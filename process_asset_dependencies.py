@@ -1,4 +1,3 @@
-#In progress ... don't beat me up yet.
 import boto3
 import os
 import json
@@ -35,7 +34,9 @@ for obj in objs:
                 }
                 dependency_map[config['name']] = {i for i in config['depends']}
 
-# Figure out the run order, put it all together, and upload to S3
+# Figure out the run order, put it all together, and upload to S3. The run order
+# is an list of sets: members of a given set can be run in any order, but following
+# sets depend on prior ones.
 run_map = { 'assets': all_assets, 'run_order': list(toposort(dependency_map)) }
 with open(WORKINGDIR + '/asset_map.json', 'w') as f:
     f.write(json.dumps(run_map, default=convert_set_to_list))
