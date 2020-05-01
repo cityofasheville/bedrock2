@@ -20,6 +20,7 @@ tmpfilepath = WORKINGDIR+'/tmp.json'
 s3 = boto3.client('s3')
 
 # Get dependency and location information for all active assets
+print('Get the list of assets from the S3 bucket')
 objs = s3.list_objects_v2(Bucket=BUCKETNAME, Prefix='store/assets')['Contents']
 for obj in objs:
     path = obj['Key'].split('/')
@@ -39,12 +40,15 @@ for obj in objs:
 # Figure out the run order, put it all together, and upload to S3. The run order
 # is an list of sets: members of a given set can be run in any order, but following
 # sets depend on prior ones.
+print('Create the run map')
 run_map = { 'assets': all_assets, 'run_order': list(toposort(dependency_map)) }
 with open(WORKINGDIR + '/asset_map.json', 'w') as f:
     f.write(json.dumps(run_map, default=convert_set_to_list))
 
+print('Upload the run map to S3')
 s3.upload_file(Filename = WORKINGDIR + '/asset_map.json', Bucket=BUCKETNAME, Key='run/asset_map.json')
 
 # And clean up
+print('Clean up')
 os.remove(tmpfilepath)
 os.remove(WORKINGDIR + '/asset_map.json')
