@@ -46,8 +46,6 @@ def get_active_asset_maps(bucket_name, prefix, s3, working_directory, run_group)
     all_assets_in_run_group = { asset: all_assets[asset] for asset in is_in_run_group }
     dependency_map_in_run_group = { asset: dependency_map[asset] for asset in is_in_run_group }
 
-
-    # result = [x for x in list_a if x[0] in list_b]
     return all_assets_in_run_group, dependency_map_in_run_group
 
 def compute_run_order(dependency_map):
