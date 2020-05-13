@@ -1,5 +1,6 @@
 tmp.json
-asset_map.json
+*.json
 .vscode
 package
 function.zip
+__pycache__
