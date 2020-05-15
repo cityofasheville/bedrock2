@@ -29,12 +29,10 @@ def lambda_handler(event, context):
     etl_data_list = get_etl_file(BUCKETNAME, 'store/assets', s3, WORKINGDIR, asset_name) #'assets' in prod?
     
     print('Dump to file')
-    with open(WORKINGDIR + '/etl.json', 'w') as f:
+    with open(WORKINGDIR + '/' + asset_name + '.etl.json', 'w') as f:
         f.write(json.dumps(etl_data_list))
 
-    # print('Upload to S3 and clean up')
-    # s3.upload_file(Filename = WORKINGDIR + '/asset_map.json', Bucket=BUCKETNAME, Key='run/asset_map.json')
-    # os.remove(WORKINGDIR + '/asset_map.json')
+    # TODO process file
 
     return {
         'statusCode': 200,
