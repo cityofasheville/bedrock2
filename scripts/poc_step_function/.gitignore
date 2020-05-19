@@ -1,5 +1,5 @@
 # Ignore zip files that are uploaded to lambda
-lambda-functions/**/*.zip
+lambda_functions/**/*.zip
 
 # Output from AWS CLI functions
 out
