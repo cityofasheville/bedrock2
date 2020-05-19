@@ -1,0 +1,133 @@
+{
+  "Comment": "An example to prove that we can read metadata from S3, process ETL run groups serially, and run ETL jobs in parallel.",
+  "StartAt": "Read metadata from S3 data asset bucket",
+  "States": {
+    "Read metadata from S3 data asset bucket": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "InputPath": "$",
+      "OutputPath": "$.Payload",
+      "Parameters": {
+        "FunctionName": "CoaFetchAssetMetadata"
+      },
+      "Next": "Are there run groups to process?"
+    },
+    "Are there run groups to process?": {
+      "Type": "Choice",
+      "InputPath": "$",
+      "Choices": [
+        {
+          "Variable": "$.runGroupCount",
+          "NumericEquals": 0,
+          "Next": "Finish"
+        }
+      ],
+      "Default": "Process run groups in serial"
+    },
+    "Process run groups in serial": {
+      "Type": "Map",
+      "MaxConcurrency": 1,
+      "InputPath": "$",
+      "Next": "Finish",
+      "ItemsPath": "$.orderedRunGroups",
+      "Parameters": {
+        "RunGroupIndex.$": "$$.Map.Item.Index",
+        "RunGroupArray.$": "$$.Map.Item.Value"
+      },
+      "Iterator": {
+        "StartAt": "Run jobs in run group in parallel",
+        "States": {
+          "Run jobs in run group in parallel": {
+            "Type": "Map",
+            "MaxConcurrency": 10,
+            "InputPath": "$",
+            "ItemsPath": "$.RunGroupArray",
+            "Parameters": {
+              "ETLJobIndex.$": "$$.Map.Item.Index",
+              "ETLJob.$": "$$.Map.Item.Value"
+            },
+            "Iterator": {
+              "StartAt": "Run ETL job tasks in serial",
+              "States": {
+                "Run ETL job tasks in serial": {
+                  "Type": "Map",
+                  "MaxConcurrency": 1,
+                  "InputPath": "$",
+                  "ItemsPath": "$.ETLJob.tasks",
+                  "Parameters": {
+                    "TaskIndex.$": "$$.Map.Item.Index",
+                    "Task.$": "$$.Map.Item.Value"
+                  },
+                  "Iterator": {
+                    "StartAt": "Choose ETL Task Type",
+                    "States": {
+                      "Choose ETL Task Type": {
+                        "Type": "Choice",
+                        "InputPath": "$",
+                        "Choices": [
+                          {
+                            "Variable": "$.Task.type",
+                            "StringEquals": "noop",
+                            "Next": "Run Noop"
+                          },
+                          {
+                            "Variable": "$.Task.type",
+                            "StringEquals": "sql",
+                            "Next": "Run Sql"
+                          }
+                        ],
+                        "Default": "Invalid Job Type"
+                      },
+                      "Run Noop": {
+                        "Type": "Task",
+                        "Resource": "arn:aws:states:::lambda:invoke",
+                        "InputPath": "$",
+                        "ResultPath": null,
+                        "Parameters": {
+                          "FunctionName": "CoaNoop",
+                          "Payload": {
+                            "Task.$": "$.Task"
+                          }
+                        },
+                        "End": true
+                      },
+                      "Run Sql": {
+                        "Type": "Task",
+                        "Resource": "arn:aws:states:::lambda:invoke",
+                        "InputPath": "$",
+                        "ResultPath": null,
+                        "Parameters": {
+                          "FunctionName": "CoaNoop",
+                          "Payload": {
+                            "Task.$": "$.Task"
+                          }
+                        },
+                        "End": true
+                      },
+                      "Invalid Job Type": {
+                        "Type": "Fail",
+                        "Cause": "Invalid ETL job type specified.",
+                        "Error": "InvalidJobType"
+                      }
+                    }
+                  },
+                  "Next": "Finish ETL job tasks"
+                },
+                "Finish ETL job tasks": {
+                  "Type": "Succeed"
+                }
+              }
+            },
+            "Next": "Finish run group"
+          },
+          "Finish run group": {
+            "Type": "Succeed"
+          }
+        }
+      }
+    },
+    "Finish": {
+      "Type": "Succeed"
+    }
+  }
+}
