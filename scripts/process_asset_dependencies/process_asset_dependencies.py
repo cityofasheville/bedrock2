@@ -23,60 +23,59 @@ def download_files(bucket_name, prefix, s3, working_directory):
     objs = s3.list_objects_v2(Bucket=bucket_name, Prefix=prefix)['Contents']
 
     for obj in objs:
-        s3.download_file(bucket_name, obj['Key'], tmpfilepath)
-        with open(tmpfilepath, 'r') as file_content:
-            path = obj['Key'].split('/')
-            if (len(path) > 1 and (path[-2] + '.json' == path[-1])):
-                file_data['assets'].update({path[-2]: json.load(file_content)}) # Asset configuration file
-            elif (len(path) > 1 and (path[-2] + '.etl.json' == path[-1])):
-                file_data['etl'].update({path[-2]: json.load(file_content)})    # ETL file
+        path = obj['Key'].split('/')
+        if (len(path) > 1 and ( (path[-2] + '.json' == path[-1]) or (path[-2] + '.etl.json' == path[-1])) ):
+            s3.download_file(bucket_name, obj['Key'], tmpfilepath)
+            with open(tmpfilepath, 'r') as file_content:
+                if path[-1][-9:] == '.etl.json':
+                    file_data['etl'].update({path[-2]: json.load(file_content)})    # ETL file
+                else:
+                    file_data['assets'].update({path[-2]: {'path': obj['Key'], 'file': json.load(file_content)}})    # Asset configuration file
     os.remove(tmpfilepath)
     return file_data
 
 
-def get_active_asset_maps(data):
+def get_active_asset_maps(file_data):
     """ Create list of assets by group and map of dependencies for active assets """
     run_groups = {} # { asset: rungrp }
     all_assets = {}
-    dependency_map = {}
     rg_list = [] # [ rungrp ]
-    grouped_assets = {}  # { rungrp: { asset: {dep name path}}}
-    grouped_dep_map = {} # { rungrp: { asset: {deps}}}
+    grouped_assets = {}  # { rungrp: { asset: {name dep uniq path}}}
 
-    for asset in data['assets']:
-        config = data['assets'][asset]
-        if (config['active']):
-            all_assets[config['name']] = {
-                'name': config['name'],
-                'depends': config['depends'],
-                'path': asset }
-            dependency_map[config['name']] = {i for i in config['depends']}
-    for etl in data['etl']:
-        config = data['etl'][etl]
-        asset_name = etl.split('/')[-1]
+    for asset in file_data['assets']:
+        config = file_data['assets'][asset]
+        if (config['file']['active']):
+            all_assets[asset] = {
+                'name': config['file']['name'],
+                'depends': config['file']['depends'],
+                'path': config['path'] }
+    for etl in file_data['etl']:
+        config = file_data['etl'][etl]
+        #asset_name = etl.split('/')[-1]
         asset_run_group = config['run_group']
-        run_groups.update({ asset_name: asset_run_group })
+        run_groups.update({ etl: asset_run_group })
 
     # Group assets and dependencies by Run Group
-    for asset, dependency_list in dependency_map.items():
+    for asset in all_assets:
         rg = run_groups[asset]
         if (rg in rg_list):
-            grouped_dep_map[rg].update({asset: dependency_list})
             grouped_assets[rg].update({asset: all_assets[asset]})
         else:
             rg_list.append(rg)
-            grouped_dep_map.update({rg: {asset: dependency_list}})
             grouped_assets.update({rg: {asset: all_assets[asset]}})
 
-    return grouped_assets, grouped_dep_map
+    return grouped_assets
 
 
-def write_map_files(grouped_assets, grouped_dependency_map, bucket_name, prefix, s3, working_directory):
+def write_map_files(grouped_assets, bucket_name, prefix, s3, working_directory):
     """Compute run order and write files"""
     print('Compute run order and write files')
-    for rungrp in grouped_dependency_map:
+    for rungrp in grouped_assets:
+        dependency_map = {}
+        for asset in grouped_assets[rungrp]:
+            dependency_map[asset] = {i for i in grouped_assets[rungrp][asset]['depends']} 
         run_map = { 'assets': grouped_assets[rungrp], 
-                    'run_order': compute_run_order(grouped_dependency_map[rungrp]) }
+                    'run_order': compute_run_order(dependency_map) }
         assetmap_filepath = working_directory + '/' + rungrp + '.json'
         s3_filepath = prefix + '/' + rungrp + '.json'
         with open(assetmap_filepath, 'w') as f:
@@ -94,8 +93,8 @@ def lambda_handler(event, context):
 
     print('Load the asset maps')
     file_data = download_files(BUCKETNAME, 'store/assets', s3, WORKINGDIR)
-    grouped_assets, grouped_dependency_map = get_active_asset_maps(file_data)
-    write_map_files(grouped_assets, grouped_dependency_map, BUCKETNAME, 'run', s3, WORKINGDIR)
+    grouped_assets = get_active_asset_maps(file_data)
+    write_map_files(grouped_assets, BUCKETNAME, 'run', s3, WORKINGDIR)
 
     return {
         'statusCode': 200,
