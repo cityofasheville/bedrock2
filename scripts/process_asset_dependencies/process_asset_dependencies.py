@@ -17,6 +17,7 @@ def compute_run_order(dependency_map):
 
 def download_files(bucket_name, prefix, s3, working_directory):
     """ Get all asset and etl files from S3 """
+    print("Download asset and etl files from S3")
     file_data = {'assets': {},'etl': {}}
     tmpfilepath = working_directory + '/tmp.json'
 
@@ -37,11 +38,12 @@ def download_files(bucket_name, prefix, s3, working_directory):
 
 def get_active_asset_maps(file_data):
     """ Create map of assets and dependencies for active assets """
-    run_groups = {} # { asset: rungrp }
+    print("Create map of assets and dependencies for active assets")
+    run_groups = {}
     all_assets = {}
-    rg_list = [] # [ rungrp ]
-    grouped_assets = {}  # { rungrp: { asset: {}}}
-    grouped_asset_maps = {} # { rungrp: { assets: {}, runorder: []}}
+    rg_list = []
+    grouped_assets = {}
+    asset_maps = {}
 
     for asset in file_data['assets']:
         config = file_data['assets'][asset]
@@ -72,24 +74,24 @@ def get_active_asset_maps(file_data):
             dependency_map[asset] = {i for i in grouped_assets[rungrp][asset]['depends']} 
         run_map = { 'assets': grouped_assets[rungrp], 
                     'run_order': compute_run_order(dependency_map) }
-        grouped_asset_maps[rungrp] = run_map
+        asset_maps[rungrp] = run_map
 
-    return grouped_asset_maps
+    return asset_maps
 
 
-def write_map_files(grouped_asset_maps, bucket_name, prefix, s3, working_directory):
-    """Compute run order and write files"""
-    print('Compute run order and write files')
-    for rungrp in grouped_asset_maps:
-        run_map = grouped_asset_maps[rungrp]
+def write_map_files(asset_maps, bucket_name, prefix, s3, working_directory):
+    """ Write a map file for each run group back out to S3 """
+    print('Write map files back out to S3')
+    for rungrp in asset_maps:
+        run_map = asset_maps[rungrp]
         assetmap_filepath = working_directory + '/' + rungrp + '.json'
         s3_filepath = prefix + '/' + rungrp + '.json'
         with open(assetmap_filepath, 'w') as f:
             f.write(json.dumps(run_map, default=convert_set_to_list))
 
         print('Upload to S3: ' + s3_filepath)
-        # s3.upload_file(Filename = assetmap_filepath, Bucket=bucket_name, Key=s3_filepath)
-        # os.remove(assetmap_filepath)    
+        s3.upload_file(Filename = assetmap_filepath, Bucket=bucket_name, Key=s3_filepath)
+        os.remove(assetmap_filepath)    
 
 
 def lambda_handler(event, context):
@@ -99,8 +101,8 @@ def lambda_handler(event, context):
 
     print('Load the asset maps')
     file_data = download_files(BUCKETNAME, 'store/assets', s3, WORKINGDIR)
-    grouped_asset_maps = get_active_asset_maps(file_data)
-    write_map_files(grouped_asset_maps, BUCKETNAME, 'run', s3, WORKINGDIR)
+    asset_maps = get_active_asset_maps(file_data)
+    write_map_files(asset_maps, BUCKETNAME, 'run', s3, WORKINGDIR)
 
     return {
         'statusCode': 200,
