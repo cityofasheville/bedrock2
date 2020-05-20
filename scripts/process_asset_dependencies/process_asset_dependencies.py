@@ -36,11 +36,12 @@ def download_files(bucket_name, prefix, s3, working_directory):
 
 
 def get_active_asset_maps(file_data):
-    """ Create list of assets by group and map of dependencies for active assets """
+    """ Create map of assets and dependencies for active assets """
     run_groups = {} # { asset: rungrp }
     all_assets = {}
     rg_list = [] # [ rungrp ]
-    grouped_assets = {}  # { rungrp: { asset: {name dep uniq path}}}
+    grouped_assets = {}  # { rungrp: { asset: {}}}
+    grouped_asset_maps = {} # { rungrp: { assets: {}, runorder: []}}
 
     for asset in file_data['assets']:
         config = file_data['assets'][asset]
@@ -64,18 +65,23 @@ def get_active_asset_maps(file_data):
             rg_list.append(rg)
             grouped_assets.update({rg: {asset: all_assets[asset]}})
 
-    return grouped_assets
-
-
-def write_map_files(grouped_assets, bucket_name, prefix, s3, working_directory):
-    """Compute run order and write files"""
-    print('Compute run order and write files')
+    # create asset maps grouped by Run Group
     for rungrp in grouped_assets:
         dependency_map = {}
         for asset in grouped_assets[rungrp]:
             dependency_map[asset] = {i for i in grouped_assets[rungrp][asset]['depends']} 
         run_map = { 'assets': grouped_assets[rungrp], 
                     'run_order': compute_run_order(dependency_map) }
+        grouped_asset_maps[rungrp] = run_map
+
+    return grouped_asset_maps
+
+
+def write_map_files(grouped_asset_maps, bucket_name, prefix, s3, working_directory):
+    """Compute run order and write files"""
+    print('Compute run order and write files')
+    for rungrp in grouped_asset_maps:
+        run_map = grouped_asset_maps[rungrp]
         assetmap_filepath = working_directory + '/' + rungrp + '.json'
         s3_filepath = prefix + '/' + rungrp + '.json'
         with open(assetmap_filepath, 'w') as f:
@@ -93,8 +99,8 @@ def lambda_handler(event, context):
 
     print('Load the asset maps')
     file_data = download_files(BUCKETNAME, 'store/assets', s3, WORKINGDIR)
-    grouped_assets = get_active_asset_maps(file_data)
-    write_map_files(grouped_assets, BUCKETNAME, 'run', s3, WORKINGDIR)
+    grouped_asset_maps = get_active_asset_maps(file_data)
+    write_map_files(grouped_asset_maps, BUCKETNAME, 'run', s3, WORKINGDIR)
 
     return {
         'statusCode': 200,
