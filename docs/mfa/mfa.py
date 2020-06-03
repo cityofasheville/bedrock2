@@ -6,7 +6,7 @@ out the three lines you need to run at the command prompt.
 To use, add a file mfa_config.py in the same folder that holds your iam arn and the matching profile name.
 It can be just this one line:
 
-mfadev="arn:aws:iam::0000000000:mfa/name"; profilename="default"
+mfadevice="arn:aws:iam::0000000000:mfa/name"; profilename="default"
 
 """
 import subprocess
@@ -14,9 +14,9 @@ import json
 import os
 import mfa_config
 
-def main(profilename, mfadev):
+def main(profilename, mfadevice):
     twofa = input("Enter two factor auth code for profile " + profilename + ": ") 
-    cmd = 'aws sts get-session-token --serial-number ' + mfadev + ' --profile ' + profilename + ' --token-code ' + twofa
+    cmd = 'aws sts get-session-token --serial-number ' + mfadevice + ' --profile ' + profilename + ' --token-code ' + twofa
     output = subprocess.check_output(cmd, shell=True)
     js = json.loads(output)
 
@@ -30,7 +30,7 @@ def main(profilename, mfadev):
     print(f"export AWS_SESSION_TOKEN={js['Credentials']['SessionToken']}\n")
     print("\n")
 
-mfadev = mfa_config.mfadev
+mfadevice = mfa_config.mfadevice
 profilename = mfa_config.profilename
-main(profilename, mfadev)
+main(profilename, mfadevice)
 
