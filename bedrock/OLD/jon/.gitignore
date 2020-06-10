@@ -1,0 +1,6 @@
+tmp.json
+*.json
+.vscode
+package
+function.zip
+__pycache__/
