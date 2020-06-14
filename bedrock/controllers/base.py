@@ -4,7 +4,7 @@ from cement.utils.version import get_version_banner
 from ..core.version import get_version
 
 VERSION_BANNER = """
-MyApp Does Amazing Things! %s
+Bedrock data management system %s
 %s
 """ % (get_version(), get_version_banner())
 
