@@ -22,22 +22,47 @@ def download_files(bucket_name, prefix, s3, working_directory):
     os.remove(tmpfilepath)
     return file_data
 
-def preprocess_assets_in_s3(msg='Hello, world'):
-    print(msg)
-    BUCKETNAME = os.getenv('bedrock_bucketname')
-    print('Bucket name is ', BUCKETNAME)
+def prepare_assets(file_data):
+    print("Create map of assets and dependencies for active assets")
+    all_assets = {}
+
+    for asset in file_data['assets']:
+        config = file_data['assets'][asset]
+        if (config['file']['active']):
+            etl = { 'run_group': None, 'tasks': [] }
+            if (asset in file_data['etl']):
+                etl = file_data['etl'][asset]
+            all_assets[asset] = {
+                'name': config['file']['name'],
+                'depends': config['file']['depends'],
+                'path': config['path'],
+                'run_group': etl['run_group'],
+                'etl_tasks': etl['tasks'] }
+    return all_assets  
+
+def write_asset_map(all_assets, bucket_name, prefix, s3, working_directory):
+    """ Write asset map back out to S3 """
+    print('Write asset map back out to S3')
+    assets_filepath = working_directory + '/' + 'all_assets.json'
+    s3_filepath = prefix + '/'  + 'all_assets.json'
+
+    with open(assets_filepath, 'w') as f:
+        f.write(json.dumps(all_assets))
+    s3.upload_file(Filename = assets_filepath, Bucket=bucket_name, Key=s3_filepath)
+    os.remove(assets_filepath)    
+
+def preprocess_assets_in_s3(bucket_name, output_mode='s3'):
+    print('Bucket name is ', bucket_name)
     WORKINGDIR = os.getenv('bedrock_workingdir', '.')
-    print('Working directory is ', WORKINGDIR)
     s3 = boto3.client('s3')
+    return_value = 'Done'
 
     print('Download the asset information')
-    file_data = download_files(BUCKETNAME, 'store/assets', s3, WORKINGDIR)
+    file_data = download_files(bucket_name, 'store/assets', s3, WORKINGDIR)
+    all_assets = prepare_assets(file_data)
+    if (output_mode == 's3'):
+        write_asset_map(all_assets, bucket_name, 'meta', s3, WORKINGDIR)
+    else:
+        return_value = all_assets
 
-    # asset_maps = get_active_asset_maps(file_data)
-    # write_map_files(asset_maps, BUCKETNAME, 'run', s3, WORKINGDIR)
-
-    # return {
-    #     'statusCode': 200,
-    #     'body': json.dumps('Updated run map')
-    # }
-    return file_data
+    return return_value
