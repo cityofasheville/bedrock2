@@ -14,7 +14,7 @@ class Base(Controller):
         label = 'base'
 
         # text displayed at the top of --help output
-        description = 'MyApp Does Amazing Things!'
+        description = 'Bedrock data management system'
 
         # text displayed at the bottom of --help output
         epilog = 'Usage: bedrock command1 --foo bar'
