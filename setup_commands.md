@@ -14,8 +14,9 @@ pip install toposort
 conda env export --name conda-env > conda-env.yml
 
 python .\setup.py develop
-
-# I'm working in powershell, so I ran this:
+```
+I'm working in powershell, so I set the bucket name via:
+``
 $env:bedrock_bucketname = 'managed-data-assets-dev'
 
 
