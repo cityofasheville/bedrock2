@@ -16,7 +16,8 @@ conda env export --name conda-env > conda-env.yml
 python .\setup.py develop
 ```
 I'm working in powershell, so I set the bucket name via:
-``
+
+``1
 $env:bedrock_bucketname = 'managed-data-assets-dev'
 
 
