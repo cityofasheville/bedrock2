@@ -1,2 +1,2 @@
-# BedRock2
-This is the second version of the ETL program Bedrock.
+# Bedrock 2
+Second version of the Bedrock system.
