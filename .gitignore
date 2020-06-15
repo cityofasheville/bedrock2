@@ -3,4 +3,5 @@ tmp.json
 .vscode
 package
 function.zip
+data/
 __pycache__/

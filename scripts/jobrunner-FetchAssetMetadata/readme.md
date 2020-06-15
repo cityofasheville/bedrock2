@@ -1,0 +1,3 @@
+# FetchAssetMetadata 
+Will be called by job runner step function. Reads etl files and returns data in format like Matt's version...
+(except it aint right yet, this only looks at one. Rethink)
