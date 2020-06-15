@@ -15,7 +15,7 @@ class BedrockCore(Controller):
         arguments=[
             ### add a sample foo option under subcommand namespace
             ( [ '-o', '--output' ],
-              { 'help' : 'output mode (s3 or stdout)' } ),
+              { 'help' : 'output mode: s3 (default) or stdout' } ),
         ],
     )
     def preprocess(self):
