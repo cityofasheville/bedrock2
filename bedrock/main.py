@@ -3,6 +3,7 @@ from cement import App, TestApp, init_defaults
 from cement.core.exc import CaughtSignal
 from .core.exc import BedrockError
 from .controllers.base import Base
+from .controllers.bedrock_core import BedrockCore
 
 # configuration defaults
 CONFIG = init_defaults('bedrock')
@@ -42,7 +43,8 @@ class Bedrock(App):
 
         # register handlers
         handlers = [
-            Base
+            Base,
+            BedrockCore
         ]
 
 

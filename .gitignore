@@ -1,3 +1,9 @@
+# Bedrock additions
+.vscode/
+conda-env/
+tmp.json
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
