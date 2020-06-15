@@ -1,13 +1,13 @@
 
-let blueprint = {
+let etl = {
     source_location: {
         location: "localpgfrom",
-        schemaname: "fromdb",
+        schemaname: "public",
         tablename: "moo",
     },
     target_location: {
         location: "localpgto",
-        schemaname: "todb",
+        schemaname: "public",
         tablename: "moo",
     },
     columns: [
@@ -15,13 +15,8 @@ let blueprint = {
             name: "dat",
             type: "number"
         }
-    ]
+    ],
+    create_table: true
 }
 
-let create_table = true;
-
-function setup() {
-    return { blueprint, create_table };
-}
-
-module.exports = setup;
+module.exports = etl;
