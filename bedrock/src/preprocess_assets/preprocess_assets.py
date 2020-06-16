@@ -61,7 +61,7 @@ def preprocess_assets_in_s3(bucket_name, output_mode='s3'):
     file_data = download_files(bucket_name, 'store/assets', s3, WORKINGDIR)
     all_assets = prepare_assets(file_data)
     if (output_mode == 's3'):
-        write_asset_map(all_assets, bucket_name, 'meta', s3, WORKINGDIR)
+        write_asset_map(all_assets, bucket_name, 'run', s3, WORKINGDIR)
     else:
         return_value = all_assets
 
