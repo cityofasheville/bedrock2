@@ -1,12 +1,12 @@
 
 let etl = {
     source_location: {
-        location: "localpgfrom",
+        location: "localpgto",
         schemaname: "public",
         tablename: "moo",
     },
     target_location: {
-        location: "localpgto",
+        location: "localpgfrom",
         schemaname: "public",
         tablename: "moo",
     },
