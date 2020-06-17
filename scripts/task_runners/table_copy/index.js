@@ -1,15 +1,17 @@
-let etl = require('./setup')
-let db_defs = require('./data/db_connection_PRIVATE')
+let fs = require("fs")
+
 const { Pool } = require('pg')
-var copyTo = require('pg-copy-streams').to     // pipe from a table _TO_ stream (copyOut - copy-to)
-var copyFrom = require('pg-copy-streams').from // pipe to a table _FROM_ stream (copyIn - copy-from)
+var copyTo = require('pg-copy-streams').to     // pipe from a table _TO_ stream
+var copyFrom = require('pg-copy-streams').from // pipe to a table _FROM_ stream
+let db_defs = JSON.parse(fs.readFileSync('/Users/jon/Documents/bedrock2/scripts/task_runners/table_copy/data/bedrock_connections.json'))
+let etl = require('./setup')
 
 async function run(){
-    let fromloc = db_defs[etl.source_location.location]
+    let fromloc = db_defs[etl.source_location.connection]
     fromloc.table = etl.source_location
     fromloc.fromto = 'from'
 
-    let toloc = db_defs[etl.target_location.location]
+    let toloc = db_defs[etl.target_location.connection]
     toloc.table = etl.target_location
     toloc.fromto = 'to'
 
@@ -18,14 +20,14 @@ async function run(){
     console.log(toloc)
     
     let from_stream, to_stream
-    if(fromloc.type == 'pg') {
+    if(fromloc.type == 'postgresql') {
         from_stream = await get_pg_stream(fromloc)
-    }else if(fromloc.type == 'ss') {
+    }else if(fromloc.type == 'sqlserver') {
         from_stream = await get_ss_stream(fromloc)
     }
-    if(toloc.type == 'pg') {
+    if(toloc.type == 'postgresql') {
         to_stream = await get_pg_stream(toloc)
-    }else if(fromloc.type == 'ss') {
+    }else if(fromloc.type == 'sqlserver') {
         to_stream = await get_ss_stream(toloc)
     }
     from_stream.pipe(to_stream)
@@ -40,8 +42,8 @@ function get_pg_stream(location) {
         let tablename = `${location.table.schemaname}.${location.table.tablename}`
 
         let pool = new Pool({
-            connection: location.connection,
-            username: location.username,
+            host: location.host,
+            user: location.username,
             password: location.password,
             database: location.database,
             max: 10,
@@ -52,22 +54,43 @@ function get_pg_stream(location) {
         .connect()
         .then(client => {
             let stream
+            let done = () => { client.release() }
+            let err = (e) => { 
+                client.release()
+                console.error('query error', e.message, e.stack)
+                reject()
+            }
             if(location.fromto == 'from') {
                 let query_string = `COPY ${tablename} TO STDOUT`
                 stream = client.query(copyTo(query_string))
                 stream.on('end', done)
                 stream.on('error', reject)
             }else{
+                let del_string = `DELETE FROM ${tablename}`
+                stream = client.query(del_string)
+                .catch(e => {
+                    client.release()
+                    console.error('query error', e.message, e.stack)
+                  })
                 let query_string = `COPY ${tablename} FROM STDIN`
                 stream = client.query(copyFrom(query_string))
                 stream.on('error', reject)
                 stream.on('finish', done)  
             }
-            function done() {
-                client.release()
-            }
+
             resolve( stream )
         })        
     })
 }
 
+var pool = new Pool()
+pool.connect().then(client => {
+  client.query('select $1::text as name', ['pg-pool']).then(res => {
+    client.release()
+    console.log('hello from', res.rows[0].name)
+  })
+  .catch(e => {
+    client.release()
+    console.error('query error', e.message, e.stack)
+  })
+})
