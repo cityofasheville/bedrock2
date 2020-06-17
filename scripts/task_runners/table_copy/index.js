@@ -3,8 +3,13 @@ let fs = require("fs")
 const { Pool } = require('pg')
 var copyTo = require('pg-copy-streams').to     // pipe from a table _TO_ stream
 var copyFrom = require('pg-copy-streams').from // pipe to a table _FROM_ stream
-let db_defs = JSON.parse(fs.readFileSync('/Users/jon/Documents/bedrock2/scripts/task_runners/table_copy/data/bedrock_connections.json'))
+let db_defs = JSON.parse(fs.readFileSync('./data/bedrock_connections.json'))
 let etl = require('./setup')
+const {
+    parse_data,
+    transform_data,
+    stringify_data
+  } = require('./transform_data');
 
 async function run(){
     let fromloc = db_defs[etl.source_location.connection]
@@ -30,7 +35,11 @@ async function run(){
     }else if(fromloc.type == 'sqlserver') {
         to_stream = await get_ss_stream(toloc)
     }
-    from_stream.pipe(to_stream)
+    from_stream
+    .pipe(parse_data)
+    .pipe(transform_data)
+    .pipe(stringify_data)
+    .pipe(to_stream)
 }
 
 run()
@@ -82,15 +91,3 @@ function get_pg_stream(location) {
         })        
     })
 }
-
-var pool = new Pool()
-pool.connect().then(client => {
-  client.query('select $1::text as name', ['pg-pool']).then(res => {
-    client.release()
-    console.log('hello from', res.rows[0].name)
-  })
-  .catch(e => {
-    client.release()
-    console.error('query error', e.message, e.stack)
-  })
-})
