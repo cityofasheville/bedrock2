@@ -28,7 +28,7 @@ async function insert_db() {
     const client = connectionManager.getConnection('localpgfrom');
     let sqlAsset = `insert into public.moo(dat)values($1) `;
   
-    for(let i=1;i<100000;i++) {
+    for(let i=1;i<10000;i++) {
       let queryArgs=[i];
       const assets = await client.query(sqlAsset, queryArgs);
     }

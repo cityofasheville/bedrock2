@@ -1,5 +1,5 @@
 const Connection = require('./connection');
-const connectionDefinitions = require('../data/db_connection_definitions');
+const connectionDefinitions = require('./db_connection_definitions');
 
 class ConnectionManager {
   constructor(config) {

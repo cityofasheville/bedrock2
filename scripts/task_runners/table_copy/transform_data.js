@@ -3,7 +3,7 @@ const csv = require('csv');
 const datefns = require('date-fns');
 
 const parse_data = csv.parse()
-const transform_data = csv.transform(function(data){ // choose and rename columns
+const transform_data = csv.transform(function(data){ 
   return data 
 })
 const stringify_data = csv.stringify()
