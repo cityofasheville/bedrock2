@@ -21,7 +21,23 @@ function get_ss_stream(location) {
             let pool = await sql.connect(config)
             const request = new sql.Request(pool);
             let stream = request
-                .pipe(csv.stringify())
+                .pipe(csv.stringify({
+                    cast: {
+                        date: function(date){
+                            var d = new Date(date),
+                            month = '' + (d.getMonth() + 1),
+                            day = '' + d.getDate(),
+                            year = d.getFullYear();
+
+                            if (month.length < 2) 
+                                month = '0' + month;
+                            if (day.length < 2) 
+                                day = '0' + day;
+
+                            return [year, month, day].join('-');
+                        }
+                    }
+                }))
             request.query(sql_string)
             stream.on('error', err => {
                 reject(err)

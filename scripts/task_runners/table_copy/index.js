@@ -25,9 +25,9 @@ async function run(){
     
     let from_stream, to_stream
     if(fromloc.type == 'postgresql') {
-        from_stream = await get_pg_stream(fromloc)
+        from_stream = await get_pg_stream(fromloc) // stream buffer
     }else if(fromloc.type == 'sqlserver') {
-        from_stream = await get_ss_stream(fromloc)
+        from_stream = await get_ss_stream(fromloc) // objects
     }
     if(toloc.type == 'postgresql') {
         to_stream = await get_pg_stream(toloc) // stream buffer
@@ -35,10 +35,11 @@ async function run(){
         console.error("not implemented")
         // to_stream = await get_ss_stream(toloc)
     }
+    from_stream.pipe(process.stdout)
     from_stream
-    .pipe(parse_data)
-    .pipe(transform_data)
-    .pipe(stringify_data)
+    // .pipe(parse_data)
+    // .pipe(transform_data)
+    // .pipe(stringify_data)
     .pipe(to_stream)
 }
 

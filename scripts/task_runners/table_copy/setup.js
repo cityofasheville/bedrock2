@@ -4,6 +4,8 @@ let etl = {
         type: "database",
         connection: "localss",
         schemaname: "dbo",
+        // connection: "localpgfrom",
+        // schemaname: "public",
         tablename: "telestaff_person01",  
     },
     target_location: {

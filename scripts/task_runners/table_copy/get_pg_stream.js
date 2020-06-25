@@ -27,7 +27,7 @@ function get_pg_stream(location) {
                 reject(e)
             }
             if(location.fromto == 'from') {
-                let query_string = `COPY ${tablename} TO STDOUT WITH (FORMAT csv, HEADER)`
+                let query_string = `COPY ${tablename} TO STDOUT WITH (FORMAT csv)`
                 stream = client.query(copyTo(query_string))
                 stream.on('end', done)
                 stream.on('error', err)
@@ -38,7 +38,7 @@ function get_pg_stream(location) {
                     client.release()
                     console.error('query error', e.message, e.stack)
                   })
-                let query_string = `COPY ${tablename} FROM STDIN WITH (FORMAT csv, HEADER)`
+                let query_string = `COPY ${tablename} FROM STDIN WITH (FORMAT csv)`
                 stream = client.query(copyFrom(query_string))
                 stream.on('error', err)
                 stream.on('finish', done)  

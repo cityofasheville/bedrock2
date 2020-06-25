@@ -2,31 +2,31 @@
 const csv = require('csv');
 const datefns = require('date-fns');
 
-const parse_data = csv.parse()
+const parse_data111 = csv.parse()
 const transform_data = csv.transform(function(data){ 
   console.log((data))
   return data 
 })
 const stringify_data = csv.stringify()
 
-// const fix_data_types = csv.parse({ // correct the data types
-//   bom: true,
-//   columns: true,
-//   cast: function(value, context){ 
-//     if(context.column === "hours") {
-//         return parseFloat(value);
-//     } else if(context.column === "employeePayrollID" || context.column === 'payrollCode') {
-//         return parseInt(value, 10);
-//     } else if(context.column === "payRangeFrom") {
-//         return datefns.parse(value, "yyyy-MM-dd", new Date());
-//     } else if(context.column === 'from' || context.column === 'through') {
-//         let datestr = `${value.slice(0,19)}`
-//         return datefns.parse(datestr, "yyyy-MM-dd kk:mm:ss", new Date());
-//     } else {
-//         return value;
-//     }
-//   }
-// });
+const parse_data = csv.parse({ // correct the data types
+  bom: true,
+  columns: true,
+  cast: function(value, context){ 
+    if(context.column === "hours") {
+        return parseFloat(value);
+    } else if(context.column === "employeePayrollID" || context.column === 'payrollCode') {
+        return parseInt(value, 10);
+    } else if(context.column === "payRangeFrom") {
+        return datefns.parse(value, "yyyy-MM-dd", new Date());
+    } else if(context.column === 'from' || context.column === 'through') {
+        let datestr = `${value.slice(0,19)}`
+        return datefns.parse(datestr, "yyyy-MM-dd kk:mm:ss", new Date());
+    } else {
+        return value;
+    }
+  }
+});
 
 // const choose_columns = csv.transform (function(data){ // choose and rename columns
 //   return { 
