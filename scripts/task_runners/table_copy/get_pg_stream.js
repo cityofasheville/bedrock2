@@ -31,7 +31,7 @@ function get_pg_stream(location) {
                 stream = client.query(copyTo(query_string))
                 stream.on('end', done)
                 stream.on('error', err)
-            }else{
+            }else if(location.fromto == 'to'){
                 let del_string = `DELETE FROM ${tablename}`
                 stream = client.query(del_string)
                 .catch(e => {

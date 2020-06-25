@@ -1,18 +1,33 @@
 
+// let etl = {
+//     source_location: {
+//         type: "database",
+//         connection: "localss",
+//         schemaname: "dbo",
+//         tablename: "testy",  
+
+//     },
+//     target_location: {
+//         type: "database",
+//         connection: "localpgto",
+//         schemaname: "public",
+//         tablename: "testy",
+//     }
+// }
+
 let etl = {
     source_location: {
         type: "database",
-        connection: "localss",
-        schemaname: "dbo",
-        // connection: "localpgfrom",
-        // schemaname: "public",
-        tablename: "telestaff_person01",  
+        connection: "localpgto",
+        schemaname: "public",
+        tablename: "testy",
+
     },
     target_location: {
         type: "database",
-        connection: "localpgto",
+        connection: "localpgfrom",
         schemaname: "public",
-        tablename: "telestaff_person01",
+        tablename: "testy",
     }
 }
 // let etl = {

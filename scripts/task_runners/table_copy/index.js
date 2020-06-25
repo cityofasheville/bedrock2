@@ -2,11 +2,7 @@ const fs = require("fs")
 
 const db_defs = JSON.parse(fs.readFileSync('./data/bedrock_connections.json'))
 const etl = require('./setup')
-const {
-    parse_data,
-    transform_data,
-    stringify_data
-  } = require('./transform_data');
+
 const get_pg_stream = require('./get_pg_stream');
 const get_ss_stream = require('./get_ss_stream');
 
@@ -25,22 +21,17 @@ async function run(){
     
     let from_stream, to_stream
     if(fromloc.type == 'postgresql') {
-        from_stream = await get_pg_stream(fromloc) // stream buffer
+        from_stream = await get_pg_stream(fromloc)
     }else if(fromloc.type == 'sqlserver') {
-        from_stream = await get_ss_stream(fromloc) // objects
+        from_stream = await get_ss_stream(fromloc)
     }
     if(toloc.type == 'postgresql') {
-        to_stream = await get_pg_stream(toloc) // stream buffer
+        to_stream = await get_pg_stream(toloc)
     }else if(toloc.type == 'sqlserver') {
-        console.error("not implemented")
-        // to_stream = await get_ss_stream(toloc)
+        to_stream = await get_ss_stream(toloc) // not implemented
     }
     from_stream.pipe(process.stdout)
-    from_stream
-    // .pipe(parse_data)
-    // .pipe(transform_data)
-    // .pipe(stringify_data)
-    .pipe(to_stream)
+    from_stream.pipe(to_stream)
 }
 
 run()
