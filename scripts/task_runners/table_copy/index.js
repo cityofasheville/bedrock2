@@ -30,9 +30,10 @@ async function run(){
         from_stream = await get_ss_stream(fromloc)
     }
     if(toloc.type == 'postgresql') {
-        to_stream = await get_pg_stream(toloc)
+        to_stream = await get_pg_stream(toloc) // stream buffer
     }else if(toloc.type == 'sqlserver') {
-        to_stream = await get_ss_stream(toloc)
+        console.error("not implemented")
+        // to_stream = await get_ss_stream(toloc)
     }
     from_stream
     .pipe(parse_data)

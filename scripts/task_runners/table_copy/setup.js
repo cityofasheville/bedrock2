@@ -2,30 +2,28 @@
 let etl = {
     source_location: {
         type: "database",
-        connection: "localpgfrom",
-        schemaname: "public",
-        tablename: "moo",
+        connection: "localss",
+        schemaname: "dbo",
+        tablename: "telestaff_person01",  
     },
     target_location: {
         type: "database",
         connection: "localpgto",
         schemaname: "public",
-        tablename: "moo",
-    },
-    columns: {
-        trip_id: {
-            type: "varchar"
-        },
-        arrival_time: {
-            type: "time"
-        }
+        tablename: "telestaff_person01",
     }
 }
-
-
+// let etl = {
+//     source_location: {
+//         type: "database",
+//         connection: "munis_etl",
+//         schemaname: "dbo",
+//         tablename: "telestaff_person01",  
+//     }
+// }
 // target_location: {
 //     type: "database",
-//     connection: "localssto",
+//     connection: "localss",
 //     schemaname: "dbo",
 //     tablename: "gtfs_stop_times",
 // },
@@ -60,3 +58,11 @@ module.exports = etl;
 //         filedir: "/Users/jon/Documents/bedrock2/scripts/task_runners/table_copy/data"
 //     },
 //   }
+
+
+// MAYBE THE DATA WILL INCLUDE COLUMNS?
+//     columns: {
+//         dat: {
+//             type: "integer"
+//         }
+//     }
