@@ -1,4 +1,4 @@
-const get_pg_stream = require('./get_pg_stream');
+const get_pg_stream = require('../get_pg_stream');
 
 let fromloc = {
     type: 'postgresql', 

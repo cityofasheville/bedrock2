@@ -1,4 +1,4 @@
-const get_ss_stream = require('./get_ss_stream');
+const get_ss_stream = require('../get_ss_stream');
 
 let fromloc = {
     type: 'sqlserver', 
