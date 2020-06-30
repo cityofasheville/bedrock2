@@ -7,9 +7,9 @@ do
   echo "Removing old dependencies..."
   rm -Rf ./package
   echo "Installing dependencies..."
-  #pip install -r requirements.txt --target ./package || ( echo "FAILED TO INSTALL DEPENDENCIES" && continue )
+  pip install -r requirements.txt --target ./package || ( echo "FAILED TO INSTALL DEPENDENCIES" && continue )
   echo "Packaging function as zip..."
   rm -f function.zip
-  #zip function.zip ./*
+  zip function.zip ./*
   cd ..
 done
