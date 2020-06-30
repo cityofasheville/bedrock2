@@ -1,4 +1,5 @@
 #!/bin/bash
+echo `pwd`
 rm -Rf ./package
 pip install --target ./package toposort
 cd package/
