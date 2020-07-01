@@ -21,14 +21,8 @@ I'm working in powershell, so I set the bucket name via:
 ```
 $env:bedrock_bucketname = 'managed-data-assets-dev'
 
-
 ```
-
-Posix shell:
-
+When I'm testing the bedrock persona, I also run
 ```
-export bedrock_bucketname='managed-data-assets-dev'
+$env:AWS_DEFAULT_PROFILE = 'bedrock'
 ```
-
-### To run:
-bedrock preprocess --output s3

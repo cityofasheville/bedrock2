@@ -1,0 +1,12 @@
+{
+    "name": "create_run_map",
+    "description": "Create a run map",
+    "role": "arn:aws:iam::382274149743:role/bedrock_user_role",
+    "handler": "create_run_map.lambda_handler",
+    "runtime": "python3.8",
+    "environment": {
+        "Variables": {
+            "bedrock_workingdir": "/tmp"
+        }
+    }
+}
