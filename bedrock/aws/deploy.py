@@ -37,7 +37,8 @@ def create_function(lmda, path, fct_name):
         Publish=True,
         Code={
             'ZipFile':zip
-        }
+        },
+        Environment=config['environment']
     )
     print(response)
 

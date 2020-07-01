@@ -26,7 +26,7 @@ def convert_set_to_list(obj): # Function to convert sets to lists for JSON dump
     raise TypeError
 
 def lambda_handler(event, context):
-    result = create_run_map_function('managed-data-assets-dev', 'daily')
+    result = create_run_map_function(event['s3bucket'], event['rungroup'])
     return {
         'statusCode': 200,
         'body': json.dumps(result, default=convert_set_to_list)
