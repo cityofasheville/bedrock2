@@ -10,6 +10,9 @@ do
   pip install -r requirements.txt --target ./package || ( echo "FAILED TO INSTALL DEPENDENCIES" && continue )
   echo "Packaging function as zip..."
   rm -f function.zip
-  zip function.zip ./*
+  cd package
+  zip -r9 ../function.zip .
+  cd ..
+  zip -g function.zip ./*.py
   cd ..
 done
