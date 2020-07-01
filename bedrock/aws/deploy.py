@@ -11,16 +11,12 @@ def subdirs(path):
 def create_role(path, rolename):
     try:
         print('      Creating role: ' + rolename)
-        full_dir = './roles/' + rolename + '/'
-        trust_policy_file = rolename + '_trust.json'
-        with open(full_dir + trust_policy_file, 'r') as file_content:
-            trust_policy = json.load(file_content)
-        iam.create_role(RoleName=dir, AssumeRolePolicyDocument = json.dumps(trust_policy))
-        policy_file = rolename + '_policies.json'
-        with open(full_dir + policy_file, 'r') as file_content:
-            policy = json.load(file_content)
+        config_file = './roles/' + rolename + '/' + rolename + '_config.json'
+        with open(config_file, 'r') as file_content:
+            config = json.load(file_content)
+        iam.create_role(RoleName=dir, AssumeRolePolicyDocument = json.dumps(config['trust']))
         role = boto3.resource('iam').Role(dir)
-        for arn in policy["policy_arns"]:
+        for arn in config["policy_arns"]:
             role.attach_policy(PolicyArn=arn)
     except:
         print('Error creating role ' + rolename)
