@@ -6,7 +6,7 @@ import json
 from toposort import toposort
 
 def create_run_map_function(bucket_name, run_group):
-    WORKINGDIR = os.getenv('bedrock_workingdir', '.')
+    WORKINGDIR = '/tmp'
     s3 = boto3.client('s3')
     downloaded_file = WORKINGDIR + '/all_assets.json'
     s3.download_file(bucket_name, 'run/all_assets.json', downloaded_file)
