@@ -4,7 +4,7 @@ do
   echo ""
   echo "Building in $directory..."
   cd "$directory" || continue
-  if [ -f "./requirements.txt" ]; then
+  if [ -f "./requirements.txt" ] && [ -f "./config.json" ] ; then
     echo "Removing old dependencies..."
     rm -Rf ./package
     echo "Installing dependencies..."
