@@ -1,6 +1,9 @@
 #!/bin/bash
 for directory in ./*/
 do
+  echo ""
+  echo "Building in $directory..."
+  cd "$directory" || continue
   if [ -f "./requirements.txt" ]; then
     echo "Removing old dependencies..."
     rm -Rf ./package
