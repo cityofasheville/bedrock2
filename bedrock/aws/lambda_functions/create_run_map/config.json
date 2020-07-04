@@ -1,6 +1,5 @@
 {
     "name": "create_run_map",
     "description": "Create a run map",
-    "role": "bedrock_user_role",
-    "runtime": "python3.8"
+    "role": "bedrock_user_role"
 }
