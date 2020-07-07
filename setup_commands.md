@@ -20,5 +20,8 @@ I'm working in powershell, so I set the bucket name via:
 ```
 $env:bedrock_bucketname = 'managed-data-assets-dev'
 
-
+```
+When I'm testing the bedrock persona, I also run
+```
+$env:AWS_DEFAULT_PROFILE = 'bedrock'
 ```
