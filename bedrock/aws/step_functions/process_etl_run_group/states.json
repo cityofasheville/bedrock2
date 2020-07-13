@@ -11,70 +11,66 @@
           "rungroup": "daily"
         },
         "ResultPath": "$",
-        "Next": "Hello World example?"
+        "Next": "Check200"
       },
-      "Hello World example?": {
-        "Comment": "A Choice state adds branching logic to a state machine. Choice rules can implement 16 different comparison operators, and can be combined using And, Or, and Not",
+      "Check200": {
+        "Comment": "Make sure there wasn't an error return",
         "Type": "Choice",
         "Choices": [
           {
             "Variable": "$.statusCode",
             "NumericEquals": 200,
-            "Next": "Yes"
+            "Next": "IsGo"
+          }
+        ],
+        "Default": "Failed",
+        "OutputPath": "$.body"
+      },
+      "IsGo": {
+        "Comment": "Make sure there wasn't an error return",
+        "Type": "Choice",
+        "Choices": [
+          {
+            "Variable": "$.go",
+            "BooleanEquals": true,
+            "Next": "ProcessSet"
           },
           {
             "Not": {
-              "Variable": "$.statusCode",
-              "NumericEquals": 200
+              "Variable": "$.go",
+              "BooleanEquals": true
             },
-            "Next": "No"
+            "Next": "Done"
           }
         ],
-        "Default": "Yes"
+        "Default": "Done"
       },
-      "Yes": {
-        "Type": "Pass",
-        "Next": "Wait 3 sec",
-        "OutputPath": "$.body"
+      "ProcessSet": {
+        "Type": "Map",
+        "MaxConcurrency": 10,
+        "InputPath": "$",
+        "ItemsPath": "$.next",
+        "Parameters": {
+          "ETLJobIndex.$": "$$.Map.Item.Index",
+          "ETLJob.$": "$$.Map.Item.Value"
+        },
+        "Iterator": {
+          "StartAt": "ProcessOneJob",
+          "States": {
+            "ProcessOneJob": {
+              "Type": "Pass",
+              "End": true
+            }
+          }
+        },
+        "Next": "Done"
       },
-      "No": {
+      "Failed": {
         "Type": "Fail",
         "Cause": "Not Hello World"
       },
-      "Wait 3 sec": {
-        "Comment": "A Wait state delays the state machine from continuing for a specified time.",
-        "Type": "Wait",
-        "Seconds": 3,
-        "Next": "Parallel State"
-      },
-      "Parallel State": {
-        "Comment": "A Parallel state can be used to create parallel branches of execution in your state machine.",
-        "Type": "Parallel",
-        "Next": "Hello World",
-        "Branches": [
-          {
-            "StartAt": "Hello",
-            "States": {
-              "Hello": {
-                "Type": "Pass",
-                "End": true
-              }
-            }
-          },
-          {
-            "StartAt": "World",
-            "States": {
-              "World": {
-                "Type": "Pass",
-                "End": true
-              }
-            }
-          }
-        ]
-      },
-      "Hello World": {
-        "Type": "Pass",
-        "End": true
+      "Done": {
+        "Type": "Succeed"
       }
     }
   }
