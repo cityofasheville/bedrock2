@@ -1,5 +1,5 @@
 {
-    "Comment": "A Hello World example demonstrating various state types of the Amazon States Language",
+    "Comment": "State machine to run a single ETL run group",
     "StartAt": "Init",
     "States": {
       "Init": {
@@ -18,13 +18,15 @@
         "Type": "Choice",
         "Choices": [
           {
-            "Variable": "$.IsHelloWorldExample",
-            "BooleanEquals": true,
+            "Variable": "$.statusCode",
+            "NumericEquals": 200,
             "Next": "Yes"
           },
           {
-            "Variable": "$.IsHelloWorldExample",
-            "BooleanEquals": false,
+            "Not": {
+              "Variable": "$.statusCode",
+              "NumericEquals": 200
+            },
             "Next": "No"
           }
         ],
@@ -32,7 +34,8 @@
       },
       "Yes": {
         "Type": "Pass",
-        "Next": "Wait 3 sec"
+        "Next": "Wait 3 sec",
+        "OutputPath": "$.body"
       },
       "No": {
         "Type": "Fail",

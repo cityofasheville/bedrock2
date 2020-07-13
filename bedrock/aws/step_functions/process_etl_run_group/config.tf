@@ -65,5 +65,5 @@ resource "aws_sfn_state_machine" "sfn_state_machine" {
   name     = "process_etl_run_group"
   role_arn = aws_iam_role.process_etl_run_group_role.arn
 
-  definition = file("./hello.json")
+  definition = file("./states.json")
 }
