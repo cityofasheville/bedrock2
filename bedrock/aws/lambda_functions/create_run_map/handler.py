@@ -24,6 +24,7 @@ def create_run_map_function(bucket_name, run_group):
         result['next'] = runsets.pop(0)
         result['remainder'] = runsets
         result['go'] = True
+        result['all_assets'] = all_assets
     return result    
 
 def convert_set_to_list(obj): # Function to convert sets to lists for JSON dump
