@@ -1,10 +1,16 @@
 {
     "Comment": "A Hello World example demonstrating various state types of the Amazon States Language",
-    "StartAt": "Pass",
+    "StartAt": "Init",
     "States": {
-      "Pass": {
-        "Comment": "A Pass state passes its input to its output, without performing work. Pass states are useful when constructing and debugging state machines.",
-        "Type": "Pass",
+      "Init": {
+        "Comment": "Create the run map to initialize the run.",
+        "Type": "Task",
+        "Resource": "arn:aws:lambda:us-east-1:382274149743:function:create_run_map",
+        "Parameters": {
+          "s3bucket": "managed-data-assets-dev",
+          "rungroup": "daily"
+        },
+        "ResultPath": "$",
         "Next": "Hello World example?"
       },
       "Hello World example?": {
