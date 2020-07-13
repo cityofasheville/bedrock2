@@ -19,12 +19,21 @@ def create_run_map_function(bucket_name, run_group):
             dependency_map[key] = {a for a in asset['depends']}
 
     runsets= list(toposort(dependency_map))
+    runs = []
+    while runsets: #process each runset
+        runset = runsets.pop()
+        items = []
+        while runset: # Process each job in the runset
+            item = runset.pop()
+            items.append(all_assets[item])
+        runs.append(items)
+
     result = {};
-    if len(runsets) > 0:
-        result['next'] = runsets.pop(0)
-        result['remainder'] = runsets
+    if len(runs) > 0:
+        result['next'] = runs.pop()
+        result['remainder'] = runs
         result['go'] = True
-        result['all_assets'] = all_assets
+#        result['all_assets'] = all_assets
     return result    
 
 def convert_set_to_list(obj): # Function to convert sets to lists for JSON dump
