@@ -47,23 +47,26 @@
       },
       "ProcessSet": {
         "Type": "Map",
-        "MaxConcurrency": 10,
+        "MaxConcurrency": 5,
         "InputPath": "$",
         "ItemsPath": "$.next",
         "Parameters": {
           "ETLJobIndex.$": "$$.Map.Item.Index",
-          "ETLJob.$": "$$.Map.Item.Value"
+          "ETLJob.$": "$$.Map.Item.Value",
+          "AssetsMap.$": "$.all_assets"
         },
         "Iterator": {
           "StartAt": "ProcessOneJob",
           "States": {
             "ProcessOneJob": {
               "Type": "Pass",
+              "OutputPath": "$.ETLJob",
               "End": true
             }
           }
         },
-        "Next": "Done"
+        "Next": "Done",
+        "ResultPath": "$.results"
       },
       "Failed": {
         "Type": "Fail",
