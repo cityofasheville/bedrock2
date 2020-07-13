@@ -33,7 +33,9 @@ def convert_set_to_list(obj): # Function to convert sets to lists for JSON dump
 
 def lambda_handler(event, context):
     result = create_run_map_function(event['s3bucket'], event['rungroup'])
+    result = json.loads(json.dumps(result, default=convert_set_to_list))
     return {
         'statusCode': 200,
-        'body': json.dumps(result, default=convert_set_to_list)
+        'body': result
+#        'body': json.dumps(result, default=convert_set_to_list)
     }
