@@ -3,7 +3,7 @@
     "StartAt": "Init",
     "States": {
       "Init": {
-        "Comment": "Create the run map to initialize the run.",
+        "Comment": "Initialize the run map.",
         "Type": "Task",
         "Resource": "arn:aws:lambda:us-east-1:382274149743:function:create_run_map",
         "Parameters": {
@@ -14,7 +14,7 @@
         "Next": "Check200"
       },
       "Check200": {
-        "Comment": "Make sure there wasn't an error return",
+        "Comment": "Make sure there wasn't an error return from the lambda",
         "Type": "Choice",
         "Choices": [
           {
@@ -27,25 +27,19 @@
         "OutputPath": "$.body"
       },
       "IsGo": {
-        "Comment": "Make sure there wasn't an error return",
+        "Comment": "Check whether there is more to do",
         "Type": "Choice",
         "Choices": [
           {
             "Variable": "$.go",
             "BooleanEquals": true,
-            "Next": "ProcessSet"
-          },
-          {
-            "Not": {
-              "Variable": "$.go",
-              "BooleanEquals": true
-            },
-            "Next": "Done"
+            "Next": "ProcessParallelSet"
           }
         ],
         "Default": "Done"
       },
-      "ProcessSet": {
+      "ProcessParallelSet": {
+        "Comment": "Process a set of independent assets in parallel",
         "Type": "Map",
         "MaxConcurrency": 10,
         "InputPath": "$",
@@ -55,11 +49,14 @@
           "ETLJob.$": "$$.Map.Item.Value"
         },
         "Iterator": {
-          "StartAt": "ProcessOneJob",
+          "StartAt": "ProcessOneAsset",
           "States": {
-            "ProcessOneJob": {
+            "ProcessOneAsset": {
+              "Comment": "Sequentially process the tasks associated with one asset",
               "Type": "Map",
               "MaxConcurrency": 1,
+              "ResultPath": "$.ETLJob.jobresults",
+              "End": true,
               "InputPath": "$",
               "ItemsPath": "$.ETLJob.etl_tasks",  
               "Parameters": {
@@ -71,14 +68,33 @@
                 "StartAt": "DoOneTask",
                 "States": {
                   "DoOneTask": {
+                    "Type": "Choice",
+                    "Choices": [
+                      {
+                        "Variable": "$.ETLTask.type",
+                        "StringEquals": "noop",
+                        "Next": "NoopTask"
+                      }
+                    ],
+                    "Default": "UnknownTask"
+                  },
+                  "NoopTask": {
+                    "Comment": "Actively do nothing.",
+                    "Type": "Task",
+                    "Resource": "arn:aws:lambda:us-east-1:382274149743:function:run_etl_lambda",
+                    "Parameters": {
+                      "task.$": "$.ETLTask"
+                    },
+                    "ResultPath": "$",
+                    "End": true
+                  },
+                  "UnknownTask": {
                     "Type": "Pass",
-                    "ResultPath": "$.out",
+                    "ResultPath": "$",
                     "End": true
                   }
                 }
-              },
-              "ResultPath": "$.jobresults",
-              "End": true
+              }
             }
           }
         },
