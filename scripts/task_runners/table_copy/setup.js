@@ -4,14 +4,14 @@ let etl = {
         type: "database",
         connection: "localss",
         schemaname: "dbo",
-        tablename: "testy",  
+        tablename: "testtable",  
 
     },
     target_location: {
         type: "database",
         connection: "localpgto",
         schemaname: "public",
-        tablename: "testy",
+        tablename: "testtable",
     }
 }
 
@@ -20,14 +20,14 @@ let etl = {
 //         type: "database",
 //         connection: "localpgto",
 //         schemaname: "public",
-//         tablename: "testy",
+//         tablename: "testtable",
 
 //     },
 //     target_location: {
 //         type: "database",
 //         connection: "localpgfrom",
 //         schemaname: "public",
-//         tablename: "testy",
+//         tablename: "testtable",
 //     }
 // }
 // let etl = {
