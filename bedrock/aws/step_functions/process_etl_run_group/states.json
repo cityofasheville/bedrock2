@@ -81,7 +81,7 @@
                   "NoopTask": {
                     "Comment": "Actively do nothing.",
                     "Type": "Task",
-                    "Resource": "arn:aws:lambda:us-east-1:382274149743:function:run_etl_lambda",
+                    "Resource": "arn:aws:lambda:us-east-1:382274149743:function:noop_task",
                     "Parameters": {
                       "task.$": "$.ETLTask"
                     },
