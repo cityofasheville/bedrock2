@@ -1,3 +1,6 @@
 package/
 function.zip
+**/.terraform/*
+*.tfstate.*
+
 

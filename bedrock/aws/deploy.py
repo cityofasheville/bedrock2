@@ -1,8 +1,11 @@
 import os
+import sys
 import json
 import urllib.parse
 import boto3
 
+PYTHON_RUNTIME = 'python3.8'
+JS_RUNTIME = 'nodejs12.x'
 def subdirs(path):
     for dir in os.listdir(path):
         if os.path.isdir(os.path.join(path, dir)):
@@ -21,30 +24,38 @@ def create_role(iam, path, rolename):
     except:
         print('Error creating role ' + rolename)
 
-def create_function(lmda, path, fct_name):
-    print('     Create ' + fct_name)
-    config_file = './lambda_functions/' + fct_name + '/' + fct_name + '_config.json'
-    zipfile = './lambda_functions/' + fct_name + '/function.zip'
-    with open(config_file, 'r') as file_content:
+def create_function(lmda, iam, dir):
+    runtime = PYTHON_RUNTIME
+    if (os.path.isfile(dir + 'package.json')):
+        runtime = JS_RUNTIME
+    with open(dir+'/config.json', 'r') as file_content:
         config = json.load(file_content)
-    with open(zipfile,'rb') as zip_content:
+    print('     Create ' + config['name'])
+    with open(dir+'/function.zip','rb') as zip_content:
         zip = zip_content.read()
     response = lmda.create_function(
         FunctionName=config['name'],
-        Runtime=config['runtime'],
-        Role=config['role'],
-        Handler=config['handler'],
+        Runtime=runtime,
+        Role=iam.get_role(RoleName=config['role'])['Role']['Arn'],
+        Handler='handler.lambda_handler',
         Publish=True,
-        Code={
-            'ZipFile':zip
-        },
-        Environment=config['environment']
+        Code={ 'ZipFile':zip }
     )
     print(response)
 
 
-def update_function(lmda, path, fct_name):
-    print('     Update ' + fct_name)
+def update_function(lmda, dir):
+    with open(dir+'/config.json', 'r') as file_content:
+        config = json.load(file_content)
+    print('     Update ' + config['name'])
+    with open(dir+'/function.zip','rb') as zip_content:
+        zip = zip_content.read()
+    response = lmda.update_function_code(
+        FunctionName=config['name'],
+        Publish=True,
+        ZipFile= zip
+    )
+    print(response)
 
 
 ###########################
@@ -66,9 +77,13 @@ print('Deploying lambdas')
 lmda = boto3.client('lambda')
 
 for dir in subdirs('./lambda_functions'):
-    if (os.path.exists('./lambda_functions/' + dir + '/' + dir + '_config.json')):
+    if (os.path.exists('./lambda_functions/' + dir + '/' + 'config.json')):
         try:
             lmda.get_function(FunctionName=dir)
-            update_function(lmda, './lambda_functions', dir)
+            try:
+                update_function(lmda, './lambda_functions/' + dir)
+            except:
+                print('Error updating function code for ' + dir)
+                print(sys.exc_info()[0])
         except:
-            create_function(lmda, './lambda_functions', dir)
+            create_function(lmda, iam, './lambda_functions/' + dir)
