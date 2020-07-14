@@ -3,6 +3,6 @@ cd ./lambda_functions
 cd ..
 
 cd ./step_functions
-./deploy_stepfunctions.sh
+./deploy-stepfunctions.sh
 cd ..
 
