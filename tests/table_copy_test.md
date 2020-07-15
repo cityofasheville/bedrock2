@@ -2,13 +2,9 @@
 
 Prerequisites: Node and Docker
 
+    cd tests/setup_docker
+    ./setup.sh
 
-
-`
-cd tests/setup_docker
-
-./setup.sh
-`
 Creates three Docker db's: SS1, PG1, and PG2. (Two Postgres and one SQL Server. PG2 is on port 5430.) They all have the table "testtable". SS has rows of data. Note: The SS takes a few minutes to create after script runs.
 
 `
