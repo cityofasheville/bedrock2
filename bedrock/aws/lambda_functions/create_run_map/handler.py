@@ -28,11 +28,14 @@ def create_run_map_function(bucket_name, run_group):
             items.append(all_assets[item])
         runs.append(items)
 
-    result = {};
+    result = {}
     if len(runs) > 0:
         result['next'] = runs.pop()
         result['remainder'] = runs
         result['go'] = True
+        result['success'] = []
+        result['skipped'] = []
+        result['failure'] = []
 #        result['all_assets'] = all_assets
     return result    
 
