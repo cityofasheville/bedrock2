@@ -1,6 +1,6 @@
-const fs = require("fs")
+
 const table_copy = require('../scripts/task_runners/table_copy/index')
-const db_defs = JSON.parse(fs.readFileSync('./test_connections.json'))
+const db_defs = require('./test_connections')
 
 async function run(){
 
