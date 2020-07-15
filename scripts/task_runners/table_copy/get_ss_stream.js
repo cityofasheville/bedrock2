@@ -8,6 +8,7 @@ function get_ss_stream(location) {
             let sql_string = `SELECT * FROM ${tablename}`
             const config = {
                 server: location.host,
+                port: location.port,
                 user: location.username,
                 password: location.password,
                 database: location.database,
