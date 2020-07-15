@@ -4,14 +4,16 @@ const csv = require('csv');
 function get_ss_stream(location) { 
     return new Promise(async (resolve, reject) => {
         if(location.fromto == 'from') {
-            let tablename = `${location.table.schemaname}.${location.table.tablename}`
+            let tablename = `${location.schemaname}.${location.tablename}`
+            let db_def = location.db_def
+
             let sql_string = `SELECT * FROM ${tablename}`
             const config = {
-                server: location.host,
-                port: location.port,
-                user: location.username,
-                password: location.password,
-                database: location.database,
+                server: db_def.host,
+                port: db_def.port,
+                user: db_def.username,
+                password: db_def.password,
+                database: db_def.database,
                 options: { enableArithAbort: true },
                 pool: {
                     max: 10,

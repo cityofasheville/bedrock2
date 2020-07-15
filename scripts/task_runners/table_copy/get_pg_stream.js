@@ -4,14 +4,15 @@ const copyFrom = require('pg-copy-streams').from // pipe to a table _FROM_ strea
 
 function get_pg_stream(location) {
     return new Promise((resolve, reject) => {
-        let tablename = `${location.table.schemaname}.${location.table.tablename}`
+        let tablename = `${location.schemaname}.${location.tablename}`
+        let db_def = location.db_def
 
         let pool = new Pool({
-            host: location.host,
-            port: location.port,
-            user: location.username,
-            password: location.password,
-            database: location.database,
+            host: db_def.host,
+            port: db_def.port,
+            user: db_def.username,
+            password: db_def.password,
+            database: db_def.database,
             max: 10,
             idleTimeoutMillis: 10000,
         });
