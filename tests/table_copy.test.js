@@ -3,8 +3,8 @@ const table_copy = require('../scripts/task_runners/table_copy/index')
 const db_defs = require('./test_connections')
 
 async function run(){
-
-    await table_copy(db_defs,{
+    let etl
+    etl = {
         source_location: {
             type: "database",
             connection: "localss1",
@@ -18,10 +18,12 @@ async function run(){
             schemaname: "public",
             tablename: "testtable",
         }
-    })
+    }
+
+    await table_copy(db_defs,etl)
 
 
-    await table_copy(db_defs,{
+    etl = {
         source_location: {
             type: "database",
             connection: "localpg1",
@@ -35,6 +37,8 @@ async function run(){
             schemaname: "public",
             tablename: "testtable",
         }
-    })
+    }
+
+    await table_copy(db_defs,etl)
 }
 run()
