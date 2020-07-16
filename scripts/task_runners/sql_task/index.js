@@ -1,23 +1,19 @@
-// Not working yet
-async function sql_task(db_defs,etl){
-    let location = db_defs[etl.location.connection]
-    location.table = etl.source_location
+const pg_sql = require('./pg_sql');
+const ss_sql = require('./ss_sql');
+
+async function sql_task(db_defs,sql,etl){
+    let result
+    let location = etl.location
+    let db_def = db_defs[location.connection]
 
     console.log(location)
     
-    let from_stream, to_stream
     if(location.type == 'postgresql') {
-        from_stream = await get_pg_stream(location)
+        result = await pg_sql(db_def,sql)
     }else if(location.type == 'sqlserver') {
-        from_stream = await get_ss_stream(location)
+        result = await ss_sql(db_def,sql)
     }
-    if(toloc.type == 'postgresql') {
-        to_stream = await get_pg_stream(toloc)
-    }else if(toloc.type == 'sqlserver') {
-        to_stream = await get_ss_stream(toloc) // not implemented
-    }
-    from_stream.pipe(process.stdout)
-    from_stream.pipe(to_stream)
+    return result
 }
 
 module.exports = sql_task
