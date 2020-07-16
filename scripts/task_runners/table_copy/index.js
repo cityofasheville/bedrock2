@@ -16,14 +16,6 @@ async function table_copy(db_defs,etl){
         }
         toloc.fromto = 'to'
 
-        // let fromloc = db_defs[etl.source_location.connection]
-        // fromloc.table = etl.source_location
-        // fromloc.fromto = 'from'
-
-        // let toloc = db_defs[etl.target_location.connection]
-        // toloc.table = etl.target_location
-        // toloc.fromto = 'to'
-
         console.log(etl)
         console.log(fromloc)
         console.log(toloc)
@@ -41,7 +33,8 @@ async function table_copy(db_defs,etl){
         }
         pipeline(
         from_stream,
-        to_stream,()=>{
+        to_stream,(err)=>{
+            if(err){ reject() }
             resolve()
         })
     })
