@@ -1,0 +1,127 @@
+{
+    "Comment": "State machine to run a single ETL run group",
+    "StartAt": "Init",
+    "States": {
+      "Init": {
+        "Comment": "Initialize the run map.",
+        "Type": "Task",
+        "Resource": "arn:aws:lambda:us-east-1:382274149743:function:create_run_map",
+        "Parameters": {
+          "s3bucket": "managed-data-assets-dev",
+          "rungroup": "daily"
+        },
+        "ResultPath": "$",
+        "Next": "Check200"
+      },
+      "Check200": {
+        "Comment": "Make sure there wasn't an error return from the lambda",
+        "Type": "Choice",
+        "Choices": [
+          {
+            "Variable": "$.statusCode",
+            "NumericEquals": 200,
+            "Next": "IsGo"
+          }
+        ],
+        "Default": "Failed",
+        "OutputPath": "$.body"
+      },
+      "IsGo": {
+        "Comment": "Check whether there is more to do",
+        "Type": "Choice",
+        "Choices": [
+          {
+            "Variable": "$.go",
+            "BooleanEquals": true,
+            "Next": "ProcessParallelSet"
+          }
+        ],
+        "Default": "Done"
+      },
+      "ProcessParallelSet": {
+        "Comment": "Process a set of independent assets in parallel",
+        "Type": "Map",
+        "MaxConcurrency": 10,
+        "InputPath": "$",
+        "ItemsPath": "$.next",
+        "Parameters": {
+          "ETLJobIndex.$": "$$.Map.Item.Index",
+          "ETLJob.$": "$$.Map.Item.Value"
+        },
+        "Iterator": {
+          "StartAt": "ProcessOneAsset",
+          "States": {
+            "ProcessOneAsset": {
+              "Comment": "Sequentially process the tasks associated with one asset",
+              "Type": "Map",
+              "MaxConcurrency": 1,
+              "ResultPath": "$.ETLJob.jobresults",
+              "End": true,
+              "InputPath": "$",
+              "ItemsPath": "$.ETLJob.etl_tasks",  
+              "Parameters": {
+                "ETLTaskIndex.$": "$$.Map.Item.Index",
+                "ETLTask.$": "$$.Map.Item.Value",
+                "Job.$": "$.ETLJob",
+                "JobIndex.$": "$.ETLJobIndex"
+              },
+              "OutputPath": "$",
+              "Iterator": {
+                "StartAt": "DoOneTask",
+                "States": {
+                  "DoOneTask": {
+                    "Type": "Choice",
+                    "Choices": [
+                      {
+                        "Variable": "$.ETLTask.type",
+                        "StringEquals": "noop",
+                        "Next": "NoopTask"
+                      }
+                    ],
+                    "Default": "UnknownTask"
+                  },
+                  "NoopTask": {
+                    "Comment": "Actively do nothing.",
+                    "Type": "Task",
+                    "Resource": "arn:aws:lambda:us-east-1:382274149743:function:noop_task",
+                    "Parameters": {
+                      "task.$": "$.ETLTask",
+                      "job_index.$": "$.ETLTaskIndex",
+                      "index.$": "$.JobIndex"
+                    },
+                    "ResultPath": "$",
+                    "End": true
+                  },
+                  "UnknownTask": {
+                    "Type": "Pass",
+                    "ResultPath": "$",
+                    "End": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "Next": "UpdateRunMap",
+        "ResultPath": "$.results"
+      },
+      "UpdateRunMap": {
+        "Comment": "Update the run map.",
+        "Type": "Task",
+        "Resource": "arn:aws:lambda:us-east-1:382274149743:function:update_run_map",
+        "Parameters": {
+          "state.$": "$"
+        },
+        "ResultPath": "$",
+        "Next": "Check200"
+      },
+      "Failed": {
+        "Type": "Fail",
+        "Cause": "Not Hello World"
+      },
+      "Done": {
+        "Type": "Succeed"
+      }
+    }
+  }
+  

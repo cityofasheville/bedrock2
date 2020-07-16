@@ -18,7 +18,26 @@ def create_run_map_function(bucket_name, run_group):
         if (asset['run_group'] == run_group):
             dependency_map[key] = {a for a in asset['depends']}
 
-    return list(toposort(dependency_map))
+    runsets= list(toposort(dependency_map))
+    runs = []
+    while runsets: #process each runset
+        runset = runsets.pop()
+        items = []
+        while runset: # Process each job in the runset
+            item = runset.pop()
+            items.append(all_assets[item])
+        runs.append(items)
+
+    result = {}
+    if len(runs) > 0:
+        result['next'] = runs.pop()
+        result['remainder'] = runs
+        result['go'] = True
+        result['success'] = []
+        result['skipped'] = []
+        result['failure'] = []
+#        result['all_assets'] = all_assets
+    return result    
 
 def convert_set_to_list(obj): # Function to convert sets to lists for JSON dump
     if isinstance(obj, set):
@@ -29,5 +48,5 @@ def lambda_handler(event, context):
     result = create_run_map_function(event['s3bucket'], event['rungroup'])
     return {
         'statusCode': 200,
-        'body': json.dumps(result, default=convert_set_to_list)
+        'body': json.loads(json.dumps(result, default=convert_set_to_list))
     }
