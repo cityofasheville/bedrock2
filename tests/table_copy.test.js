@@ -1,5 +1,5 @@
 
-const table_copy = require('../scripts/task_runners/table_copy/index')
+const table_copy = require('../scripts/table_copy/index')
 const db_defs = require('./test_connections')
 
 async function run(){

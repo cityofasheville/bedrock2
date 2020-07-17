@@ -1,5 +1,5 @@
 
-const sql_task = require('../scripts/task_runners/sql_task/index')
+const sql_task = require('../scripts/sql_task/index')
 const db_defs = require('./test_connections')
 
 async function run(){
