@@ -1,7 +1,7 @@
 terraform {
   backend "s3" {
-    bucket = "dev-coa-terraform-repository"
-    key    = "bedrock/step_functions/process_etl_run_group/terraform.tfstate"
+    bucket = "cad-tfstate-store"
+    key    = "terraform/bedrock/step_functions/process_etl_run_group/terraform_dev.tfstate"
     region = "us-east-1"
   }
 }
