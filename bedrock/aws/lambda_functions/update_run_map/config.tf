@@ -6,6 +6,16 @@ terraform {
   }
 }
 
+variable "region" {
+  type          = string
+  description   = "Region in which to create resources"
+}
+
+variable "stepfunction_role" {
+  type          = string
+  description   = "Role to use for the state machine"
+}
+
 provider "aws" {
   profile	= "default"
   region	= "us-east-1"
@@ -14,7 +24,7 @@ provider "aws" {
 resource "aws_lambda_function" "update_run_map" {
     filename        = "function.zip"
     function_name   = "update_run_map"
-    role            = "arn:aws:iam::382274149743:role/bedrock-lambda-role"
+    role            = var.lambda_role
     handler         = "handler.lambda_handler"
     runtime         = "python3.8"
     source_code_hash = filebase64sha256("function.zip")

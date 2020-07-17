@@ -17,7 +17,7 @@ do
       cd ..
       zip -g function.zip ./*.py
     else
-      echo "Packaging pythong files as zip..."
+      echo "Packaging python files as zip..."
       zip -r9 ./function.zip ./*.py
     fi
   fi
