@@ -11,14 +11,14 @@ variable "region" {
   description   = "Region in which to create resources"
 }
 
-variable "stepfunction_role" {
+variable "lambda_role" {
   type          = string
-  description   = "Role to use for the state machine"
+  description   = "Role to use for the lambda function"
 }
 
 provider "aws" {
   profile	= "default"
-  region	= "us-east-1"
+  region	= var.region
 }
 
 resource "aws_lambda_function" "update_run_map" {

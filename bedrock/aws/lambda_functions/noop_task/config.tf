@@ -5,15 +5,26 @@ terraform {
     region = "us-east-1"
   }
 }
+
+variable "region" {
+  type          = string
+  description   = "Region in which to create resources"
+}
+
+variable "lambda_role" {
+  type          = string
+  description   = "Role to use for the lambda function"
+}
+
 provider "aws" {
   profile	= "default"
-  region	= "us-east-1"
+  region	= var.region
 }
 
 resource "aws_lambda_function" "noop_task" {
     filename        = "function.zip"
     function_name   = "noop_task"
-    role            = "arn:aws:iam::382274149743:role/bedrock-lambda-role"
+    role            = var.lambda_role
     handler         = "handler.lambda_handler"
     runtime         = "python3.8"
     source_code_hash = filebase64sha256("function.zip")
