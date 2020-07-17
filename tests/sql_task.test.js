@@ -6,11 +6,10 @@ async function run(){
     let etl, sql, result
 
     etl = {
-        location: {
-            type: 'sqlserver',
-            connection: "localss1",
-            sql_file: "insertdata.sql"
-        }
+        type: 'sql',
+        file: "insertdata.sql",
+        db: "localss1",
+        active: "true"
     }
     sql = "insert into testtable(a,b,c,d) values (33.3,'NEW data',GETDATE(),GETDATE())"
 
@@ -18,11 +17,10 @@ async function run(){
     console.log(result)
 
     etl = {
-        location: {
-            type: 'postgresql',
-            connection: "localpg1",
-            sql_file: "insertdata.sql"
-        }
+        type: 'sql',
+        file: "insertdata.sql",
+        db: "localpg1",
+        active: "true"
     }
     sql = "insert into testtable(a,b,c,d) values (33.3,'NEW data',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP)"
 

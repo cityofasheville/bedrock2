@@ -3,14 +3,13 @@ const ss_sql = require('./ss_sql');
 
 async function sql_task(db_defs,sql,etl){
     let result
-    let location = etl.location
-    let db_def = db_defs[location.connection]
+    let db_def = db_defs[etl.db]
 
-    console.log(location)
+    console.log(etl)
     
-    if(location.type == 'postgresql') {
+    if(db_def.type == 'postgresql') {
         result = await pg_sql(db_def,sql)
-    }else if(location.type == 'sqlserver') {
+    }else if(db_def.type == 'sqlserver') {
         result = await ss_sql(db_def,sql)
     }
     return result

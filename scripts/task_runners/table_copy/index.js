@@ -6,13 +6,13 @@ async function table_copy(db_defs,etl){
     return new Promise(async (resolve, reject) => {
         let fromloc = etl.source_location
         if (fromloc.type = 'database') {
-            fromloc.db_def = db_defs[fromloc.connection]
+            fromloc.db_def = db_defs[fromloc.db]
         }
         fromloc.fromto = 'from'
 
         let toloc = etl.target_location
         if (toloc.type = 'database') {
-            toloc.db_def = db_defs[toloc.connection]
+            toloc.db_def = db_defs[toloc.db]
         }
         toloc.fromto = 'to'
 
