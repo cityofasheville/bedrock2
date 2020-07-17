@@ -1,4 +1,4 @@
-#Setup Commands
+# Setup Commands
 
 EJ 6/14/2020 - These are the commands I ran to set up for development.
 
@@ -13,7 +13,8 @@ pip install cement==3.0.2
 pip install toposort
 conda env export --name conda-env > conda-env.yml
 
-python .\setup.py develop
+python ./setup.py develop  
+
 ```
 I'm working in powershell, so I set the bucket name via:
 

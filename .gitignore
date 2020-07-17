@@ -2,7 +2,11 @@
 .vscode/
 conda-env/
 tmp.json
-
+*.json
+package
+function.zip
+data/
+bedrock_connections.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -109,3 +113,4 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+node_modules

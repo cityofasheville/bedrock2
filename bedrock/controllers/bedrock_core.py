@@ -15,7 +15,7 @@ class BedrockCore(Controller):
         arguments=[
             ### preprocess assets command help
             ( [ '-o', '--output' ],
-              { 'help' : 'output mode (s3 or stdout)' } ),
+              { 'help' : 'output mode: s3 (default) or stdout' } ),
         ],
     )
     def preprocess(self):
