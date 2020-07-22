@@ -1,9 +1,11 @@
 const pg_sql = require('./pg_sql');
 const ss_sql = require('./ss_sql');
+const get_db_defs= require('./get_db_defs');
 
-async function sql_task(db_defs,sql,etl){
-    let result
+async function sql_task(sql,etl){
+    let db_defs = await get_db_defs()
     let db_def = db_defs[etl.db]
+    let result
 
     console.log(etl)
     

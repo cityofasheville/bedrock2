@@ -9,7 +9,7 @@ Creates three Docker db's: SS1, PG1, and PG2. (Two Postgres and one SQL Server. 
 
     cd ../../scripts/table_copy
     npm install
-    cd ../../../tests
+    cd tests
     node table_copy.test.js
 
 Runs two copy tasks: SS1 to PG1 and PG1 to PG2.

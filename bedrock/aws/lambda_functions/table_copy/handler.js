@@ -1,10 +1,12 @@
-const get_pg_stream = require('./get_pg_stream');
-const get_ss_stream = require('./get_ss_stream');
-const get_db_defs= require('./get_db_defs');
+const get_pg_stream = require('./get_pg_stream')
+const get_ss_stream = require('./get_ss_stream')
+const get_db_defs= require('./get_db_defs')
 const { pipeline } = require('stream')
 
-async function table_copy(etl){
+exports.lambda_handler = async (event) => {    
+    
     return new Promise(async (resolve, reject) => {
+        let etl = event.ETLJob.etl_tasks[0]  // ?
         let db_defs = await get_db_defs()
         let fromloc = etl.source_location
         if (fromloc.type = 'database') {
@@ -41,5 +43,3 @@ async function table_copy(etl){
         })
     })
 }
-
-module.exports = table_copy
