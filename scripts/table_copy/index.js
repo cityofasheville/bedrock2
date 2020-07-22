@@ -1,9 +1,11 @@
 const get_pg_stream = require('./get_pg_stream');
 const get_ss_stream = require('./get_ss_stream');
+const get_db_defs= require('./get_db_defs');
 const { pipeline } = require('stream')
 
-async function table_copy(db_defs,etl){
+async function table_copy(etl){
     return new Promise(async (resolve, reject) => {
+        let db_defs = get_db_defs
         let fromloc = etl.source_location
         if (fromloc.type = 'database') {
             fromloc.db_def = db_defs[fromloc.db]
