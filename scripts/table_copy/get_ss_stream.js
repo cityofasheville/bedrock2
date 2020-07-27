@@ -42,7 +42,7 @@ function get_ss_stream(location) {
                 stream.on('finish', () => {
                     pool.close();
                 })
-                console.log("copy from SQL Server: ", location.db)
+                console.log("copy from SQL Server: ", location.db, tablename)
                 resolve( stream )
             } catch (err) {
                 reject(err)

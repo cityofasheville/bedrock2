@@ -47,7 +47,7 @@ function get_pg_stream(location) {
                 stream = client.query(copyTo(query_string))
                 stream.on('end', done)
                 stream.on('error', err_func)
-                console.log("Copy from Postgres: ", location.db)
+                console.log("Copy from Postgres: ", location.db, tablename) 
             }else if(location.fromto == 'to'){
                 // create temp table
                 let createtemp_string = `SELECT * INTO TEMP ${temp_tablename} FROM ${tablename} WHERE 1=2;`;
@@ -57,7 +57,7 @@ function get_pg_stream(location) {
                 stream = client.query(copyFrom(query_string))
                 stream.on('error', err_func)
                 stream.on('finish', copy_from_temp)  
-                console.log("Copy to Postgres: ", location.db)
+                console.log("Copy to Postgres: ", location.db, tablename)
             }
 
             resolve( stream )
