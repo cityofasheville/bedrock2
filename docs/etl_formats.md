@@ -39,6 +39,29 @@ Multiple tasks can be in each file
     ]
 }
 
+## Table Copy (type CSV)
+
+{
+    "run_group": "daily",
+    "tasks": [
+        {
+            type: "table_copy",
+            source_location: {
+                type: "csv",
+                winshare: "//coa-file-share/"
+                filepath: "/tmp/data.csv",
+                skiprows: "2"
+            },
+            target_location: {
+                type: "csv",
+                s3: "bedrock-files"
+                filepath: "/tmp/data.csv",
+            },
+            active: true
+        }
+    ]
+}
+
 ## No-op
 
 {

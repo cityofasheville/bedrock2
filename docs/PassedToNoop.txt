@@ -1,0 +1,23 @@
+Passed to noop:
+
+{
+    "JobIndex": 0,
+    "JobGo": true,
+    "ETLJob": {
+        "name": "bc_civicaddress_table.ms1",
+        "depends": [],
+        "path": "store/assets/bc_civicaddress_table.ms1/bc_civicaddress_table.ms1.json",
+        "run_group": "daily",
+        "etl_tasks": [
+            {
+                "type": "noop",
+                "file": "",
+                "db": null,
+                "active": true
+            }
+        ]
+    },
+    "ETLJobIndex": 0,
+    "TaskIndex": 0,
+    "JobType": "noop"
+}
