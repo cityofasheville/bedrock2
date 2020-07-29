@@ -6,10 +6,10 @@ import json
 
 def lambda_handler(event, context):
     print(json.dumps(event))
-    task = event['task']
+    task = event
     return {
         'statusCode': 404,
         'body': {
-            "lambda_output": "No such task type " + task['type'] + " defined."
+            "lambda_output": "No such task type " + task['JobType'] + " defined."
         }
     }

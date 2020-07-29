@@ -19,7 +19,7 @@ def update_run_map(state):
         name = result['name']
         print ('Run ' + str(i) + ' ' + name)
         for j in range(len(result['etl_tasks'])):
-            task_result = result['jobresults'][j]
+            task_result = result['etl_tasks'][j]['result']
             if 'statusCode' not in task_result or task_result['statusCode'] != 200:
                 print('   Task ' + str(j) + ' of job ' + name + ' failed')
                 newstate['failure'].append({

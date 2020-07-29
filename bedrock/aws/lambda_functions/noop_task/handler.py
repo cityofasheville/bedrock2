@@ -7,10 +7,10 @@ import json
 def lambda_handler(event, context):
     print('I am in the run_etl lambda handler')
     print(json.dumps(event))
-    task = event['task']
+    task = event
     return {
         'statusCode': 200,
         'body': {
-            "lambda_output": "This is a test of " + task['type']
+            "lambda_output": "This is a test of " + task['JobType']
         }
     }
