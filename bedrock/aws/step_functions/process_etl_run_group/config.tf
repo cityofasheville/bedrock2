@@ -34,3 +34,10 @@ resource "aws_sfn_state_machine" "sfn_state_machine_dev" {
 
   definition = file("./states_dev.json")
 }
+
+resource "aws_sfn_state_machine" "sfn_state_machine_jon" {
+  name     = "process_etl_run_group_jon"
+  role_arn = var.stepfunction_role
+
+  definition = file("./states_jon.json")
+}
