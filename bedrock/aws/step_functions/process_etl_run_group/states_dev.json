@@ -27,7 +27,7 @@
       "OutputPath": "$.body"
     },
     "IsGo": {
-      "Comment": "Check whether there is more to do",
+      "Comment": "Check whether there are more parallel sets to do",
       "Type": "Choice",
       "Choices": [
         {
@@ -58,7 +58,7 @@
     "ProcessParallelSet": {
       "Comment": "Process a set of independent assets in parallel",
       "Type": "Map",
-      "MaxConcurrency": 2,
+      "MaxConcurrency": 1,
       "InputPath": "$",
       "ItemsPath": "$.next",
       "Parameters": {
@@ -114,12 +114,7 @@
             "Comment": "Unknown task type.",
             "Type": "Task",
             "Resource": "arn:aws:lambda:us-east-1:382274149743:function:unknown_task",
-            "Parameters": {
-              "task.$": "$.ETLTask",
-              "job_index.$": "$.ETLTaskIndex",
-              "index.$": "$.JobIndex"
-            },
-            "ResultPath": "$",
+            "ResultPath": "$.TaskOutput",
             "Next": "CheckTaskStatus"
           },
           "CheckTaskStatus": {
@@ -130,6 +125,7 @@
               "input.$": "$"
             },
             "ResultPath": "$",
+            "OutputPath": "$.body",
             "Next": "ProcessOneAsset"
           }, 
           "TasksDone": {
