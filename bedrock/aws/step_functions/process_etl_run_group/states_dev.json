@@ -5,7 +5,7 @@
     "Init": {
       "Comment": "Initialize the run map.",
       "Type": "Task",
-      "Resource": "arn:aws:lambda:us-east-1:382274149743:function:create_run_map",
+      "Resource": "${create_etl_run_map_arn}",
       "Parameters": {
         "s3bucket": "managed-data-assets-dev",
         "rungroup": "daily"
@@ -41,7 +41,7 @@
     "UpdateRunMap": {
       "Comment": "Update the run map.",
       "Type": "Task",
-      "Resource": "arn:aws:lambda:us-east-1:382274149743:function:update_run_map",
+      "Resource": "${update_etl_run_map_arn}",
       "Parameters": {
         "state.$": "$"
       },
@@ -87,7 +87,7 @@
           "SetupTask": {
             "Comment": "Set up the next task.",
             "Type": "Task",
-            "Resource": "arn:aws:lambda:us-east-1:382274149743:function:setup_task",
+            "Resource": "${setup_task_arn}",
             "ResultPath": "$",
             "OutputPath": "$.result",
             "Next": "DoOneTask"
@@ -106,21 +106,21 @@
           "NoopTask": {
             "Comment": "Actively do nothing.",
             "Type": "Task",
-            "Resource": "arn:aws:lambda:us-east-1:382274149743:function:noop_task",
+            "Resource": "${etl_task_noop_arn}",
             "ResultPath": "$.TaskOutput",
             "Next": "CheckTaskStatus"
           },
           "UnknownTask": {
             "Comment": "Unknown task type.",
             "Type": "Task",
-            "Resource": "arn:aws:lambda:us-east-1:382274149743:function:unknown_task",
+            "Resource": "${etl_task_unknown_arn}",
             "ResultPath": "$.TaskOutput",
             "Next": "CheckTaskStatus"
           },
           "CheckTaskStatus": {
             "Comment": "Check the status of the last task.",
             "Type": "Task",
-            "Resource": "arn:aws:lambda:us-east-1:382274149743:function:check_task_status",
+            "Resource": "${check_task_status_arn}",
             "Parameters": {
               "input.$": "$"
             },
