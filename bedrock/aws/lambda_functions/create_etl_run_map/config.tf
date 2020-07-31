@@ -29,3 +29,7 @@ resource "aws_lambda_function" "create_etl_run_map" {
     runtime         = "python3.8"
     source_code_hash = filebase64sha256("function.zip")
 }
+
+output "create_etl_run_map_arn" {
+  value = "${aws_lambda_function.create_etl_run_map.arn}"
+}
