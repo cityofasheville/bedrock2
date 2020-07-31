@@ -87,7 +87,7 @@
           "SetupTask": {
             "Comment": "Set up the next task.",
             "Type": "Task",
-            "Resource": "${setup_task_arn}",
+            "Resource": "${setup_etl_job_task_arn}",
             "ResultPath": "$",
             "OutputPath": "$.result",
             "Next": "DoOneTask"
@@ -120,7 +120,7 @@
           "CheckTaskStatus": {
             "Comment": "Check the status of the last task.",
             "Type": "Task",
-            "Resource": "${check_task_status_arn}",
+            "Resource": "${check_etl_job_task_status_arn}",
             "Parameters": {
               "input.$": "$"
             },

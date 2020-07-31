@@ -6,6 +6,11 @@ terraform {
   }
 }
 
+variable "region" {
+  type          = string
+  description   = "Region in which to create resources"
+}
+
 provider "aws" {
   profile	= "default"
   region = var.region
@@ -13,21 +18,21 @@ provider "aws" {
 
 resource "aws_sfn_state_machine" "sfn_state_machine" {
   name     = "process_etl_run_group"
-  role_arn = var.stepfunction_role
+  role_arn = data.terraform_remote_state.stepfunction_role.outputs.bedrock_stepfunction_role_arn
 
   definition = file("./states.json")
 }
 
 resource "aws_sfn_state_machine" "sfn_state_machine_dev" {
   name     = "process_etl_run_group_dev"
-  role_arn = var.stepfunction_role
+  role_arn = data.terraform_remote_state.stepfunction_role.outputs.bedrock_stepfunction_role_arn
 
   definition = templatefile("./states_dev.json", {
-    create_etl_run_map_arn: var.create_etl_run_map_arn,
-    update_etl_run_map_arn: var.update_etl_run_map_arn,
-    setup_task_arn:         var.setup_task_arn,  
-    etl_task_noop_arn:      var.etl_task_noop_arn,
-    etl_task_unknown_arn:   var.etl_task_unknown_arn,
-    check_task_status_arn:  var.check_task_status_arn
+    create_etl_run_map_arn: data.terraform_remote_state.create_etl_run_map_lambda.outputs.create_etl_run_map_arn,
+    update_etl_run_map_arn: data.terraform_remote_state.update_etl_run_map_lambda.outputs.update_etl_run_map_arn,
+    setup_etl_job_task_arn:         data.terraform_remote_state.setup_etl_job_task_lambda.outputs.setup_etl_job_task_arn,  
+    etl_task_noop_arn:      data.terraform_remote_state.etl_task_noop_lambda.outputs.etl_task_noop_arn,
+    etl_task_unknown_arn:   data.terraform_remote_state.etl_task_unknown_lambda.outputs.etl_task_unknown_arn,
+    check_etl_job_task_status_arn:  data.terraform_remote_state.check_etl_job_task_status_lambda.outputs.check_etl_job_task_status_arn
     })
 }
