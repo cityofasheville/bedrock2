@@ -11,11 +11,6 @@ variable "region" {
   description   = "Region in which to create resources"
 }
 
-variable "lambda_role" {
-  type          = string
-  description   = "Role to use for the lambda function"
-}
-
 provider "aws" {
   profile	= "default"
   region	= var.region
@@ -24,7 +19,7 @@ provider "aws" {
 resource "aws_lambda_function" "update_etl_run_map" {
     filename        = "function.zip"
     function_name   = "update_etl_run_map"
-    role            = var.lambda_role
+    role            = data.terraform_remote_state.lambda_role.outputs.bedrock_lambda_role_arn
     handler         = "handler.lambda_handler"
     runtime         = "python3.8"
     source_code_hash = filebase64sha256("function.zip")
