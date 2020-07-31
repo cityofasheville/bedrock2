@@ -1,7 +1,7 @@
 terraform {
   backend "s3" {
     bucket = "cad-tfstate-store"
-    key    = "terraform/bedrock/lambda_functions/update_etl_run_map/terraform_dev.tfstate"
+    key    = "terraform/bedrock/lambda_functions/check_etl_job_task_status/terraform_dev.tfstate"
     region = "us-east-1"
   }
 }
@@ -21,15 +21,15 @@ provider "aws" {
   region	= var.region
 }
 
-resource "aws_lambda_function" "update_etl_run_map" {
+resource "aws_lambda_function" "check_etl_job_task_status" {
     filename        = "function.zip"
-    function_name   = "update_etl_run_map"
+    function_name   = "check_etl_job_task_status"
     role            = var.lambda_role
     handler         = "handler.lambda_handler"
     runtime         = "python3.8"
     source_code_hash = filebase64sha256("function.zip")
 }
 
-output "update_etl_run_map_arn" {
-  value = "${aws_lambda_function.update_etl_run_map.arn}"
+output "check_etl_job_task_status_arn" {
+  value = "${aws_lambda_function.check_etl_job_task_status.arn}"
 }
