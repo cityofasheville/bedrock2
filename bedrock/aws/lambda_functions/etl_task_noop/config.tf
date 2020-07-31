@@ -29,3 +29,7 @@ resource "aws_lambda_function" "etl_task_noop" {
     runtime         = "python3.8"
     source_code_hash = filebase64sha256("function.zip")
 }
+
+output "etl_task_noop_arn" {
+  value = "${aws_lambda_function.etl_task_noop.arn}"
+}
