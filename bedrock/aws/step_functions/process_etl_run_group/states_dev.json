@@ -14,26 +14,26 @@
       "Next": "Check200"
     },
     "Check200": {
-      "Comment": "Make sure there wasn't an error return from the lambda",
+      "Comment": "Make sure there wasn't an error return from create/update_etl_run_map",
       "Type": "Choice",
       "Choices": [
         {
           "Variable": "$.statusCode",
           "NumericEquals": 200,
-          "Next": "IsGo"
+          "Next": "RunsetIsGo"
         }
       ],
       "Default": "Failed",
       "OutputPath": "$.body"
     },
-    "IsGo": {
+    "RunsetIsGo": {
       "Comment": "Check whether there are more parallel sets to do",
       "Type": "Choice",
       "Choices": [
         {
-          "Variable": "$.go",
+          "Variable": "$.RunSetIsGo",
           "BooleanEquals": true,
-          "Next": "ProcessParallelSet"
+          "Next": "ProcessRunSet"
         }
       ],
       "Default": "Done"
@@ -55,29 +55,27 @@
     "Done": {
       "Type": "Succeed"
     },
-    "ProcessParallelSet": {
-      "Comment": "Process a set of independent assets in parallel",
+    "ProcessRunSet": {
+      "Comment": "Process a set of independent ETL jobs in parallel",
       "Type": "Map",
       "MaxConcurrency": 1,
       "InputPath": "$",
-      "ItemsPath": "$.next",
+      "ItemsPath": "$.runsets[0]",
       "Parameters": {
-        "ETLJobIndex.$": "$$.Map.Item.Index",
         "ETLJob.$": "$$.Map.Item.Value",
-        "JobIndex": 0,
-        "JobGo": true
+        "JobIsGo": true
       },
       "Next": "UpdateRunMap",
       "ResultPath": "$.results",
       "Iterator": {
-        "StartAt": "ProcessOneAsset",
+        "StartAt": "ProcessOneETLJob",
         "States": {
-          "ProcessOneAsset": {
-            "Comment": "Loop through tasks associated with one asset",
+          "ProcessOneETLJob": {
+            "Comment": "Loop through tasks associated with one ETL job",
             "Type": "Choice",
             "Choices": [
               {
-                "Variable": "$.JobGo",
+                "Variable": "$.JobIsGo",
                 "BooleanEquals": true,
                 "Next": "SetupTask"
               }
@@ -126,7 +124,7 @@
             },
             "ResultPath": "$",
             "OutputPath": "$.body",
-            "Next": "ProcessOneAsset"
+            "Next": "ProcessOneETLJob"
           }, 
           "TasksDone": {
             "Type": "Pass",
