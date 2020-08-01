@@ -20,21 +20,23 @@ def create_run_map_function(bucket_name, run_group):
     runsets= list(toposort(dependency_map))
     runs = []
     while runsets: #process each runset
-        runset = runsets.pop()
+        runset = runsets.pop(0)
         items = []
         while runset: # Process each job in the runset
-            item = runset.pop()
+            item = runset.pop() # Warning - this is a Set pop, not a List pop
             items.append(all_assets[item])
         runs.append(items)
 
-    result = {}
+    result = { 'RunSetIsGo': False }
     if len(runs) > 0:
-        result['next'] = runs.pop()
-        result['remainder'] = runs
-        result['go'] = True
+        result['runsets'] = runs
+#        result['next'] = runs.pop()
+#        result['remainder'] = runs
+        result['RunSetIsGo'] = True
         result['success'] = []
         result['skipped'] = []
         result['failure'] = []
+        result['results'] = None
 #        result['all_assets'] = all_assets
     return result    
 
