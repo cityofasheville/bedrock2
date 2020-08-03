@@ -3,7 +3,7 @@
 AWS 2 factor auth. Prompts for 6 digit code and prints 
 out the three lines you need to run at the command prompt.
 
-To use, add a file mfa_config.py in the same folder that holds your iam arn and the matching profile name.
+To use, add a file mfa_config.py in the same folder that holds your iam MFA arn and the matching profile name.
 It can be just this one line:
 
 mfadevice="arn:aws:iam::0000000000:mfa/name"; profilename="default"

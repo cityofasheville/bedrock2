@@ -39,7 +39,12 @@ exports.lambda_handler = async (event) => {
         from_stream,
         to_stream,(err)=>{
             if(err){ reject() }
-            resolve()
+            resolve({
+                'statusCode': 200,
+                'body': {
+                    "lambda_output": "..."
+                }
+            })
         })
     })
 }

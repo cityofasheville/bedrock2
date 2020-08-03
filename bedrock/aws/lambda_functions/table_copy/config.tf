@@ -29,4 +29,3 @@ resource "aws_lambda_function" "table_copy" {
     runtime         = "nodejs12.x"
     source_code_hash = filebase64sha256("function.zip")
 }
-

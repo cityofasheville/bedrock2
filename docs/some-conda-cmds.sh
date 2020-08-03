@@ -1,10 +1,10 @@
-conda create -n bedrock 
-conda activate bedrock
+conda create -n conda-env 
+conda activate bedrconda-envock
 pip install -r scripts/process_asset_dependencies/requirements.txt
 
 
 pip install toposort (or conda install -c conda-forge toposort?)
-conda env export --name bedrock > bedrock-conda-env.yml
+conda env export --name conda-env > bedrock-conda-env.yml
 conda env create --file bedrock-conda-env.yml
 
 conda install --yes --file requirements.txt

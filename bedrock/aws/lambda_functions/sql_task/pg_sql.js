@@ -18,9 +18,10 @@ function pg_sql(db_def,sql) {
             await client.end()
             resolve()
         } catch(err) {
-            reject(err)
+            reject(err.errorMessage)
         }
     })
 }
 
 module.exports = pg_sql
+ 

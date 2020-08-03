@@ -28,5 +28,10 @@ resource "aws_lambda_function" "sql_task" {
     handler         = "handler.lambda_handler"
     runtime         = "nodejs12.x"
     source_code_hash = filebase64sha256("function.zip")
+    timeout         = 240
+    environment {
+      variables = {
+      foo = "bar"
+    }
+  }
 }
-

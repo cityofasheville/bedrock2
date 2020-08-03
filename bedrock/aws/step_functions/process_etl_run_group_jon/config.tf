@@ -1,7 +1,7 @@
 terraform {
   backend "s3" {
     bucket = "cad-tfstate-store"
-    key    = "terraform/bedrock/step_functions/process_etl_run_group/terraform_dev.tfstate"
+    key    = "terraform/bedrock/step_functions/process_etl_run_group_jon/terraform_dev.tfstate"
     region = "us-east-1"
   }
 }
@@ -21,16 +21,9 @@ provider "aws" {
   region = var.region
 }
 
-resource "aws_sfn_state_machine" "sfn_state_machine" {
-  name     = "process_etl_run_group"
+resource "aws_sfn_state_machine" "sfn_state_machine_jon" {
+  name     = "process_etl_run_group_jon"
   role_arn = var.stepfunction_role
 
-  definition = file("./states.json")
-}
-
-resource "aws_sfn_state_machine" "sfn_state_machine_dev" {
-  name     = "process_etl_run_group_dev"
-  role_arn = var.stepfunction_role
-
-  definition = file("./states_dev.json")
+  definition = file("./states_jon.json")
 }
