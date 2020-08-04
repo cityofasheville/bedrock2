@@ -1,0 +1,140 @@
+{
+  "Comment": "State machine to run a single ETL run group",
+  "StartAt": "Init",
+  "States": {
+    "Init": {
+      "Comment": "Initialize the run map.",
+      "Type": "Task",
+      "Resource": "${create_etl_run_map_arn}",
+      "Parameters": {
+        "s3bucket": "managed-data-assets-dev",
+        "rungroup": "daily"
+      },
+      "ResultPath": "$",
+      "Next": "Check200"
+    },
+    "Check200": {
+      "Comment": "Make sure there wasn't an error return from create/update_etl_run_map",
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.statusCode",
+          "NumericEquals": 200,
+          "Next": "RunsetIsGo"
+        }
+      ],
+      "Default": "Failed",
+      "OutputPath": "$.body"
+    },
+    "RunsetIsGo": {
+      "Comment": "Check whether there are more parallel sets to do",
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.RunSetIsGo",
+          "BooleanEquals": true,
+          "Next": "ProcessRunSet"
+        }
+      ],
+      "Default": "Done"
+    },
+    "UpdateRunMap": {
+      "Comment": "Update the run map.",
+      "Type": "Task",
+      "Resource": "${update_etl_run_map_arn}",
+      "Parameters": {
+        "state.$": "$"
+      },
+      "ResultPath": "$",
+      "Next": "Check200"
+    },
+    "Failed": {
+      "Type": "Fail",
+      "Cause": "Not Hello World"
+    },
+    "Done": {
+      "Type": "Succeed"
+    },
+    "ProcessRunSet": {
+      "Comment": "Process a set of independent ETL jobs in parallel",
+      "Type": "Map",
+      "MaxConcurrency": 1,
+      "InputPath": "$",
+      "ItemsPath": "$.runsets[0]",
+      "Parameters": {
+        "ETLJob.$": "$$.Map.Item.Value",
+        "JobIsGo": true
+      },
+      "Next": "UpdateRunMap",
+      "ResultPath": "$.results",
+      "Iterator": {
+        "StartAt": "ProcessOneETLJob",
+        "States": {
+          "ProcessOneETLJob": {
+            "Comment": "Loop through tasks associated with one ETL job",
+            "Type": "Choice",
+            "Choices": [
+              {
+                "Variable": "$.JobIsGo",
+                "BooleanEquals": true,
+                "Next": "SetupTask"
+              }
+            ],
+            "Default": "TasksDone"
+          },
+          "SetupTask": {
+            "Comment": "Set up the next task.",
+            "Type": "Task",
+            "Resource": "${setup_etl_job_task_arn}",
+            "ResultPath": "$",
+            "OutputPath": "$.result",
+            "Next": "DoOneTask"
+          },
+          "DoOneTask": {
+            "Type": "Choice",
+            "Choices": [
+              {
+                "Variable": "$.JobType",
+                "StringEquals": "noop",
+                "Next": "NoopTask"
+              }
+            ],
+            "Default": "UnknownTask"
+          },
+          "NoopTask": {
+            "Comment": "Actively do nothing.",
+            "Type": "Task",
+            "Resource": "${etl_task_noop_arn}",
+            "ResultPath": "$.TaskOutput",
+            "Next": "CheckTaskStatus"
+          },
+          "UnknownTask": {
+            "Comment": "Unknown task type.",
+            "Type": "Task",
+            "Resource": "${etl_task_unknown_arn}",
+            "ResultPath": "$.TaskOutput",
+            "Next": "CheckTaskStatus"
+          },
+          "CheckTaskStatus": {
+            "Comment": "Check the status of the last task.",
+            "Type": "Task",
+            "Resource": "${check_etl_job_task_status_arn}",
+            "Parameters": {
+              "input.$": "$"
+            },
+            "ResultPath": "$",
+            "OutputPath": "$.body",
+            "Next": "ProcessOneETLJob"
+          }, 
+          "TasksDone": {
+            "Type": "Pass",
+            "End": true,
+            "ResultPath": "$.results"      
+          }
+        }
+      }
+    }
+  }
+}
+
+  

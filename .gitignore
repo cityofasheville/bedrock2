@@ -2,7 +2,7 @@
 .vscode/
 conda-env/
 tmp.json
-*.json
+hold.json
 package
 function.zip
 data/
