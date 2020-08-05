@@ -15,6 +15,9 @@ function ss_sql(db_def,sql_string) {
                 idleTimeoutMillis: 30000
             }
         }
+        if(db_def.domain){
+            config.domain = db_def.domain
+        }
         try {
             await sql.connect(config)
             const result = await sql.query(sql_string)

@@ -21,6 +21,9 @@ function get_ss_stream(location) {
                     idleTimeoutMillis: 30000
                 }
             }
+            if(db_def.domain){
+                config.domain = db_def.domain
+            }
             try {
                 let pool = await sql.connect(config)
                 const request = new sql.Request(pool);

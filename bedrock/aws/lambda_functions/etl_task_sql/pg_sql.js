@@ -15,7 +15,7 @@ function pg_sql(db_def,sql) {
             await client.connect()
             const res = await client.query(sql)
             console.log(res)
-            await client.end()
+            await client.end()  
             resolve()
         } catch(err) {
             reject(err.errorMessage)
