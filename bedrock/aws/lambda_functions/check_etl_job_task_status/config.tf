@@ -1,6 +1,6 @@
 terraform {
   backend "s3" {
-    bucket = "cad-tfstate-store"
+    bucket = "ca-tfstate-store"
     key    = "terraform/bedrock/lambda_functions/check_etl_job_task_status/terraform_dev.tfstate"
     region = "us-east-1"
   }
