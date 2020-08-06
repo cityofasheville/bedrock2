@@ -4,6 +4,7 @@ do
   echo ""
   echo "Building in $directory..."
   cd "$directory" || continue
+  # Python
   if [ -f "./requirements.txt" ] || [ -f "./handler.py" ] ; then
     echo "Removing old dependencies..."
     rm -Rf ./package
@@ -21,6 +22,7 @@ do
       zip -r9 ./function.zip ./*.py
     fi
   fi
+  # Node.js
   if [ -f "./package.json" ]; then
     echo "Removing old dependencies..."
     rm -Rf ./node_modules

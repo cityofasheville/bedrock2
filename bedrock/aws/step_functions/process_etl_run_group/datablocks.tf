@@ -52,6 +52,24 @@ data "terraform_remote_state" "etl_task_noop_lambda" {
   }
 }
 
+data "terraform_remote_state" "etl_task_sql_lambda" {
+  backend = "s3"
+  config = {
+    bucket = "cad-tfstate-store"
+    key    = "terraform/bedrock/lambda_functions/etl_task_sql/terraform_dev.tfstate"
+    region = "us-east-1"
+  }
+}
+
+data "terraform_remote_state" "etl_task_table_copy_lambda" {
+  backend = "s3"
+  config = {
+    bucket = "cad-tfstate-store"
+    key    = "terraform/bedrock/lambda_functions/etl_task_table_copy/terraform_dev.tfstate"
+    region = "us-east-1"
+  }
+}
+
 data "terraform_remote_state" "etl_task_unknown_lambda" {
   backend = "s3"
   config = {
