@@ -1,5 +1,5 @@
 conda create -n conda-env 
-conda activate bedrconda-envock
+conda activate conda-env
 pip install -r scripts/process_asset_dependencies/requirements.txt
 
 

@@ -20,14 +20,7 @@ resource "aws_sfn_state_machine" "sfn_state_machine" {
   name     = "process_etl_run_group"
   role_arn = data.terraform_remote_state.stepfunction_role.outputs.bedrock_stepfunction_role_arn
 
-  definition = file("./states.json")
-}
-
-resource "aws_sfn_state_machine" "sfn_state_machine_dev" {
-  name     = "process_etl_run_group_dev"
-  role_arn = data.terraform_remote_state.stepfunction_role.outputs.bedrock_stepfunction_role_arn
-
-  definition = templatefile("./states_dev.json", {
+  definition = templatefile("./states.json", {
     create_etl_run_map_arn: data.terraform_remote_state.create_etl_run_map_lambda.outputs.create_etl_run_map_arn,
     update_etl_run_map_arn: data.terraform_remote_state.update_etl_run_map_lambda.outputs.update_etl_run_map_arn,
     setup_etl_job_task_arn:         data.terraform_remote_state.setup_etl_job_task_lambda.outputs.setup_etl_job_task_arn,  
