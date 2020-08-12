@@ -12,7 +12,7 @@ variable "region" {
 }
 
 provider "aws" {
-  profile	= var.AWS_PROFILE
+  profile	= var.aws_profile
   region	= var.region
 }
 
