@@ -20,8 +20,8 @@ resource "aws_lambda_function" "etl_task_table_copy" {
     source_code_hash = filebase64sha256("function.zip")
     timeout         = 480
     vpc_config {
-      subnet_ids         = ["subnet-00e55df750014753d", "subnet-0c119b605ff498f3b"]
-      security_group_ids = ["sg-076e12ba2a9012944"]
+      subnet_ids         = var.subnet_ids
+      security_group_ids = var.security_group_ids
     }
 }
 

@@ -19,6 +19,10 @@ resource "aws_lambda_function" "etl_task_sql" {
     runtime         = "nodejs12.x"
     source_code_hash = filebase64sha256("function.zip")
     timeout         = 480
+    vpc_config {
+      subnet_ids         = var.subnet_ids
+      security_group_ids = var.security_group_ids
+    }
 }
 
 output "etl_task_sql_arn" {
