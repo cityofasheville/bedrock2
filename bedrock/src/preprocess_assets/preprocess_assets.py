@@ -58,7 +58,7 @@ def preprocess_assets_in_s3(bucket_name, output_mode='s3'):
     return_value = 'Done'
 
     print('Download the asset information')
-    file_data = download_files(bucket_name, 'store/assets', s3, WORKINGDIR)
+    file_data = download_files(bucket_name, 'assets', s3, WORKINGDIR)   # 'store/assets'
     all_assets = prepare_assets(file_data)
     if (output_mode == 's3'):
         write_asset_map(all_assets, bucket_name, 'run', s3, WORKINGDIR)

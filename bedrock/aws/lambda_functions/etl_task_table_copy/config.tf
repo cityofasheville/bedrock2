@@ -6,13 +6,8 @@ terraform {
   }
 }
 
-variable "region" {
-  type          = string
-  description   = "Region in which to create resources"
-}
-
 provider "aws" {
-  profile	= "default"
+  profile	= var.aws_profile
   region	= var.region
 }
 
@@ -24,6 +19,10 @@ resource "aws_lambda_function" "etl_task_table_copy" {
     runtime         = "nodejs12.x"
     source_code_hash = filebase64sha256("function.zip")
     timeout         = 480
+    vpc_config {
+      subnet_ids         = ["subnet-00e55df750014753d", "subnet-0c119b605ff498f3b"]
+      security_group_ids = ["sg-076e12ba2a9012944"]
+    }
 }
 
 output "etl_task_table_copy_arn" {

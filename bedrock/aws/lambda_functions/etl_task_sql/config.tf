@@ -6,13 +6,8 @@ terraform {
   }
 }
 
-variable "region" {
-  type          = string
-  description   = "Region in which to create resources"
-}
-
 provider "aws" {
-  profile	= "default"
+  profile	= var.aws_profile
   region	= var.region
 }
 
