@@ -7,8 +7,8 @@
       "Type": "Task",
       "Resource": "${create_etl_run_map_arn}",
       "Parameters": {
-        "s3bucket": "managed-data-assets-dev",
-        "rungroup": "tues_night"
+        "s3bucket": "managed-data-assets",
+        "rungroup": "daily"
       },
       "ResultPath": "$",
       "Next": "Check200"
