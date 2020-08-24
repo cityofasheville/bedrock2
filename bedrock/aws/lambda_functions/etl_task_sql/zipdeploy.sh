@@ -6,4 +6,4 @@
     cd ..
     zip -gq function.zip ./*.js
     echo "send it"
-    terraform apply -auto-approve
+    terraform apply -var-file=ca.tfvars -auto-approve

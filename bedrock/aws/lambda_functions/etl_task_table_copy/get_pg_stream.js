@@ -18,7 +18,6 @@ function get_pg_stream(location) {
             idleTimeoutMillis: 10000,
         });
 
-
         pool
         .connect()
         .then(client => {

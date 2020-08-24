@@ -1,0 +1,1 @@
+sam local invoke "TableCopy" -e sam_local_event.json
