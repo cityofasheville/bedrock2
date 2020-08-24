@@ -1,0 +1,31 @@
+{
+    "JobIsGo": true,
+    "ETLJob": {
+      "name": "testtable2",
+      "depends": [
+        "testtable"
+      ],
+      "path": "store/assets/testtable/testtable.json",
+      "run_group": "tues_night",
+      "etl_tasks": [
+        {
+          "type": "table_copy",
+        
+          "source_location": {
+            "type": "database",
+            "db": "localss1",
+            "schemaname": "dbo",
+            "tablename": "testtable"
+          },
+        
+          "target_location": {
+            "type": "database",
+            "db": "localpg2",
+            "schemaname": "public",
+            "tablename": "testtable"
+          },
+          "active": true
+        }
+      ]
+    }
+  }

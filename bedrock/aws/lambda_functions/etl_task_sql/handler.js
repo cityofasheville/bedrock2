@@ -4,7 +4,7 @@ const get_db_defs= require('./get_db_defs')
 const get_sql_from_file = require('./get_sql_from_file')
 
 exports.lambda_handler =  async function(event) {
-    console.log("EVENT: \n" + JSON.stringify(event, null, 2))
+    // console.log("EVENT: \n" + JSON.stringify(event, null, 2))
     try {
         let result
         let etl = event.ETLJob.etl_tasks[0]
@@ -31,9 +31,7 @@ exports.lambda_handler =  async function(event) {
         }
     }
     catch(err) {
-        console.log("Err: \n" + err) // debugging
-        throw err
-        throw{
+        return {
             'statusCode': 400,
             'body': {
                 "lambda_output": err
