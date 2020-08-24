@@ -1,7 +1,7 @@
 const { Client } = require('pg')
 
-function pg_sql(db_def,sql) {
-    return new Promise(async (resolve, reject) => {
+async function pg_sql(db_def,sql) {
+    try {
         const client = new Client({
             host: db_def.host,
             port: db_def.port,
@@ -11,17 +11,14 @@ function pg_sql(db_def,sql) {
             max: 10,
             idleTimeoutMillis: 10000,
         });
-        try{
-            await client.connect()
-            const res = await client.query(sql)
-            console.log(res)
-            await client.end()  
-            resolve()
-        } catch(err) {
-            console.log(JSON.stringify(err, null, 2))
-            reject(err)
-        }
-    })
+        await client.connect()
+        const res = await client.query(sql)
+        await client.end()  
+        return res.rowCount
+    }
+    catch(err){
+        throw err
+    }
 }
 
 module.exports = pg_sql
