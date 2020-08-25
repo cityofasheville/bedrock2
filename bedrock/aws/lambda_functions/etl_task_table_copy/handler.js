@@ -8,7 +8,7 @@ const pipeline = util.promisify(stream.pipeline);
 
 exports.lambda_handler = async (event) => {  
     try{
-        let etl = event.ETLJob.etl_tasks[0]
+        let etl = event.ETLJob.etl_tasks[event.TaskIndex]
         let db_defs = await get_db_defs()
         let fromloc = etl.source_location
         if (fromloc.type = 'database') {
@@ -49,9 +49,6 @@ exports.lambda_handler = async (event) => {
                     "lambda_output": "data transferred"
                 }
             }
-        })
-        .catch(err => {
-            throw(err)
         })
     } catch (err) {
         console.log(JSON.stringify(err, null, 2))

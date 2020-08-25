@@ -30,12 +30,12 @@ async function get_ss_stream(location) {
             let stream = request
                 .pipe(csv.stringify({
                     cast: {
-                        date: function xx(date){
+                        date: (date)=>{
                             return date.toISOString()
                         },
-                        boolean: function(value){
+                        boolean: (value)=>{
                             return value ? '1': '0'
-                            }
+                        }
                     }
                 }))
             request.query(sql_string)
