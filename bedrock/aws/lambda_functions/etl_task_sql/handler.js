@@ -7,7 +7,7 @@ exports.lambda_handler =  async function(event) {
     // console.log("EVENT: \n" + JSON.stringify(event, null, 2))
     try {
         let result
-        let etl = event.ETLJob.etl_tasks[0]
+        let etl = event.ETLJob.etl_tasks[event.TaskIndex]
 
         let db_defs = await get_db_defs()
         let sql_filepath = 'store/assets/' + event.ETLJob.name + '/' + etl.file  // 
