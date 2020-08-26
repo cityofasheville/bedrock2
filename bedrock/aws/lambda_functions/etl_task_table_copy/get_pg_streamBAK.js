@@ -24,9 +24,8 @@ function get_pg_stream(location) {
             let stream
             /////////////////////
             let err_func = (e) => { 
-                client.release()
-                console.error('query error', e.message, e.stack)
-                reject(e)
+                console.error('query error', e)
+                done()
             }
             let done = () => { client.release() }
             let copy_from_temp = () => {
@@ -36,9 +35,8 @@ function get_pg_stream(location) {
                 INSERT INTO ${tablename} SELECT * FROM ${temp_tablename};
                 COMMIT;
                 `
-                stream = client.query(trans_string)
-                .catch(err_func)
-                client.release()
+                client.query(trans_string)
+                done()
             }
             /////////////////////
             if(location.fromto == 'from') {
@@ -51,7 +49,6 @@ function get_pg_stream(location) {
                 // create temp table
                 let createtemp_string = `SELECT * INTO TEMP ${temp_tablename} FROM ${tablename} WHERE 1=2;`;
                 client.query(createtemp_string)
-                .catch(err_func)
                 let query_string = `COPY ${temp_tablename} FROM STDIN WITH (FORMAT csv)`
                 stream = client.query(copyFrom(query_string))
                 stream.on('error', err_func)

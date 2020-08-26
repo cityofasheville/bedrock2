@@ -39,9 +39,9 @@ async function get_ss_stream(location) {
                     }
                 }))
             request.query(sql_string)
-            stream.on('error', err => {
-                throw(err)
-            })
+            // stream.on('error', err => {
+            //     throw(err)
+            // })
             stream.on('finish', () => {
                 pool.close();
             })

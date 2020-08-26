@@ -28,12 +28,16 @@ async function get_pg_stream(location) {
             COMMIT;
             `
             client.query(trans_string)
+            console.log("happy1")
+
+            client.release()
         }
         //////////
         if(location.fromto == 'from') {
             let query_string = `COPY ${tablename} TO STDOUT WITH (FORMAT csv)`
             stream = client.query(copyTo(query_string))
 
+            stream.on('end', ()=>{ console.log("happy2"); client.release() })
             stream.on('error', ()=>{ throw err })
 
             console.log("Copy from Postgres: ", location.db, tablename) 
@@ -52,10 +56,10 @@ async function get_pg_stream(location) {
         }
 
         return stream
-    // }catch(err) {
-    //     throw err
-    }finally{
+    }catch(err) {
+        console.log("pg err", err)
         client.release()
+        throw err
     }
 }
 
