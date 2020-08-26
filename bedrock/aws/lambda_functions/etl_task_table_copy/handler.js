@@ -46,7 +46,7 @@ exports.lambda_handler = async (event) => {
             return {
                 'statusCode': 200,
                 'body': {
-                    "lambda_output": "data transferred"
+                    "lambda_output": `Table copied ${toloc.schemaname}.${toloc.tablename}`
                 }
             }
         })
