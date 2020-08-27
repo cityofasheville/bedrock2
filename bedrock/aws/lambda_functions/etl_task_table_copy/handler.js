@@ -10,7 +10,6 @@ exports.lambda_handler = async (event) => {
     try{
         let etl = event.ETLJob.etl_tasks[event.TaskIndex]
         let db_defs = await get_db_defs()
-        console.log(db_defs)
         let fromloc = etl.source_location
         if (fromloc.type = 'database') {
             if(db_defs[fromloc.db])
@@ -26,7 +25,6 @@ exports.lambda_handler = async (event) => {
             else { throw `Database definition ${toloc.db} not found` }
         }
         toloc.fromto = 'to'
-        console.log({ fromloc, toloc })
         let from_stream, to_stream
         
         if(fromloc.db_def.type == 'postgresql') {
@@ -39,7 +37,6 @@ exports.lambda_handler = async (event) => {
         }else if(toloc.db_def.type == 'sqlserver') {
             to_stream = await get_ss_stream(toloc) // not implemented
         }
-        console.log({ from_stream, to_stream })
         from_stream.on('error', (err)=>{ returnError(err) })
         to_stream.on('error', (err)=>{ returnError(err)})
 
@@ -50,7 +47,7 @@ exports.lambda_handler = async (event) => {
             return {
                 'statusCode': 200,
                 'body': {
-                    "lambda_output": `Table copied ${toloc.schemaname}.${toloc.tablename}`
+                    "lambda_output": `Table copied ${toloc.db} ${toloc.schemaname}.${toloc.tablename}`
                 }
             }
         })
