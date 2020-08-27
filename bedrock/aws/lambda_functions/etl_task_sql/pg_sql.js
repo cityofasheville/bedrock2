@@ -13,8 +13,9 @@ async function pg_sql(db_def,sql) {
         });
         await client.connect()
         const res = await client.query(sql)
+
         await client.end()  
-        return res.rowCount
+        return "Row count: " + res.rowCount
     }
     catch(err){
         throw err

@@ -25,7 +25,6 @@ exports.lambda_handler = async (event) => {
             else { throw `Database definition ${toloc.db} not found` }
         }
         toloc.fromto = 'to'
-
         let from_stream, to_stream
         
         if(fromloc.db_def.type == 'postgresql') {
@@ -38,6 +37,8 @@ exports.lambda_handler = async (event) => {
         }else if(toloc.db_def.type == 'sqlserver') {
             to_stream = await get_ss_stream(toloc) // not implemented
         }
+        from_stream.on('error', (err)=>{ returnError(err) })
+        to_stream.on('error', (err)=>{ returnError(err)})
 
         return pipeline(
         from_stream,
@@ -46,17 +47,32 @@ exports.lambda_handler = async (event) => {
             return {
                 'statusCode': 200,
                 'body': {
+<<<<<<< HEAD
                     "lambda_output": `Table copied ${toloc.schemaname}.${toloc.tablename}`
+=======
+                    "lambda_output": `Table copied ${toloc.db} ${toloc.schemaname}.${toloc.tablename}`
+>>>>>>> blue
                 }
             }
         })
+        .catch(err=>{
+            returnError(err)
+        })
     } catch (err) {
         console.log(JSON.stringify(err, null, 2))
-        return {
-            'statusCode': 500,
-            'body': {
-                "lambda_output": err
-            }
+        returnError(err)
+    }
+}
+process.on('unhandledRejection', (reason, promise) => {
+    console.log('Unhandled Rejection at:', promise, 'reason:', reason);
+    returnError(reason)
+});
+
+function returnError(err){
+    return {
+        'statusCode': 500,
+        'body': {
+            "lambda_output": err
         }
     }
 }

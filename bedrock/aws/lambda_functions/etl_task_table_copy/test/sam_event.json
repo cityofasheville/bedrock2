@@ -1,29 +1,29 @@
 {
-    "JobIsGo": true,
-    "ETLJob": {
-      "name": "testtable2",
-      "depends": [
-        "testtable"
-      ],
-      "path": "store/assets/testtable2/testtable2.json",
-      "run_group": "tues_night",
-      "etl_tasks": [
-        {
-          "type": "table_copy",
-          "source_location": {
-            "type": "database",
-            "db": "library",
-            "schemaname": "xjon",
-            "tablename": "testtable"
-          },
-          "target_location": {
-            "type": "database",
-            "db": "library",
-            "schemaname": "xjon",
-            "tablename": "testtable2"
-          },
-          "active": true
-        }
-      ]
-    }
-  }
+  "JobIsGo": true,
+  "ETLJob": {
+    "name": "test_DeptToDivMapping",
+    "depends": [],
+    "path": "store/assets/test_DeptToDivMapping/test_DeptToDivMapping.json",
+    "run_group": "midnight",
+    "etl_tasks": [
+      {
+        "type": "table_copy",
+        "source_location": {
+          "type": "database",
+          "db": "munis",
+          "schemaname": "avl",
+          "tablename": "DeptToDivMapping"
+        },
+        "target_location": {
+          "type": "database",
+          "db": "nopubrecdb1-bedrocktest",
+          "schemaname": "public",
+          "tablename": "DeptToDivMapping"
+        },
+        "active": true
+      }
+    ]
+  },
+  "TaskIndex": 0,
+  "JobType": "table_copy"
+}
