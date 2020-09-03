@@ -23,7 +23,7 @@ async function ss_sql(db_def,sql_string) {
         const result = await sql.query(sql_string)
         return result
     } catch (err) {
-        reject(err)
+        throw ["SQL Server error", err]
     }
 }
 

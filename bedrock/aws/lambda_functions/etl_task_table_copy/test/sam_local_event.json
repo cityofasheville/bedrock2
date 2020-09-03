@@ -13,8 +13,8 @@
         
           "source_location": {
             "type": "database",
-            "db": "localss1",
-            "schemaname": "dbo",
+            "db": "localpg1",
+            "schemaname": "public",
             "tablename": "testtable"
           },
         
@@ -27,5 +27,7 @@
           "active": true
         }
       ]
-    }
+    },
+    "TaskIndex": 0,
+    "JobType": "table_copy"
   }

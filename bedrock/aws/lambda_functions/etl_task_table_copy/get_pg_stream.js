@@ -34,7 +34,7 @@ async function get_pg_stream(location) {
             let query_string = `COPY ${tablename} TO STDOUT WITH (FORMAT csv)`
             stream = await client.query(copyTo(query_string))
 
-            stream.on('error', ()=>{ throw err })
+            stream.on('error', err=>{ error_throw(client,err) })
             stream.on('end', async ()=>{ await client.end() })
             console.log("Copy from Postgres: ", location.db, tablename) 
         }else if(location.fromto == 'to'){
@@ -45,18 +45,21 @@ async function get_pg_stream(location) {
             let query_string = `COPY ${temp_tablename} FROM STDIN WITH (FORMAT csv)`
             stream = await client.query(copyFrom(query_string))
 
-            stream.on('error', ()=>{ throw err })
+            stream.on('error', err=>{ error_throw(client,err) })
             stream.on('finish', copy_from_temp)
 
             console.log("Copy to Postgres: ", location.db, tablename)
-        }
+        } 
 
         return stream
     }catch(err) {
-        console.log("pg err", err)
-        await client.end()
-        throw err
+        error_throw(client,err)
     }
+}
+
+async function error_throw(client,err) {
+        await client.end()
+        throw ["Postgres stream error", err]
 }
 
 module.exports = get_pg_stream

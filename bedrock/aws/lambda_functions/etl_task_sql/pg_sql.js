@@ -18,7 +18,9 @@ async function pg_sql(db_def,sql) {
         return "Row count: " + res.rowCount
     }
     catch(err){
-        throw err
+        if(err.code === '42P01') throw ["Postgres error: Table not found",err]
+        if(err.code === '42601') throw ["Postgres error: Syntax error",err]
+        throw ["Postgres error",err]
     }
 }
 

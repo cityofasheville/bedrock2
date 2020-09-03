@@ -6,13 +6,15 @@ const get_sql_from_file = require('./get_sql_from_file')
 exports.lambda_handler =  async function(event) {
     // console.log("EVENT: \n" + JSON.stringify(event, null, 2))
     try {
-        let result
+        let result, db_def
         let etl = event.ETLJob.etl_tasks[event.TaskIndex]
 
         let db_defs = await get_db_defs()
         let sql_filepath = 'store/assets/' + event.ETLJob.name + '/' + etl.file  // 
         let sql = await get_sql_from_file(sql_filepath)
-        let db_def = db_defs[etl.db]
+        if(db_defs[etl.db])
+        { db_def = db_defs[etl.db] }
+        else { throw `Database definition ${etl.db} not found` }
         // console.log("db_def: \n" + JSON.stringify(db_def, null, 2))
         // console.log("sql: \n" + JSON.stringify(sql, null, 2))
         if(db_def.type == 'postgresql') {

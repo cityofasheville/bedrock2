@@ -1,0 +1,171 @@
+create table JournalLineItems (
+Id	int	,
+AccountId	int	,
+Sequence	int	,
+Reference1	varchar(6)	,
+Reference2	varchar(10)	,
+Reference3	varchar(16)	,
+Reference4	varchar(10)	,
+Source	char(3)	,
+TransactionType	char(1)	,
+BudgetType	char(1)	,
+Comment	varchar(30)	,
+OverBudget	boolean	,
+AutoManual	char(1)	,
+DebitCredit	char(1)	,
+EffectiveDate	TIMESTAMP(3)	,
+Gross	decimal(13, 2)	,
+Entity	char(1)	,
+PAApplied	boolean	,
+Debit	decimal(13, 2)	,
+Credit	decimal(13, 2)	,
+EntryClerk	varchar(20)	,
+Version	BYTEA	,
+AdditionalDescription	text	,
+Year	smallint	,
+Period	smallint	,
+JournalNumber	int	
+)
+
+create table public.gbinvoid
+(
+gbod_year smallint,
+gbod_bill int,
+gbod_line smallint,
+gbod_chg_def char(6),
+gbod_comment varchar(8000),
+gbod_uom char(4),
+gbod_qty decimal(8,2),
+gbod_price decimal(14,6),
+gbod_disc_amt decimal(10,2),
+gbod_orig_amt decimal(10,2),
+gbod_adj_amt decimal(10,2),
+gbod_paid_amt decimal(10,2),
+gbod_fee_adj decimal(10,2),
+gbod_ref_amt decimal(10,2),
+gbod_oth_cid int,
+gbod_oth_code char(6)
+)
+
+create table public.PurchaseOrderReceipts
+(
+ClosePO bit, --
+CreatedDate timestamp(3), --
+DollarAmount decimal(13,2),
+IsFullyLiquidatedPO bit, --
+IsFullyInvoiced bit, --
+PackingSlipNumber varchar(15),
+PurchaseOrderItemId int,
+QuantityInvoiced decimal(8,2),
+AmountInvoiced decimal(13,2),
+QuantityReceived decimal(8,2),
+QuantityReturned decimal(8,2),
+ReceivedById int,
+ReceivedComments varchar(230),
+ReceivedDate timestamp(3), ---
+ReturnedComments varchar(230),
+RMANumber varchar(25),
+Status varchar(1)
+);
+
+
+select * from (
+	select distinct b.TABLE_SCHEMA+ '.' + b.TABLE_NAME nm from (
+		SELECT distinct TABLE_SCHEMA, TABLE_NAME FROM INFORMATION_SCHEMA.COLUMNS
+		where DATA_TYPE = 'bit'
+	) as b
+	inner join (
+		SELECT distinct TABLE_SCHEMA, TABLE_NAME FROM INFORMATION_SCHEMA.COLUMNS
+		where DATA_TYPE = 'decimal'
+	) as d
+	on b.TABLE_NAME = d.TABLE_NAME
+	and b.TABLE_SCHEMA = d.TABLE_SCHEMA
+	inner join (
+		SELECT distinct TABLE_SCHEMA, TABLE_NAME FROM INFORMATION_SCHEMA.COLUMNS
+		where DATA_TYPE = 'datetime'
+	) as dt
+	on b.TABLE_NAME = dt.TABLE_NAME
+	and b.TABLE_SCHEMA = dt.TABLE_SCHEMA
+	inner join (
+		SELECT distinct TABLE_SCHEMA, TABLE_NAME FROM INFORMATION_SCHEMA.COLUMNS
+		where DATA_TYPE = 'varchar'
+	) as v
+	on b.TABLE_NAME = v.TABLE_NAME
+	and b.TABLE_SCHEMA = v.TABLE_SCHEMA
+) as typ
+inner join (
+	SELECT      SCHEMA_NAME(A.schema_id) + '.' + A.Name nom, AVG(B.rows) AS 'RowCt'
+	FROM        sys.objects A
+	INNER JOIN sys.partitions B ON A.object_id = B.object_id
+	WHERE       A.type = 'U'
+	GROUP BY    A.schema_id, A.Name
+) as sy
+on sy.nom = typ.nm
+order by RowCt desc
+
+nm	nom	RowCt
+dbo.JournalLineItems	dbo.JournalLineItems	3883723
+dbo.Invoices	dbo.Invoices	392669
+dbo.Journals	dbo.Journals	247936
+dbo.PurchaseOrderReceipts	dbo.PurchaseOrderReceipts	61782
+dbo.EmployeeDeductions	dbo.EmployeeDeductions	53407
+dbo.TDD_Rebuild_2018051717430187794_PurchaseOrderReceipts	dbo.TDD_Rebuild_2018051717430187794_PurchaseOrderReceipts	52758
+dbo.RequisitionItems	dbo.RequisitionItems	45828
+dbo.PurchaseOrderItems	dbo.PurchaseOrderItems	43102
+dbo.EmployeePays	dbo.EmployeePays	41675
+dbo.Vendors	dbo.Vendors	27908
+dbo.rqdetail_table	dbo.rqdetail_table	25621
+dbo.podetail_table	dbo.podetail_table	25272
+dbo.Requisitions	dbo.Requisitions	17582
+dbo.Accounts	dbo.Accounts	16192
+dbo.PurchaseOrders	dbo.PurchaseOrders	13988
+dbo.Commodities	dbo.Commodities	8723
+dbo.EmployeeEvaluations	dbo.EmployeeEvaluations	8331
+dbo.Employees	dbo.Employees	5535
+dbo.PersonnelPositions	dbo.PersonnelPositions	5434
+dbo.TDD_Rebuild_2018051717425740998_PersonnelPositions	dbo.TDD_Rebuild_2018051717425740998_PersonnelPositions	5236
+dbo.WarehouseItems	dbo.WarehouseItems	4810
+dbo.InventoryItems_table	dbo.InventoryItems_table	4809
+dbo.Contracts	dbo.Contracts	3686
+dbo.PayrollGrades	dbo.PayrollGrades	1119
+dbo.Projects	dbo.Projects	1067
+dbo.PayrollGenOptions	dbo.PayrollGenOptions	984
+dbo.TrainingCourses	dbo.TrainingCourses	514
+dbo.PayTypes	dbo.PayTypes	271
+dbo.JournalProofDetails	dbo.JournalProofDetails	216
+dbo.Grants	dbo.Grants	116
+dbo.AccrualTables	dbo.AccrualTables	49
+dbo.JournalProofHeaders	dbo.JournalProofHeaders	32
+dbo.PersonnelActions	dbo.PersonnelActions	8
+dbo.JournalPostProcess_Globals	dbo.JournalPostProcess_Globals	2
+dbo.Educations	dbo.Educations	2
+dbo.Certifications	dbo.Certifications	1
+ProfessionalServices.COAAccounts	ProfessionalServices.COAAccounts	0
+ProfessionalServices.COAProjects	ProfessionalServices.COAProjects	0
+StateReporting.NewYorkNYSLRSContributions	StateReporting.NewYorkNYSLRSContributions	0
+StateReporting.NewYorkNYSLRSEarnings	StateReporting.NewYorkNYSLRSEarnings	0
+StateReporting.NewYorkNYSLRSJobData	StateReporting.NewYorkNYSLRSJobData	0
+dbo.EmployeeAssignments	dbo.EmployeeAssignments	0
+dbo.Applicants	dbo.Applicants	0
+Purchasing.BidVendorResponses	Purchasing.BidVendorResponses	0
+StateReporting.FLDOEFiscalYearSalaries	StateReporting.FLDOEFiscalYearSalaries	0
+StateReporting.FLDOEFiscalYearSalaries2	StateReporting.FLDOEFiscalYearSalaries2	0
+StateReporting.FLDOESalarySupplements	StateReporting.FLDOESalarySupplements	0
+StateReporting.FLDOEStaffAdditionalCompensation	StateReporting.FLDOEStaffAdditionalCompensation	0
+StateReporting.FLDOEStaffBenefits	StateReporting.FLDOEStaffBenefits	0
+StateReporting.FLDOEStaffBenefits2	StateReporting.FLDOEStaffBenefits2	0
+StateReporting.FLDOEStaffPayrollInformation	StateReporting.FLDOEStaffPayrollInformation	0
+StateReporting.FLDOEStaffPayrolls	StateReporting.FLDOEStaffPayrolls	0
+dbo.GBInvoices	dbo.GBInvoices	0
+dbo.ProjectStrings	dbo.ProjectStrings	0
+dbo.ProjectJournalLineDetails	dbo.ProjectJournalLineDetails	0
+dbo.ProjectJournalLines	dbo.ProjectJournalLines	0
+dbo.ProjectProof_ProjectStringDetails	dbo.ProjectProof_ProjectStringDetails	0
+dbo.SchoolBusDrivers	dbo.SchoolBusDrivers	0
+dbo.TDD_Rebuild_2018051717425697255_PersonnelActions	dbo.TDD_Rebuild_2018051717425697255_PersonnelActions	0
+dbo.Vendor1099SDetail	dbo.Vendor1099SDetail	0
+dbo.WarehouseSublocationItems	dbo.WarehouseSublocationItems	0
+dbo.WorkOrderAssetRentalTransactions	dbo.WorkOrderAssetRentalTransactions	0
+dbo.TDD_Rebuild_2018051717430490839_WarehouseSublocationItems	dbo.TDD_Rebuild_2018051717430490839_WarehouseSublocationItems	0
+dbo.TDD_Rebuild_2018051717474634966_Invoices	dbo.TDD_Rebuild_2018051717474634966_Invoices	0
+dbo.TDD_Rebuild_2018051717474888066_ProjectStrings	dbo.TDD_Rebuild_2018051717474888066_ProjectStrings	0

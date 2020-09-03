@@ -7,21 +7,21 @@ const stream = require('stream');
 const pipeline = util.promisify(stream.pipeline);
 
 exports.lambda_handler = async (event) => {  
+    // console.log("event",event)
     try{
         let etl = event.ETLJob.etl_tasks[event.TaskIndex]
         let db_defs = await get_db_defs()
+        // console.log("db_defs",db_defs)
         let fromloc = etl.source_location
         if (fromloc.type = 'database') {
-            if(db_defs[fromloc.db])
-            { fromloc.db_def = db_defs[fromloc.db] }
+            if(db_defs[fromloc.db]) { fromloc.db_def = db_defs[fromloc.db] }
             else { throw `Database definition ${fromloc.db} not found` }
         }
         fromloc.fromto = 'from'
 
         let toloc = etl.target_location
         if (toloc.type = 'database') {
-            if(db_defs[toloc.db])
-            { toloc.db_def = db_defs[toloc.db] }
+            if(db_defs[toloc.db]) { toloc.db_def = db_defs[toloc.db] }
             else { throw `Database definition ${toloc.db} not found` }
         }
         toloc.fromto = 'to'
@@ -40,6 +40,10 @@ exports.lambda_handler = async (event) => {
         from_stream.on('error', (err)=>{ returnError(err) })
         to_stream.on('error', (err)=>{ returnError(err)})
 
+        // setTimeout(function() {
+        //     from_stream.destroy() // TEST CLOSE PIPE EARLY
+        //   }, 1000)
+
         return pipeline(
         from_stream,
         to_stream)
@@ -56,19 +60,21 @@ exports.lambda_handler = async (event) => {
         })
     } catch (err) {
         console.log(JSON.stringify(err, null, 2))
-        returnError(err)
+        return returnError(err)
     }
 }
-process.on('unhandledRejection', (reason, promise) => {
-    console.log('Unhandled Rejection at:', promise, 'reason:', reason);
-    returnError(reason)
-});
 
 function returnError(err){
     return {
         'statusCode': 500,
         'body': {
-            "lambda_output": err
+            "lambda_output": err.toString()
         }
     }
 }
+
+process.on('unhandledRejection', (reason, promise) => {
+    console.log('Unhandled Rejection at:', promise, 'reason:', reason);
+    returnError(reason)
+});
+
