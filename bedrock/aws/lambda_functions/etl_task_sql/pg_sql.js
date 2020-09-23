@@ -15,40 +15,13 @@ async function pg_sql(db_def,sql) {
         const res = await client.query(sql)
 
         await client.end()  
-        return "Row count: " + res.rowCount
+        return res.rowCount ? "Row count: " + res.rowCount : "Completed: " + JSON.stringify(res)
     }
     catch(err){
-        if(err.code === '42P01') throw ["Postgres error: Table not found",err]
-        if(err.code === '42601') throw ["Postgres error: Syntax error",err]
-        throw ["Postgres error",err]
+      const pg_error_codes = require("./pg_error_codes")
+      let errmsg = pg_error_codes[err.code]
+      throw [{"Postgres error":errmsg},err]
     }
 }
 
 module.exports = pg_sql
- 
-
-/* PG syntax error returns
-{
-  "length": 93,
-  "name": "error",
-  "severity": "ERROR",
-  "code": "42601",
-  "position": "1",
-  "file": "scan.l",
-  "line": "1128",
-  "routine": "scanner_yyerror"
-}
-
-PG table not found
-{
-  "length": 114,
-  "name": "error",
-  "severity": "ERROR",
-  "code": "42P01",
-  "position": "13",
-  "file": "parse_relation.c",
-  "line": "1159",
-  "routine": "parserOpenTable"
-}
-
-*/
