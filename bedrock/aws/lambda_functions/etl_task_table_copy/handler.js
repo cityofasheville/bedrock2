@@ -40,10 +40,6 @@ exports.lambda_handler = async (event) => {
         from_stream.on('error', (err)=>{ returnError(err) })
         to_stream.on('error', (err)=>{ returnError(err)})
 
-        // setTimeout(function() {
-        //     from_stream.destroy() // TEST CLOSE PIPE EARLY
-        //   }, 1000)
-
         return pipeline(
         from_stream,
         to_stream)

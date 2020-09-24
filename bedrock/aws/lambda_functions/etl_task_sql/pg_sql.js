@@ -15,7 +15,7 @@ async function pg_sql(db_def,sql) {
         const res = await client.query(sql)
 
         await client.end()  
-        return res.rowCount ? "Row count: " + res.rowCount : "Completed: " + JSON.stringify(res)
+        return res.rowCount ? "Row count: " + res.rowCount : "Completed"
     }
     catch(err){
       const pg_error_codes = require("./pg_error_codes")
