@@ -18,7 +18,7 @@ get_sql_from_file:
         throw ["S3 SQL file error",err]
     }
 
-get_db_defs:
+get_connections:
 
     test_connections_docker.json    
 

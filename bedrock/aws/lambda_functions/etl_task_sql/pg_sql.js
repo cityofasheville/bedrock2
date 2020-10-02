@@ -1,13 +1,13 @@
 const { Client } = require('pg')
 
-async function pg_sql(db_def,sql) {
+async function pg_sql(connection,sql) {
     try {
         const client = new Client({
-            host: db_def.host,
-            port: db_def.port,
-            user: db_def.username,
-            password: db_def.password,
-            database: db_def.database,
+            host: connection.host,
+            port: connection.port,
+            user: connection.username,
+            password: connection.password,
+            database: connection.database,
             max: 10,
             idleTimeoutMillis: 10000,
         });

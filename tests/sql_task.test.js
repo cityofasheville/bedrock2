@@ -4,9 +4,9 @@ require('dotenv').config()
 
 async function run(){
     try {
-        let db_def, sql, result
+        let connection, sql, result
 
-        db_def = {
+        connection = {
             host: process.env.host,
             port: process.env.port,
             user: process.env.username,
@@ -21,7 +21,7 @@ async function run(){
         FROM (random() *36)::int FOR 1)
         FROM generate_series(1, 12) ), '' ) ,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP)`
         for(let x=0;x<1000;x++){
-            result = await sql_task(db_def,sql)
+            result = await sql_task(connection,sql)
             console.log("rowCount: ",result)
         }
     } catch(err) {

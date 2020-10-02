@@ -5,15 +5,15 @@ async function get_ss_stream(location) {
     try {
         if(location.fromto == 'from') {
             let tablename = `${location.schemaname}.${location.tablename}`
-            let db_def = location.db_def
+            let conn_info = location.connection
 
             let sql_string = `SELECT * FROM ${tablename}`
             const config = {
-                server: db_def.host,
-                port: db_def.port,
-                user: db_def.username,
-                password: db_def.password,
-                database: db_def.database,
+                server: conn_info.host,
+                port: conn_info.port,
+                user: conn_info.username,
+                password: conn_info.password,
+                database: conn_info.database,
                 options: { enableArithAbort: true },
                 pool: {
                     max: 10,
@@ -21,8 +21,8 @@ async function get_ss_stream(location) {
                     idleTimeoutMillis: 30000
                 }
             }
-            if(db_def.domain){
-                config.domain = db_def.domain
+            if(conn_info.domain){
+                config.domain = conn_info.domain
             }
 
             let pool = await sql.connect(config)
@@ -45,7 +45,7 @@ async function get_ss_stream(location) {
             stream.on('finish', () => {
                 pool.close();
             })
-            console.log("Copy from SQL Server: ", location.db, tablename) 
+            console.log("Copy from SQL Server: ", location.connection, tablename) 
             return stream
         }else if(location.fromto == 'to'){
             throw ("SQL Server 'To' not implemented")
