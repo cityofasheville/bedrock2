@@ -9,7 +9,7 @@
             {
                 "type": "sql",
                 "file": "update_test.sql",
-                "db": "library",
+                "connection": "library",
                 "active": true
             }
         ]

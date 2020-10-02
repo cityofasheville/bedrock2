@@ -1,13 +1,13 @@
 const { Client } = require('pg')
 
-async function pg_sql(db_def,sql) {
+async function pg_sql(connection,sql) {
     try {
         const client = new Client({
-            host: db_def.host,
-            port: db_def.port,
-            user: db_def.username,
-            password: db_def.password,
-            database: db_def.database,
+            host: connection.host,
+            port: connection.port,
+            user: connection.username,
+            password: connection.password,
+            database: connection.database,
             max: 10,
             idleTimeoutMillis: 10000,
         });
@@ -15,38 +15,13 @@ async function pg_sql(db_def,sql) {
         const res = await client.query(sql)
 
         await client.end()  
-        return "Row count: " + res.rowCount
+        return res.rowCount ? "Row count: " + res.rowCount : "Completed"
     }
     catch(err){
-        throw err
+      const pg_error_codes = require("./pg_error_codes")
+      let errmsg = pg_error_codes[err.code]
+      throw [{"Postgres error":errmsg},err]
     }
 }
 
 module.exports = pg_sql
- 
-
-/* PG syntax error returns
-{
-  "length": 93,
-  "name": "error",
-  "severity": "ERROR",
-  "code": "42601",
-  "position": "1",
-  "file": "scan.l",
-  "line": "1128",
-  "routine": "scanner_yyerror"
-}
-
-PG table not found
-{
-  "length": 114,
-  "name": "error",
-  "severity": "ERROR",
-  "code": "42P01",
-  "position": "13",
-  "file": "parse_relation.c",
-  "line": "1159",
-  "routine": "parserOpenTable"
-}
-
-*/

@@ -16,7 +16,7 @@
         },
         "target_location": {
           "type": "database",
-          "db": "nopubrecdb1-bedrocktest",
+          "db": "localpg2",
           "schemaname": "public",
           "tablename": "DeptToDivMapping"
         },

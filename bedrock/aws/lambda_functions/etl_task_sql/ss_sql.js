@@ -1,13 +1,13 @@
 const sql = require('mssql');
 
-async function ss_sql(db_def,sql_string) { 
+async function ss_sql(connection,sql_string) { 
     try {
         const config = {
-            server: db_def.host,
-            port: db_def.port,
-            user: db_def.username,
-            password: db_def.password,
-            database: db_def.database,
+            server: connection.host,
+            port: connection.port,
+            user: connection.username,
+            password: connection.password,
+            database: connection.database,
             options: { enableArithAbort: true },
             pool: {
                 max: 10,
@@ -15,15 +15,15 @@ async function ss_sql(db_def,sql_string) {
                 idleTimeoutMillis: 30000
             }
         }
-        if(db_def.domain){
-            config.domain = db_def.domain
+        if(connection.domain){
+            config.domain = connection.domain
         }
 
         await sql.connect(config)
         const result = await sql.query(sql_string)
         return result
     } catch (err) {
-        reject(err)
+        throw ["SQL Server error", err]
     }
 }
 
