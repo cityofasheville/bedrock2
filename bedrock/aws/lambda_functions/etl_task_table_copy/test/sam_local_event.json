@@ -20,7 +20,7 @@
           "target_location": {
             "connection": "localpg1",
             "schemaname": "public",
-            "tablename": "testtable"
+            "tablename": "testtablexxx"
           },
           "active": true
         }

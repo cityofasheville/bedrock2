@@ -1,24 +1,22 @@
 {
   "JobIsGo": true,
   "ETLJob": {
-    "name": "test_DeptToDivMapping",
+    "name": "coa_asheville_neighborhoods.ms1",
     "depends": [],
-    "path": "store/assets/test_DeptToDivMapping/test_DeptToDivMapping.json",
-    "run_group": "midnight",
+    "path": "store/assets/coa_asheville_neighborhoods.ms1/coa_asheville_neighborhoods.ms1.json",
+    "run_group": "daily",
     "etl_tasks": [
       {
         "type": "table_copy",
         "source_location": {
-          "type": "database",
-          "db": "munis",
-          "schemaname": "avl",
-          "tablename": "DeptToDivMapping"
+          "connection": "coa-gis-edit1",
+          "schemaname": "coagis",
+          "tablename": "coa_asheville_neighborhoods"
         },
         "target_location": {
-          "type": "database",
-          "db": "localpg2",
-          "schemaname": "public",
-          "tablename": "DeptToDivMapping"
+          "connection": "mdastore1",
+          "schemaname": "internal2",
+          "tablename": "coa_asheville_neighborhoods"
         },
         "active": true
       }

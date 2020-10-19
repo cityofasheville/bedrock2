@@ -7,7 +7,7 @@ const stream = require('stream');
 const pipeline = util.promisify(stream.pipeline);
 
 exports.lambda_handler = async (event) => {  
-    console.log("event",event)
+    // console.log("event",event)
     try{
         let etl = event.ETLJob.etl_tasks[event.TaskIndex]
         let connections = await get_connections()
@@ -29,7 +29,7 @@ exports.lambda_handler = async (event) => {
         }
         toloc.fromto = 'to'
 
-        console.log("fromtoloc",fromloc,toloc)
+        // console.log("fromtoloc",fromloc,toloc)
 
         let from_stream, to_stream
         
@@ -43,8 +43,17 @@ exports.lambda_handler = async (event) => {
         }else if(toloc.conn_info.type == 'sqlserver') {
             to_stream = await get_ss_stream(toloc) // not implemented
         }
-        from_stream.on('error', (err)=>{ returnError(err) })
-        to_stream.on('error', (err)=>{ returnError(err)})
+
+        // These arent needed for pg. testing for ss
+        // from_stream.on('error', (err)=>{
+        //     console.log("from_stream",err)
+        //     return returnError(err)
+        // })
+        // to_stream.on('error', (err)=>{
+        //     console.log("to_stream",err)
+        //     return returnError(err)
+        // })
+        // These arent needed for pg. testing for ss
 
         return pipeline(
         from_stream,
@@ -58,11 +67,12 @@ exports.lambda_handler = async (event) => {
             }
         })
         .catch(err=>{
-            returnError(err)
+            console.log("pipeline",err)
+            return returnError(err) 
         })
     } catch (err) {
-        console.log(JSON.stringify(err, null, 2))
-        return returnError(err)
+        console.log("caught")
+        return returnError(err)    
     }
 }
 
@@ -74,9 +84,3 @@ function returnError(err){
         }
     }
 }
-
-process.on('unhandledRejection', (reason, promise) => {
-    console.log('Unhandled Rejection at:', promise, 'reason:', reason);
-    returnError(reason)
-});
-

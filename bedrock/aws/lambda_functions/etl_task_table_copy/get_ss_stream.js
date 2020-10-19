@@ -2,58 +2,62 @@ const sql = require('mssql');
 const csv = require('csv');
 
 async function get_ss_stream(location) { 
-    try {
-        if(location.fromto == 'from') {
-            let tablename = `${location.schemaname}.${location.tablename}`
-            let conn_info = location.conn_info
+    return new Promise(function(resolve, reject) {
+        try {
+            if(location.fromto == 'from') {
+                let tablename = `${location.schemaname}.${location.tablename}`
+                let conn_info = location.conn_info
 
-            let sql_string = `SELECT * FROM ${tablename}`
-            const config = {
-                server: conn_info.host,
-                port: conn_info.port,
-                user: conn_info.username,
-                password: conn_info.password,
-                database: conn_info.database,
-                options: { enableArithAbort: true },
-                pool: {
-                    max: 10,
-                    min: 0,
-                    idleTimeoutMillis: 30000
-                }
-            }
-            if(conn_info.domain){
-                config.domain = conn_info.domain
-            }
-
-            let pool = await sql.connect(config)
-            const request = new sql.Request(pool);
-            let stream = request
-                .pipe(csv.stringify({
-                    cast: {
-                        date: (date)=>{
-                            return date.toISOString()
-                        },
-                        boolean: (value)=>{
-                            return value ? '1': '0'
-                        }
+                let sql_string = `SELECT * FROM ${tablename}`
+                const config = {
+                    server: conn_info.host,
+                    port: conn_info.port,
+                    user: conn_info.username,
+                    password: conn_info.password,
+                    database: conn_info.database,
+                    options: { enableArithAbort: true },
+                    pool: {
+                        max: 10,
+                        min: 0,
+                        idleTimeoutMillis: 30000
                     }
-                }))
-            request.query(sql_string)
-            stream.on('error', err => {
-                throw(err)
-            })
-            stream.on('finish', () => {
-                pool.close();
-            })
-            console.log("Copy from SQL Server: ", location.connection, tablename) 
-            return stream
-        }else if(location.fromto == 'to'){
-            throw ("SQL Server 'To' not implemented")
+                }
+                if(conn_info.domain) config.domain = conn_info.domain
+
+                let pool = sql.connect(config, err => {
+                    if(err)reject("SQL Server connection error",err)
+                    const request = new sql.Request(pool)
+                    request.stream = true
+
+                    request.query(sql_string)
+                    request.on('error', err => {
+                        reject(err)
+                    })
+                    request.on('finish', () => { //done?
+                        pool.close();
+                    })
+                    console.log("Copy from SQL Server: ", location.connection, tablename) 
+                    let stream = request
+                        .pipe(csv.stringify({
+                            cast: {
+                                date: (date)=>{
+                                    return date.toISOString()
+                                },
+                                boolean: (value)=>{
+                                    return value ? '1': '0'
+                                }
+                            }
+                        }))            
+                    resolve( stream )
+                })
+            }else if(location.fromto == 'to'){
+                reject ("SQL Server 'To' not implemented")
+            }
         }
-    }
-    catch(err){
-        throw ["SQL Server stream error", err]
-    }
+        catch(err){
+            reject( ["SQL Server stream error", err] )
+        }
+    })
 }
 
 module.exports = get_ss_stream
