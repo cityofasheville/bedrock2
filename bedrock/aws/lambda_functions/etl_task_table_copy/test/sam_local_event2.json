@@ -12,13 +12,13 @@
           "type": "table_copy",
         
           "source_location": {
-            "connection": "localss1",
-            "schemaname": "dbo",
-            "tablename": "testtable"
+            "connection": "localpg1",
+            "schemaname": "public",
+            "tablename": "testtablex"
           },
         
           "target_location": {
-            "connection": "localpg1",
+            "connection": "localpg2",
             "schemaname": "public",
             "tablename": "testtable"
           },

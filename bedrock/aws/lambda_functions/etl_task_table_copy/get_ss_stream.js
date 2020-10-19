@@ -5,7 +5,7 @@ async function get_ss_stream(location) {
     try {
         if(location.fromto == 'from') {
             let tablename = `${location.schemaname}.${location.tablename}`
-            let conn_info = location.connection
+            let conn_info = location.conn_info
 
             let sql_string = `SELECT * FROM ${tablename}`
             const config = {
