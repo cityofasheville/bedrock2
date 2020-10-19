@@ -44,17 +44,6 @@ exports.lambda_handler = async (event) => {
             to_stream = await get_ss_stream(toloc) // not implemented
         }
 
-        // These arent needed for pg. testing for ss
-        // from_stream.on('error', (err)=>{
-        //     console.log("from_stream",err)
-        //     return returnError(err)
-        // })
-        // to_stream.on('error', (err)=>{
-        //     console.log("to_stream",err)
-        //     return returnError(err)
-        // })
-        // These arent needed for pg. testing for ss
-
         return pipeline(
         from_stream,
         to_stream)
@@ -67,11 +56,9 @@ exports.lambda_handler = async (event) => {
             }
         })
         .catch(err=>{
-            console.log("pipeline",err)
             return returnError(err) 
         })
     } catch (err) {
-        console.log("caught")
         return returnError(err)    
     }
 }

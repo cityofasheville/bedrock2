@@ -18,9 +18,9 @@
           },
         
           "target_location": {
-            "connection": "localpg1",
+            "connection": "localpg2",
             "schemaname": "public",
-            "tablename": "testtablexxx"
+            "tablename": "testtable"
           },
           "active": true
         }
