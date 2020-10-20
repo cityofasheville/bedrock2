@@ -2,8 +2,7 @@ const sql = require('mssql')
 
 const pools = {}
 
-// manage a set of pools by name (config will be required to create the pool)
-// a pool will be removed when it is closed
+// SQL Server Advanced Pool Management https://github.com/tediousjs/node-mssql#advanced-pool-management
 async function get_pool(name, config) {
   if (!Object.prototype.hasOwnProperty.call(pools, name)) {
     const pool = new sql.ConnectionPool(config)
