@@ -46,7 +46,7 @@ Multiple tasks can be in each file
             headerrow: 1
 
 #### google_sheets
-            connection: "google_sheets",
+            connection: "bedrock-googlesheets",
             spreadsheetid: "9876234HIUFQER872345T",
             range: 'Bad Actors!A5:B'
             

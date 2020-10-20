@@ -12,15 +12,15 @@
           "type": "table_copy",
         
           "source_location": {
-            "connection": "localss1",
-            "schemaname": "dbo",
-            "tablename": "testtable"
+            "connection": "bedrock-googlesheets",
+            "spreadsheetid": "xxx",
+            "range": "Categories!A2:B"
           },
         
           "target_location": {
-            "connection": "localpg2",
+            "connection": "localpg1",
             "schemaname": "public",
-            "tablename": "testtable"
+            "tablename": "capital_project_categories"
           },
           "active": true
         }

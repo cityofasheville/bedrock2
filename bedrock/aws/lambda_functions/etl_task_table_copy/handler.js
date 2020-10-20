@@ -1,5 +1,6 @@
 const get_pg_stream = require('./get_pg_stream')
 const get_ss_stream = require('./get_ss_stream')
+const get_google_stream = require('./get_google_stream')
 const get_connections= require('./get_connections')
 const util = require('util');
 const stream = require('stream');
@@ -11,55 +12,46 @@ exports.lambda_handler = async (event) => {
     try{
         let etl = event.ETLJob.etl_tasks[event.TaskIndex]
         let connections = await get_connections()
-        
+        let streams = {}
 
-        let fromloc = etl.source_location
-        if (connections[fromloc.connection]) {
-            fromloc.conn_info = connections[fromloc.connection]
-        } else { 
-            throw `Connection definition ${fromloc.connection} not found`
-        }
-        fromloc.fromto = 'from'
-
-        let toloc = etl.target_location
-        if (connections[toloc.connection]) {
-            toloc.conn_info = connections[toloc.connection]
-        } else { 
-            throw `Connection definition ${toloc.connection} not found`
-        }
-        toloc.fromto = 'to'
-
-        // console.log("fromtoloc",fromloc,toloc)
-
-        let from_stream, to_stream
-        
-        if(fromloc.conn_info.type == 'postgresql') {
-            from_stream = await get_pg_stream(fromloc)
-        }else if(fromloc.conn_info.type == 'sqlserver') {
-            from_stream = await get_ss_stream(fromloc)
-        }
-        if(toloc.conn_info.type == 'postgresql') {
-            to_stream = await get_pg_stream(toloc)
-        }else if(toloc.conn_info.type == 'sqlserver') {
-            to_stream = await get_ss_stream(toloc) // not implemented
+        let bothloc = [ 
+            {name: 'source_location'},
+            {name: 'target_location'}
+        ]
+        for (const eachloc of bothloc) {
+            eachloc.location = etl[eachloc.name]
+            eachloc.location.fromto = eachloc.name
+            if (connections[eachloc.location.connection]) {
+                eachloc.location.conn_info = connections[eachloc.location.connection]
+            } else { 
+                throw `Connection definition ${eachloc.location.connection} not found`
+            }
+            // console.log(JSON.stringify(eachloc.location,null,2))
+            if(eachloc.location.conn_info.type == 'postgresql') {
+                streams[eachloc.name] = await get_pg_stream(eachloc.location)
+            }else if(eachloc.location.conn_info.type == 'sqlserver') {
+                streams[eachloc.name] = await get_ss_stream(eachloc.location)
+            }else if(eachloc.location.conn_info.type == 'google_sheets') {
+                streams[eachloc.name] = await get_google_stream(eachloc.location)
+            }
         }
 
         return pipeline(
-        from_stream,
-        to_stream)
+        streams.source_location,
+        streams.target_location)
         .then(() => {
             return {
                 'statusCode': 200,
                 'body': {
-                    "lambda_output": `Table copied ${toloc.connection} ${toloc.schemaname}.${toloc.tablename}`
+                    "lambda_output": `Table copied ${etl.target_location.connection} ${etl.target_location.schemaname}.${etl.target_location.tablename}`
                 }
             }
         })
         .catch(err=>{
-            return returnError(err) 
+            return returnError(err)
         })
     } catch (err) {
-        return returnError(err)    
+        return returnError(err)
     }
 }
 

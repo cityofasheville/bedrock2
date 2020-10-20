@@ -8,7 +8,7 @@ async function get_ss_stream(location) {
             reject(err)
         })
         try {
-            if(location.fromto == 'from') {
+            if(location.fromto == 'source_location') {
                 let tablename = `${location.schemaname}.${location.tablename}`
                 let conn_info = location.conn_info
                 let pool_name = location.connection
@@ -53,7 +53,7 @@ async function get_ss_stream(location) {
                         }
                     }))            
                 resolve( stream )
-            }else if(location.fromto == 'to'){
+            }else if(location.fromto == 'target_location'){
                 reject ("SQL Server 'To' not implemented")
             }
         }

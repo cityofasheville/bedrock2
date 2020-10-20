@@ -35,14 +35,14 @@ function get_pg_stream(location) {
             await client.connect()
             .catch(err => { console.error('Connection error', err.stack); reject(err) } )
 
-            if(location.fromto == 'from') {
+            if(location.fromto == 'source_location') {
                 let query_string = `COPY ${tablename} TO STDOUT WITH (FORMAT csv)`
                 stream = client.query(copyTo(query_string))
 
                 stream.on('error', err=>{ client.end(); reject(err) })
                 stream.on('end', ()=>{ client.end() })
                 console.log("Copy from Postgres: ", location.connection, tablename) 
-            }else if(location.fromto == 'to'){
+            }else if(location.fromto == 'target_location'){
                 // create empty temp table
                 let createtemp_string = `SELECT * INTO TEMP ${temp_tablename} FROM ${tablename} WHERE 1=2;`;
                 await client.query(createtemp_string).catch((err)=>{ reject(err) })
