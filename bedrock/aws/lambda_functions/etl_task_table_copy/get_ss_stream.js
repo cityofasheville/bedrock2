@@ -1,5 +1,6 @@
 const sql = require('mssql');
 const csv = require('csv');
+const { close_all_pools, get_pool } = require("./ss_pools")
 
 async function get_ss_stream(location) { 
     return new Promise(async function(resolve, reject) {
@@ -10,6 +11,7 @@ async function get_ss_stream(location) {
             if(location.fromto == 'from') {
                 let tablename = `${location.schemaname}.${location.tablename}`
                 let conn_info = location.conn_info
+                let pool_name = location.connection
 
                 let sql_string = `SELECT * FROM ${tablename}`
                 const config = {
@@ -27,9 +29,8 @@ async function get_ss_stream(location) {
                 }
                 if(conn_info.domain) config.domain = conn_info.domain
 
-                let pool = await sql.connect(config)
-
-                const request = new sql.Request(pool)
+                let pool = await get_pool(pool_name, config)
+                const request = await pool.request()
                 request.stream = true
 
                 request.query(sql_string)
@@ -37,7 +38,7 @@ async function get_ss_stream(location) {
                     reject(err)
                 })
                 request.on('finish', () => { //done?
-                    pool.close();
+                    close_all_pools();
                 })
                 console.log("Copy from SQL Server: ", location.connection, tablename) 
                 let stream = request

@@ -1,22 +1,22 @@
 {
   "JobIsGo": true,
   "ETLJob": {
-    "name": "coa_asheville_neighborhoods.ms1",
+    "name": "ad_info",
     "depends": [],
-    "path": "store/assets/coa_asheville_neighborhoods.ms1/coa_asheville_neighborhoods.ms1.json",
+    "path": "store/assets/ad_info/ad_info.json",
     "run_group": "daily",
     "etl_tasks": [
       {
         "type": "table_copy",
         "source_location": {
-          "connection": "coa-gis-edit1",
-          "schemaname": "coagis",
-          "tablename": "coa_asheville_neighborhoods"
+          "connection": "munis",
+          "schemaname": "amd",
+          "tablename": "ad_info"
         },
         "target_location": {
           "connection": "mdastore1",
           "schemaname": "internal2",
-          "tablename": "coa_asheville_neighborhoods"
+          "tablename": "ad_info"
         },
         "active": true
       }
