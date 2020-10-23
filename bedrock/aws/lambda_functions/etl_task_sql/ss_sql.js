@@ -8,6 +8,7 @@ async function ss_sql(connection,sql_string) {
             user: connection.username,
             password: connection.password,
             database: connection.database,
+            requestTimeout: 680000,
             options: { enableArithAbort: true },
             pool: {
                 max: 10,
@@ -21,7 +22,7 @@ async function ss_sql(connection,sql_string) {
 
         await sql.connect(config)
         const result = await sql.query(sql_string)
-        return result
+        return JSON.stringify(result).slice(0,40)
     } catch (err) {
         throw ["SQL Server error", err]
     }

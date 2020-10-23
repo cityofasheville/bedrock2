@@ -20,6 +20,7 @@ async function get_ss_stream(location) {
                     user: conn_info.username,
                     password: conn_info.password,
                     database: conn_info.database,
+                    requestTimeout: 680000,
                     options: { enableArithAbort: true },
                     pool: {
                         max: 10,

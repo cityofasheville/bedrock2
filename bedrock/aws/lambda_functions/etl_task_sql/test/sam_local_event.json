@@ -1,1 +1,20 @@
-
+{
+    "JobIsGo": true,
+    "ETLJob": {
+      "name": "bc_buncombe_tax.acc",
+      "depends": [
+      ],
+      "path": "store/assets/bc_buncombe_tax.acc/bc_buncombe_tax.acc.json",
+      "run_group": "tues_night",
+      "etl_tasks": [
+        {
+            "type": "sql",
+            "file": "buncombe_tax_inspections.sql",
+            "connection": "accela",
+            "active": true
+          }
+      ]
+    },
+    "TaskIndex": 0,
+    "JobType": "sql"
+  }

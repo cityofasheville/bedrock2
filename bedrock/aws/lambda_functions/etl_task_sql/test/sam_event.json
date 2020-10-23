@@ -11,7 +11,7 @@
       {
           "type": "sql",
           "file": "1-coa_bc_address_master_base.sql",
-          "db": "datastore1",
+          "connection": "datastore1",
           "active": true
       }
     ]

@@ -24,13 +24,9 @@ async function get_google_stream(location){
             })
 
             console.log("Copy from Google Sheet: https://docs.google.com/spreadsheets/d/"+location.spreadsheetid+"/edit#gid="+range.split("!")[0])
-
-                // console.log(response.data.values)
-
+            // console.log(response.data.values)
             const csvstring = csv.stringify(fix_uneven_rows(range,response.data.values))
-
             return Readable.from(csvstring);
-
         } catch (err) {
             console.error("Google Sheet error: ", err);
             throw("Google Sheet error: " + err)
@@ -41,7 +37,7 @@ async function get_google_stream(location){
 }
 
 function fix_uneven_rows(range,values){
-    // Google just drops data if a column is empty at the end of the row (lame)
+    // Google just drops data if a field is empty at the end of the row (lame)
     function sscol_to_number(letters){
         return letters.split('').reduce((r, a) => r * 26 + parseInt(a, 36) - 9, 0); 
     }
