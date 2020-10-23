@@ -1,6 +1,7 @@
 const get_pg_stream = require('./get_pg_stream')
 const get_ss_stream = require('./get_ss_stream')
 const get_google_stream = require('./get_google_stream')
+const stream_debug = require('./stream_debug')
 const get_connections= require('./get_connections')
 const util = require('util');
 const stream = require('stream');
@@ -38,6 +39,7 @@ exports.lambda_handler = async (event) => {
 
         return pipeline(
         streams.source_location,
+        //stream_debug,
         streams.target_location)
         .then(() => {
             return {

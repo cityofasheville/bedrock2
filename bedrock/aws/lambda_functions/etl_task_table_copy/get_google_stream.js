@@ -23,9 +23,12 @@ async function get_google_stream(location){
                 range
             })
 
-            console.log("Copy from Google Sheet: https://docs.google.com/spreadsheets/d/", location.spreadsheetid)
+            console.log("Copy from Google Sheet: https://docs.google.com/spreadsheets/d/"+location.spreadsheetid+"/edit#gid="+range.split("!")[0])
 
-            const csvstring = csv.stringify(response.data.values)
+                // console.log(response.data.values)
+
+            const csvstring = csv.stringify(fix_uneven_rows(range,response.data.values))
+
             return Readable.from(csvstring);
 
         } catch (err) {
@@ -35,6 +38,25 @@ async function get_google_stream(location){
     }else if(location.fromto == 'target_location'){
         throw ("Google Sheets 'To' not implemented")
     }
+}
+
+function fix_uneven_rows(range,values){
+    // Google just drops data if a column is empty at the end of the row (lame)
+    function sscol_to_number(letters){
+        return letters.split('').reduce((r, a) => r * 26 + parseInt(a, 36) - 9, 0); 
+    }
+    let sscols = range.replace(/[0-9]/g, '').split("!")[1].split(":") // eg ['A','AB']
+    let colnums = sscols.map(sscol_to_number)                         // eg [1,28]
+    let numcols = colnums[1]-colnums[0]+1
+    let fixed_data = []
+    for(row of values) {
+        let new_row = new Array(numcols)
+        for(let i = 0; i < row.length; i++) {
+            new_row[i] = row[i]
+        }
+        fixed_data.push(new_row)
+    } 
+    return fixed_data
 }
 
 module.exports= get_google_stream

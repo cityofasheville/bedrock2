@@ -1,25 +1,25 @@
 {
   "JobIsGo": true,
   "ETLJob": {
-    "name": "ad_info",
+    "name": "capital_projects_master",
     "depends": [],
-    "path": "store/assets/ad_info/ad_info.json",
+    "path": "store/assets/capital_projects_master/capital_projects_master.json",
     "run_group": "daily",
     "etl_tasks": [
       {
         "type": "table_copy",
         "source_location": {
-          "connection": "munis",
-          "schemaname": "amd",
-          "tablename": "ad_info"
+            "connection": "bedrock-googlesheets",
+            "spreadsheetid": "1IepJrSjqbGK7UcTmFHqknNUD6Iyx6-3_zpj6qHprBgY",
+            "range": "General Project Information!A1:Z"
         },
         "target_location": {
           "connection": "mdastore1",
           "schemaname": "internal2",
-          "tablename": "ad_info"
+            "tablename": "capital_projects_master"
         },
-        "active": true
-      }
+        "active": false
+    }
     ]
   },
   "TaskIndex": 0,

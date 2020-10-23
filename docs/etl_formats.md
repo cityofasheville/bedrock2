@@ -42,18 +42,18 @@ Multiple tasks can be in each file
 
 #### CSV -S3
             "connection": "s3_data_files",
-            filepath: "/tmp/data.csv",
-            headerrow: 1
+            "filepath": "/tmp/data.csv",
+            "headerrow": 1
 
 #### google_sheets
-            connection: "bedrock-googlesheets",
-            spreadsheetid: "9876234HIUFQER872345T",
-            range: 'Bad Actors!A5:B'
+            "connection": "bedrock-googlesheets",
+            "spreadsheetid": "9876234HIUFQER872345T",
+            "range": 'Bad Actors!A5:B'
             
 #### CSV -winshare
-            connection: "fileshare_g",
-            filepath: "/winshares/dont/work/on/lambda/(yet?)/data.csv",
-            headerrow: "2"
+            "connection": "fileshare_g",
+            "filepath": "/winshares/dont/work/on/lambda/(yet?)/data.csv",
+            "headerrow": "2"
 
 
 
