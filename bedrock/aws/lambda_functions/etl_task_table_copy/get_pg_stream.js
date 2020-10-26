@@ -20,12 +20,19 @@ function get_pg_stream(location) {
             let stream
             /////////
             let copy_from_temp = () => {
+                let serial_to_append = ''
+                if(location.append_serial) {
+                    serial_to_append=`alter table ${temp_tablename} add column ${location.append_serial} serial;`
+                }
                 let trans_string = `
                 BEGIN TRANSACTION;
+                ${serial_to_append}
                 TRUNCATE TABLE ${tablename};
                 INSERT INTO ${tablename} SELECT * FROM ${temp_tablename};
                 COMMIT;
                 `
+                                                                                console.log(trans_string)
+
                 client.query(trans_string, (err, res) => {
                     client.end()
                     if(err) reject(err)
