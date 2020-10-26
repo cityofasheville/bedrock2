@@ -4,6 +4,7 @@ const copyFrom = require('pg-copy-streams').from // pipe to a table _FROM_ strea
 
 function get_pg_stream(location) {
     return new Promise(async function(resolve, reject) {
+        console.log(location)
         try{
             let tablename = `${location.schemaname}.${location.tablename}`
             let temp_tablename = `temp_${location.tablename}`
@@ -31,8 +32,6 @@ function get_pg_stream(location) {
                 INSERT INTO ${tablename} SELECT * FROM ${temp_tablename};
                 COMMIT;
                 `
-                                                                                console.log(trans_string)
-
                 client.query(trans_string, (err, res) => {
                     client.end()
                     if(err) reject(err)
@@ -53,6 +52,10 @@ function get_pg_stream(location) {
                 // create empty temp table
                 let createtemp_string = `SELECT * INTO TEMP ${temp_tablename} FROM ${tablename} WHERE 1=2;`;
                 await client.query(createtemp_string).catch((err)=>{ reject(err) })
+                if(location.append_serial) {  //if we are adding a serial column
+                    let dropserial_string = `alter table ${temp_tablename} drop column ${location.append_serial};`;
+                    await client.query(dropserial_string).catch((err)=>{ reject(err) })
+                }
 
                 let query_string = `COPY ${temp_tablename} FROM STDIN WITH (FORMAT csv)`
                 stream = client.query(copyFrom(query_string))

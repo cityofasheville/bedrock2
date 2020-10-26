@@ -29,7 +29,7 @@ Multiple tasks can be in each file
             <TYPE INFO, see below>
       },
       "active": true
-  }
+    }
   ]
 }
 
@@ -39,6 +39,7 @@ Multiple tasks can be in each file
             "connection": "localss1",
             "schemaname": "dbo",
             "tablename": "testtable"
+            <OPTIONAL> "append_serial": "objectid"
 
 #### CSV -S3
             "connection": "s3_data_files",

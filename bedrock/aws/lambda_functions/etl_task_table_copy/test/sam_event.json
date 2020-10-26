@@ -9,17 +9,18 @@
       {
         "type": "table_copy",
         "source_location": {
-            "connection": "bedrock-googlesheets",
-            "spreadsheetid": "1IepJrSjqbGK7UcTmFHqknNUD6Iyx6-3_zpj6qHprBgY",
-            "range": "General Project Information!A1:Z"
+          "connection": "bedrock-googlesheets",
+          "spreadsheetid": "1IepJrSjqbGK7UcTmFHqknNUD6Iyx6-3_zpj6qHprBgY",
+          "range": "General Project Information!A2:Z"
         },
         "target_location": {
           "connection": "mdastore1",
           "schemaname": "internal2",
-            "tablename": "capital_projects_master"
+          "tablename": "capital_projects_master",
+          "append_serial": "objectid"
         },
         "active": false
-    }
+      }
     ]
   },
   "TaskIndex": 0,
