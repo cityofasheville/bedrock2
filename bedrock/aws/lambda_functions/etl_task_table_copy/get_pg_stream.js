@@ -52,7 +52,7 @@ function get_pg_stream(location) {
                 // create empty temp table
                 let createtemp_string = `SELECT * INTO TEMP ${temp_tablename} FROM ${tablename} WHERE 1=2;`;
                 await client.query(createtemp_string).catch((err)=>{ reject(err) })
-                if(location.append_serial) {  //if we are adding a serial column
+                if(location.append_serial) {  //The serial column appears in target but not source, so drop it first and readd it after stream
                     let dropserial_string = `alter table ${temp_tablename} drop column ${location.append_serial};`;
                     await client.query(dropserial_string).catch((err)=>{ reject(err) })
                 }
