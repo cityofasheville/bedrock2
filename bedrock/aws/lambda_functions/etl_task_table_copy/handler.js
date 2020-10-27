@@ -42,7 +42,7 @@ exports.lambda_handler = async (event) => {
 
             return pipeline(
             streams.source_location,
-            //stream_debug,
+            // stream_debug,
             streams.target_location)
             .then(() => {
                 return {

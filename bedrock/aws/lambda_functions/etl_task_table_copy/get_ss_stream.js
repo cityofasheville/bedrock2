@@ -20,6 +20,7 @@ async function get_ss_stream(location) {
                     user: conn_info.username,
                     password: conn_info.password,
                     database: conn_info.database,
+                    connectionTimeout: 30000,
                     requestTimeout: 680000,
                     options: { enableArithAbort: true },
                     pool: {
@@ -51,7 +52,8 @@ async function get_ss_stream(location) {
                             boolean: (value)=>{
                                 return value ? '1': '0'
                             }
-                        }
+                        },
+                        quoted_match: /\r/
                     }))            
                 resolve( stream )
             }else if(location.fromto == 'target_location'){
