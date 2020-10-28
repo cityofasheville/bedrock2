@@ -66,15 +66,13 @@ Multiple tasks can be in each file
         {
             "type": "table_copy_since",
             "source_location": {
-                "type": "database",
-                "db": "localss1",
+                "connection": "localss1",
                 "schemaname": "dbo",
                 "tablename": "testtable"
             },
             "target_location": {
-                "type": "database",
-                "db": "localpg1",
-                "schemaname": "public",
+                "connection": "localpg1",
+                "schemaname": "dbo",
                 "tablename": "testtable"
             },
             "num_weeks": 78,

@@ -33,7 +33,7 @@ async function get_ss_stream(location) {
                 }
                 if(conn_info.domain) config.domain = conn_info.domain
                 if(conn_info.parameters) {
-                    if(conn_info.parameters.encrypt === false) config.options.encrypt = false //for <= SQL 2008
+                    if(conn_info.parameters.encrypt === false) config.options.encrypt = false
                 }
                 let pool = await get_pool(pool_name, config)
                 const request = await pool.request()
