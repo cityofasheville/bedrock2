@@ -1,4 +1,3 @@
-  
 #!/usr/bin/env python3
 import boto3
 import os
@@ -17,6 +16,7 @@ def update_run_map(state):
         job = jobs[i]
         result = results[i]['ETLJob']
         name = result['name']
+        success = True
         for j in range(len(result['etl_tasks'])):
             task_result = result['etl_tasks'][j]['result']
             if 'statusCode' not in task_result or task_result['statusCode'] != 200:
@@ -26,11 +26,13 @@ def update_run_map(state):
                     "result": result
                 })
                 fails[name] = True
+                success = False
                 break
-            else:
-                newstate['success'].append(name)
-            if name in fails:
+            if not success:
                 break
+
+        if success:
+            newstate['success'].append(name)
 
     # Purge all jobs from state['remainder'] that depend on failed or skipped jobs
     newremainder = []
