@@ -3,13 +3,7 @@ const ss_sql = require('./ss_sql')
 const get_connections= require('./get_connections')
 const get_sql_from_file = require('./get_sql_from_file')
 
-exports.lambda_handler =  async function(event, context) {
-    // timeout task  
-    let timeleft = context.getRemainingTimeInMillis() - 300;
-    const timeout = new Promise(( resolve ) => {
-      setTimeout(() => resolve({ statusCode: 500, message: `Lambda timed out after ${Math.round(timeleft/1000)} seconds` }), timeleft);
-    })
-  
+exports.lambda_handler =  async function(event, context) {  
     const task = new Promise(async ( resolve ) => {
         try {
             let result, connection
@@ -20,9 +14,9 @@ exports.lambda_handler =  async function(event, context) {
                 let connections = await get_connections()
                 let sql_filepath = 'store/assets/' + event.ETLJob.name + '/' + etl.file  // 
                 let sql = await get_sql_from_file( sql_filepath )
-                console.log("etl: \n" + JSON.stringify(etl, null, 2))
-                console.log("connection: \n" + JSON.stringify(connections, null, 2))
-                console.log("sql: \n" + JSON.stringify(sql, null, 2))
+                // console.log("etl: \n" + JSON.stringify(etl, null, 2))
+                // console.log("connection: \n" + JSON.stringify(connections, null, 2))
+                // console.log("sql: \n" + JSON.stringify(sql, null, 2))
                 if (connections[etl.connection]) {
                     connection = connections[etl.connection]
                 } else { 
@@ -55,8 +49,13 @@ exports.lambda_handler =  async function(event, context) {
         }
 
     })
-    
-    // race the timeout task with the real task-ready steady go!
+
+    // timeout task  
+    let timeleft = context.getRemainingTimeInMillis() - 300;
+    const timeout = new Promise(( resolve ) => {
+        setTimeout(() => resolve({ statusCode: 500, message: `Lambda timed out after ${Math.round(timeleft/1000)} seconds` }), timeleft);
+    })
+    // race the timeout task with the real task
     const res = await Promise.race([task, timeout]);
     return res;
 }
