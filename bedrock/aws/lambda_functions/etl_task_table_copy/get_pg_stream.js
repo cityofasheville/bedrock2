@@ -4,7 +4,7 @@ const copyFrom = require('pg-copy-streams').from // pipe to a table _FROM_ strea
 
 function get_pg_stream(location) {
     return new Promise(async function(resolve, reject) {
-        console.log(location)
+        // console.log(location)
         try{
             let tablename = `${location.schemaname}.${location.tablename}`
             let temp_tablename = `temp_${location.tablename}`
