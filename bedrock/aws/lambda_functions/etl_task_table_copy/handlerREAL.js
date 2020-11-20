@@ -1,16 +1,14 @@
 const get_pg_stream = require('./get_pg_stream')
 const get_ss_stream = require('./get_ss_stream')
 const get_google_stream = require('./get_google_stream')
-// const stream_debug = require('./stream_debug')
+const stream_debug = require('./stream_debug')
 const get_connections = require('./get_connections')
 const util = require('util');
 const stream = require('stream');
 
 const pipeline = util.promisify(stream.pipeline);
 
-exports.lambda_handler = async (event, context) => {
-    let timeleft = context.getRemainingTimeInMillis() - 300;
-
+exports.lambda_handler =  async function(event, context) {
     const task = new Promise(async ( resolve ) => { 
         // console.log("event",event)
         try{
@@ -33,6 +31,7 @@ exports.lambda_handler = async (event, context) => {
                     } else { 
                         throw `Connection definition ${eachloc.location.connection} not found`
                     }
+                    // console.log(JSON.stringify(eachloc.location,null,2))
                     if(eachloc.location.conn_info.type === 'postgresql') {
                         streams[eachloc.name] = await get_pg_stream(eachloc.location)
                     }else if(eachloc.location.conn_info.type === 'sqlserver') {
@@ -62,18 +61,24 @@ exports.lambda_handler = async (event, context) => {
             resolve(returnError(err))
         }
     })
-    
-    // timeout task 
-    const timeout = new Promise(async (resolve) => {      
-      await require('util').promisify(setTimeout)(timeleft);
-      resolve({ statusCode: 500, message: `Lambda timed out after ${Math.round(timeleft/1000)} seconds` }) 
-    })
+
+    // timeout task  
+    let timeleft = context.getRemainingTimeInMillis() - 300;
+    // const timeout = new Promise(( resolve ) => {
+    //     setTimeout(() => resolve({ statusCode: 500, message: `Lambda timed out after ${Math.round(timeleft/1000)} seconds` }), timeleft);
+    // })
+    const timeout = new Promise(async (resolve) => {
+        console.log("I'm timing out2")
+        await timeoutpromise(timeleft) // require('util').promisify(setTimeout)(timeleft);
+        console.log("I'm timing out2too")
+        resolve({ statusCode: 500, message: `Lambda timed out after ${Math.round(timeleft/1000)} seconds` }) 
+      })
     // race the timeout task with the real task
     const res = await Promise.race([task, timeout]);
     return res;
-  };
+}
 
-  function returnError(err){
+function returnError(err){
     return {
         'statusCode': 500,
         'body': {
