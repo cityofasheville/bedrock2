@@ -2,9 +2,7 @@
   "JobIsGo": true,
   "ETLJob": {
     "name": "testtable2",
-    "depends": [
-      "testtable"
-    ],
+    "depends": [],
     "path": "store/assets/testtable/testtable.json",
     "run_group": "tues_night",
     "etl_tasks": [

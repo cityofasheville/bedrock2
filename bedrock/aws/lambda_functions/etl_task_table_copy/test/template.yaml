@@ -8,12 +8,14 @@ Resources:
     Properties:
       Runtime: nodejs12.x
       Handler: handler.lambda_handler
-      Timeout: 20
+      Timeout: 30
       CodeUri: ..
+      MemorySize: 400
   TestTimeout:
     Type: AWS::Serverless::Function
     Properties:
       Runtime: nodejs12.x
       Handler: testtimeout.lambda_handler
-      Timeout: 60
-      CodeUri: ..
+      Timeout: 30
+      CodeUri: .
+      MemorySize: 400

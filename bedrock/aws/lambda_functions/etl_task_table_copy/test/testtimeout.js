@@ -1,8 +1,8 @@
-const get_ss_stream = require('./get_ss_stream')
-const get_google_stream = require('./get_google_stream')
-const get_connections = require('./get_connections')
+const get_ss_stream = require('../get_ss_stream')
+const get_google_stream = require('../get_google_stream')
+const get_connections = require('../get_connections')
 
-const get_pg_stream = require('./get_pg_stream')
+const get_pg_stream = require('../get_pg_stream')
 const stream = require('stream');
 exports.lambda_handler = async (event, context) => {
     let timeleft = context.getRemainingTimeInMillis() - 300;

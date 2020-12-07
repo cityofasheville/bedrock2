@@ -1,15 +1,15 @@
-const get_pg_stream = require('./get_pg_stream')
-const get_ss_stream = require('./get_ss_stream')
-const get_google_stream = require('./get_google_stream')
-// const stream_debug = require('./stream_debug')
-const get_connections = require('./get_connections')
-const util = require('util');
-const stream = require('stream');
-
-const pipeline = util.promisify(stream.pipeline);
+        const get_pg_stream = require('./get_pg_stream')
+        const get_ss_stream = require('./get_ss_stream')
+        const get_google_stream = require('./get_google_stream')
+        // const stream_debug = require('./stream_debug')
+        const get_connections = require('./get_connections')
+        const util = require('util');
+        const stream = require('stream');
+    
+        const pipeline = util.promisify(stream.pipeline);   
 
 exports.lambda_handler = async (event, context) => {
-    let timeleft = context.getRemainingTimeInMillis() - 300;
+    let timeleft = context.getRemainingTimeInMillis() - 1000; // the seconds may need to be tuned. Everything needs to load before it times out or it wont return status code
 
     const task = new Promise(async ( resolve ) => { 
         // console.log("event",event)
@@ -62,18 +62,21 @@ exports.lambda_handler = async (event, context) => {
             resolve(returnError(err))
         }
     })
-    
     // timeout task 
     const timeout = new Promise(async (resolve) => {      
-      await require('util').promisify(setTimeout)(timeleft);
-      resolve({ statusCode: 500, message: `Lambda timed out after ${Math.round(timeleft/1000)} seconds` }) 
-    })
+        await require('util').promisify(setTimeout)(timeleft);
+        resolve({ statusCode: 500, message: `Lambda timed out after ${Math.round(timeleft/1000)} seconds` }) 
+      })    
+    // // timeout task 
+    // const timeout = new Promise(( resolve ) => {
+    //     setTimeout(() => resolve({ statusCode: 500, message: `Lambda timed out after ${Math.round(timeleft/1000)} seconds` }), timeleft);
+    // })
     // race the timeout task with the real task
     const res = await Promise.race([task, timeout]);
     return res;
-  };
+};
 
-  function returnError(err){
+function returnError(err){
     return {
         'statusCode': 500,
         'body': {
