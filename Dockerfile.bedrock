@@ -1,0 +1,3 @@
+FROM ejaxonavl/devmachine
+RUN conda create -n bedrock python=3.9
+RUN echo "conda activate bedrock" >> ~/.bashrc
