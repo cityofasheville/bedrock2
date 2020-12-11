@@ -3,13 +3,10 @@
 Second version of the Bedrock system.
 
 cd /home/bedrock
-conda create -n bedrock python=3.9
-conda activate bedrock
-pip install requirements.txt
+pip install -r requirements.txt
 python setup.py develop
 
 ## Using the Docker Development Machine
-docker build -f Dockerfile.devmachine --tag ejaxonavl/devmachine .
 docker build -f Dockerfile.bedrock --tag ejaxonavl/bedrock .
 
 ### To log in
