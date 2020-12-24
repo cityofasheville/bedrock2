@@ -1,6 +1,16 @@
 # Bedrock 2
 
-Second version of the Bedrock system.
+Bedrock is a system for strategic data asset inventory and dependency management. 
+
+## What is in this repo?
+
+TBD
+
+## How do you use Bedrock?
+The Bedrock system consists of two main parts: a command-line interface and AWS functions that may be invoked from the CLI or via CloudWatch events.
+
+## How do you deploy the Bedrock system?
+### Pre-requisites
 
 cd /home/bedrock
 pip install -r requirements.txt
