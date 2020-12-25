@@ -2,10 +2,12 @@ FROM amazonlinux:2
 
 # Base system
 RUN yum -y update
+RUN yum install -y gcc-c++ make
 RUN cd /tmp; curl "https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh" -o miniconda3.sh; \
    bash ./miniconda3.sh -b -p /usr/share/miniconda; rm ./miniconda3.sh; ln -s /usr/share/miniconda/bin/conda /usr/local/bin/conda
 RUN conda init bash
-RUN yum install -y gcc-c++ make
+RUN yum install -y unixODBC-devel
+RUN ln -s /usr/libexec/gcc/x86_64-redhat-linux/7/cc1plus /usr/bin # https://github.com/mkleehammer/pyodbc/wiki/Install
 RUN curl -sL https://rpm.nodesource.com/setup_12.x | bash -
 RUN yum -y install nodejs git unzip
 

@@ -3,4 +3,5 @@ jinja2
 pyyaml
 colorlog
 boto3
-
+psycopg2-binary
+pyodbc

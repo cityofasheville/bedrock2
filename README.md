@@ -15,6 +15,7 @@ The Bedrock system consists of two main parts: a command-line interface and AWS 
 cd /home/bedrock
 pip install -r requirements.txt
 python setup.py develop
+export BEDROCK_BUCKETNAME=managed-data-assets
 
 ## Using the Docker Development Machine
 docker build -f Dockerfile.bedrock --tag ejaxonavl/bedrock .
