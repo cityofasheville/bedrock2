@@ -23,12 +23,30 @@ def get_blueprint(s3, bucket_name, blueprint_name, tmpfilepath):
     os.remove(tmpfilepath)
     return bp
 
-def sql_column(col, is_last):
-    if(col["type"] == "string"):
-        if "length" in col and col["length"] > 0:
-            res = col["name"] + " VARCHAR(" + str(col["length"])+")"
+def create_string_column(col, dbtype):
+    if "length" in col and col["length"] > 0:
+        res = col["name"] + " VARCHAR(" + str(col["length"])+")"
+    else:
+        res = col["name"] + " TEXT"
+    return res
+
+def create_integer_column(col, dbtype):
+    res = col["name"] + " "
+    if "length" in col and col["length"] != 4:
+        if col["length"] == 2:
+            res = res + "SMALLINT"
         else:
-            res = col["name"] + " TEXT"
+            res = res + "BIGINT"
+    else:
+        res = res + "INTEGER"
+    return res
+
+
+def sql_column(col, is_last, dbtype):
+    if col["type"] == "string":
+        res = create_string_column(col, dbtype)
+    elif col["type"] == "integer":
+        res = create_integer_column(col, dbtype)
     else:
         return ""
 
@@ -38,12 +56,12 @@ def sql_column(col, is_last):
 
 
 
-def create_table_from_blueprint(blueprint, table_name):
+def create_table_from_blueprint(blueprint, table_name, dbtype = "postgresql"):
     sql = "CREATE TABLE " + table_name + " ("
     for i in range(len(blueprint["columns"])):
         is_last = (i == len(blueprint['columns']) - 1)
         print("is_last = " + str(is_last))
-        sql = sql + sql_column(blueprint["columns"][i], is_last)
+        sql = sql + sql_column(blueprint["columns"][i], is_last, dbtype)
     sql = sql + " )"
     print("SQL is " + sql)
     return sql

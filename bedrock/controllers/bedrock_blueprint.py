@@ -64,7 +64,7 @@ class BedrockBlueprint(Controller):
             print("A table name of the form SCHEMA.TABLENAME is required - exiting")
             return -1
 
-        sql = create_table_from_blueprint(blueprint, self.app.pargs.table)
+        sql = create_table_from_blueprint(blueprint, self.app.pargs.table, connection["type"])
         execute_sql_statement(connection, sql)
         pass
 
