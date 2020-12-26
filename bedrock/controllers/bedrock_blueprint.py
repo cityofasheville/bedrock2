@@ -5,10 +5,12 @@ import botocore
 import json
 import sys
 
-from ..src.utilities.print import pretty_print_list
+from ..src.utilities.print import print_list_in_columns
 from ..src.utilities.connections import get_connections
 from ..src.blueprint.blueprint import get_blueprint, list_blueprints, create_table_from_blueprint
 from ..src.utilities.sql import execute_sql_statement
+from ..src.utilities.constants import *
+
 
 class BedrockBlueprint(Controller):
     class Meta:
@@ -32,8 +34,14 @@ class BedrockBlueprint(Controller):
 
     def create_table(self):
         bucket_name = os.getenv("BEDROCK_BUCKETNAME")
-        prefix = "run/"
-        tmpfilepath = "./tmp.json"
+        tmpfiledir = os.getenv("BEDROCK_TMPFILE_DIR")
+        tmpfilename = os.getenv("BEDROCK_TMPFILE_NAME")
+        if tmpfiledir is None:
+            tmpfiledir = "."
+        if tmpfilename is None:
+            tmpfilename = "tmp.json"
+        tmpfilepath = tmpfiledir + "/" + tmpfilename
+
         connections = {}
         s3 = boto3.client("s3")
 
@@ -44,8 +52,8 @@ class BedrockBlueprint(Controller):
         # Get the list of possible connections, then make sure we have chosen one.
         connections = get_connections(s3, bucket_name, tmpfilepath)
         if self.app.pargs.connection is None or self.app.pargs.connection not in connections:
-            print("A connection name is required. Must be one of the following:")
-            pretty_print_list(list(connections.keys()))
+            print("\nA connection name is required. Must be one of the following:\n")
+            print_list_in_columns(list(connections.keys()))
             return -1
         connection = connections[self.app.pargs.connection]
 
@@ -53,15 +61,15 @@ class BedrockBlueprint(Controller):
         blueprint_name = self.app.pargs.blueprint
         blueprint = None
         if blueprint_name is not None:
-            blueprint = get_blueprint(s3, bucket_name, "store/blueprints/" + blueprint_name + ".json", tmpfilepath)
+            blueprint = get_blueprint(s3, bucket_name, BLUEPRINTS_PREFIX + blueprint_name + ".json", tmpfilepath)
         if blueprint is None:
-            blueprints = list_blueprints(s3, bucket_name, "store/blueprints/")
-            print("Blue print " + (blueprint_name if blueprint_name is not None else "")  + " not found. Must be one of the following:")
-            pretty_print_list(blueprints)
+            blueprints = list_blueprints(s3, bucket_name, BLUEPRINTS_PREFIX)
+            print("\nBlue print " + (blueprint_name if blueprint_name is not None else "")  + " not found. Must be one of:\n")
+            print_list_in_columns(blueprints)
             return -1
 
         if self.app.pargs.table is None or len(self.app.pargs.table.split(".")) != 2:
-            print("A table name of the form SCHEMA.TABLENAME is required - exiting")
+            print("\nA table name of the form SCHEMA.TABLENAME is required.\n")
             return -1
 
         sql = create_table_from_blueprint(blueprint, self.app.pargs.table, connection["type"])

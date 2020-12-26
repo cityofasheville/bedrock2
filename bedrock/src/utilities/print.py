@@ -1,13 +1,8 @@
-def pretty_print_list(a):
-    ll = len(a)
-    i = 0
-    s = "     "
-    for itm in a:
-        if i == ll-1:
-            s = s + itm
-        else:
-            s = s + itm + ",  "
-        i = i + 1
-        if i > 0 and i%5 == 0:
-            s = s + "\n     "
-    print(s)
+
+def print_list_in_columns(a, ncol=3, width=35):
+    for count, itm in enumerate(a, 1):
+        print (" " + itm.ljust(width), end=' ')
+        if count % ncol == 0:
+            print('')
+    print('')
+
