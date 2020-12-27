@@ -9,6 +9,13 @@ def create_string_column(col, dbtype):
             res = col["name"] + "VARCHAR(max)"
     return res
 
+def create_character_column(col, dbtype):
+    if "length" in col and col["length"] > 0:
+        res = col["name"] + " CHARACTER(" + str(col["length"])+")"
+    else:
+        raise Exception("Length required for character type " + col["name"])
+    return res
+
 def create_integer_column(col, dbtype):
     res = col["name"] + " "
     if "length" in col and col["length"] != 4:
@@ -44,6 +51,8 @@ def create_datetime_column(col, dbtype):
 def sql_column(col, is_last, dbtype):
     if col["type"] == "string":
         res = create_string_column(col, dbtype)
+    elif col["type"] == "character":
+        res = create_character_column(col, dbtype)
     elif col["type"] == "integer":
         res = create_integer_column(col, dbtype)
     elif col["type"] == "decimal":
