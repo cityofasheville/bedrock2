@@ -5,6 +5,7 @@ import json
 import psycopg2
 
 from ..utilities.construct_sql import sql_column
+from ..utilities.sql import execute_sql_statement_with_return
 
 def list_blueprints(s3, bucket_name, prefix):
     objs = s3.list_objects_v2(Bucket=bucket_name, Prefix=prefix)["Contents"]
@@ -35,6 +36,20 @@ def create_table_from_blueprint(blueprint, table_name, dbtype = "postgresql"):
     return sql
 
 def columns_from_pg_table(cdefs):
+    type_map = {
+        "character varying": "string",
+        "character": "character",
+        "integer": "integer",
+        "bigint": "bigint",
+        "smallint": "smallint",
+        "boolean": "boolean",
+        "double precision": "double",
+        "real": "float",
+        "numeric": "decimal",
+        "timestamp without time zone": "datetime",
+        "date": "date",
+        "time without time zone": "time"
+    }
     columns = []
     for i in range(len(cdefs)):
         name, nullable, in_type, in_length, in_precision, in_radix, in_scale, ord = cdefs[i]
@@ -43,39 +58,27 @@ def columns_from_pg_table(cdefs):
             "description": "TBD",
             "type": None,
         }
+        if in_type not in type_map:
+            raise Exception("ERROR: Unknown column type " + in_type + " for column " + name)
+        col["type"] = type_map[in_type]
         if nullable == "NO":
             col["nullable"] = False
-        if in_type == "character varying":
-            col["type"] = "string"
+        if in_type in ("character varying", "character"):
             col["length"] = in_length
-        elif in_type == "character":
-            col["type"] = in_type
-            col["length"] = in_length
-        elif in_type == "integer":
-            col["type"] = "integer"
-        elif in_type == "bigint":
-            col["type"] = "bigint"
-        elif in_type == "smallint":
-            col["type"] = "smallint"
-        elif in_type == "boolean":
-            col["type"] = "boolean"
-        elif in_type == "double precision":
-            col["type"] = "double"
-        elif in_type == "real":
-            col["type"] = "float"
-        elif in_type == "numeric":
-            col["type"] = "decimal"
+        if in_type == "numeric":
             col["precision"] = str(in_precision) + "," + str(in_scale)
-        elif in_type == "timestamp without time zone":
-            col["type"] = "datetime"
-        elif in_type == "date":
-            col["type"] = "date"
-        elif in_type == "time without time zone":
-            col["type"] = "time"
-        else:
-            raise Exception("ERROR: Unknown column type " + in_type + " for column " + name)
+            
         columns.append(col)
     return columns
+
+def columns_from_table(bedrock_connection, cdefs):
+    if (bedrock_connection["type"] == "postgresql"):
+        return columns_from_pg_table(cdefs)
+    elif bedrock_connection["type"] == "sqlserver":
+        print("columns_from_table: SQL SERVER NOT YET IMPLEMENTED")
+        return None
+    else:
+        raise Exception("Connection type " + bedrock_connection["type"] + " not yet implemented")
 
 def create_blueprint_from_table(bedrock_connection, blueprint_name, table_name):
     if len(table_name.split('.')) != 2:
@@ -88,32 +91,14 @@ def create_blueprint_from_table(bedrock_connection, blueprint_name, table_name):
             FROM information_schema.columns """
     sql = sql + "WHERE table_name = '" + table + "' AND table_schema = '" + schema + "' ORDER BY ordinal_position ASC"
     conn = None
-    if bedrock_connection["type"] == "postgresql":
-        try:
-            conn = psycopg2.connect(
-                host=bedrock_connection["host"],
-                database=bedrock_connection["database"],
-                user=bedrock_connection["username"],
-                password=bedrock_connection["password"]
-            )
-            cur = conn.cursor()
-            cur.execute(sql)
-            res = cur.fetchall()
-            blueprint = {
-                "name": blueprint_name,
-                "description": "TBD",
-                "columns": columns_from_pg_table(res)
-            }
-            cur.close()
-            conn.commit()
-            conn.close()
-        except (Exception, psycopg2.DatabaseError) as error:
-            print(error)
-        finally:
-            if conn is not None:
-                conn.close()
-    else:
-        print("Connection type " + bedrock_connection["type"] + " not yet implemented")
-    with open("./" + blueprint_name + ".1.0.json", 'w') as f:
-        f.write(json.dumps(blueprint, indent = 4))
+    res = execute_sql_statement_with_return(bedrock_connection, sql)
+    blueprint = {
+        "name": blueprint_name,
+        "description": "TBD",
+        "columns": columns_from_table(bedrock_connection, res)
+    }
+    fname = "./" + blueprint_name + ".1.0.json"
+    with open(fname, 'w') as f:
+        f.write(json.dumps(blueprint, indent = 4)+ "\n")
+    print("Blueprint written to " + fname)
     return blueprint

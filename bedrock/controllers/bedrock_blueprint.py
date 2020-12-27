@@ -112,22 +112,10 @@ class BedrockBlueprint(Controller):
         if self.app.pargs.table is not None: # Looks like we are deriving from an existing table
             # Get the list of possible connections, then make sure we have chosen one.
             connections = get_connections(s3, bucket_name, tmpfilepath)
+            print(json.dumps(connections, indent=4))
             if self.app.pargs.connection is None or self.app.pargs.connection not in connections:
                 print("\nA connection name is required. Must be one of the following:\n")
                 print_list_in_columns(list(connections.keys()))
                 return -1
             connection = connections[self.app.pargs.connection]
             blueprint = create_blueprint_from_table(connection, self.app.pargs.blueprint, self.app.pargs.table)
-    
-    @ex(
-        help="create blueprint",
-
-        arguments=[
-            ### preprocess assets command help
-            ( [ "-n", "--name" ],
-              { "help" : "bedrock blueprint create -n NAME: Create a blueprint with name NAME" } ),
-        ],
-    )
-    def create(self):
-        print(self.app.pargs)
-        

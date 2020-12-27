@@ -6,11 +6,19 @@ RUN yum install -y gcc-c++ make
 RUN cd /tmp; curl "https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh" -o miniconda3.sh; \
    bash ./miniconda3.sh -b -p /usr/share/miniconda; rm ./miniconda3.sh; ln -s /usr/share/miniconda/bin/conda /usr/local/bin/conda
 RUN conda init bash
-RUN yum install -y unixODBC-devel
+RUN yum install -y unixODBC-devel python3-devel
 RUN ln -s /usr/libexec/gcc/x86_64-redhat-linux/7/cc1plus /usr/bin # https://github.com/mkleehammer/pyodbc/wiki/Install
+RUN pip3 install --user pyodbc
 RUN curl -sL https://rpm.nodesource.com/setup_12.x | bash -
 RUN yum -y install nodejs git unzip
 RUN yum -y install postgresql postgresql-server
+
+# Drivers for MS SQL Server
+RUN curl https://packages.microsoft.com/config/rhel/7/prod.repo > /etc/yum.repos.d/mssql-release.repo
+RUN yum -y remove unixODBC-utf16 unixODBC-utf16-devel
+RUN ACCEPT_EULA=Y yum -y install msodbcsql17
+RUN echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bash_profile
+RUN echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bashrc
 
 RUN cd /tmp; curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"; \
    unzip awscliv2.zip; ./aws/install; rm -Rf aws awscliv2.zip
