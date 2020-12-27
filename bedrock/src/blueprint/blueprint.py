@@ -35,13 +35,46 @@ def create_table_from_blueprint(blueprint, table_name, dbtype = "postgresql"):
     return sql
 
 def columns_from_pg_table(cdefs):
+    columns = []
     for i in range(len(cdefs)):
-        name, nullable, type, length, precision, radix, scale, ord = cdefs[i]
+        name, nullable, in_type, in_length, in_precision, in_radix, in_scale, ord = cdefs[i]
         col = {
-            "name": name
+            "name": name,
+            "description": "TBD",
+            "type": None,
+            "nullable": True if nullable != "NO" else False
         }
-        print(name, type, length, sep=", ")
-    return []
+        if in_type == "character varying":
+            col["type"] = "string"
+            col["length"] = in_length
+        elif in_type == "character":
+            col["type"] = in_type
+            col["length"] = in_length
+        elif in_type == "integer":
+            col["type"] = "integer"
+        elif in_type == "bigint":
+            col["type"] = "bigint"
+        elif in_type == "smallint":
+            col["type"] = "smallint"
+        elif in_type == "boolean":
+            col["type"] = "boolean"
+        elif in_type == "double precision":
+            col["type"] = "double"
+        elif in_type == "real":
+            col["type"] = "float"
+        elif in_type == "numeric":
+            col["type"] = "decimal"
+            col["precision"] = str(in_precision) + "," + str(in_scale)
+        elif in_type == "timestamp without time zone":
+            col["type"] = "datetime"
+        elif in_type == "date":
+            col["type"] = "date"
+        elif in_type == "time without time zone":
+            col["type"] = "time"
+        else:
+            raise Exception("ERROR: Unknown column type " + in_type + " for column " + name)
+        columns.append(col)
+    return columns
 
 def create_blueprint_from_table(bedrock_connection, blueprint_name, table_name):
     if len(table_name.split('.')) != 2:
@@ -79,5 +112,7 @@ def create_blueprint_from_table(bedrock_connection, blueprint_name, table_name):
         finally:
             if conn is not None:
                 conn.close()
-    # else:
-        # print("Connection type " + bedrock_connection["type"] + " not yet implemented")
+    else:
+        print("Connection type " + bedrock_connection["type"] + " not yet implemented")
+    
+    print(json.dumps(blueprint, indent=4))
