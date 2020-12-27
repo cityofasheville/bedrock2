@@ -118,8 +118,6 @@ class BedrockBlueprint(Controller):
                 return -1
             connection = connections[self.app.pargs.connection]
             blueprint = create_blueprint_from_table(connection, self.app.pargs.blueprint, self.app.pargs.table)
-            print(blueprint)
-
     
     @ex(
         help="create blueprint",

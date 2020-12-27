@@ -42,8 +42,9 @@ def columns_from_pg_table(cdefs):
             "name": name,
             "description": "TBD",
             "type": None,
-            "nullable": True if nullable != "NO" else False
         }
+        if nullable == "NO":
+            col["nullable"] = False
         if in_type == "character varying":
             col["type"] = "string"
             col["length"] = in_length
@@ -86,7 +87,6 @@ def create_blueprint_from_table(bedrock_connection, blueprint_name, table_name):
                 character_maximum_length, numeric_precision, numeric_precision_radix, numeric_scale, ordinal_position
             FROM information_schema.columns """
     sql = sql + "WHERE table_name = '" + table + "' AND table_schema = '" + schema + "' ORDER BY ordinal_position ASC"
-    print(sql)
     conn = None
     if bedrock_connection["type"] == "postgresql":
         try:
@@ -114,5 +114,6 @@ def create_blueprint_from_table(bedrock_connection, blueprint_name, table_name):
                 conn.close()
     else:
         print("Connection type " + bedrock_connection["type"] + " not yet implemented")
-    
-    print(json.dumps(blueprint, indent=4))
+    with open("./" + blueprint_name + ".1.0.json", 'w') as f:
+        f.write(json.dumps(blueprint, indent = 4))
+    return blueprint
