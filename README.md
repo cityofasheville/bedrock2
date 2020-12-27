@@ -28,3 +28,9 @@ docker images
 docker ps -a
 docker image prune
 docker container prune
+
+## Blueprint
+Example:
+    bedrock blueprint create-table -c mdastore1 -b employee.1.0 -t internal2.ejtmp
+which is equivalent to:
+    bedrock blueprint create-table --connection=mdastore1 --blueprint=employee.1.0 --table=internal2.ejtmp

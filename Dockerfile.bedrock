@@ -10,6 +10,7 @@ RUN yum install -y unixODBC-devel
 RUN ln -s /usr/libexec/gcc/x86_64-redhat-linux/7/cc1plus /usr/bin # https://github.com/mkleehammer/pyodbc/wiki/Install
 RUN curl -sL https://rpm.nodesource.com/setup_12.x | bash -
 RUN yum -y install nodejs git unzip
+RUN yum -y install postgresql postgresql-server
 
 RUN cd /tmp; curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"; \
    unzip awscliv2.zip; ./aws/install; rm -Rf aws awscliv2.zip
