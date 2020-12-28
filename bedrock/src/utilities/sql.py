@@ -64,6 +64,7 @@ def execute_sql_statement_with_return(bedrock_connection, sql):
             for row in cursor:
                 print(row)
         except (Exception) as error:
+            print("HI")
             print(error)
         finally:
             if conn is not None:
