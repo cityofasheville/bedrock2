@@ -11,7 +11,7 @@ What these two types have in common is a need for a managed interface between th
 
 Bedrock may be viewed as (a) a set of conventions for maintaining data and metadata, (b) deployable AWS infrastructure for running ETL jobs and other functions, and (c) a command-line tool for working with data assets and for deploying and running the Bedrock AWS infrastructure.
 
-The assets managed by Bedrock are maintained in the managed-data-assets repository, which is automatically synchronized to an S3 bucket. The Bedrock code references this bucket via the environment variable _BEDROCK_BUCKETNAME_.
+The assets managed by Bedrock are maintained in the [managed-data-assets repository](https://github.com/cityofasheville/managed-data-assets), which is automatically synchronized to an S3 bucket. The Bedrock code references this bucket via the environment variable _BEDROCK_BUCKETNAME_.
 
 Additional information about Bedrock and its use can be found in the __docs__ directory.
 
