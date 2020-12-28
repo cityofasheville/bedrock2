@@ -2,7 +2,6 @@ import boto3
 import botocore
 import os
 import json
-import psycopg2
 
 from ..utilities.construct_sql import sql_column
 from ..utilities.sql import execute_sql_statement_with_return
@@ -28,6 +27,8 @@ def get_blueprint(s3, bucket_name, blueprint_name, tmpfilepath):
     return bp
 
 def create_table_from_blueprint(blueprint, table_name, dbtype = "postgresql"):
+    if dbtype != "postgresql":
+        raise Exception("create_table_from_blueprint: " + dbtype + " not yet implemented")
     sql = "CREATE TABLE " + table_name + " ("
     for i in range(len(blueprint["columns"])):
         is_last = (i == len(blueprint['columns']) - 1)
@@ -35,11 +36,13 @@ def create_table_from_blueprint(blueprint, table_name, dbtype = "postgresql"):
     sql = sql + " )"
     return sql
 
-def columns_from_pg_table(cdefs):
+def columns_from_table(bedrock_connection, cdefs):
     type_map = {
         "character varying": "string",
+        "varchar": "string",
         "character": "character",
         "integer": "integer",
+        "int": "integer",
         "bigint": "bigint",
         "smallint": "smallint",
         "boolean": "boolean",
@@ -47,6 +50,7 @@ def columns_from_pg_table(cdefs):
         "real": "float",
         "numeric": "decimal",
         "timestamp without time zone": "datetime",
+        "datetime": "datetime",
         "date": "date",
         "time without time zone": "time"
     }
@@ -63,7 +67,7 @@ def columns_from_pg_table(cdefs):
         col["type"] = type_map[in_type]
         if nullable == "NO":
             col["nullable"] = False
-        if in_type in ("character varying", "character"):
+        if in_type in ("character varying", "character", "varchar"):
             col["length"] = in_length
         if in_type == "numeric":
             col["precision"] = str(in_precision) + "," + str(in_scale)
@@ -71,26 +75,35 @@ def columns_from_pg_table(cdefs):
         columns.append(col)
     return columns
 
-def columns_from_table(bedrock_connection, cdefs):
-    if (bedrock_connection["type"] == "postgresql"):
-        return columns_from_pg_table(cdefs)
+def create_table_info_sql(bedrock_connection, schema, table):
+    if bedrock_connection["type"] == "postgresql":
+        sql = """
+                SELECT column_name, is_nullable, data_type,
+                    character_maximum_length, numeric_precision, numeric_precision_radix, numeric_scale, ordinal_position
+                FROM information_schema.columns """
+        sql = sql + "WHERE table_name = '" + table + "' AND table_schema = '" + schema + "' ORDER BY ordinal_position ASC"
     elif bedrock_connection["type"] == "sqlserver":
-        print("columns_from_table: SQL SERVER NOT YET IMPLEMENTED")
-        return None
-    else:
-        raise Exception("Connection type " + bedrock_connection["type"] + " not yet implemented")
+        sql = """
+            SELECT 
+                COLUMN_NAME as column_name,
+                IS_NULLABLE as is_nullable,
+                DATA_TYPE as data_type,
+                CHARACTER_MAXIMUM_LENGTH as character_maximum_length,
+                NUMERIC_PRECISION as numeric_precision,
+                NULL as numeric_precision_radix,
+                NUMERIC_SCALE as numeric_scale,
+                ORDINAL_POSITION as ordinal_position
+            FROM INFORMATION_SCHEMA.COLUMNS
+            WHERE TABLE_NAME = '"""
+        sql = sql + table + "' AND TABLE_SCHEMA = '" + schema + "' ORDER BY ORDINAL_POSITION ASC"
+    return sql
 
 def create_blueprint_from_table(bedrock_connection, blueprint_name, table_name):
     if len(table_name.split('.')) != 2:
         print("Tablename " + table_name + " not valid - must be in the form SCHEMA.TABLENAME")
         return None
     schema, table = table_name.split('.')
-    sql = """
-            SELECT column_name, is_nullable, data_type,
-                character_maximum_length, numeric_precision, numeric_precision_radix, numeric_scale, ordinal_position
-            FROM information_schema.columns """
-    sql = sql + "WHERE table_name = '" + table + "' AND table_schema = '" + schema + "' ORDER BY ordinal_position ASC"
-    conn = None
+    sql = create_table_info_sql(bedrock_connection, schema, table)
     res = execute_sql_statement_with_return(bedrock_connection, sql)
     blueprint = {
         "name": blueprint_name,

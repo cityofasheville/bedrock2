@@ -1,5 +1,5 @@
 import psycopg2
-import pyodbc
+import pymssql
 
 def execute_sql_statement(bedrock_connection, sql):
     conn = None
@@ -48,23 +48,14 @@ def execute_sql_statement_with_return(bedrock_connection, sql):
                 conn.close()
     elif bedrock_connection["type"] == "sqlserver":
         try:
-            print("drivers: ")
-            print(pyodbc.drivers())
-            conn = pyodbc.connect(driver="ODBC Driver 17 for SQL Server",
-                                  server=bedrock_connection["host"],
+            conn = pymssql.connect(host=bedrock_connection["host"],
                                   database=bedrock_connection["database"],
-                                  uid=bedrock_connection["username"],
-                                  password=bedrock_connection["password"],
-                                  port=1433,
-                                  domain="ASHEVILLE")
+                                  user=bedrock_connection['domain'] + '\\' + bedrock_connection['username'],
+                                  password=bedrock_connection["password"])
             cursor = conn.cursor()
-            cursor.execute('select top 10 * from amd.ad_info')
-            print("I am here!")
-            print(cursor)
-            for row in cursor:
-                print(row)
+            cursor.execute(sql)
+            res = cursor.fetchall()
         except (Exception) as error:
-            print("HI")
             print(error)
         finally:
             if conn is not None:
