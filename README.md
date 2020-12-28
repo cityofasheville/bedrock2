@@ -2,46 +2,54 @@
 
 Bedrock is a system for strategic data asset inventory and dependency management.  The purpose of the Bedrock system is to support the strategic use of data. In particular, the system attempts to automate as much as possible maintaining an up-to-date inventory of strategic data assets and their dependencies, maintaining up-to-date versions of the data itself, and supporting access both to the data and to information about it (metadata).
 
-# What data is Bedrock responsible for?
 Bedrock focuses on two types of data:
+
  - Data that we want to manage as strategic assets for reporting or performance management
  - Data that is used for integrating systems
+
 What these two types have in common is a need for a managed interface between the systems or processes that generate the data and those that make use of it. As much as possible, systems that use the data should be able to remain ignorant of the details of how it is extracted or maintained, other than what is captured in metadata to support its use.
-In the particular case of an application database (whether the application is third-party or custom), this means that the dependencies between Bedrock and data in that database lie only in the views/APIs provided by those systems for data extraction and any additional processing that needs to be done to conform the data to our internal standards or needs. Bedrock is not responsible for the maintenance of those views or for the application database itself, but it does provide the standard to which extracted data must conform. Bedrock becomes responsible for the particular dataset only after it has been extracted and transformed.
-In the case of Google sheets, the interface is effectively a contract between Bedrock and the people, process or system that maintains the spreadsheet.
 
+Bedrock may be viewed as (a) a set of conventions for maintaining data and metadata, (b) deployable AWS infrastructure for running ETL jobs and other functions, and (c) a command-line tool for working with data assets and for deploying and running the Bedrock AWS infrastructure.
 
-## What is in this repo?
+The assets managed by Bedrock are maintained in the managed-data-assets repository, which is automatically synchronized to an S3 bucket. The Bedrock code references this bucket via the environment variable _BEDROCK_BUCKETNAME_.
 
-TBD
+Additional information about Bedrock and its use can be found in the __docs__ directory.
 
-## How do you use Bedrock?
-The Bedrock system consists of two main parts: a command-line interface and AWS functions that may be invoked from the CLI or via CloudWatch events.
+## Contents and Organization
 
-## How do you deploy the Bedrock system?
-### Pre-requisites
+As a command-line tool, Bedrock is built on the [Cement CLI Application Framework](https://builtoncement.com/), and the organization of the code is largely determined by Cement. Bedrock-specific code may be found in the _controllers_, _src_, and _aws_ subdirectories [./bedrock/](./bedrock). 
 
-cd /home/bedrock
-pip install -r requirements.txt
-python setup.py develop
-export BEDROCK_BUCKETNAME=managed-data-assets
+Commands in Cement are implemented using controllers in the [controllers](./bedrock/controllers) directory. Bedrock-specific controllers have the prefix _bedrock___. The commands use functions defined in the [src](./bedrock/src) directory to carry out much of the work.
 
-## Using the Docker Development Machine
-docker build -f Dockerfile.bedrock --tag ejaxonavl/bedrock .
+AWS infrastructure for Bedrock is defined in the [aws](./bedrock/aws) directory.
 
-### To log in
-winpty docker run -it -v "C:\Users\ericjackson\dev\bedrock\bedrock2":/home/bedrock ejaxonavl/bedrock bash
+## Usage
 
-### Other useful commands
-docker images
-docker ps -a
-docker image prune
-docker container prune
+Preprocess assets in BEDROCK_BUCKETNAME for ETL runs:
 
-## Blueprint
-Example:
-    bedrock blueprint create-table -c mdastore1 -b employee.1.0 -t internal2.ejtmp
-which is equivalent to:
+    bedrock preprocess -o s3  
+
+Create a database table based on a blueprint (the two following lines are equivalent)
+
+    bedrock blueprint create-table -c mdastore1 -b employee.1.0 -t internal2.ejtmp  
     bedrock blueprint create-table --connection=mdastore1 --blueprint=employee.1.0 --table=internal2.ejtmp
 
- bedrock blueprint  create-blueprint -c munis -t amd.pr_employee_info -b tstmun
+Create a blueprint file based on an existing database table:
+
+    bedrock blueprint  create-blueprint -c mdastore1 -t internal2.pr_employee_info -b testblueprint
+
+## Development and Deployment
+
+Bedrock will work relatively easily on most Linux architectures, but the base environment is the Amazon Linux 2 environment defined by the [Dockerfile.bedrock](./Dockerfile.bedrock) file. To build and run on Windows, for example (Mac should be equivalent, without the need for _winpty):
+
+    docker build -f Dockerfile.bedrock --tag ejaxonavl/bedrock .
+    winpty docker run -it -v "C:\Users\ericjackson\dev\bedrock\bedrock2":/home/bedrock ejaxonavl/bedrock bash
+
+A _bedrock_ Conda environment is automatically activated on login. Once logged in, run the following:
+
+    cd /home/bedrock
+    pip install -r requirements.txt
+    python setup.py develop
+    export BEDROCK_BUCKETNAME=managed-data-assets
+
+TBD - documentation on deploying and running AWS infrastructure.
