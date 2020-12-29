@@ -19,7 +19,7 @@ class BedrockCore(Controller):
         ],
     )
     def preprocess(self):
-        BUCKETNAME = os.getenv('bedrock_bucketname')
+        BUCKETNAME = os.getenv('BEDROCK_BUCKETNAME')
         output_mode = 's3'
         if self.app.pargs.output is not None:
             output_mode = self.app.pargs.output
