@@ -6,7 +6,7 @@ do
   cd "$directory" || continue
   if [ -f "./config.tf" ] ; then
     echo "Run terraform apply..."
-    terraform apply
+    terraform apply -var-file=ca.tfvars
   fi
 
   cd ..

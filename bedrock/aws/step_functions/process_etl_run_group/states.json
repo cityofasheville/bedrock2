@@ -36,7 +36,7 @@
           "Next": "ProcessRunSet"
         }
       ],
-      "Default": "Done"
+      "Default": "EmailResults"
     },
     "UpdateRunMap": {
       "Comment": "Update the run map.",
@@ -52,6 +52,15 @@
       "Type": "Fail",
       "Cause": "Not Hello World"
     },
+
+    "EmailResults": {
+      "Comment": "Send Results Email",
+      "Type": "Task",
+      "Resource": "${etl_email_results_arn}",
+      "ResultPath": "$.TaskOutput",
+      "Next": "Done"
+    },
+
     "Done": {
       "Type": "Succeed"
     },

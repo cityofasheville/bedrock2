@@ -78,3 +78,12 @@ data "terraform_remote_state" "etl_task_unknown_lambda" {
     region = "us-east-1"
   }
 }
+
+data "terraform_remote_state" "etl_email_results_lambda" {
+  backend = "s3"
+  config = {
+    bucket = "ca-tfstate-store"
+    key    = "terraform/bedrock/lambda_functions/etl_email_results/terraform_dev.tfstate"
+    region = "us-east-1"
+  }
+}
