@@ -44,6 +44,8 @@ Bedrock will work relatively easily on most Linux architectures, but the base en
 
     docker build -f Dockerfile.bedrock --tag ejaxonavl/bedrock .
     winpty docker run -it -v "C:\Users\ericjackson\dev\bedrock\bedrock2":/home/bedrock ejaxonavl/bedrock bash
+So the second command on Mac would be something like:
+    docker run -it -v "/Users/jon/Documents/bedrock2":/home/bedrock ejaxonavl/bedrock bash
 
 A _bedrock_ Conda environment is automatically activated on login. Once logged in, run the following:
 

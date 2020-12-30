@@ -5,9 +5,10 @@ const ses_sendemail = require('./ses_sendemail');
 const compiledFunction = pug.compileFile(path.join(__dirname, '/email.pug'));
 
 function sendEmails(results) {
-    results.success.sort()
-    results.failure.sort()
+    results.failure = results.failure.map(res=>res.name) 
+    results.failure.sort() 
     results.skipped.sort()
+    
     let emailAddrs = ["jtwilson@ashevillenc.gov"]
     let pugObj = {};
     pugObj.results = results;
