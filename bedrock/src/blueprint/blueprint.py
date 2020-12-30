@@ -3,8 +3,10 @@ import botocore
 import os
 import json
 
-from ..utilities.construct_sql import sql_column
 from ..utilities.sql import execute_sql_statement_with_return
+from ..utilities.construct_sql import get_table_info_sql
+from ..utilities.constants import BLUEPRINTS_PREFIX
+from ..utilities.print import print_list_in_columns
 
 def list_blueprints(s3, bucket_name, prefix):
     objs = s3.list_objects_v2(Bucket=bucket_name, Prefix=prefix)["Contents"]
@@ -14,32 +16,33 @@ def list_blueprints(s3, bucket_name, prefix):
         blist.append(nm[0:-5]) # Remove the trailing .json
     return blist
 
-def get_blueprint(s3, bucket_name, blueprint_name, tmpfilepath):
-    try:
-        s3.download_file(bucket_name, blueprint_name, tmpfilepath)
-    except botocore.exceptions.ClientError as error:
-        if error.response["Error"]["Code"] == "404":
-            return None
-    bp = {}
-    with open(tmpfilepath, "r") as file_content:
-        bp = json.load(file_content)
-    os.remove(tmpfilepath)
-    return bp
+def get_blueprint(blueprint_name, bucket_name, s3, tmpfilepath):
+    blueprint = None
+    if blueprint_name is not None:
+        try:
+            s3.download_file(bucket_name, BLUEPRINTS_PREFIX + blueprint_name + ".json", tmpfilepath)
+            with open(tmpfilepath, "r") as file_content:
+                blueprint = json.load(file_content)
+            os.remove(tmpfilepath)
+        except botocore.exceptions.ClientError as error:
+            blueprint = None
 
-def create_table_from_blueprint(blueprint, table_name, dbtype = "postgresql"):
-    if dbtype != "postgresql":
-        raise Exception("create_table_from_blueprint: " + dbtype + " not yet implemented")
-    sql = "CREATE TABLE " + table_name + " ("
-    for i in range(len(blueprint["columns"])):
-        is_last = (i == len(blueprint['columns']) - 1)
-        sql = sql + sql_column(blueprint["columns"][i], is_last, dbtype)
-    sql = sql + " )"
-    return sql
+        if blueprint is None:
+            print("\nBlue print " + blueprint_name  + " not found. Must be one of:\n")
+    else:
+        print("You must specify a blueprint using the -b option. Must be one of:")
+
+    if blueprint is None:
+        blueprints = list_blueprints(s3, bucket_name, BLUEPRINTS_PREFIX)
+        print_list_in_columns(blueprints)
+
+    return blueprint
 
 def columns_from_table(bedrock_connection, cdefs):
     type_map = {
         "character varying": "string",
         "varchar": "string",
+        "text": "string",
         "character": "character",
         "integer": "integer",
         "int": "integer",
@@ -52,7 +55,9 @@ def columns_from_table(bedrock_connection, cdefs):
         "timestamp without time zone": "datetime",
         "datetime": "datetime",
         "date": "date",
-        "time without time zone": "time"
+        "time without time zone": "time",
+        "bytea": "binary",
+        "USER-DEFINED": "UNKNOWN"
     }
     columns = []
     for i in range(len(cdefs)):
@@ -75,43 +80,18 @@ def columns_from_table(bedrock_connection, cdefs):
         columns.append(col)
     return columns
 
-def create_table_info_sql(bedrock_connection, schema, table):
-    if bedrock_connection["type"] == "postgresql":
-        sql = """
-                SELECT column_name, is_nullable, data_type,
-                    character_maximum_length, numeric_precision, numeric_precision_radix, numeric_scale, ordinal_position
-                FROM information_schema.columns """
-        sql = sql + "WHERE table_name = '" + table + "' AND table_schema = '" + schema + "' ORDER BY ordinal_position ASC"
-    elif bedrock_connection["type"] == "sqlserver":
-        sql = """
-            SELECT 
-                COLUMN_NAME as column_name,
-                IS_NULLABLE as is_nullable,
-                DATA_TYPE as data_type,
-                CHARACTER_MAXIMUM_LENGTH as character_maximum_length,
-                NUMERIC_PRECISION as numeric_precision,
-                NULL as numeric_precision_radix,
-                NUMERIC_SCALE as numeric_scale,
-                ORDINAL_POSITION as ordinal_position
-            FROM INFORMATION_SCHEMA.COLUMNS
-            WHERE TABLE_NAME = '"""
-        sql = sql + table + "' AND TABLE_SCHEMA = '" + schema + "' ORDER BY ORDINAL_POSITION ASC"
-    return sql
-
 def create_blueprint_from_table(bedrock_connection, blueprint_name, table_name):
     if len(table_name.split('.')) != 2:
         print("Tablename " + table_name + " not valid - must be in the form SCHEMA.TABLENAME")
         return None
     schema, table = table_name.split('.')
-    sql = create_table_info_sql(bedrock_connection, schema, table)
+    sql = get_table_info_sql(bedrock_connection, schema, table)
     res = execute_sql_statement_with_return(bedrock_connection, sql)
+    if len(res) == 0:
+        raise Exception("Table " + table_name + " not found.")
     blueprint = {
         "name": blueprint_name,
         "description": "TBD",
         "columns": columns_from_table(bedrock_connection, res)
     }
-    fname = "./" + blueprint_name + ".1.0.json"
-    with open(fname, 'w') as f:
-        f.write(json.dumps(blueprint, indent = 4)+ "\n")
-    print("Blueprint written to " + fname)
     return blueprint
