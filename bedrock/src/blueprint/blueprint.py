@@ -5,6 +5,8 @@ import json
 
 from ..utilities.sql import execute_sql_statement_with_return
 from ..utilities.construct_sql import get_table_info_sql
+from ..utilities.constants import BLUEPRINTS_PREFIX
+from ..utilities.print import print_list_in_columns
 
 def list_blueprints(s3, bucket_name, prefix):
     objs = s3.list_objects_v2(Bucket=bucket_name, Prefix=prefix)["Contents"]
@@ -14,17 +16,27 @@ def list_blueprints(s3, bucket_name, prefix):
         blist.append(nm[0:-5]) # Remove the trailing .json
     return blist
 
-def get_blueprint(s3, bucket_name, blueprint_name, tmpfilepath):
-    try:
-        s3.download_file(bucket_name, blueprint_name, tmpfilepath)
-    except botocore.exceptions.ClientError as error:
-        if error.response["Error"]["Code"] == "404":
-            return None
-    bp = {}
-    with open(tmpfilepath, "r") as file_content:
-        bp = json.load(file_content)
-    os.remove(tmpfilepath)
-    return bp
+def get_blueprint(blueprint_name, bucket_name, s3, tmpfilepath):
+    blueprint = None
+    if blueprint_name is not None:
+        try:
+            s3.download_file(bucket_name, BLUEPRINTS_PREFIX + blueprint_name + ".json", tmpfilepath)
+            with open(tmpfilepath, "r") as file_content:
+                blueprint = json.load(file_content)
+            os.remove(tmpfilepath)
+        except botocore.exceptions.ClientError as error:
+            blueprint = None
+
+        if blueprint is None:
+            print("\nBlue print " + blueprint_name  + " not found. Must be one of:\n")
+    else:
+        print("You must specify a blueprint using the -b option. Must be one of:")
+
+    if blueprint is None:
+        blueprints = list_blueprints(s3, bucket_name, BLUEPRINTS_PREFIX)
+        print_list_in_columns(blueprints)
+
+    return blueprint
 
 def columns_from_table(bedrock_connection, cdefs):
     type_map = {
