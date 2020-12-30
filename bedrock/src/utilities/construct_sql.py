@@ -92,3 +92,14 @@ def sql_column(col, is_last, dbtype):
         res = res + ",\n"
     return res
 
+def create_table_from_blueprint(blueprint, table_name, dbtype = "postgresql"):
+    if dbtype != "postgresql":
+        raise Exception("create_table_from_blueprint: " + dbtype + " not yet implemented")
+    sql = "CREATE TABLE " + table_name + " ("
+    for i in range(len(blueprint["columns"])):
+        is_last = (i == len(blueprint['columns']) - 1)
+        sql = sql + sql_column(blueprint["columns"][i], is_last, dbtype)
+    sql = sql + " )"
+    return sql
+
+

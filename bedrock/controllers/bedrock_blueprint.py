@@ -7,9 +7,10 @@ import sys
 
 from ..src.utilities.print import print_list_in_columns
 from ..src.utilities.connections import get_connections
-from ..src.blueprint.blueprint import get_blueprint, list_blueprints, create_table_from_blueprint, create_blueprint_from_table
+from ..src.blueprint.blueprint import get_blueprint, list_blueprints, create_blueprint_from_table
 from ..src.utilities.sql import execute_sql_statement
-from ..src.utilities.constants import *
+from ..src.utilities.construct_sql import create_table_from_blueprint
+from ..src.utilities.constants import BLUEPRINTS_PREFIX
 
 
 class BedrockBlueprint(Controller):
@@ -32,17 +33,11 @@ class BedrockBlueprint(Controller):
         ],
     )
     def create_table(self):
-        bucket_name = os.getenv("BEDROCK_BUCKETNAME")
-        tmpfiledir = os.getenv("BEDROCK_TMPFILE_DIR")
-        tmpfilename = os.getenv("BEDROCK_TMPFILE_NAME")
-        if tmpfiledir is None:
-            tmpfiledir = "."
-        if tmpfilename is None:
-            tmpfilename = "tmp.json"
-        tmpfilepath = tmpfiledir + "/" + tmpfilename
-
-        connections = {}
         s3 = boto3.client("s3")
+        bucket_name = os.getenv("BEDROCK_BUCKETNAME")
+        tmpfilepath = os.getenv("BEDROCK_TMPFILE_DIR", ".") + "/" + os.getenv("BEDROCK_TMPFILE_NAME", "tmp.json")
+        blueprint_name = self.app.pargs.blueprint
+        blueprint = None
 
         if bucket_name is None:
             print("You must set the BEDROCK_BUCKETNAME environment variable to the appropriate bucket name.")
@@ -57,8 +52,6 @@ class BedrockBlueprint(Controller):
         connection = connections[self.app.pargs.connection]
 
         # Download the blueprint
-        blueprint_name = self.app.pargs.blueprint
-        blueprint = None
         if blueprint_name is not None:
             blueprint = get_blueprint(s3, bucket_name, BLUEPRINTS_PREFIX + blueprint_name + ".json", tmpfilepath)
             if blueprint is None:

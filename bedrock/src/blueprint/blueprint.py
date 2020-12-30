@@ -3,7 +3,6 @@ import botocore
 import os
 import json
 
-from ..utilities.construct_sql import sql_column
 from ..utilities.sql import execute_sql_statement_with_return
 
 def list_blueprints(s3, bucket_name, prefix):
@@ -25,16 +24,6 @@ def get_blueprint(s3, bucket_name, blueprint_name, tmpfilepath):
         bp = json.load(file_content)
     os.remove(tmpfilepath)
     return bp
-
-def create_table_from_blueprint(blueprint, table_name, dbtype = "postgresql"):
-    if dbtype != "postgresql":
-        raise Exception("create_table_from_blueprint: " + dbtype + " not yet implemented")
-    sql = "CREATE TABLE " + table_name + " ("
-    for i in range(len(blueprint["columns"])):
-        is_last = (i == len(blueprint['columns']) - 1)
-        sql = sql + sql_column(blueprint["columns"][i], is_last, dbtype)
-    sql = sql + " )"
-    return sql
 
 def columns_from_table(bedrock_connection, cdefs):
     type_map = {
