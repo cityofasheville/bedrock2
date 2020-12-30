@@ -4,6 +4,7 @@ import os
 import json
 
 from ..utilities.sql import execute_sql_statement_with_return
+from ..utilities.construct_sql import get_table_info_sql
 
 def list_blueprints(s3, bucket_name, prefix):
     objs = s3.list_objects_v2(Bucket=bucket_name, Prefix=prefix)["Contents"]
@@ -67,28 +68,12 @@ def columns_from_table(bedrock_connection, cdefs):
         columns.append(col)
     return columns
 
-def create_table_info_sql(bedrock_connection, schema, table):
-    sql = """
-        SELECT 
-            COLUMN_NAME as column_name,
-            IS_NULLABLE as is_nullable,
-            DATA_TYPE as data_type,
-            CHARACTER_MAXIMUM_LENGTH as character_maximum_length,
-            NUMERIC_PRECISION as numeric_precision,
-            NULL as numeric_precision_radix,
-            NUMERIC_SCALE as numeric_scale,
-            ORDINAL_POSITION as ordinal_position
-        FROM INFORMATION_SCHEMA.COLUMNS
-        WHERE TABLE_NAME = '"""
-    sql = sql + table + "' AND TABLE_SCHEMA = '" + schema + "' ORDER BY ORDINAL_POSITION ASC"
-    return sql
-
 def create_blueprint_from_table(bedrock_connection, blueprint_name, table_name):
     if len(table_name.split('.')) != 2:
         print("Tablename " + table_name + " not valid - must be in the form SCHEMA.TABLENAME")
         return None
     schema, table = table_name.split('.')
-    sql = create_table_info_sql(bedrock_connection, schema, table)
+    sql = get_table_info_sql(bedrock_connection, schema, table)
     res = execute_sql_statement_with_return(bedrock_connection, sql)
     if len(res) == 0:
         raise Exception("Table " + table_name + " not found.")

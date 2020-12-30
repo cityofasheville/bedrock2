@@ -102,4 +102,19 @@ def create_table_from_blueprint(blueprint, table_name, dbtype = "postgresql"):
     sql = sql + " )"
     return sql
 
+def get_table_info_sql(bedrock_connection, schema, table):
+    sql = """
+        SELECT 
+            COLUMN_NAME as column_name,
+            IS_NULLABLE as is_nullable,
+            DATA_TYPE as data_type,
+            CHARACTER_MAXIMUM_LENGTH as character_maximum_length,
+            NUMERIC_PRECISION as numeric_precision,
+            NULL as numeric_precision_radix,
+            NUMERIC_SCALE as numeric_scale,
+            ORDINAL_POSITION as ordinal_position
+        FROM INFORMATION_SCHEMA.COLUMNS
+        WHERE TABLE_NAME = '"""
+    sql = sql + table + "' AND TABLE_SCHEMA = '" + schema + "' ORDER BY ORDINAL_POSITION ASC"
+    return sql
 
