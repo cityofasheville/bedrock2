@@ -51,7 +51,7 @@ class BedrockBlueprint(Controller):
         # Get the list of possible connections, then make sure we have chosen one.
         connections = get_connections(s3, bucket_name, tmpfilepath)
         if self.app.pargs.connection is None or self.app.pargs.connection not in connections:
-            print("\nA connection name is required. Must be one of the following:\n")
+            print("\nA connection name is required using the -c option. Must be one of the following:\n")
             print_list_in_columns(list(connections.keys()))
             return -1
         connection = connections[self.app.pargs.connection]
@@ -61,14 +61,18 @@ class BedrockBlueprint(Controller):
         blueprint = None
         if blueprint_name is not None:
             blueprint = get_blueprint(s3, bucket_name, BLUEPRINTS_PREFIX + blueprint_name + ".json", tmpfilepath)
+            if blueprint is None:
+                print("\nBlue print " + blueprint_name  + " not found. Must be one of:\n")
+        else:
+            print("You must specify a blueprint using the -b option. Must be one of:")
+
         if blueprint is None:
             blueprints = list_blueprints(s3, bucket_name, BLUEPRINTS_PREFIX)
-            print("\nBlue print " + (blueprint_name if blueprint_name is not None else "")  + " not found. Must be one of:\n")
             print_list_in_columns(blueprints)
             return -1
 
         if self.app.pargs.table is None or len(self.app.pargs.table.split(".")) != 2:
-            print("\nA table name of the form SCHEMA.TABLENAME is required.\n")
+            print("\nA table name of the form SCHEMA.TABLENAME is required using the -t option.\n")
             return -1
 
         sql = create_table_from_blueprint(blueprint, self.app.pargs.table, connection["type"])
@@ -96,7 +100,6 @@ class BedrockBlueprint(Controller):
             tmpfiledir = "."
         if tmpfilename is None:
             tmpfilename = "tmp.json"
-        tmpfilepath = tmpfiledir + "/" + tmpfilename
 
         connections = {}
         s3 = boto3.client("s3")
@@ -104,19 +107,28 @@ class BedrockBlueprint(Controller):
         if bucket_name is None:
             print("You must set the BEDROCK_BUCKETNAME environment variable to the appropriate bucket name.")
             return -1
-        if self.app.pargs.blueprint is None:
-            print("You must set a blueprint name.")
+        blueprint_name = self.app.pargs.blueprint
+        if blueprint_name is None:
+            print("You must set a blueprint name with the -b option.")
             return -1
-        table_name = None
-        if self.app.pargs.table is not None:
-            table_name = self.app.pargs.table
-        blueprint = None
-        if table_name is not None: # Looks like we are deriving from an existing table or view
+
+        blueprint = {
+            "name": blueprint_name,
+            "description": "TBD",
+            "columns": []
+        }
+
+        if self.app.pargs.table is not None: # Looks like we are deriving from an existing table or view
             # Get the list of possible connections, then make sure we have chosen one.
-            connections = get_connections(s3, bucket_name, tmpfilepath)
+            connections = get_connections(s3, bucket_name, tmpfiledir + "/" + tmpfilename)
             if self.app.pargs.connection is None or self.app.pargs.connection not in connections:
-                print("\nA connection name is required. Must be one of the following:\n")
+                print("\nYou must specific a connection name with the -c option. Must be one of the following:\n")
                 print_list_in_columns(list(connections.keys()))
                 return -1
             connection = connections[self.app.pargs.connection]
-            blueprint = create_blueprint_from_table(connection, self.app.pargs.blueprint, table_name)
+            blueprint = create_blueprint_from_table(connection, blueprint_name, self.app.pargs.table)
+
+        fname = "./" + blueprint_name + ".1.0.json"
+        with open(fname, 'w') as f:
+            f.write(json.dumps(blueprint, indent = 4)+ "\n")
+        print("Blueprint written to " + fname)

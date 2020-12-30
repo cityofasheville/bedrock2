@@ -40,6 +40,7 @@ def columns_from_table(bedrock_connection, cdefs):
     type_map = {
         "character varying": "string",
         "varchar": "string",
+        "text": "string",
         "character": "character",
         "integer": "integer",
         "int": "integer",
@@ -52,7 +53,9 @@ def columns_from_table(bedrock_connection, cdefs):
         "timestamp without time zone": "datetime",
         "datetime": "datetime",
         "date": "date",
-        "time without time zone": "time"
+        "time without time zone": "time",
+        "bytea": "binary",
+        "USER-DEFINED": "UNKNOWN"
     }
     columns = []
     for i in range(len(cdefs)):
@@ -76,26 +79,19 @@ def columns_from_table(bedrock_connection, cdefs):
     return columns
 
 def create_table_info_sql(bedrock_connection, schema, table):
-    if bedrock_connection["type"] == "postgresql":
-        sql = """
-                SELECT column_name, is_nullable, data_type,
-                    character_maximum_length, numeric_precision, numeric_precision_radix, numeric_scale, ordinal_position
-                FROM information_schema.columns """
-        sql = sql + "WHERE table_name = '" + table + "' AND table_schema = '" + schema + "' ORDER BY ordinal_position ASC"
-    elif bedrock_connection["type"] == "sqlserver":
-        sql = """
-            SELECT 
-                COLUMN_NAME as column_name,
-                IS_NULLABLE as is_nullable,
-                DATA_TYPE as data_type,
-                CHARACTER_MAXIMUM_LENGTH as character_maximum_length,
-                NUMERIC_PRECISION as numeric_precision,
-                NULL as numeric_precision_radix,
-                NUMERIC_SCALE as numeric_scale,
-                ORDINAL_POSITION as ordinal_position
-            FROM INFORMATION_SCHEMA.COLUMNS
-            WHERE TABLE_NAME = '"""
-        sql = sql + table + "' AND TABLE_SCHEMA = '" + schema + "' ORDER BY ORDINAL_POSITION ASC"
+    sql = """
+        SELECT 
+            COLUMN_NAME as column_name,
+            IS_NULLABLE as is_nullable,
+            DATA_TYPE as data_type,
+            CHARACTER_MAXIMUM_LENGTH as character_maximum_length,
+            NUMERIC_PRECISION as numeric_precision,
+            NULL as numeric_precision_radix,
+            NUMERIC_SCALE as numeric_scale,
+            ORDINAL_POSITION as ordinal_position
+        FROM INFORMATION_SCHEMA.COLUMNS
+        WHERE TABLE_NAME = '"""
+    sql = sql + table + "' AND TABLE_SCHEMA = '" + schema + "' ORDER BY ORDINAL_POSITION ASC"
     return sql
 
 def create_blueprint_from_table(bedrock_connection, blueprint_name, table_name):
@@ -105,13 +101,11 @@ def create_blueprint_from_table(bedrock_connection, blueprint_name, table_name):
     schema, table = table_name.split('.')
     sql = create_table_info_sql(bedrock_connection, schema, table)
     res = execute_sql_statement_with_return(bedrock_connection, sql)
+    if len(res) == 0:
+        raise Exception("Table " + table_name + " not found.")
     blueprint = {
         "name": blueprint_name,
         "description": "TBD",
         "columns": columns_from_table(bedrock_connection, res)
     }
-    fname = "./" + blueprint_name + ".1.0.json"
-    with open(fname, 'w') as f:
-        f.write(json.dumps(blueprint, indent = 4)+ "\n")
-    print("Blueprint written to " + fname)
     return blueprint
