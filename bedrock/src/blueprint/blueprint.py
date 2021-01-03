@@ -36,6 +36,20 @@ def create_table_from_blueprint(blueprint, table_name, dbtype = "postgresql"):
     sql = sql + " )"
     return sql
 
+blueprint_types = [
+    "string",
+    "character",
+    "integer",
+    "decimal",
+    "real",
+    "boolean",
+    "datetime",
+    "date",
+    "time",
+    "binary",
+    "geometry"
+]
+
 def columns_from_table(bedrock_connection, cdefs):
     type_map = {
         "character varying": "string",
