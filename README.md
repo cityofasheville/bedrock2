@@ -1,4 +1,5 @@
 # Bedrock 2
+![LOGO](./docs/bedrock.png)
 
 Bedrock is a system for strategic data asset inventory and dependency management.  The purpose of the Bedrock system is to support the strategic use of data. In particular, the system attempts to automate as much as possible maintaining an up-to-date inventory of strategic data assets and their dependencies, maintaining up-to-date versions of the data itself, and supporting access both to the data and to information about it (metadata).
 
@@ -40,13 +41,17 @@ Create a blueprint file based on an existing database table:
 
 ## Development and Deployment
 
-Bedrock will work relatively easily on most Linux architectures, but the base environment is the Amazon Linux 2 environment defined by the [Dockerfile.bedrock](./Dockerfile.bedrock) file. To build and run on Windows, for example (Mac should be equivalent, without the need for _winpty):
-
+Bedrock will work relatively easily on most Linux architectures, but the base environment is the Amazon Linux 2 environment defined by the [Dockerfile.bedrock](./Dockerfile.bedrock) file. 
+- To build and run on Windows:
+```
     docker build -f Dockerfile.bedrock --tag ejaxonavl/bedrock .
     winpty docker run -it -v "C:\Users\ericjackson\dev\bedrock\bedrock2":/home/bedrock ejaxonavl/bedrock bash
-So the second command on Mac would be something like:
+```
+- and on a Mac it would be something like:
+```
+    docker build -f Dockerfile.bedrock --tag ejaxonavl/bedrock .
     docker run -it -v "/Users/jon/Documents/bedrock2":/home/bedrock ejaxonavl/bedrock bash
-
+```
 A _bedrock_ Conda environment is automatically activated on login. Once logged in, run the following:
 
     cd /home/bedrock
