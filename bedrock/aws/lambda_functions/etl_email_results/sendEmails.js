@@ -6,6 +6,7 @@ const compiledFunction = pug.compileFile(path.join(__dirname, '/email.pug'));
 
 function sendEmails(results) {
     results.failure = results.failure.map(res=>res.name) 
+    results.success.sort() 
     results.failure.sort() 
     results.skipped.sort()
 

@@ -59,4 +59,6 @@ A _bedrock_ Conda environment is automatically activated on login. Once logged i
     python setup.py develop
     export BEDROCK_BUCKETNAME=managed-data-assets
 
+Then set the AWS permissions and run "bedrock preprocess -o s3"
+ 
 TBD - documentation on deploying and running AWS infrastructure.
