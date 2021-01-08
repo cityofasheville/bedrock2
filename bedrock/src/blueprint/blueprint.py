@@ -4,9 +4,10 @@ import os
 import json
 
 from ..utilities.sql import execute_sql_statement_with_return
-from ..utilities.construct_sql import get_table_info_sql
+from ..utilities.construct_sql import get_table_info_sql, sql_column
 from ..utilities.constants import BLUEPRINTS_PREFIX
 from ..utilities.print import print_list_in_columns
+from ..utilities.types import ss_types, pg_types
 
 def list_blueprints(s3, bucket_name, prefix):
     objs = s3.list_objects_v2(Bucket=bucket_name, Prefix=prefix)["Contents"]
@@ -38,27 +39,14 @@ def get_blueprint(blueprint_name, bucket_name, s3, tmpfilepath):
 
     return blueprint
 
-def columns_from_table(bedrock_connection, cdefs):
-    type_map = {
-        "character varying": "string",
-        "varchar": "string",
-        "text": "string",
-        "character": "character",
-        "integer": "integer",
-        "int": "integer",
-        "bigint": "bigint",
-        "smallint": "smallint",
-        "boolean": "boolean",
-        "double precision": "double",
-        "real": "float",
-        "numeric": "decimal",
-        "timestamp without time zone": "datetime",
-        "datetime": "datetime",
-        "date": "date",
-        "time without time zone": "time",
-        "bytea": "binary",
-        "USER-DEFINED": "UNKNOWN"
-    }
+def blueprint_columns_from_table(db_type, cdefs):
+    if db_type == "postgresql":
+        typemap = pg_types
+    elif db_type == "sqlserver":
+        typemap = ss_types
+    else:
+        raise Exception("blueprint_columns_from_table: unknown database type " + db_type)
+
     columns = []
     for i in range(len(cdefs)):
         name, nullable, in_type, in_length, in_precision, in_radix, in_scale, ord = cdefs[i]
@@ -67,15 +55,21 @@ def columns_from_table(bedrock_connection, cdefs):
             "description": "TBD",
             "type": None,
         }
-        if in_type not in type_map:
+        if in_type not in typemap:
             raise Exception("ERROR: Unknown column type " + in_type + " for column " + name)
-        col["type"] = type_map[in_type]
+        col["type"] = typemap[in_type]["bedrock_type"]
+        if "length" in typemap[in_type]:
+            col["length"] = typemap[in_type]["length"]
         if nullable == "NO":
             col["nullable"] = False
         if in_type in ("character varying", "character", "varchar"):
             col["length"] = in_length
         if in_type == "numeric":
             col["precision"] = str(in_precision) + "," + str(in_scale)
+        if col["type"] == "real" and "length" not in col:
+            col["length"] = 8
+            if "precision" in col and col["precision"] <= 24:
+                col["length"] = 4
             
         columns.append(col)
     return columns
@@ -92,6 +86,16 @@ def create_blueprint_from_table(bedrock_connection, blueprint_name, table_name):
     blueprint = {
         "name": blueprint_name,
         "description": "TBD",
-        "columns": columns_from_table(bedrock_connection, res)
+        "columns": blueprint_columns_from_table(bedrock_connection["type"], res)
     }
     return blueprint
+
+def create_table_from_blueprint(blueprint, table_name, dbtype = "postgresql"):
+    if dbtype != "postgresql":
+        raise Exception("create_table_from_blueprint: " + dbtype + " not yet implemented")
+    sql = "CREATE TABLE " + table_name + " ("
+    for i in range(len(blueprint["columns"])):
+        is_last = (i == len(blueprint['columns']) - 1)
+        sql = sql + sql_column(blueprint["columns"][i], is_last, dbtype)
+    sql = sql + " )"
+    return sql
