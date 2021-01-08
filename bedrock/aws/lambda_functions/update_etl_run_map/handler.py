@@ -37,10 +37,10 @@ def update_run_map(state):
     # Purge all jobs from state['remainder'] that depend on failed or skipped jobs
     newremainder = []
     while len(state['runsets']) > 0:
-        jobset = state['runsets'].pop()
+        jobset = state['runsets'].pop(0)
         jobs = []
         while (len(jobset)) > 0:
-            job = jobset.pop()
+            job = jobset.pop(0)
             for i in range(len(job['depends'])):
                 if job['depends'][i] in fails:
                     fails[job['name']] = True

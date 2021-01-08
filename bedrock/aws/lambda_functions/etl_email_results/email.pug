@@ -1,0 +1,46 @@
+html
+  body
+    if results.skipped.length > 0 || results.failure.length > 0
+      h3 Bedrock final status: ERROR
+    else
+      h3 Bedrock final status: OK
+
+    div(style='border:1px solid grey;font-size:14px;width:300px;background-color: #e6ebf0;')
+      ul
+        li Total Success: #{results.success.length} 
+        li Total Errors: #{results.failure.length} 
+        li Total Skipped: #{results.skipped.length}
+    if results.success.length > 0
+      table(style='border:1px solid grey;font-size:14px;width:300px')
+        thead
+          tr(style='background-color: #5D7B9D; color: white;')
+            th SUCCESS: #{results.success.length} 
+
+        tbody
+          each asset in results.success
+            tr
+              td(style="background-color: #e6ebf0;") #{asset}
+
+    if results.failure.length > 0
+      table(style='border:1px solid grey;font-size:14px;width:300px')
+        thead
+          tr(style='background-color: #5D7B9D; color: white;')
+            th ERRORS: #{results.failure.length} 
+
+        tbody
+          each asset in results.failure
+            tr
+              td(style="background-color: #e6ebf0;") #{asset}
+
+    if results.skipped.length > 0
+      table(style='border:1px solid grey;font-size:14px;width:300px')
+        thead
+          tr(style='background-color: #5D7B9D; color: white;')
+            th SKIPPED: #{results.skipped.length} 
+
+        tbody
+          each asset in results.skipped
+            tr
+              td(style="background-color: #e6ebf0;") #{asset}
+              
+    results.results
