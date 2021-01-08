@@ -1,0 +1,19 @@
+AWSTemplateFormatVersion : '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Description: SAM Local
+Resources:
+  TableCopy:
+    Type: AWS::Serverless::Function
+    Properties:
+      Runtime: nodejs12.x
+      Handler: handler.lambda_handler
+      Timeout: 4
+      CodeUri: ..
+  TestTimeout:
+    Type: AWS::Serverless::Function
+    Properties:
+      Runtime: nodejs12.x
+      Handler: testtimeout.lambda_handler
+      Timeout: 5
+      CodeUri: .

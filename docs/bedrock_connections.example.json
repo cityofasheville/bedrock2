@@ -1,0 +1,25 @@
+{
+    "coa_publicdb1": {
+        "type": "postgresql",
+        "username": "dbadmin",
+        "password": "xxxxx",
+        "authmethod": "password",
+        "host": "coa-publicdb1.cd9h9tveyb58.us-east-1.rds.amazonaws.com",
+        "port": 5432,
+        "database": "mdastore1"
+    },
+    "munis": {
+        "type": "sqlserver",
+        "username": "bedrock",
+        "password": "xxxxx",
+        "authmethod": "ad",
+        "host": "coa-munis-ma",
+        "database": "munprod"
+    },
+    "google_etl_service_account": {
+        "type": "google",
+        "username": "fred",
+        "password": "abc123",
+        "authmethod": "tbd"
+    }
+}

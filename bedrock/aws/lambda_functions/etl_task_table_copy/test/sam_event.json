@@ -1,0 +1,27 @@
+{
+  "JobIsGo": true,
+  "ETLJob": {
+    "name": "parking_cincinnati_rv_tickets.ms1",
+    "depends": [],
+    "path": "store/assets/parking_cincinnati_rv_tickets.ms1/parking_cincinnati_rv_tickets.ms1.json",
+    "run_group": "daily",
+    "etl_tasks": [
+      {
+        "type": "table_copy",
+        "source_location": {
+          "connection": "cinncinati_parking",
+          "schemaname": "dbo",
+          "tablename": "RV_TICKETS"
+        },
+        "target_location": {
+          "connection": "mdastore1",
+          "schemaname": "internal2",
+          "tablename": "parking_cincinnati_rv_tickets"
+        },
+        "active": true
+      }
+    ]
+  },
+  "TaskIndex": 0,
+  "JobType": "table_copy"
+}

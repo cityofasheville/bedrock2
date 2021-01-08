@@ -10,13 +10,13 @@ f.close()
 
 setup(
     name='bedrock',
-    version=VERSION,
-    description='MyApp Does Amazing Things!',
+    version='2.0',
+    description='Data asset management system',
     long_description=LONG_DESCRIPTION,
     long_description_content_type='text/markdown',
     author='City of Asheville',
-    author_email='ejackson@ashevillenc.gov',
-    url='https://github.com/johndoe/myapp/',
+    author_email='jtwilson@ashevillenc.gov',
+    url='https://github.com/cityofasheville/bedrock2',
     license='GPLV4',
     packages=find_packages(exclude=['ez_setup', 'tests*']),
     package_data={'bedrock': ['templates/*']},
