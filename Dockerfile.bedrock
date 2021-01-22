@@ -3,16 +3,23 @@ FROM amazonlinux:2
 # Base system
 RUN yum -y update
 RUN yum install -y gcc-c++ make
+
 RUN cd /tmp; curl "https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh" -o miniconda3.sh; \
    bash ./miniconda3.sh -b -p /usr/share/miniconda; rm ./miniconda3.sh; ln -s /usr/share/miniconda/bin/conda /usr/local/bin/conda
 RUN conda init bash
-RUN yum install -y unixODBC-devel
+
 RUN curl -sL https://rpm.nodesource.com/setup_12.x | bash -
 RUN yum -y install nodejs git unzip
+
 RUN yum -y install postgresql postgresql-server
 
 RUN cd /tmp; curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"; \
    unzip awscliv2.zip; ./aws/install; rm -Rf aws awscliv2.zip
+
+RUN yum -y install -y yum-utils
+RUN yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
+RUN yum -y install terraform
+RUN cd /usr/local/bin; curl --location  "https://github.com/gruntwork-io/terragrunt/releases/download/v0.26.7/terragrunt_linux_amd64" -o terragrunt; chmod +x terragrunt
 
 # Bedrock-specific
 RUN mkdir /home/bedrock

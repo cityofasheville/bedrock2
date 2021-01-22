@@ -30,6 +30,7 @@ Preprocess assets in BEDROCK_BUCKETNAME for ETL runs:
 
     bedrock preprocess -o s3  
 
+### Blueprints
 Create a database table based on a blueprint (the two following lines are equivalent)
 
     bedrock blueprint create-table -c mdastore1 -b employee.1.0 -t internal2.ejtmp  

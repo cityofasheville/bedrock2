@@ -7,9 +7,8 @@ import sys
 
 from ..src.utilities.print import print_list_in_columns
 from ..src.utilities.connections import get_connection
-from ..src.blueprint.blueprint import get_blueprint, list_blueprints, create_blueprint_from_table
+from ..src.blueprint.blueprint import get_blueprint, list_blueprints, create_blueprint_from_table, create_table_from_blueprint
 from ..src.utilities.sql import execute_sql_statement
-from ..src.utilities.construct_sql import create_table_from_blueprint
 
 class BedrockBlueprint(Controller):
     class Meta:
