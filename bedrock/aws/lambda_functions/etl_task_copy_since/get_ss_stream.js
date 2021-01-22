@@ -2,7 +2,18 @@ const sql = require('mssql');
 const csv = require('csv');
 const { close_all_pools, get_pool } = require("./ss_pools")
 
-async function get_ss_stream(location) { 
+/*
+location = {
+    "connection"
+    "schemaname",
+    "tablename"
+}
+since_data = { 
+    "num_weeks",
+    "column_to_filter"
+}
+*/
+async function get_ss_stream(location,since_data) { 
     return new Promise(async function(resolve, reject) {
         sql.on('error', err => {
             reject(err)
@@ -13,7 +24,8 @@ async function get_ss_stream(location) {
                 let conn_info = location.conn_info
                 let pool_name = location.connection
 
-                let sql_string = `SELECT * FROM ${tablename}`
+                let sql_string = `SELECT * FROM ${tablename} 
+                    WHERE ${since_data.column_to_filter} >= DATEADD(WW,${since_data.num_weeks * -1}, GETDATE() )`
                 const config = {
                     server: conn_info.host,
                     port: conn_info.port,
@@ -33,7 +45,7 @@ async function get_ss_stream(location) {
                 }
                 if(conn_info.domain) config.domain = conn_info.domain
                 if(conn_info.parameters) {
-                    if(conn_info.parameters.encrypt === false) config.options.encrypt = false
+                    if(conn_info.parameters.encrypt === false) config.options.encrypt = false //for <= SQL 2008
                 }
                 let pool = await get_pool(pool_name, config)
                 const request = await pool.request()

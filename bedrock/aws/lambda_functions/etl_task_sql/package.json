@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "mssql": "^6.2.0",
+    "mssql": "^6.2.1",
     "pg": "^8.3.0"
   }
 }

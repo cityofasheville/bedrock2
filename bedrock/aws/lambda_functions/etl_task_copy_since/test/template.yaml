@@ -3,7 +3,7 @@ Transform: AWS::Serverless-2016-10-31
 
 Description: SAM Local
 Resources:
-  TableCopy:
+  CopySince:
     Type: AWS::Serverless::Function
     Properties:
       Runtime: nodejs12.x
