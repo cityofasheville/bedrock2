@@ -1,4 +1,5 @@
-exports.lambda_handler = async (event, context) => {
+// exports.lambda_handler = async (event, context) => {
+exports.lambda_handler =  (event, context) => {
     let timeleft = context.getRemainingTimeInMillis() - 300;
     // timeout task  
     const timeout = new Promise((resolve) => {
@@ -14,6 +15,11 @@ exports.lambda_handler = async (event, context) => {
     })
     
     // race the timeout task with the real task
-    const res = await Promise.race([task, timeout]);
-    return res;
+    // const res = await Promise.race([task, timeout]);
+    // return res;
+
+    return Promise.race([task, timeout])
+    .then((res)=>{
+        return res;
+    });
   };

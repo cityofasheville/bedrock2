@@ -8,7 +8,7 @@ const stream = require('stream');
 
 const pipeline = util.promisify(stream.pipeline);
 
-exports.lambda_handler =  async function(event, context) {
+exports.lambda_handler = function(event, context) {
     const task = new Promise(async ( resolve ) => { 
         // console.log("event",event)
         try{
@@ -68,8 +68,10 @@ exports.lambda_handler =  async function(event, context) {
         setTimeout(() => resolve({ statusCode: 500, message: `Lambda timed out after ${Math.round(timeleft/1000)} seconds` }), timeleft);
     })
     // race the timeout task with the real task
-    const res = await Promise.race([task, timeout]);
-    return res;
+    return Promise.race([task, timeout])
+    .then((res)=>{
+        return res;
+    });
 }
 
 function returnError(err){

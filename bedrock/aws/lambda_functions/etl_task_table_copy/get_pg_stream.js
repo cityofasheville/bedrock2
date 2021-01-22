@@ -33,6 +33,7 @@ function get_pg_stream(location) {
                 COMMIT;
                 `
                 client.query(trans_string, (err, res) => {
+                    console.log(res)
                     client.end()
                     if(err) reject(err)
                 })
