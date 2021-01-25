@@ -70,6 +70,14 @@ data "terraform_remote_state" "etl_task_table_copy_lambda" {
   }
 }
 
+data "terraform_remote_state" "etl_task_copy_since_lambda" {
+  backend = "s3"
+  config = {
+    bucket = "ca-tfstate-store"
+    key    = "terraform/bedrock/lambda_functions/etl_task_copy_since/terraform_dev.tfstate"
+    region = "us-east-1"
+  }
+}
 data "terraform_remote_state" "etl_task_unknown_lambda" {
   backend = "s3"
   config = {

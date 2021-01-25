@@ -116,6 +116,11 @@
                 "Variable": "$.JobType",
                 "StringEquals": "table_copy",
                 "Next": "TableCopyTask"
+              },
+              {
+                "Variable": "$.JobType",
+                "StringEquals": "table_copy_since",
+                "Next": "CopySinceTask"
               }
             ],
             "Default": "UnknownTask"
@@ -138,6 +143,13 @@
             "Comment": "Copy Table",
             "Type": "Task",
             "Resource": "${etl_task_table_copy_arn}",
+            "ResultPath": "$.TaskOutput",
+            "Next": "CheckTaskStatus"
+          },
+          "CopySinceTask": {
+            "Comment": "Copy Table Since a Date",
+            "Type": "Task",
+            "Resource": "${etl_task_copy_since_arn}",
             "ResultPath": "$.TaskOutput",
             "Next": "CheckTaskStatus"
           },
