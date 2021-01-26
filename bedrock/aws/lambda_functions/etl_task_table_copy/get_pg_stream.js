@@ -43,7 +43,7 @@ function get_pg_stream(location) {
             .catch(err => { console.error('Connection error', err.stack); reject(err) } )
 
             if(location.fromto == 'source_location') {
-                let query_string = `COPY ${tablename} TO STDOUT WITH (FORMAT csv)`
+                let query_string = `COPY (SELECT * FROM ${tablename}) TO STDOUT WITH (FORMAT csv)`
                 stream = client.query(copyTo(query_string))
 
                 stream.on('error', err=>{ client.end(); reject(err) })
