@@ -7,6 +7,7 @@ const util = require('util');
 const stream = require('stream');
 
 const pipeline = util.promisify(stream.pipeline);
+// OR MAYBE... const { pipeline } = require('stream/promises');
 
 exports.lambda_handler = function(event, context) {
     const task = new Promise(async ( resolve ) => { 

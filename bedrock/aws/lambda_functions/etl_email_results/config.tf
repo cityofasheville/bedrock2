@@ -23,9 +23,7 @@ resource "aws_lambda_function" "etl_email_results" {
     environment {
       variables = {
           "EMAIL_RECIPIENT_JSON" = jsonencode(
-                [
-                  "jtwilson@ashevillenc.gov",
-                ]
+                ["gisadmins@ashevillenc.gov","jtwilson@ashevillenc.gov","ejackson@ashevillenc.gov"]
             )
           "EMAIL_SENDER"         = "asheville_notifications@ashevillenc.gov"
       }

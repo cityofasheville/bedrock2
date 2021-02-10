@@ -15,7 +15,7 @@ function sendEmails(results) {
         emailSubject = "ETL Jobs Status: Error"
     }
 
-    let emailAddrs = ["jtwilson@ashevillenc.gov"]
+    let emailAddrs = JSON.parse(process.env.EMAIL_RECIPIENT_JSON)
     let pugObj = {};
     pugObj.results = results;
     let htmlEmail = compiledFunction(pugObj);

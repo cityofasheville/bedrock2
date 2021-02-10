@@ -1,3 +1,5 @@
+The Step Function calls the ETL Lambda with data in this format
+
 {
     "JobIsGo": true,
     "ETLJob": {

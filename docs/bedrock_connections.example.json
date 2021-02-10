@@ -1,25 +1,26 @@
 {
     "coa_publicdb1": {
         "type": "postgresql",
-        "username": "dbadmin",
-        "password": "xxxxx",
-        "authmethod": "password",
-        "host": "coa-publicdb1.cd9h9tveyb58.us-east-1.rds.amazonaws.com",
+        "host": "coa-publicdb1.us-east-1.rds.amazonaws.com",
         "port": 5432,
-        "database": "mdastore1"
+        "username": "admin",
+        "password": "xxxxx",
+        "database": "mdastore1",
+        "description": "Servername: coa_publicdb1"
     },
     "munis": {
         "type": "sqlserver",
+        "host": "coa-munis-ma",
+        "port": 1433,
+        "database": "munprod",
+        "domain": "ASHEVILLE",
         "username": "bedrock",
         "password": "xxxxx",
-        "authmethod": "ad",
-        "host": "coa-munis-ma",
-        "database": "munprod"
+        "description": "Servername: coa-munis-ma; AD Authentication"
     },
     "google_etl_service_account": {
-        "type": "google",
-        "username": "fred",
-        "password": "abc123",
-        "authmethod": "tbd"
+        "type": "google_sheets",
+        "client_email": "bedrock@gserviceaccount.com",
+        "private_key": "-----BEGIN PRIVATE KEY-----ihflieurbvliasubfv"
     }
 }
