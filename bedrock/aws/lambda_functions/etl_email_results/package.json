@@ -11,6 +11,6 @@
   "license": "ISC",
   "dependencies": {
     "aws-sdk": "^2.815.0",
-    "pug": "^3.0.0"
+    "pug": "^3.0.2"
   }
 }
