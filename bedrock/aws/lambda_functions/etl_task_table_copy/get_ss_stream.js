@@ -22,6 +22,7 @@ async function get_ss_stream(location) {
                     database: conn_info.database,
                     connectionTimeout: 30000,
                     requestTimeout: 680000,
+                    trustServerCertificate: true,
                     options: { 
                         enableArithAbort: true
                     },
