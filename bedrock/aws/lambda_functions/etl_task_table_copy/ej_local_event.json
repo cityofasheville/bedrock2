@@ -1,0 +1,28 @@
+{
+    "JobIsGo": true,
+    "ETLJob": {
+      "name": "testtable2",
+      "depends": [
+        "testtable"
+      ],
+      "path": "store/assets/testtable/testtable.json",
+      "run_group": "tues_night",
+      "etl_tasks": [
+        {
+          "type": "table_copy",
+          "source_location": {
+            "connection": "bedrock-googlesheets",
+            "spreadsheetid": "1TsJqzi1n3G8w4eeYIyx_boeHbjiJ1ZGGOuAFuW_j81Q",
+            "range": "Sheet1!A1:B6"
+          },
+          "target_location": {
+            "connection": "bedrock-googlesheets",
+            "spreadsheetid": "1TsJqzi1n3G8w4eeYIyx_boeHbjiJ1ZGGOuAFuW_j81Q"
+          },
+          "active": true
+        }
+      ]
+    },
+    "TaskIndex": 0,
+    "JobType": "table_copy"
+  }
