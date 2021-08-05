@@ -9,7 +9,6 @@ const context = {
 console.log(localEvent)
 lambda_handler(localEvent, context)
   .then((results) => {
-    console.log('Back from lambda_handler')
     // process.exit(0)
   }, err => {
     console.error('Ther ewas an error ' + err)

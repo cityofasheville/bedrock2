@@ -30,14 +30,10 @@ async function getGoogleStream (location) {
       return Readable.from(csvstring)
     } catch (err) {
       console.error('Google Sheet error: ', err)
-      throw("Google Sheet error: " + err)
+      throw new Error('Google Sheet error: ' + err)
     }
   } else if (location.fromto === 'target_location') {
-    try {
-      return createGoogleWritable(location)
-    } catch (e) {
-      console.log('ERRORRR! ' + e)
-    }
+    return createGoogleWritable(location)
   }
 }
 

@@ -48,12 +48,11 @@ module.exports = async function createGoogleWritable (location) {
   }
 
   googleStream._final = async function (done) {
-    console.log('Final result = ' + result)
     try {
       writeToSheet(saveLocation, result, append)
     } catch (err) {
       console.error('Google Sheet error: ', err)
-      throw("Google Sheet error: " + err)
+      throw new Error('Google Sheet error: ' + err)
     }
     done()
   }
