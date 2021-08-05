@@ -11,17 +11,14 @@ const { pipeline } = require('stream/promises')
 // OR MAYBE... const { pipeline } = require('stream/promises');
 
 exports.lambda_handler = function (event, context) {
-  console.log('Set up the task')
   const task = new Promise(async (resolve) => {
-    console.log('event', JSON.stringify(event, null, ' '))
+    // console.log('event', JSON.stringify(event, null, ' '))
     try {
       const etl = event.ETLJob.etl_tasks[event.TaskIndex]
       if (!etl.active) {
         return resolve({ statusCode: 200, body: {lambda_output: 'Inactive: skipped' } })
       } else {
-        console.log('Get the connections')
         const connections = await get_connections()
-        console.log('We have the connections: ')
         const streams = {}
 
         const bothloc = [
@@ -29,12 +26,11 @@ exports.lambda_handler = function (event, context) {
           { name: 'target_location' }
         ]
         for (const eachloc of bothloc) {
-          console.log('Processing ' + eachloc.name)
           eachloc.location = etl[eachloc.name]
           eachloc.location.fromto = eachloc.name
           if (connections[eachloc.location.connection]) {
             eachloc.location.conn_info = connections[eachloc.location.connection]
-          } else { 
+          } else {
             throw `Connection definition ${eachloc.location.connection} not found`
           }
           // console.log(JSON.stringify(eachloc.location,null,2))
@@ -47,7 +43,7 @@ exports.lambda_handler = function (event, context) {
           }
         }
         console.log('Now the pipeline')
-        const x = await pipeline(
+        pipeline(
           streams.source_location,
           // stream_debug,
           streams.target_location)

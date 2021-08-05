@@ -1,5 +1,5 @@
-const { lambda_handler } = require('./handler')
-const localEvent = require('./ej_local_event.json')
+const { lambda_handler } = require('../handler')
+const localEvent = require('./no_sam_local_event.json')
 const context = {
   getRemainingTimeInMillis: function () {
     return 1000 * 10

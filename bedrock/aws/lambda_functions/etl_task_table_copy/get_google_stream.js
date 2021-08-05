@@ -26,22 +26,17 @@ async function getGoogleStream (location) {
 
       console.log('Copy from Google Sheet: https://docs.google.com/spreadsheets/d/' + location.spreadsheetid + '/edit#gid=' + range.split('!')[0])
       // console.log(response.data.values)
-      console.log('xxxxxxxxxxxxx')
       const csvstring = csv.stringify(fixUnevenRows(range, response.data.values))
-      console.log(csvstring)
       return Readable.from(csvstring)
     } catch (err) {
       console.error('Google Sheet error: ', err)
       throw("Google Sheet error: " + err)
     }
   } else if (location.fromto === 'target_location') {
-    console.log('Creating the google writable')
     try {
-      const g = createGoogleWritable(location)
-      return g
+      return createGoogleWritable(location)
     } catch (e) {
       console.log('ERRORRR! ' + e)
-      throw ("Google Sheets 'To' not implemented")
     }
   }
 }
