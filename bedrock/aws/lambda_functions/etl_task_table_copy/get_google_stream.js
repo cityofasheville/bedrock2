@@ -26,7 +26,9 @@ async function getGoogleStream (location) {
 
       console.log('Copy from Google Sheet: https://docs.google.com/spreadsheets/d/' + location.spreadsheetid + '/edit#gid=' + range.split('!')[0])
       // console.log(response.data.values)
-      const csvstring = csv.stringify(fixUnevenRows(range,response.data.values))
+      console.log('xxxxxxxxxxxxx')
+      const csvstring = csv.stringify(fixUnevenRows(range, response.data.values))
+      console.log(csvstring)
       return Readable.from(csvstring)
     } catch (err) {
       console.error('Google Sheet error: ', err)

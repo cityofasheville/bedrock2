@@ -17,7 +17,8 @@
           },
           "target_location": {
             "connection": "bedrock-googlesheets",
-            "spreadsheetid": "1TsJqzi1n3G8w4eeYIyx_boeHbjiJ1ZGGOuAFuW_j81Q"
+            "spreadsheetid": "1TsJqzi1n3G8w4eeYIyx_boeHbjiJ1ZGGOuAFuW_j81Q",
+            "append": false
           },
           "active": true
         }

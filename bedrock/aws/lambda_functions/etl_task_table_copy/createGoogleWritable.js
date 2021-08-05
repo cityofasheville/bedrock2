@@ -6,7 +6,7 @@ writable._write(chunk, encoding, callback)
 https://nodejs.org/api/stream.html#stream_writable_write_chunk_encoding_callback_1
 */
 
-async function writeToSheet(location, theData) {
+async function writeToSheet (location, theData, append = false) {
   console.log('IN writeToSheet!')
   try {
     const jwtClient = new google.auth.JWT(
@@ -21,13 +21,29 @@ async function writeToSheet(location, theData) {
     const sheets = google.sheets('v4')
     // First clear the spreadsheet
     // https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets.values/clear
-    let response = await sheets.spreadsheets.values.clear({
+    let response
+    if (!append) {
+      response = await sheets.spreadsheets.values.clear({
+        auth: jwtClient,
+        spreadsheetId,
+        range: 'Sheet2!A2:B'
+      })
+      console.log('Cleared the sheet')
+    }
+    response = await sheets.spreadsheets.values.append({
       auth: jwtClient,
       spreadsheetId,
-      range: 'Sheet2!A2:B'
+      range: 'Sheet2!A1:b',
+      insertDataOption: 'OVERWRITE',
+      valueInputOption: 'USER_ENTERED',
+      resource: {
+        majorDimension: 'ROWS',
+        values: [
+          ['1', '2'], ['3', '4'], ['5', '6']
+        ]
+      }
     })
-    console.log('Cleared the sheet')
-    console.log(JSON.stringify(response))
+    console.log(response)
     /*
       Maybe pasteData, maybe updateData or somethign
     */
@@ -59,6 +75,7 @@ module.exports = async function createGoogleWritable (location) {
   const googleStream = new stream.Writable()
   let result = ''
   const saveLocation = location
+  const append = location.append
   googleStream._write = function (chunk, encoding, done) {
     console.log(chunk.toString())
     result += chunk
@@ -79,7 +96,7 @@ module.exports = async function createGoogleWritable (location) {
   googleStream._final = async function (done) {
     console.log('In final')
     console.log('Final result = ' + result)
-    writeToSheet(saveLocation, result)
+    writeToSheet(saveLocation, result, append)
     done()
     return true
   }
