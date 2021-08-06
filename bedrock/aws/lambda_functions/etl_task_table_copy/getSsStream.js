@@ -29,7 +29,8 @@ async function getSsStream (location) {
             max: 10,
             min: 0,
             idleTimeoutMillis: 30000
-          }
+          },
+          trustServerCertificate: true,  // Acella has self-signed certs?
         }
         if (connInfo.domain) config.domain = connInfo.domain
         if (connInfo.parameters) {

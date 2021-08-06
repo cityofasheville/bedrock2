@@ -1,22 +1,25 @@
 {
   "JobIsGo": true,
   "ETLJob": {
-    "name": "parking_cincinnati_rv_tickets.ms1",
-    "depends": [],
-    "path": "store/assets/parking_cincinnati_rv_tickets.ms1/parking_cincinnati_rv_tickets.ms1.json",
-    "run_group": "daily",
+    "name": "testtable2",
+    "depends": [
+      "testtable"
+    ],
+    "path": "store/assets/testtable/testtable.json",
+    "run_group": "tues_night",
     "etl_tasks": [
       {
         "type": "table_copy",
         "source_location": {
-          "connection": "cinncinati_parking",
-          "schemaname": "dbo",
-          "tablename": "RV_TICKETS"
+          "connection": "bedrock-googlesheets",
+          "spreadsheetid": "1TsJqzi1n3G8w4eeYIyx_boeHbjiJ1ZGGOuAFuW_j81Q",
+          "range": "Sheet1!A2:B6"
         },
         "target_location": {
-          "connection": "mdastore1",
-          "schemaname": "internal2",
-          "tablename": "parking_cincinnati_rv_tickets"
+          "connection": "bedrock-googlesheets",
+          "spreadsheetid": "1TsJqzi1n3G8w4eeYIyx_boeHbjiJ1ZGGOuAFuW_j81Q",
+          "range": "Sheet2!A2:B",
+          "append": false
         },
         "active": true
       }

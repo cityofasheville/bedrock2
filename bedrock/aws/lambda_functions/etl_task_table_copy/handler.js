@@ -5,9 +5,10 @@ const getGoogleStream = require('./getGoogleStream')
 const streamDebug = require('./streamDebug')
 const getConnections = require('./getConnections')
 
-// const util = require('util')
-// const pipeline = util.promisify(stream.pipeline);
-const { pipeline } = require('stream/promises')
+const util = require('util')
+const stream = require('stream');
+const pipeline = util.promisify(stream.pipeline);
+// const { pipeline } = require('stream/promises') //requires node 15: lambda max currently 14
 
 exports.lambda_handler = function (event, context) {
   const task = new Promise(async (resolve) => {
@@ -50,7 +51,7 @@ exports.lambda_handler = function (event, context) {
             return resolve({
               statusCode: 200,
               body: {
-                lambda_output: `Table copied ${etl.target_location.connection} ${etl.target_location.schemaname}.${etl.target_location.tablename}`
+                lambda_output: `Table copied ${etl.target_location.connection} ${ifok(etl.target_location.schemaname)}.${ifok(etl.target_location.tablename)}`
               }
             })
           })
@@ -64,7 +65,8 @@ exports.lambda_handler = function (event, context) {
   })
 
   // timeout task
-  const timeleft = context.getRemainingTimeInMillis() - 300
+  // const timeleft = context.getRemainingTimeInMillis() - 300
+  const timeleft = 1000 * 10
   const timeout = new Promise((resolve) => {
     setTimeout(() => resolve({ statusCode: 500, message: `Lambda timed out after ${Math.round(timeleft / 1000)} seconds` }), timeleft)
   })
@@ -82,4 +84,8 @@ function returnError (err) {
       lambda_output: err.toString()
     }
   }
+}
+
+function ifok(x) {
+  return typeof x !== 'undefined' ? x : ''
 }

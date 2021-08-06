@@ -23,7 +23,7 @@ async function writeToSheet (location, theData, append = false) {
     })
   }
   // Now append the new values
-  await sheets.spreadsheets.values.append({
+  sheets.spreadsheets.values.append({
     auth: jwtClient,
     spreadsheetId,
     range: location.range,
@@ -33,8 +33,15 @@ async function writeToSheet (location, theData, append = false) {
       majorDimension: 'ROWS',
       values: csvParse.parse(theData)
     }
+  }).then(function(response) {
+    // TODO: Change code below to process the `response` object:
+    console.log(response.result);
+  }, function(reason) {
+    console.error('error: ' + reason.result.error.message);
   })
 }
+
+
 
 module.exports = async function createGoogleWritable (location) {
   const googleStream = new stream.Writable()
@@ -50,6 +57,7 @@ module.exports = async function createGoogleWritable (location) {
   googleStream._final = async function (done) {
     try {
       writeToSheet(saveLocation, result, append)
+      console.log('Copy to Google Sheet: https://docs.google.com/spreadsheets/d/' + location.spreadsheetid + '/edit#gid=' + location.range.split('!')[0])
     } catch (err) {
       console.error('Google Sheet error: ', err)
       throw new Error('Google Sheet error: ' + err)
