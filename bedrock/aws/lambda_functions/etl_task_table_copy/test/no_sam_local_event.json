@@ -12,15 +12,16 @@
           "type": "table_copy",
           "source_location": {
             "connection": "bedrock-googlesheets",
-            "spreadsheetid": "1FOmrFm5afRc_XqTeF2T-ilWtZDIYzdqKiZlPX129IQA",
-            "range": "test!A2:B"
+            "spreadsheetid": "1TsJqzi1n3G8w4eeYIyx_boeHbjiJ1ZGGOuAFuW_j81Q",
+            "range": "Sheet1!A2:B6"
           },
           "target_location": {
-              "connection": "mdastore1",
-              "schemaname": "internal2",
-              "tablename": "testtable"
+            "connection": "bedrock-googlesheets",
+            "spreadsheetid": "1TsJqzi1n3G8w4eeYIyx_boeHbjiJ1ZGGOuAFuW_j81Q",
+            "range": "Sheet2!A2:B",
+            "append": true
           },
-          "active": false
+          "active": true
         }
       ]
     },

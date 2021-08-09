@@ -3,7 +3,7 @@ const sql = require('mssql')
 const pools = {}
 
 // SQL Server Advanced Pool Management https://github.com/tediousjs/node-mssql#advanced-pool-management
-async function get_pool(name, config) {
+async function getPool (name, config) {
   if (!Object.prototype.hasOwnProperty.call(pools, name)) {
     const pool = new sql.ConnectionPool(config)
     const close = pool.close.bind(pool)
@@ -18,13 +18,13 @@ async function get_pool(name, config) {
 }
 
 // close all pools
-function close_all_pools() {
+function closeAllPools () {
   return Promise.all(Object.values(pools).map((pool) => {
     return pool.close()
   }))
 }
 
 module.exports = {
-  close_all_pools,
-  get_pool
+  closeAllPools,
+  getPool
 }
