@@ -16,7 +16,7 @@ exports.lambda_handler = function (event, context) {
     try {
       const etl = event.ETLJob.etl_tasks[event.TaskIndex]
       if (!etl.active) {
-        return resolve({ statusCode: 200, body: { lambda_output: 'Inactive: skipped' } })
+        resolve({ statusCode: 200, body: { lambda_output: 'Inactive: skipped' } })
       } else {
         const connections = await getConnections()
         const streams = {}
@@ -45,28 +45,30 @@ exports.lambda_handler = function (event, context) {
 
         pipeline(
           streams.source_location,
-          // stream_debug,
+          // streamDebug,
           streams.target_location)
           .then(() => {
-            return resolve({
+            resolve({
               statusCode: 200,
               body: {
-                lambda_output: `Table copied ${etl.target_location.connection} ${ifok(etl.target_location.schemaname)}.${ifok(etl.target_location.tablename)}`
+                lambda_output: output_msg(etl.target_location)
               }
             })
           })
           .catch(err => {
-            return resolve(returnError(err))
+            resolve(returnError(err))
           })
       }
     } catch (err) {
-      return resolve(returnError(err))
+      resolve(returnError(err))
     }
   })
 
   // timeout task
-  // const timeleft = context.getRemainingTimeInMillis() - 300
-  const timeleft = 1000 * 10
+
+  const timeleft = context.getRemainingTimeInMillis() - 300
+  // const timeleft = 1000 * 10 //SAM bug workaround
+
   const timeout = new Promise((resolve) => {
     setTimeout(() => resolve({ statusCode: 500, message: `Lambda timed out after ${Math.round(timeleft / 1000)} seconds` }), timeleft)
   })
@@ -86,6 +88,12 @@ function returnError (err) {
   }
 }
 
-function ifok(x) {
-  return typeof x !== 'undefined' ? x : ''
+function output_msg(loc){
+  if( loc.tablename !== undefined ){
+    return `Table copied ${loc.connection} ${loc.schemaname}.${loc.tablename}`
+  }else if( loc.conn_info.type === 'google_sheets'){
+    return `Google Sheet copied ${loc.spreadsheetid}`
+  }else{
+    return `Copied ${loc.connection}`
+  }
 }

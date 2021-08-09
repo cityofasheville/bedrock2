@@ -56,7 +56,7 @@ module.exports = async function createGoogleWritable (location) {
 
   googleStream._final = async function (done) {
     try {
-      writeToSheet(saveLocation, result, append)
+      await writeToSheet(saveLocation, result, append)
       console.log('Copy to Google Sheet: https://docs.google.com/spreadsheets/d/' + location.spreadsheetid + '/edit#gid=' + location.range.split('!')[0])
     } catch (err) {
       console.error('Google Sheet error: ', err)

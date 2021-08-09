@@ -22,9 +22,39 @@
           "append": false
         },
         "active": true
+      },
+      {
+        "type": "table_copy",
+        "source_location": {
+          "connection": "localpg2",
+          "schemaname": "public",
+          "tablename": "testtable"
+        },
+        "target_location": {
+          "connection": "localpg1",
+          "schemaname": "public",
+          "tablename": "testtable"
+        },
+        "active": true
+      },
+      {
+        "type": "table_copy",
+        "source_location": {
+          "connection": "localpg1",
+          "schemaname": "public",
+          "tablename": "tst"
+        },
+        "target_location": {
+          "connection": "bedrock-googlesheets",
+          "spreadsheetid": "1TsJqzi1n3G8w4eeYIyx_boeHbjiJ1ZGGOuAFuW_j81Q",
+          "range": "Sheet2!A2:B",
+          "append": false
+        },
+        "active": true
       }
+
     ]
   },
-  "TaskIndex": 0,
+  "TaskIndex": 2,
   "JobType": "table_copy"
 }
