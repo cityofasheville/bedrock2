@@ -37,18 +37,16 @@ Create a blueprint file based on an existing database table:
 
 ## Installation, Development and Deployment
 
+## Installation on Docker
+
 Bedrock will work on most Linux architectures, but we have standardized on Amazon Linux 2, which can be run as a Docker container defined by [Dockerfile.bedrock](./Dockerfile.bedrock). This will install Python, Node, PostgreSQL and AWS tools, as well as clone this repository.
 
-- To build and run on Windows (changing the tag and local directory appropriately):
+To build, run and log in on Windows (changing the tag and local directory appropriately):
 ```
     docker build -f Dockerfile.bedrock --tag ejaxonavl/bedrock .
     winpty docker run -it -v "C:\Users\ericjackson\dev\bedrock\bedrock2":/home/bedrock ejaxonavl/bedrock bash
 ```
-- On a Mac it would be something like:
-```
-    docker build -f Dockerfile.bedrock --tag ejaxonavl/bedrock .
-    docker run -it -v "/Users/jon/Documents/bedrock2":/home/bedrock ejaxonavl/bedrock bash
-```
+The ```winpty``` command is not required on a Mac.
 
 A _bedrock_ Conda Python environment is automatically activated on login. After logging in the first time, run the following commands:
 
@@ -57,6 +55,8 @@ A _bedrock_ Conda Python environment is automatically activated on login. After 
     python setup.py develop
     export BEDROCK_BUCKETNAME=managed-data-assets
 
-Then set the AWS permissions and run "bedrock preprocess -o s3"
+Then set the AWS permissions.
+
+ and run "bedrock preprocess -o s3"
  
 TBD - documentation on deploying and running AWS infrastructure.
