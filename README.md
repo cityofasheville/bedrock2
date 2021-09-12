@@ -39,7 +39,7 @@ Create a blueprint file based on an existing database table:
  
 TBD - documentation on deploying and running AWS infrastructure.
 
-## Installation, Development and Deployment
+## Installation and Development
 
 ## Installation on Docker
 
@@ -50,9 +50,9 @@ To build, run and log in on Windows (changing the tag and local directory approp
     docker build -f Dockerfile.bedrock --tag ejaxonavl/bedrock .
     winpty docker run -it -v "C:\Users\ericjackson\dev\bedrock\bedrock2":/home/bedrock ejaxonavl/bedrock bash
 ```
-The ```winpty``` command is not required on a Mac.
+The ```winpty``` command is not required on a Mac. This command maps ```/home/bedrock``` to the specified directory on your local machine so that you can edit the files on your local machine while running Bedrock in the Docker container.
 
-A Conda Python environment called  _bedrock_ is automatically activated on login. After logging in the first time, run the following commands:
+To build Bedrock after logging into the Docker container for the first time, run the following commands (note that a Conda Python environment called  _bedrock_ is automatically activated on login):
 
     cd /home/bedrock
     pip install -r requirements.txt
