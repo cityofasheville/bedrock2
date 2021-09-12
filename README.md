@@ -35,6 +35,10 @@ Create a blueprint file based on an existing database table:
 
     bedrock blueprint  create-blueprint -c mdastore1 -t internal2.pr_employee_info -b testblueprint
 
+### Deploying Bedrock AWS Infrastructure
+ 
+TBD - documentation on deploying and running AWS infrastructure.
+
 ## Installation, Development and Deployment
 
 ## Installation on Docker
@@ -48,15 +52,21 @@ To build, run and log in on Windows (changing the tag and local directory approp
 ```
 The ```winpty``` command is not required on a Mac.
 
-A _bedrock_ Conda Python environment is automatically activated on login. After logging in the first time, run the following commands:
+A Conda Python environment called  _bedrock_ is automatically activated on login. After logging in the first time, run the following commands:
 
     cd /home/bedrock
     pip install -r requirements.txt
     python setup.py develop
     export BEDROCK_BUCKETNAME=managed-data-assets
 
-Then set the AWS permissions.
+Next set up the AWS environment by running the following commands:
 
- and run "bedrock preprocess -o s3"
- 
-TBD - documentation on deploying and running AWS infrastructure.
+```
+    export AWS_ACCESS_KEY_ID="_<Access_Key_ID>_"
+    export AWS_SECRET_ACCESS_KEY="_<Secred_Access_Key>_"
+    export AWS_SESSION_TOKEN="_<Session Token>_"
+```
+
+Alternatively, you may set up a profile in the AWS credentials file (see documentation [here](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html#cli-configure-quickstart-profiles)).
+
+
