@@ -8,7 +8,7 @@ Resources:
     Properties:
       Runtime: nodejs12.x
       Handler: handler.lambda_handler
-      Timeout: 40
+      Timeout: 400
       CodeUri: ..
   TestTimeout:
     Type: AWS::Serverless::Function
