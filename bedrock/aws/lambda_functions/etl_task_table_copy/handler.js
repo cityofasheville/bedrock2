@@ -66,8 +66,8 @@ exports.lambda_handler = function (event, context) {
 
   // timeout task
 
-  // const timeleft = context.getRemainingTimeInMillis() - 300
-  const timeleft = 1000 * 100 //SAM bug workaround
+  const timeleft = context.getRemainingTimeInMillis() - 300
+  // const timeleft = 1000 * 10 //SAM bug workaround
 
   const timeout = new Promise((resolve) => {
     setTimeout(() => resolve({ statusCode: 500, message: `Lambda timed out after ${Math.round(timeleft / 1000)} seconds` }), timeleft)

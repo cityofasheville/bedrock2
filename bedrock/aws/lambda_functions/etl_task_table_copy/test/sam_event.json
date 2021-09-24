@@ -11,20 +11,48 @@
       {
         "type": "table_copy",
         "source_location": {
-          "filename": "abi_potential_vendors",
           "connection": "bedrock-googlesheets",
-          "spreadsheetid": "1lQzl5-MM0SUblcyuOdxsm6duaERA5017c4eSgbnlDoI",
-          "range": "Sheet1!A2:Z"
+          "spreadsheetid": "1TsJqzi1n3G8w4eeYIyx_boeHbjiJ1ZGGOuAFuW_j81Q",
+          "range": "Sheet1!A2:B6"
         },
         "target_location": {
-          "filename": "abi_outreach_vendors",
           "connection": "bedrock-googlesheets",
-          "spreadsheetid": "1CWvQoP1pc7dIPlJeM-79XiFOv8nC7i83weT_pxv2bDs",
-          "range": "Sheet1!A2:Z",
+          "spreadsheetid": "1TsJqzi1n3G8w4eeYIyx_boeHbjiJ1ZGGOuAFuW_j81Q",
+          "range": "Sheet2!A2:B",
           "append": true
         },
         "active": true
+      },
+      {
+        "type": "table_copy",
+        "source_location": {
+          "connection": "localpg2",
+          "schemaname": "public",
+          "tablename": "testtable"
+        },
+        "target_location": {
+          "connection": "localpg1",
+          "schemaname": "public",
+          "tablename": "testtable"
+        },
+        "active": true
+      },
+      {
+        "type": "table_copy",
+        "source_location": {
+          "connection": "localpg1",
+          "schemaname": "public",
+          "tablename": "tst"
+        },
+        "target_location": {
+          "connection": "bedrock-googlesheets",
+          "spreadsheetid": "1TsJqzi1n3G8w4eeYIyx_boeHbjiJ1ZGGOuAFuW_j81Q",
+          "range": "Sheet2!A2:B",
+          "append": false
+        },
+        "active": true
       }
+
     ]
   },
   "TaskIndex": 0,

@@ -29,8 +29,8 @@ async function getGoogleStream (location) {
       const csvstring = csv.stringify(fixUnevenRows(range, response.data.values))
       return Readable.from(csvstring)
     } catch (err) {
-      console.error('Google Sheet read error: ', err)
-      throw new Error('Google Sheet read error: ' + err)
+      console.error('Google Sheet error: ', err)
+      throw new Error('Google Sheet error: ' + err)
     }
   } else if (location.fromto === 'target_location') {
     return createGoogleWritable(location)

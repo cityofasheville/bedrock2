@@ -36,37 +36,33 @@ async function writeToSheet (location, theData, append = false) {
       }
     })
   }catch(err){
-    console.log('Google error: ' + err);
-    throw('Google thrown error: ' +err)
+    console.error('Google error: ' + err, err.result.error.message);
   }
 }
 
 
 
 module.exports = async function createGoogleWritable (location) {
-  try {
-    const googleStream = new stream.Writable()
-    let result = ''
-    const saveLocation = location
-    const append = location.append
+  const googleStream = new stream.Writable()
+  let result = ''
+  const saveLocation = location
+  const append = location.append
 
-    googleStream._write = function (chunk, encoding, done) {
-      result += chunk
-      done()
-    }
-
-    googleStream._final = async function (done) {
-      // try {
-        await writeToSheet(saveLocation, result, append)
-        console.log('Copy to Google Sheet: https://docs.google.com/spreadsheets/d/' + location.spreadsheetid + '/edit#gid=' + location.range.split('!')[0])
-      // } catch (err) {
-      //   console.error('Google Sheet write error: ', err)
-      //   throw new Error('Google Sheet write error: ' + err)
-      // }
-      done()
-    }
-  }catch(err) {
-    throw new Error('Google Sheet write error: ' + err)
+  googleStream._write = function (chunk, encoding, done) {
+    result += chunk
+    done()
   }
+
+  googleStream._final = async function (done) {
+    try {
+      await writeToSheet(saveLocation, result, append)
+      console.log('Copy to Google Sheet: https://docs.google.com/spreadsheets/d/' + location.spreadsheetid + '/edit#gid=' + location.range.split('!')[0])
+    } catch (err) {
+      console.error('Google Sheet error: ', err)
+      throw new Error('Google Sheet error: ' + err)
+    }
+    done()
+  }
+
   return googleStream
 }
