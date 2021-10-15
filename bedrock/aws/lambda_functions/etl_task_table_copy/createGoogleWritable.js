@@ -36,7 +36,7 @@ async function writeToSheet (location, theData, append = false) {
       }
     })
   }catch(err){
-    console.error('Google error: ' + err, err.result.error.message);
+    console.error('Google error: ', err);
   }
 }
 
