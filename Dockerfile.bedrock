@@ -9,7 +9,7 @@ RUN cd /tmp; curl "https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x
 RUN conda init bash
 
 RUN curl -sL https://rpm.nodesource.com/setup_12.x | bash -
-RUN yum -y install nodejs git unzip
+RUN yum -y install nodejs git zip unzip
 
 RUN yum -y install postgresql postgresql-server
 
