@@ -3,44 +3,38 @@ const { google } = require('googleapis')
 const csvParse = require('csv/lib/sync')
 
 async function writeToSheet (location, theData, append = false) {
-  try{
-    const jwtClient = new google.auth.JWT(
-      location.conn_info.client_email,
-      null,
-      location.conn_info.private_key,
-      ['https://www.googleapis.com/auth/spreadsheets']
-    )
-    await jwtClient.authorize()
+  const jwtClient = new google.auth.JWT(
+    location.conn_info.client_email,
+    null,
+    location.conn_info.private_key,
+    ['https://www.googleapis.com/auth/spreadsheets']
+  )
+  await jwtClient.authorize()
 
-    const spreadsheetId = location.spreadsheetid
-    const sheets = google.sheets('v4')
+  const spreadsheetId = location.spreadsheetid
+  const sheets = google.sheets('v4')
 
-    // First clear the spreadsheet
-    if (!append) {
-      await sheets.spreadsheets.values.clear({
-        auth: jwtClient,
-        spreadsheetId,
-        range: location.range
-      })
-    }
-    // Now append the new values
-    let response = await sheets.spreadsheets.values.append({
+  // First clear the spreadsheet
+  if (!append) {
+    await sheets.spreadsheets.values.clear({
       auth: jwtClient,
       spreadsheetId,
-      range: location.range,
-      insertDataOption: 'OVERWRITE',
-      valueInputOption: 'USER_ENTERED',
-      resource: {
-        majorDimension: 'ROWS',
-        values: csvParse.parse(theData)
-      }
+      range: location.range
     })
-  }catch(err){
-    console.error('Google error: ', err);
   }
+  // Now append the new values
+  await sheets.spreadsheets.values.append({
+    auth: jwtClient,
+    spreadsheetId,
+    range: location.range,
+    insertDataOption: 'OVERWRITE',
+    valueInputOption: 'USER_ENTERED',
+    resource: {
+      majorDimension: 'ROWS',
+      values: csvParse.parse(theData)
+    }
+  })
 }
-
-
 
 module.exports = async function createGoogleWritable (location) {
   const googleStream = new stream.Writable()
