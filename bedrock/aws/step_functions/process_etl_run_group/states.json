@@ -8,7 +8,7 @@
       "Resource": "${create_etl_run_map_arn}",
       "Parameters": {
         "s3bucket": "managed-data-assets",
-        "rungroup": "daily"
+        "rungroup": "$.rungroup"
       },
       "ResultPath": "$",
       "Next": "Check200"
