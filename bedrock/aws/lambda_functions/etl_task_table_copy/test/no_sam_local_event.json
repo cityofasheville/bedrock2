@@ -19,7 +19,7 @@
             "filename": "abi_outreach_vendors",
             "connection": "bedrock-googlesheets",
             "spreadsheetid": "1lm_LdZS6yhniDEuVGyaj3vdD7ACU8Eo_pCkmNr81TvA",
-            "range": "Sheet1!A2:Z",
+            "range": "Vendors!A2:Z",
             "append": false
           },
           "active": true
@@ -30,13 +30,13 @@
             "filename": "abi_potential_vendors",
             "connection": "bedrock-googlesheets",
             "spreadsheetid": "1lQzl5-MM0SUblcyuOdxsm6duaERA5017c4eSgbnlDoI",
-            "range": "Sheet1!A2:Z"
+            "range": "Vendors!A2:Z"
           },
           "target_location": {
             "filename": "abi_outreach_vendors",
             "connection": "bedrock-googlesheets",
             "spreadsheetid": "1lm_LdZS6yhniDEuVGyaj3vdD7ACU8Eo_pCkmNr81TvA",
-            "range": "Sheet1!A2:Z",
+            "range": "Vendors!A2:Z",
             "append": true
           },
           "active": true
