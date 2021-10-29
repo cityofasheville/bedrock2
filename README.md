@@ -10,7 +10,6 @@ What these two types have in common is a need for a managed interface between th
 
 Bedrock works in conjunction with the data inventory itself, which is maintained in the [managed-data-assets repository](https://github.com/cityofasheville/managed-data-assets).
 
-
 ## Organization
 
 Bedrock consists of two parts, a set of command-line scripts and a collection of AWS infrastructure that implements an ETL system.
@@ -31,6 +30,8 @@ The ```preprocess``` command combines information on all assets defined in an S3
 
 In Bedrock a _blueprint_ is the standard representation of an asset that can be used to create a table in a database or validate data at an API interface. For now we only have two commands available, one to create a new blueprint based on an existing table and one to create a table based on a blueprint file.
 
+The connection variables used here refer to connections defined in the ```managed-data-assets``` S3 bucket.
+
 To create a database table based on a blueprint, run either of these commands (they are equivalent)
 
     bedrock blueprint create-table -c mdastore1 -b employee.1.0 -t internal2.ejtmp  
@@ -41,8 +42,10 @@ To create a blueprint file based on an existing database table:
     bedrock blueprint  create-blueprint -c mdastore1 -t internal2.pr_employee_info -b testblueprint
 
 ### Bedrock AWS ETL Infrastructure
- 
-AWS infrastructure for Bedrock is defined in the [aws](./bedrock/aws) directory.
+
+The AWS portion of Bedrock consists of the ```process_etl_run_group``` step function that runs a all the ETL jobs in a specified run-group in an order that accounts for dependencies between different datasets. The code for this step function and the associated set of lambdas is located in the [./bedrock/aws](./bedrock/aws) directory.
+
+The lambdas are a mix of Python and Node. Within a Lambda directory
 
 
 ### OTHER STUFF
