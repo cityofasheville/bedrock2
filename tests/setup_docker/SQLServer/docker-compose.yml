@@ -1,6 +1,0 @@
-version: '3'
-services:
-  ss1:
-    build: .
-    ports:
-      - "1433:1433"
