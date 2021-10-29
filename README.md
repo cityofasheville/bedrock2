@@ -29,31 +29,27 @@ The ```preprocess``` command combines information on all assets defined in an S3
 
 #### Blueprint Commands
 
-In Bedrock a _blueprint_
+In Bedrock a _blueprint_ is the standard representation of an asset that can be used to create a table in a database or validate data at an API interface. For now we only have two commands available, one to create a new blueprint based on an existing table and one to create a table based on a blueprint file.
 
-Create a database table based on a blueprint (the two following lines are equivalent)
+To create a database table based on a blueprint, run either of these commands (they are equivalent)
 
     bedrock blueprint create-table -c mdastore1 -b employee.1.0 -t internal2.ejtmp  
     bedrock blueprint create-table --connection=mdastore1 --blueprint=employee.1.0 --table=internal2.ejtmp
 
-Create a blueprint file based on an existing database table:
+To create a blueprint file based on an existing database table:
 
     bedrock blueprint  create-blueprint -c mdastore1 -t internal2.pr_employee_info -b testblueprint
 
-### Deploying Bedrock AWS Infrastructure
+### Bedrock AWS ETL Infrastructure
  
-
 AWS infrastructure for Bedrock is defined in the [aws](./bedrock/aws) directory.
 
-## Usage
 
+### OTHER STUFF
 
+#### Installation and Development
 
-TBD - documentation on deploying and running AWS infrastructure.
-
-## Installation and Development
-
-## Installation on Docker
+#### Installation on Docker
 
 Bedrock will work on most Linux architectures, but we have standardized on Amazon Linux 2, which can be run as a Docker container defined by [Dockerfile.bedrock](./Dockerfile.bedrock). This will install Python, Node, PostgreSQL and AWS tools, as well as clone this repository.
 
