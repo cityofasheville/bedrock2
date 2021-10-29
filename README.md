@@ -1,65 +1,83 @@
 # Bedrock 2
 ![LOGO](./docs/bedrock.png)
 
-Bedrock is a system for strategic data asset inventory and dependency management.  The purpose of the Bedrock system is to support the strategic use of data. In particular, the system attempts to automate as much as possible maintaining an up-to-date inventory of strategic data assets and their dependencies, maintaining up-to-date versions of the data itself, and supporting access both to the data and to information about it (metadata).
+Bedrock is a system for strategic data asset inventory and dependency management, as well as automation of the most common mechanisms for copying or transforming data. Bedrock focuses on two types of data:
 
-Bedrock focuses on two types of data:
-
- - Data that we want to manage as strategic assets for reporting or performance management
- - Data that is used for integrating systems
+ - Data for reporting or performance management
+ - Data used for integrating systems
 
 What these two types have in common is a need for a managed interface between the systems or processes that generate the data and those that make use of it. As much as possible, systems that use the data should be able to remain ignorant of the details of how it is extracted or maintained, other than what is captured in metadata to support its use.
 
-Bedrock may be viewed as (a) a set of conventions for maintaining data and metadata, (b) deployable AWS infrastructure for running ETL jobs and other functions, and (c) a command-line tool for working with data assets and for deploying and running the Bedrock AWS infrastructure.
+Bedrock works in conjunction with the data inventory itself, which is maintained in the [managed-data-assets repository](https://github.com/cityofasheville/managed-data-assets).
 
-The assets managed by Bedrock are maintained in the [managed-data-assets repository](https://github.com/cityofasheville/managed-data-assets), which is automatically synchronized to an S3 bucket. The Bedrock code references this bucket via the environment variable _BEDROCK_BUCKETNAME_.
+## Organization
 
-Additional information about Bedrock and its use can be found in the __docs__ directory.
+Bedrock consists of two parts, a set of command-line scripts and a collection of AWS infrastructure that implements an ETL system.
 
-## Contents and Organization
+### Command-Line Scripts
 
-As a command-line tool, Bedrock is built on the [Cement CLI Application Framework](https://builtoncement.com/), and the organization of the code is largely determined by Cement. Bedrock-specific code may be found in the _controllers_, _src_, and _aws_ subdirectories [./bedrock/](./bedrock). 
+As a command-line tool, Bedrock is currently built on the [Cement CLI Application Framework](https://builtoncement.com/), and the organization of the code is largely determined by Cement. Bedrock-specific code may be found in the _controllers_, _src_, and _aws_ subdirectories of [./bedrock/](./bedrock). In the near future we will be moving the Bedrock scripts out of the framework.
 
-Commands in Cement are implemented using controllers in the [controllers](./bedrock/controllers) directory. Bedrock-specific controllers have the prefix _bedrock___. The commands use functions defined in the [src](./bedrock/src) directory to carry out much of the work.
+In the meantime, there are currently just 3 scripts, only one of which is in regular use.
 
-AWS infrastructure for Bedrock is defined in the [aws](./bedrock/aws) directory.
+#### preprocess
 
-## Usage
-
-Preprocess assets in BEDROCK_BUCKETNAME for ETL runs:
+The ```preprocess``` command combines information on all assets defined in an S3 copy of the  [managed-data-assets repository](https://github.com/cityofasheville/managed-data-assets) into a single ```all_assets.json``` file that is used by the ETL system running in AWS. Currently it must be run manually whenever the repository is updated (a CircleCI job copies the repository to S3, but running ```preprocess``` is manual). To run, set the environment variable ```BEDROCK_BUCKETNAME``` to ```managed-data-assets``` and run the command:
 
     bedrock preprocess -o s3  
 
-### Blueprints
-Create a database table based on a blueprint (the two following lines are equivalent)
+#### Blueprint Commands
+
+In Bedrock a _blueprint_ is the standard representation of an asset that can be used to create a table in a database or validate data at an API interface. For now we only have two commands available, one to create a new blueprint based on an existing table and one to create a table based on a blueprint file.
+
+The connection variables used here refer to connections defined in the ```managed-data-assets``` S3 bucket.
+
+To create a database table based on a blueprint, run either of these commands (they are equivalent)
 
     bedrock blueprint create-table -c mdastore1 -b employee.1.0 -t internal2.ejtmp  
     bedrock blueprint create-table --connection=mdastore1 --blueprint=employee.1.0 --table=internal2.ejtmp
 
-Create a blueprint file based on an existing database table:
+To create a blueprint file based on an existing database table:
 
     bedrock blueprint  create-blueprint -c mdastore1 -t internal2.pr_employee_info -b testblueprint
 
-## Development and Deployment
+### Bedrock AWS ETL Infrastructure
 
-Bedrock will work relatively easily on most Linux architectures, but the base environment is the Amazon Linux 2 environment defined by the [Dockerfile.bedrock](./Dockerfile.bedrock) file. 
-- To build and run on Windows:
+The AWS portion of Bedrock consists of the ```process_etl_run_group``` step function that runs a all the ETL jobs in a specified run-group in an order that accounts for dependencies between different datasets. The code for this step function and the associated set of lambdas is located in the [./bedrock/aws](./bedrock/aws) directory.
+
+The lambdas are a mix of Python and Node. Within a Lambda directory
+
+
+### OTHER STUFF
+
+#### Installation and Development
+
+#### Installation on Docker
+
+Bedrock will work on most Linux architectures, but we have standardized on Amazon Linux 2, which can be run as a Docker container defined by [Dockerfile.bedrock](./Dockerfile.bedrock). This will install Python, Node, PostgreSQL and AWS tools, as well as clone this repository.
+
+To build, run and log in on Windows (changing the tag and local directory appropriately):
 ```
     docker build -f Dockerfile.bedrock --tag ejaxonavl/bedrock .
     winpty docker run -it -v "C:\Users\ericjackson\dev\bedrock\bedrock2":/home/bedrock ejaxonavl/bedrock bash
 ```
-- and on a Mac it would be something like:
-```
-    docker build -f Dockerfile.bedrock --tag ejaxonavl/bedrock .
-    docker run -it -v "/Users/jon/Documents/bedrock2":/home/bedrock ejaxonavl/bedrock bash
-```
-A _bedrock_ Conda environment is automatically activated on login. Once logged in, run the following:
+The ```winpty``` command is not required on a Mac. This command maps ```/home/bedrock``` to the specified directory on your local machine so that you can edit the files on your local machine while running Bedrock in the Docker container.
+
+To build Bedrock after logging into the Docker container for the first time, run the following commands (note that a Conda Python environment called  _bedrock_ is automatically activated on login):
 
     cd /home/bedrock
     pip install -r requirements.txt
     python setup.py develop
     export BEDROCK_BUCKETNAME=managed-data-assets
 
-Then set the AWS permissions and run "bedrock preprocess -o s3"
- 
-TBD - documentation on deploying and running AWS infrastructure.
+Next set up the AWS environment by running the following commands:
+
+```
+    export AWS_ACCESS_KEY_ID="_<Access_Key_ID>_"
+    export AWS_SECRET_ACCESS_KEY="_<Secred_Access_Key>_"
+    export AWS_SESSION_TOKEN="_<Session Token>_"
+```
+
+Alternatively, you may set up a profile in the AWS credentials file (see documentation [here](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html#cli-configure-quickstart-profiles)).
+
+
