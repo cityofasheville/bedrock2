@@ -11,14 +11,32 @@
         {
           "type": "table_copy",
           "source_location": {
-            "connection": "bedrock-googlesheets",
-            "spreadsheetid": "1TsJqzi1n3G8w4eeYIyx_boeHbjiJ1ZGGOuAFuW_j81Q",
-            "range": "Sheet1!A2:B6"
+            "connection": "munis",
+            "schemaname": "amd",
+            "tablename": "mwbe_vendors_by_commodity"
           },
           "target_location": {
+            "filename": "abi_outreach_vendors",
             "connection": "bedrock-googlesheets",
-            "spreadsheetid": "1TsJqzi1n3G8w4eeYIyx_boeHbjiJ1ZGGOuAFuW_j81Q",
-            "range": "Sheet2!A2:B",
+            "spreadsheetid": "1lm_LdZS6yhniDEuVGyaj3vdD7ACU8Eo_pCkmNr81TvA",
+            "range": "Vendors!A2:Z",
+            "append": false
+          },
+          "active": true
+        },
+        {
+          "type": "table_copy",
+          "source_location": {
+            "filename": "abi_potential_vendors",
+            "connection": "bedrock-googlesheets",
+            "spreadsheetid": "1lQzl5-MM0SUblcyuOdxsm6duaERA5017c4eSgbnlDoI",
+            "range": "Vendors!A2:Z"
+          },
+          "target_location": {
+            "filename": "abi_outreach_vendors",
+            "connection": "bedrock-googlesheets",
+            "spreadsheetid": "1lm_LdZS6yhniDEuVGyaj3vdD7ACU8Eo_pCkmNr81TvA",
+            "range": "Vendors!A2:Z",
             "append": true
           },
           "active": true
