@@ -11,21 +11,26 @@ What these two types have in common is a need for a managed interface between th
 Bedrock works in conjunction with the data inventory itself, which is maintained in the [managed-data-assets repository](https://github.com/cityofasheville/managed-data-assets).
 
 
-## Contents and Organization
+## Organization
 
-Bedrock consists of a combination of command-line scripts and AWS infrastructure.
+Bedrock consists of two parts, a set of command-line scripts and a collection of AWS infrastructure that implements an ETL system.
 
-As a command-line tool, Bedrock is built on the [Cement CLI Application Framework](https://builtoncement.com/), and the organization of the code is largely determined by Cement. Bedrock-specific code may be found in the _controllers_, _src_, and _aws_ subdirectories of [./bedrock/](./bedrock). 
+### Command-Line Scripts
 
-AWS infrastructure for Bedrock is defined in the [aws](./bedrock/aws) directory.
+As a command-line tool, Bedrock is currently built on the [Cement CLI Application Framework](https://builtoncement.com/), and the organization of the code is largely determined by Cement. Bedrock-specific code may be found in the _controllers_, _src_, and _aws_ subdirectories of [./bedrock/](./bedrock). In the near future we will be moving the Bedrock scripts out of the framework.
 
-## Usage
+In the meantime, there are currently just 3 scripts, only one of which is in regular use.
 
-Preprocess assets in BEDROCK_BUCKETNAME for ETL runs:
+#### preprocess
+
+The ```preprocess``` command combines information on all assets defined in an S3 copy of the  [managed-data-assets repository](https://github.com/cityofasheville/managed-data-assets) into a single ```all_assets.json``` file that is used by the ETL system running in AWS. Currently it must be run manually whenever the repository is updated (a CircleCI job copies the repository to S3, but running ```preprocess``` is manual). To run, set the environment variable ```BEDROCK_BUCKETNAME``` to ```managed-data-assets``` and run the command:
 
     bedrock preprocess -o s3  
 
-### Blueprints
+#### Blueprint Commands
+
+In Bedrock a _blueprint_
+
 Create a database table based on a blueprint (the two following lines are equivalent)
 
     bedrock blueprint create-table -c mdastore1 -b employee.1.0 -t internal2.ejtmp  
@@ -37,6 +42,13 @@ Create a blueprint file based on an existing database table:
 
 ### Deploying Bedrock AWS Infrastructure
  
+
+AWS infrastructure for Bedrock is defined in the [aws](./bedrock/aws) directory.
+
+## Usage
+
+
+
 TBD - documentation on deploying and running AWS infrastructure.
 
 ## Installation and Development
