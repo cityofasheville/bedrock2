@@ -16,15 +16,13 @@ Bedrock consists of two parts, a set of command-line scripts and a collection of
 
 ### Command-Line Scripts
 
-As a command-line tool, Bedrock is currently built on the [Cement CLI Application Framework](https://builtoncement.com/), and the organization of the code is largely determined by Cement. Bedrock-specific code may be found in the _controllers_, _src_, and _aws_ subdirectories of [./bedrock/](./bedrock). In the near future we will be moving the Bedrock scripts out of the framework.
+Bedrock scripts are located in the ```scripts``` directory and are intended to be called manually from the command line or from a tool like CircleCI. At this stage there are just 3 scripts, only one of which is in regular use.
 
-In the meantime, there are currently just 3 scripts, only one of which is in regular use.
+#### preprocess_assets
 
-#### preprocess
+The ```preprocess_assets.py``` command combines information on all assets defined in an S3 copy of the  [managed-data-assets repository](https://github.com/cityofasheville/managed-data-assets) into a single ```all_assets.json``` file that is used by the ETL system running in AWS. Currently it must be run manually whenever the repository is updated (a CircleCI job copies the repository to S3, but running ```preprocess_assets.py``` is manual). To run, set the environment variable ```BEDROCK_BUCKETNAME``` to ```managed-data-assets``` (or set with the ```-b | --bucket``` options) and run the command:
 
-The ```preprocess``` command combines information on all assets defined in an S3 copy of the  [managed-data-assets repository](https://github.com/cityofasheville/managed-data-assets) into a single ```all_assets.json``` file that is used by the ETL system running in AWS. Currently it must be run manually whenever the repository is updated (a CircleCI job copies the repository to S3, but running ```preprocess``` is manual). To run, set the environment variable ```BEDROCK_BUCKETNAME``` to ```managed-data-assets``` and run the command:
-
-    bedrock preprocess -o s3  
+    python preprocess_assets.py -o s3  
 
 #### Blueprint Commands
 
