@@ -10,49 +10,37 @@ What these two types have in common is a need for a managed interface between th
 
 Bedrock works in conjunction with the data inventory itself, which is maintained in the [managed-data-assets repository](https://github.com/cityofasheville/managed-data-assets).
 
-## Organization
-
 Bedrock consists of two parts, a set of command-line scripts and a collection of AWS infrastructure that implements an ETL system.
 
-### Command-Line Scripts
+## Command-Line Scripts
 
-As a command-line tool, Bedrock is currently built on the [Cement CLI Application Framework](https://builtoncement.com/), and the organization of the code is largely determined by Cement. Bedrock-specific code may be found in the _controllers_, _src_, and _aws_ subdirectories of [./bedrock/](./bedrock). In the near future we will be moving the Bedrock scripts out of the framework.
+Bedrock scripts are located in the ```scripts``` directory and are intended to be called manually from the command line or from a tool like CircleCI. At this stage there are just 3 scripts, only one of which is in regular use.
 
-In the meantime, there are currently just 3 scripts, only one of which is in regular use.
+### preprocess_assets
 
-#### preprocess
+The ```preprocess_assets.py``` command combines information on all assets defined in an S3 copy of the  [managed-data-assets repository](https://github.com/cityofasheville/managed-data-assets) into a single ```all_assets.json``` file that is used by the ETL system running in AWS. Currently it must be run manually whenever the repository is updated (a CircleCI job copies the repository to S3, but running ```preprocess_assets.py``` is manual). To run, set the environment variable ```BEDROCK_BUCKETNAME``` to ```managed-data-assets``` (or set with the ```-b | --bucket``` options) and run the command:
 
-The ```preprocess``` command combines information on all assets defined in an S3 copy of the  [managed-data-assets repository](https://github.com/cityofasheville/managed-data-assets) into a single ```all_assets.json``` file that is used by the ETL system running in AWS. Currently it must be run manually whenever the repository is updated (a CircleCI job copies the repository to S3, but running ```preprocess``` is manual). To run, set the environment variable ```BEDROCK_BUCKETNAME``` to ```managed-data-assets``` and run the command:
+    python preprocess_assets.py -o s3  
 
-    bedrock preprocess -o s3  
+### Blueprint Commands
 
-#### Blueprint Commands
+In Bedrock a _blueprint_ is the standard representation of an asset that can be used to create a table in a database or validate data at an API interface. For now we only have two commands available, one to create a new blueprint based on an existing table and one to create a table based on a blueprint file:
 
-In Bedrock a _blueprint_ is the standard representation of an asset that can be used to create a table in a database or validate data at an API interface. For now we only have two commands available, one to create a new blueprint based on an existing table and one to create a table based on a blueprint file.
+ - To create a database table based on a blueprint, use the ```create_table_from_blueprint``` script.
+ - To create a blueprint file based on an existing database table, use the ```create_blueprint``` script.
 
 The connection variables used here refer to connections defined in the ```managed-data-assets``` S3 bucket.
 
-To create a database table based on a blueprint, run either of these commands (they are equivalent)
-
-    bedrock blueprint create-table -c mdastore1 -b employee.1.0 -t internal2.ejtmp  
-    bedrock blueprint create-table --connection=mdastore1 --blueprint=employee.1.0 --table=internal2.ejtmp
-
-To create a blueprint file based on an existing database table:
-
-    bedrock blueprint  create-blueprint -c mdastore1 -t internal2.pr_employee_info -b testblueprint
-
-### Bedrock AWS ETL Infrastructure
+## AWS ETL Infrastructure
 
 The AWS portion of Bedrock consists of the ```process_etl_run_group``` step function that runs a all the ETL jobs in a specified run-group in an order that accounts for dependencies between different datasets. The code for this step function and the associated set of lambdas is located in the [./bedrock/aws](./bedrock/aws) directory.
 
 The lambdas are a mix of Python and Node. Within a Lambda directory
 
 
-### OTHER STUFF
+## Other Information
 
-#### Installation and Development
-
-#### Installation on Docker
+### Installation on Docker
 
 Bedrock will work on most Linux architectures, but we have standardized on Amazon Linux 2, which can be run as a Docker container defined by [Dockerfile.bedrock](./Dockerfile.bedrock). This will install Python, Node, PostgreSQL and AWS tools, as well as clone this repository.
 
@@ -65,9 +53,8 @@ The ```winpty``` command is not required on a Mac. This command maps ```/home/be
 
 To build Bedrock after logging into the Docker container for the first time, run the following commands (note that a Conda Python environment called  _bedrock_ is automatically activated on login):
 
-    cd /home/bedrock
+    cd /home/bedrock/scripts
     pip install -r requirements.txt
-    python setup.py develop
     export BEDROCK_BUCKETNAME=managed-data-assets
 
 Next set up the AWS environment by running the following commands:
