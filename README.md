@@ -26,20 +26,14 @@ The ```preprocess_assets.py``` command combines information on all assets define
 
 #### Blueprint Commands
 
-In Bedrock a _blueprint_ is the standard representation of an asset that can be used to create a table in a database or validate data at an API interface. For now we only have two commands available, one to create a new blueprint based on an existing table and one to create a table based on a blueprint file.
+In Bedrock a _blueprint_ is the standard representation of an asset that can be used to create a table in a database or validate data at an API interface. For now we only have two commands available, one to create a new blueprint based on an existing table and one to create a table based on a blueprint file:
+
+ - To create a database table based on a blueprint, use the ```create_table_from_blueprint``` script.
+ - To create a blueprint file based on an existing database table, use the ```create_blueprint``` script.
 
 The connection variables used here refer to connections defined in the ```managed-data-assets``` S3 bucket.
 
-To create a database table based on a blueprint, run either of these commands (they are equivalent)
-
-    bedrock blueprint create-table -c mdastore1 -b employee.1.0 -t internal2.ejtmp  
-    bedrock blueprint create-table --connection=mdastore1 --blueprint=employee.1.0 --table=internal2.ejtmp
-
-To create a blueprint file based on an existing database table:
-
-    bedrock blueprint  create-blueprint -c mdastore1 -t internal2.pr_employee_info -b testblueprint
-
-### Bedrock AWS ETL Infrastructure
+### AWS ETL Infrastructure
 
 The AWS portion of Bedrock consists of the ```process_etl_run_group``` step function that runs a all the ETL jobs in a specified run-group in an order that accounts for dependencies between different datasets. The code for this step function and the associated set of lambdas is located in the [./bedrock/aws](./bedrock/aws) directory.
 
