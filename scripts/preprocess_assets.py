@@ -1,6 +1,8 @@
 import boto3
 import os
 import json
+import sys
+import getopt
 
 def download_files(bucket_name, prefix, s3, working_directory):
     """ Get all asset and etl files from S3 """
@@ -49,7 +51,7 @@ def write_asset_map(all_assets, bucket_name, prefix, s3, working_directory):
     with open(assets_filepath, 'w') as f:
         f.write(json.dumps(all_assets))
     s3.upload_file(Filename = assets_filepath, Bucket=bucket_name, Key=s3_filepath)
-    os.remove(assets_filepath)    
+    os.remove(assets_filepath)
 
 def preprocess_assets_in_s3(bucket_name, output_mode='s3'):
     print('Bucket name is ', bucket_name)
@@ -66,3 +68,31 @@ def preprocess_assets_in_s3(bucket_name, output_mode='s3'):
         return_value = all_assets
 
     return return_value
+
+def usage():
+    print('  Usage:  preprocess_assets [-b|--bucket bucketname] [-o|--output s3|stdout] [-h|--help]')
+
+BUCKETNAME = os.getenv('BEDROCK_BUCKETNAME')
+output_mode = 's3'
+
+try: 
+    opts, args = getopt.getopt(sys.argv[1:], "ho:b:", ["output=", "bucket=", "help"])
+except getopt.GetoptError as err:
+    print(err)
+    usage()
+    sys.exit(2)
+
+for opt, arg in opts:
+    if opt in ("-h", "--help"):
+        usage()
+        sys.exit(0)
+    elif opt in ("-o", "--output"):
+        output_mode = arg
+    elif opt in ("-b", "--bucket"):
+        BUCKETNAME = arg
+
+print("Bucket name is ", BUCKETNAME)
+print("Output mode is ", output_mode)
+
+val = preprocess_assets_in_s3(BUCKETNAME, output_mode)
+print(val)
