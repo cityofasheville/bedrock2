@@ -16,10 +16,11 @@ def download_files(bucket_name, prefix, s3, working_directory):
         path = obj['Key'].split('/')
         if (len(path) > 1 and ( (path[-2] + '.json' == path[-1]) or (path[-2] + '.etl.json' == path[-1])) ):
             s3.download_file(bucket_name, obj['Key'], tmpfilepath)
+            print(obj['Key'])
             with open(tmpfilepath, 'r') as file_content:
                 if path[-1][-9:] == '.etl.json':
                     file_data['etl'].update({path[-2]: json.load(file_content)})    # ETL file
-                else:
+                elif path[-1][-5:] == '.json':
                     file_data['assets'].update({path[-2]: {'path': obj['Key'], 'file': json.load(file_content)}})    # Asset configuration file
     os.remove(tmpfilepath)
     return file_data
