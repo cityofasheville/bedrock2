@@ -12,15 +12,14 @@ Bedrock works in conjunction with the data inventory itself, which is maintained
 
 Bedrock consists of two parts, a set of command-line scripts and a collection of AWS infrastructure that implements an ETL system.
 
+### Asset Preprocessing
+
+Whenever Assets in the [managed-data-assets repository](https://github.com/cityofasheville/managed-data-assets) are created or modified, a Github Action script copies the data up to an S3 bucket in AWS. Then it runs the [preprocess_assets.py](https://github.com/cityofasheville/managed-data-assets/blob/production/.github/workflows/preprocess_assets/preprocess_assets.py) command to combine information on all assets defined into a single ```all_assets.json``` file that is used by the ETL system running in AWS.
+
+
 ## Command-Line Scripts
 
-Bedrock scripts are located in the ```scripts``` directory and are intended to be called manually from the command line or from a tool like CircleCI. At this stage there are just 3 scripts, only one of which is in regular use.
-
-### preprocess_assets
-
-The ```preprocess_assets.py``` command combines information on all assets defined in an S3 copy of the  [managed-data-assets repository](https://github.com/cityofasheville/managed-data-assets) into a single ```all_assets.json``` file that is used by the ETL system running in AWS. Currently it must be run manually whenever the repository is updated (a CircleCI job copies the repository to S3, but running ```preprocess_assets.py``` is manual). To run, set the environment variable ```BEDROCK_BUCKETNAME``` to ```managed-data-assets``` (or set with the ```-b | --bucket``` options) and run the command:
-
-    python preprocess_assets.py -o s3  
+Bedrock scripts are located in the ```scripts``` directory and are intended to be called manually from the command line or from a tool like CircleCI. There are currently 2 scripts, which create Blueprints.
 
 ### Blueprint Commands
 
@@ -49,10 +48,7 @@ To build, run and log in on Windows (changing the tag and local directory approp
     docker build -f Dockerfile.bedrock --tag ejaxonavl/bedrock .
     winpty docker run -it -v "C:\Users\ericjackson\dev\bedrock\bedrock2":/home/bedrock ejaxonavl/bedrock bash
 ```
-The ```winpty``` command is not required on a Mac. 
-```
-    docker run -it -v "/Users/jon/Documents/bedrock2":/home/bedrock ejaxonavl/bedrock bash
-```
+
 This command maps ```/home/bedrock``` to the specified directory on your local machine so that you can edit the files on your local machine while running Bedrock in the Docker container.
 
 To build Bedrock after logging into the Docker container for the first time, run the following commands (note that a Conda Python environment called  _bedrock_ is automatically activated on login):
