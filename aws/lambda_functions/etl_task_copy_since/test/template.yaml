@@ -6,14 +6,14 @@ Resources:
   CopySince:
     Type: AWS::Serverless::Function
     Properties:
-      Runtime: nodejs12.x
+      Runtime: nodejs14.x
       Handler: handler.lambda_handler
       Timeout: 40
       CodeUri: ..
   TestTimeout:
     Type: AWS::Serverless::Function
     Properties:
-      Runtime: nodejs12.x
+      Runtime: nodejs14.x
       Handler: testtimeout.lambda_handler
       Timeout: 5
       CodeUri: .
