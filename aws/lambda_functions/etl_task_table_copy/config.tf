@@ -16,7 +16,7 @@ resource "aws_lambda_function" "etl_task_table_copy" {
     function_name   = "etl_task_table_copy"
     role            = data.terraform_remote_state.lambda_role.outputs.bedrock_lambda_role_arn
     handler         = "handler.lambda_handler"
-    runtime         = "nodejs12.x"
+    runtime         = "nodejs14.x"
     source_code_hash = filebase64sha256("function.zip")
     timeout         = 900
     memory_size     = 256
