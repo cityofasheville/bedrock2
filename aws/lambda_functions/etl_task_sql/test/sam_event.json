@@ -1,21 +1,22 @@
 {
   "JobIsGo": true,
   "ETLJob": {
-    "name": "testtable2",
+    "name": "bc_property_pinnum_formatted_owner_names",
     "depends": [
-      "testtable"
+      "bc_property_account_master",
+      "bc_property"
     ],
-    "path": "store/assets/testtable/testtable.json",
+    "path": "store/assets/bc_property_pinnum_formatted_owner_names/bc_property_pinnum_formatted_owner_names.json",
     "run_group": "tues_night",
     "etl_tasks": [
       {
-          "type": "sql",
-          "file": "1-coa_bc_address_master_base.sql",
-          "connection": "datastore1",
-          "active": true
+        "type": "sql",
+        "file": "fill_owner_names.sql",
+        "connection": "pubrecdb1/mdastore1/dbadmin",
+        "active": true
       }
     ]
   },
   "TaskIndex": 0,
-  "JobType": "sql"
+  "JobType": "table_copy"
 }

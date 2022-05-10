@@ -1,6 +1,6 @@
 const pg_sql = require('./pg_sql')
 const ss_sql = require('./ss_sql')
-const get_connections= require('./get_connections')
+const getConnection = require('./getConnection')
 const get_sql_from_file = require('./get_sql_from_file')
 
 exports.lambda_handler = function(event, context) {  
@@ -11,17 +11,12 @@ exports.lambda_handler = function(event, context) {
             if (!etl.active) {
                 result = "Inactive: skipped"
             }else{
-                let connections = await get_connections()
                 let sql_filepath = 'store/assets/' + event.ETLJob.name + '/' + etl.file  // 
                 let sql = await get_sql_from_file( sql_filepath )
                 // console.log("etl: \n" + JSON.stringify(etl, null, 2))
                 // console.log("connection: \n" + JSON.stringify(connections, null, 2))
                 // console.log("sql: \n" + JSON.stringify(sql, null, 2))
-                if (connections[etl.connection]) {
-                    connection = connections[etl.connection]
-                } else { 
-                    throw `Database definition ${etl.connection} not found`
-                }
+                connection = await getConnection(etl.connection)
 
                 if (connection.type == 'postgresql') {
                     result = await pg_sql( connection,sql )
