@@ -1,17 +1,15 @@
 const sql = require('mssql')
 const csv = require('csv')
-const { closeAllPools, getPool } = require('./ssPools')
 
-async function getSsStream (location) {
-  return new Promise(async function (resolve, reject) {
+function getSsStream (location) {
+  return new Promise(function (resolve, reject) {
     sql.on('error', err => {
-      reject(err)
+      throw(`SQL Server Error: ${err}`)
     })
     try {
       if (location.fromto === 'source_location') {
         const tablename = `${location.schemaname}.${location.tablename}`
         const connInfo = location.conn_info
-        const poolName = location.connection
 
         const sqlString = `SELECT * FROM ${tablename}`
         const config = {
@@ -30,25 +28,29 @@ async function getSsStream (location) {
             min: 0,
             idleTimeoutMillis: 30000
           },
-          trustServerCertificate: true,  // Acella has self-signed certs?
+          trustServerCertificate: true // Accela has self-signed certs?
         }
         if (connInfo.domain) config.domain = connInfo.domain
         if (connInfo.parameters) {
           if (connInfo.parameters.encrypt === false) config.options.encrypt = false // for <= SQL 2008
         }
-        const pool = await getPool(poolName, config)
-        const request = await pool.request()
-        request.stream = true
+        sql.connect(config, err => {
+          if (err) { reject(err) }
+          const request = new sql.Request()
+          request.stream = true
+          request.query(sqlString)
 
-        request.query(sqlString)
-        request.on('error', err => {
-          reject(err)
-        })
-        request.on('finish', () => { // done?
-          closeAllPools()
-        })
-        console.log('Copy from SQL Server: ', location.connection, tablename)
-        const stream = request
+          request.on('error', err => {
+            reject(err)
+          })
+          // request.on('row', row => {
+          //   console.log(row)
+          // })
+          request.on('done', result => {
+            console.log('SQL Server rows affected: ' + result.rowsAffected)
+            sql.close()
+          })
+          const stream = request
           .pipe(csv.stringify({
             cast: {
               date: (date) => {
@@ -60,12 +62,14 @@ async function getSsStream (location) {
             },
             quoted_match: /\r/ // csv.stringify already checks for \n and \r\n. Our data has \r too. ¯\_(ツ)_/¯
           }))
-        resolve(stream)
+          console.log('Copy from SQL Server: ', location.connection, tablename)  
+          resolve(stream)
+        })
       } else if (location.fromto === 'target_location') {
-        reject(new Error("SQL Server 'To' not implemented"))
+        reject("SQL Server 'To' not implemented")
       }
     } catch (err) {
-      reject(new Error('SQL Server stream error ' + err))
+      reject('SQL Server stream error ' )
     }
   })
 }
