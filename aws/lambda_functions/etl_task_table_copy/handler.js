@@ -3,7 +3,7 @@ const getSsStream = require('./getSsStream')
 const getGoogleStream = require('./getGoogleStream')
 // eslint-disable-next-line no-unused-vars
 const streamDebug = require('./streamDebug')
-const getConnections = require('./getConnections')
+const getConnection = require('./getConnection')
 
 const util = require('util')
 const stream = require('stream');
@@ -18,7 +18,6 @@ exports.lambda_handler = function (event, context) {
       if (!etl.active) {
         resolve({ statusCode: 200, body: { lambda_output: 'Inactive: skipped' } })
       } else {
-        const connections = await getConnections()
         const streams = {}
 
         const bothloc = [
@@ -28,12 +27,8 @@ exports.lambda_handler = function (event, context) {
         for (const eachloc of bothloc) {
           eachloc.location = etl[eachloc.name]
           eachloc.location.fromto = eachloc.name
-          if (connections[eachloc.location.connection]) {
-            eachloc.location.conn_info = connections[eachloc.location.connection]
-          } else {
-            throw new Error(`Connection definition ${eachloc.location.connection} not found`)
-          }
-          // console.log(JSON.stringify(eachloc.location,null,2))
+          eachloc.location.conn_info = await getConnection(eachloc.location.connection)
+
           if (eachloc.location.conn_info.type === 'postgresql') {
             streams[eachloc.name] = await getPgStream(eachloc.location)
           } else if (eachloc.location.conn_info.type === 'sqlserver') {
