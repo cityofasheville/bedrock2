@@ -9,14 +9,14 @@
       {
         "type": "table_copy",
         "source_location": {
-          "connection": "munis/munprod/mssqlgisadmin",
-          "schemaname": "amd",
-          "tablename": "ad_info"
-        },
-        "target_location": {
           "connection": "pubrecdb1/mdastore1/dbadmin",
           "schemaname": "internal",
           "tablename": "ad_info"
+        },
+        "target_location": {
+          "connection": "s3_data_files",
+          "filename": "d_mda_${YYYY}${MM}${DD}.csv",
+          "s3_path": "d/"
         },
         "active": true
       }
