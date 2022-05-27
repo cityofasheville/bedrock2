@@ -1,7 +1,6 @@
 var AWS = require('aws-sdk'),
     region = "us-east-1",
-    secret,
-    decodedBinarySecret;
+    secret;
 
 function getConnection (secretName) {
     return new Promise((resolve,reject) => {
