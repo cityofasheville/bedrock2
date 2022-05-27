@@ -8,12 +8,19 @@ Resources:
     Properties:
       Runtime: nodejs14.x
       Handler: handler.lambda_handler
-      Timeout: 40
+      Timeout: 80
       CodeUri: ..
-  TestTimeout:
+  Test:
     Type: AWS::Serverless::Function
     Properties:
       Runtime: nodejs14.x
-      Handler: testtimeout.lambda_handler
-      Timeout: 5
-      CodeUri: .
+      Handler: test-callback-racing.lambda_handler
+      Timeout: 40
+      CodeUri: ..  
+  So:
+    Type: AWS::Serverless::Function
+    Properties:
+      Runtime: nodejs14.x
+      Handler: so.handler
+      Timeout: 40
+      CodeUri: ..  
