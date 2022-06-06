@@ -2,7 +2,7 @@
 Multiple tasks can be in each file
 
 ## SQL
-
+```
 {
     "run_group": "daily",
     "tasks": [
@@ -14,9 +14,9 @@ Multiple tasks can be in each file
         }
     ]
 }
-
+```
 ## Table Copy
-
+```
 {
   "run_group": "daily",
   "tasks": [
@@ -32,7 +32,7 @@ Multiple tasks can be in each file
     }
   ]
 }
-
+```
 ### Table Copy Types
 
 #### database
@@ -59,7 +59,7 @@ Multiple tasks can be in each file
 
 
 ## Table Copy Since
-
+```
 {
     "run_group": "daily",
     "tasks": [
@@ -81,9 +81,9 @@ Multiple tasks can be in each file
         }
     ]
 }
-
+```
 ## SFTP
-
+```
 {
     "run_group": "daily",
     "tasks": [
@@ -102,9 +102,9 @@ Multiple tasks can be in each file
         }
     ]
 }
-
+```
 ## No-op
-
+```
 {
     "run_group": "daily",
     "tasks": [
@@ -114,3 +114,4 @@ Multiple tasks can be in each file
         }
     ]
 }
+```
