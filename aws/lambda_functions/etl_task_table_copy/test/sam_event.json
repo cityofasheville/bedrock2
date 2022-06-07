@@ -9,14 +9,17 @@
       {
         "type": "table_copy",
         "source_location": {
-          "connection": "pubrecdb1/mdastore1/dbadmin",
-          "schemaname": "internal",
-          "tablename": "ad_info"
+          "connection": "coa-acceladb/accela/mssqlgisadmin",
+          "schemaname": "dbo",
+          "tablename": "AA_SEQ",
+          "tableheaders": false,
+          "sortasc": "REC_DATE"
         },
         "target_location": {
           "connection": "s3_data_files",
-          "filename": "d_mda_${YYYY}${MM}${DD}.csv",
-          "s3_path": "d/"
+          "filename": "afile.${YYYY}${MM}${DD}.txt",
+          "s3_path": "test/",
+          "fixedwidth_noquotes": true
         },
         "active": true
       }

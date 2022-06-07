@@ -18,7 +18,8 @@
     "csv": "^5.5.0",
     "eslint": "^8.15.0",
     "googleapis": "^84.0.0",
-    "mssql": "^7.2.0",
+    "mssql": "^8.1.2",
+    "multistream": "^4.1.0",
     "pg": "^8.7.1",
     "pg-copy-streams": "^5.1.1"
   },
