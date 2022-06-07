@@ -6,6 +6,10 @@ function getPgStream (location) {
   return new Promise(function (resolve, reject) {
     try {
       const tablename = `${location.schemaname}.${location.tablename}`
+      const tableheaders = location.tableheaders ? ", HEADER " : ""
+      const orderby = location.sortdesc ? ` order by ${location.sortdesc} desc ` 
+                      :location.sortasc ? ` order by ${location.sortasc} asc ` 
+                      : ""
       const tempTablename = `temp_${location.tablename}`
       const connInfo = location.conn_info
       const client = new Client({
@@ -41,7 +45,7 @@ function getPgStream (location) {
       client.connect()
         .then(() => {
           if (location.fromto === 'source_location') {
-            const queryString = `COPY (SELECT * FROM ${tablename}) TO STDOUT WITH (FORMAT csv)`
+            const queryString = `COPY (SELECT * FROM ${tablename} ${orderby}) TO STDOUT WITH (FORMAT csv ${tableheaders})`
             stream = client.query(copyTo(queryString))
 
             stream.on('error', err => { client.end(); reject(err) })
