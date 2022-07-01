@@ -1,8 +1,24 @@
 {
-  "action": "put",
-  "s3_connection": "s3_data_files",
-  "s3_path": "", 
-  "ftp_connection": "telestaff_ftp",
-  "ftp_path": "/PROD/person.errors/",
-  "filename": "XO16000__xo10001i.77103.${YYYY}${MM}${DD}.txt"
+  "JobIsGo": true,
+  "ETLJob": {
+    "name": "aetna",
+    "depends": [],
+    "path": "store/assets/aetna/aetna.json",
+    "run_group": "tues_night",
+    "etl_tasks": [
+      {
+        "type": "sftp",
+        "description": "Copy Aetna S3 to FTP site",
+        "action": "put",
+        "s3_connection": "s3_data_files",
+        "s3_path": "aetna/",
+        "ftp_connection": "aetna_ftp",
+        "ftp_path": "/AetnaSRC_Reports/toAetna/",
+        "filename": "aetna_asheville_${YYYY}${MM}${DD}.csv",
+        "active": true
+      }
+    ]
+  },
+  "TaskIndex": 0,
+  "JobType": "sftp"
 }

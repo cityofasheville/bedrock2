@@ -9,4 +9,4 @@ Resources:
       CodeUri: ../src
       Runtime: python3.8
       Handler: handler.lambda_handler
-      Timeout: 60
+      Timeout: 600
