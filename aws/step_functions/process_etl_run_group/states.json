@@ -119,8 +119,13 @@
               },
               {
                 "Variable": "$.JobType",
-                "StringEquals": "table_copy_since",
-                "Next": "CopySinceTask"
+                "StringEquals": "sftp",
+                "Next": "SFTPTask"
+              },
+              {
+                "Variable": "$.JobType",
+                "StringEquals": "encrypt",
+                "Next": "EncryptTask"
               }
             ],
             "Default": "UnknownTask"
@@ -146,10 +151,17 @@
             "ResultPath": "$.TaskOutput",
             "Next": "CheckTaskStatus"
           },
-          "CopySinceTask": {
-            "Comment": "Copy Table Since a Date",
+          "SFTPTask": {
+            "Comment": "Copy SFTP files",
             "Type": "Task",
-            "Resource": "${etl_task_copy_since_arn}",
+            "Resource": "${etl_task_sftp_arn}",
+            "ResultPath": "$.TaskOutput",
+            "Next": "CheckTaskStatus"
+          },
+          "EncryptTask": {
+            "Comment": "Encrypt S3 file with PGP",
+            "Type": "Task",
+            "Resource": "${etl_task_encrypt_arn}",
             "ResultPath": "$.TaskOutput",
             "Next": "CheckTaskStatus"
           },

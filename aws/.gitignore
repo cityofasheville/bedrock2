@@ -1,8 +1,10 @@
 package/
 function.zip
 **/.terraform/*
+.terraform.lock.hcl
 *.tfstate.*
 *.tfstate
+.aws-sam
 
 
 

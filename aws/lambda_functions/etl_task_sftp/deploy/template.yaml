@@ -1,0 +1,12 @@
+AWSTemplateFormatVersion : '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Description: SAM Local
+Resources:
+  ftppy:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../src
+      Runtime: python3.8
+      Handler: handler.lambda_handler
+      Timeout: 60
