@@ -3,17 +3,10 @@ Transform: AWS::Serverless-2016-10-31
 
 Description: SAM Local
 Resources:
-  CopySince:
+  encrypt:
     Type: AWS::Serverless::Function
     Properties:
       Runtime: nodejs14.x
       Handler: handler.lambda_handler
-      Timeout: 40
+      Timeout: 480
       CodeUri: ..
-  TestTimeout:
-    Type: AWS::Serverless::Function
-    Properties:
-      Runtime: nodejs14.x
-      Handler: testtimeout.lambda_handler
-      Timeout: 5
-      CodeUri: .

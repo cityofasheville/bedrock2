@@ -5,7 +5,7 @@ var MultiStream = require('multistream')
 const { closeAllPools, getPool } = require('./ssPools')
 
 async function getSsStream(location) {
-	return new Promise(async function (resolve, reject) {
+	return new Promise( function (resolve, reject) {
 		sql.on('error', err => {
 			reject(err)
 		})
@@ -58,26 +58,25 @@ async function getSsStream(location) {
 				if (connInfo.parameters) {
 					if (connInfo.parameters.encrypt === false) config.options.encrypt = false // for <= SQL 2008
 				}
-				const pool = await getPool(poolName, config)
+				getPool(poolName, config)
+				.then(pool => {
+					const arrayOfStreams = arrayOfSQL.map((sqlString, index) => {
+						const request = pool.request()
 
-				const arrayOfStreams = arrayOfSQL.map((sqlString, index) => {
-					const request = pool.request()
+						request.stream = true
 
-					request.stream = true
+						request.query(sqlString)
 
-					request.query(sqlString)
-
-					request.on('error', err => {
-						reject(err)
-					})
-					if (index === 0) {
-						nonObjStream = request
-							.pipe(csv.stringify({
-								quote: ""
-							}))
-					} else {
-						nonObjStream = request
-							.pipe(csv.stringify({
+						request.on('error', err => {
+							reject(err)
+						})
+						if (index === 0) {
+							nonObjStream = request
+								.pipe(csv.stringify({
+									quote: ""
+								}))
+						} else {
+							let stringify_options = {
 								cast: {
 									date: (date) => {
 										return date.toISOString()
@@ -87,19 +86,27 @@ async function getSsStream(location) {
 									}
 								},
 								quoted_match: /\r/ // csv.stringify already checks for \n and \r\n. Our data has \r too. ¯\_(ツ)_/¯
-							}))
-					}
-					return nonObjStream
+							}
+							if(location.fixedwidth_noquotes) { 
+								stringify_options.quote = ""
+							}
+							nonObjStream = request
+								.pipe(csv.stringify(stringify_options))
+						}
+						return nonObjStream
+					})
+
+					console.log('Copy from SQL Server: ', location.connection, tablename)
+					const retStream = new MultiStream(arrayOfStreams)
+
+					retStream.on('done', result => {
+						console.log('SQL Server rows affected: ' + result.rowsAffected)
+					})
+
+					resolve(retStream)
 				})
 
-				console.log('Copy from SQL Server: ', location.connection, tablename)
-				const retStream = new MultiStream(arrayOfStreams)
 
-				retStream.on('done', result => {
-					console.log('SQL Server rows affected: ' + result.rowsAffected)
-				})
-
-				resolve(retStream)
 			} else if (location.fromto === 'target_location') {
 				reject(new Error("SQL Server 'To' not implemented"))
 			}

@@ -18,8 +18,8 @@ async function pg_sql(connection,sql) {
         return res.rowCount ? "Row count: " + res.rowCount : "Completed"
     }
     catch(err){
-      const pg_error_codes = require("./pg_error_codes")
-      let errmsg = pg_error_codes[err.code]
+      const pgErrorCodes = require("./pgErrorCodes")
+      let errmsg = pgErrorCodes[err.code]
       throw [{"Postgres error":errmsg},err]
     }
 }

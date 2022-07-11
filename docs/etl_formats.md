@@ -40,6 +40,9 @@ Multiple tasks can be in each file
             "schemaname": "dbo",
             "tablename": "testtable"
             <OPTIONAL> "append_serial": "objectid"
+            <OPTIONAL> "sortasc": "fieldname",
+            <OPTIONAL> "sortdesc": "fieldname",
+            <OPTIONAL> "fixedwidth_noquotes": true                                  
 
 #### CSV -S3
             "connection": "s3_data_files",
@@ -64,20 +67,10 @@ Multiple tasks can be in each file
     "run_group": "daily",
     "tasks": [
         {
-            "type": "table_copy_since",
-            "source_location": {
-                "connection": "localss1",
-                "schemaname": "dbo",
-                "tablename": "testtable"
-            },
-            "target_location": {
-                "connection": "localpg1",
-                "schemaname": "dbo",
-                "tablename": "testtable"
-            },
+            "type": "table_copy",
+            <ALL THE TABLE COPY FIELDS>
             "num_weeks": 78,
-            "column_to_filter": "ins_date",
-            "active": true
+            "column_to_filter": "ins_date"
         }
     ]
 }
@@ -87,21 +80,68 @@ Multiple tasks can be in each file
 {
     "run_group": "daily",
     "tasks": [
-        {
-            "type": "sftp",
-            "direction": "download",
-            "location": "ftpsite",  //This would link to bedrock_connections.json, where it would have passwords or keyfiles
-            "directory": "/export/",
-            "remotefile": "*.csv",
-            "deleteremote": "true",
-            "localfile":  {
-                s3: "bedrock-data-files",
-                filepath: "/tmp/data.csv"
-            },
-            "active": true
-        }
+      {
+        "type": "encrypt",
+        "s3_connection": "s3_data_files",
+        "s3_path": "vendor/",
+        "ftp_connection": "vendor_ftp",
+        "filename": "vendor_asheville_${YYYY}${MM}${DD}.csv",
+        "encrypted_filename": "vendor_asheville_${YYYY}${MM}${DD}.csv.pgp",
+        "active": true
+      },
+      {
+        "type": "sftp",
+        "description": "Copy vendor S3 to FTP site",
+        "action": "put",
+        "s3_connection": "s3_data_files",
+        "s3_path": "telestaff-import-person/",
+        "ftp_connection": "telestaff_ftp",
+        "ftp_path": "/PROD/import/ongoing.unprocessed/",
+        "filename": "vendor_asheville_${YYYY}${MM}${DD}.csv.pgp",
+        "active": true
+      }
     ]
 }
+// sftp actions can be one of these: (always include "type": "sftp", and "active": true too)
+        {
+            "action": "put",
+            "s3_connection": "s3_data_files",
+            "s3_path": "telestaff-payroll-export/", 
+            "ftp_connection": "telestaff_ftp",
+            "ftp_path": "/PROD/person.errors/",
+            "filename": "PD-220218-thu.csv"
+        }
+
+        {
+            "action": "get",
+            "s3_connection": "s3_data_files",
+            "s3_path": "telestaff-payroll-export/", 
+            "ftp_connection": "telestaff_ftp",
+            "ftp_path": "/PROD/person.errors/",
+            "filename": "payroll-report-export.csv"
+        }
+
+        {
+            "action": "list",
+            "ftp_connection": "telestaff_ftp",
+            "ftp_path": "/PROD/export/"
+        }
+
+        {
+            "action": "del",
+            "ftp_connection": "telestaff_ftp",
+            "ftp_path": "/PROD/export/",
+            "filename": "Yesterday.csv"
+        }
+
+        {
+            "action": "getall",
+            "s3_connection": "",
+            "s3_path": "", 
+            "ftp_connection": "",
+            "ftp_path": "/"
+        }
+
 ```
 ## No-op
 ```

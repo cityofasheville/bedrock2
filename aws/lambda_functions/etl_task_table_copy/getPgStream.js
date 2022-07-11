@@ -45,6 +45,9 @@ function getPgStream (location) {
       client.connect()
         .then(() => {
           if (location.fromto === 'source_location') {
+            if(location.fixedwidth_noquotes) { 
+              reject(new Error("Postgres 'fixedwidth_noquotes' not implemented"))
+            }
             const queryString = `COPY (SELECT * FROM ${tablename} ${orderby}) TO STDOUT WITH (FORMAT csv ${tableheaders})`
             stream = client.query(copyTo(queryString))
 

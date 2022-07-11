@@ -1,48 +1,40 @@
-const pg_sql = require('./pg_sql')
-const ss_sql = require('./ss_sql')
+const pgSql = require('./pgSql')
+const ssSql = require('./ssSql')
 const getConnection = require('./getConnection')
-const get_sql_from_file = require('./get_sql_from_file')
+const getSqlFromFile = require('./getSqlFromFile')
 
-exports.lambda_handler = function(event, context) {  
-    const task = new Promise(async ( resolve ) => {
+exports.lambda_handler = async function(event, context) {  
+    const task = new Promise(resolve => {
         try {
-            let result, connection
             let etl = event.ETLJob.etl_tasks[event.TaskIndex]
             if (!etl.active) {
-                result = "Inactive: skipped"
+                resolve(formatRes(200, "Inactive: skipped"))
             }else{
                 let sql_filepath = 'store/assets/' + event.ETLJob.name + '/' + etl.file  // 
-                let sql = await get_sql_from_file( sql_filepath )
-                // console.log("etl: \n" + JSON.stringify(etl, null, 2))
-                // console.log("connection: \n" + JSON.stringify(connections, null, 2))
-                // console.log("sql: \n" + JSON.stringify(sql, null, 2))
-                connection = await getConnection(etl.connection)
-
-                if (connection.type == 'postgresql') {
-                    result = await pg_sql( connection,sql )
-                } else if (connection.type == 'sqlserver') {
-                    result = await ss_sql( connection,sql )
-                } else { 
-                    throw("Invalid DB Type")
-                }
+                getSqlFromFile( sql_filepath )
+                .then(sql => {
+                    getConnection(etl.connection)
+                    .then(connection => {
+                        if (connection.type == 'postgresql') {
+                            pgSql( connection,sql )
+                            .then(result => {
+                                resolve(formatRes(200, result))
+                            })
+                        } else if (connection.type == 'sqlserver') {
+                            ssSql( connection,sql )
+                            .then(result => {
+                                resolve(formatRes(200, result))
+                            })
+                        } else { 
+                            throw("Invalid DB Type")
+                        }                        
+                    })
+                })
             }
-
-            resolve ({
-                'statusCode': 200,
-                'body': {
-                    "lambda_output": result
-                }
-            })
         }
         catch(err) {
-            resolve ({
-                'statusCode': 500,
-                'body': {
-                    "lambda_output": err
-                }
-            })
+            resolve(formatRes(500, err))
         }
-
     })
 
     // timeout task  
@@ -55,4 +47,13 @@ exports.lambda_handler = function(event, context) {
     .then((res)=>{
         return res;
     });
+}
+
+function formatRes(code, result) {
+    return {
+        'statusCode': code,
+        'body': {
+            "lambda_output": result
+        }
+    }
 }
