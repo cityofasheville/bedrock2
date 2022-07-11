@@ -114,3 +114,10 @@ venv.bak/
 # mypy
 .mypy_cache/
 node_modules
+
+# terrafrom
+.terraform.lock.hcl
+.terraform/
+
+# AWS
+.aws-sam/

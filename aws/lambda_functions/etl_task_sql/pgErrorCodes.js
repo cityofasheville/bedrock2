@@ -1,4 +1,4 @@
-let pg_error_codes = {
+let pgErrorCodes = {
 	"00000": "successful_completion",
 	"01000": "warning",
 	"0100C": "dynamic_result_sets_returned",
@@ -258,4 +258,4 @@ let pg_error_codes = {
 	"XX001": "data_corrupted",
 	"XX002": "index_corrupted"
 }
-module.exports = pg_error_codes
+module.exports = pgErrorCodes
