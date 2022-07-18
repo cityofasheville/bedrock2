@@ -12,7 +12,7 @@ exports.lambda_handler = async function (event, context) {
         let filename = fillDateTemplate(etl.filename)
         let encrypted_filename = fillDateTemplate(etl.encrypted_filename)
         const s3_conn = await getConnection(etl.s3_connection)
-        const ftp_conn = await getConnection(etl.ftp_connection)
+        const ftp_conn = await getConnection(etl.encrypt_connection)
         let pgp_key = ftp_conn.pgp_key
 
         // get unencrypted file 'filename' from s3
