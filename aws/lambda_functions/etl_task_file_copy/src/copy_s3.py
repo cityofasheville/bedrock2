@@ -1,6 +1,5 @@
 import boto3
 
-TEMPFILE = '/tmp/temp.txt'
 s3 = boto3.client('s3')
         
 def download_s3(location):

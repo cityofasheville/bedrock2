@@ -1,7 +1,5 @@
 import paramiko
 
-WORKINGDIR = '/tmp/'
-
 def get_ftp(location):
     try:
         sftp = connectToFTP(location["connection_data"])
