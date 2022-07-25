@@ -9,7 +9,7 @@ from copy_ftp import put_ftp, get_ftp
 
 region_name = "us-east-1"  # for secrets manager
 
-def fillDateTemplate(filename):
+def fillDateTemplate(filename):  # Convert file_${YYYY}${MM}${DD}.csv to file_20220721.csv
     filename = filename.replace('${','{')
     now = datetime.datetime.now()
     year = now.year
@@ -21,7 +21,7 @@ def fillDateTemplate(filename):
     return (filename.format(YYYY=year,MM=month,DD=day,HH=hour,mm=minute,SS=second))
 
 
-def getConnection(secret_name):
+def getConnection(secret_name):  # Look up secrets in Secrets Manager
     try:
         session = boto3.session.Session()
         client = session.client(
@@ -35,11 +35,6 @@ def getConnection(secret_name):
         return results
     except BaseException as err:
         raise Exception("Connection Secret Error: " + str(err))
-
-def buildMsg(target_location):
-    return ('File uploaded to ' +
-    target_location["connection_data"]["type"] + ': ' +
-    target_location["connection"] + ' ' + target_location["filename"]) 
 
 def lambda_handler(event, context):
     try:
@@ -76,10 +71,12 @@ def lambda_handler(event, context):
         elif target_location["connection_data"]["type"] == "sftp":
             put_ftp(target_location)
             
-        retmsg = buildMsg(target_location)
-
         if os.path.exists(tempfile):
                 os.remove(tempfile)
+
+        retmsg = ('File uploaded to ' +
+            target_location["connection_data"]["type"] + ': ' +
+            target_location["connection"] + ' ' + target_location["filename"]) 
 
         return {
             'statusCode': 200,

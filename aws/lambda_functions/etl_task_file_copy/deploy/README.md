@@ -12,12 +12,11 @@ Requirements:
 
 (Uses SAM in a Docker container to build because the Crypto in SSH/file_copy in a Lambda requires a Linux native build.)
 
-To deploy role: cd to deploy/etl_task_file_copy-role and run: 
 ```
 terraform init
 terraform apply -var-file=ca.tfvars
 ```
-Run ```builddeploy.sh``` to deploy Lambda. (Run ```terraform init``` in deploy/etl_task_file_copy first)
+Run ```builddeploy.sh``` to deploy Lambda. (Run ```terraform init``` in deploy/ first)
 Run ```runsambuild.sh``` to test locally.
 
 

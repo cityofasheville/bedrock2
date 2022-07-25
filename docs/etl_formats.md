@@ -1,6 +1,7 @@
 # Formats for ETL files in the managed-data-assets repository
 Multiple tasks can be in each file
 
+Also see [Managed Data Assets README](https://github.com/cityofasheville/managed-data-assets/blob/production/README_file_formats.md)
 ## SQL
 ```
 {
@@ -61,21 +62,33 @@ Multiple tasks can be in each file
 
 
 
-## Table Copy Since
+## File Copy
+File copy can read and write from S3 and SFTP sites. Google Drive and maybe Windows fileshares to be added.
+All locations have the same three fields: connection, filename, and path. Connections include a type field to distinguish S3 from SFTP, etc.
 ```
 {
     "run_group": "daily",
     "tasks": [
         {
-            "type": "table_copy",
-            <ALL THE TABLE COPY FIELDS>
-            "num_weeks": 78,
-            "column_to_filter": "ins_date"
+            "type": "file_copy",
+            "source_location": {
+                "connection": "",
+                "filename": "",
+                "path": ""
+            },
+            "target_location": {
+                "connection": "",
+                "filename": "",
+                "path": ""
+            },
+            "active": true
         }
     ]
 }
 ```
+
 ## SFTP
+SFTP has mostly been superseded by file copy, which has more potential source and target destinations. It does include a few useful specialized FTP commands: list, delete, and getall
 ```
 {
     "run_group": "daily",
