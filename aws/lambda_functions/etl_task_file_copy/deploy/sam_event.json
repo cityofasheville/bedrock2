@@ -11,13 +11,13 @@
         "description": "Copy Safety Skills S3 to FTP site",
         "source_location": {
           "connection": "s3_data_files",
-          "filename": "users${YYYY}${MM}${DD}.csv",
-          "path": "safetyskills/"
+          "filename": "avl.PR_City_Employees_Everbridge.csv",
+          "path": "everbridge/"
         },
         "target_location": {
-          "connection": "safetyskills_ftp",
-          "filename": "users.csv",
-          "path": "/35408/"
+          "connection": "everbridge_emp_ftp",
+          "filename": "avl.PR_City_Employees_Everbridge.csv",
+          "path": "/replace/"
         },
         "active": true
       }

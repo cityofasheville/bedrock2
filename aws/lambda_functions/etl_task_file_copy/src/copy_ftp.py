@@ -1,4 +1,5 @@
 import paramiko
+import io
 
 def get_ftp(location):
     try:
@@ -30,10 +31,12 @@ def connectToFTP(connection_data):
         ftp_user = connection_data['username']
         transport = paramiko.Transport((ftp_host, int(ftp_port)))
         transport.start_client(timeout=60)
-        if connection_data['password'] is not None:
+
+        if 'password' in connection_data.keys():
             transport.auth_password(username = ftp_user, password = connection_data['password'])
-        elif connection_data['privateKey'] is not None:
-            transport.auth_publickey(username = ftp_user, key = connection_data['privateKey'])
+        elif 'privateKey' in connection_data.keys():
+            pk = paramiko.RSAKey.from_private_key(io.StringIO(connection_data['privateKey']))
+            transport.auth_publickey(username = ftp_user, key = pk)
         sftp = paramiko.SFTPClient.from_transport(transport)
         return sftp
     except BaseException as err:
