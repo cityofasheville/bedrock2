@@ -1,8 +1,7 @@
 const sql = require('mssql')
 const csv = require('csv')
-const stream = require('stream');
 var MultiStream = require('multistream')
-const { closeAllPools, getPool } = require('./ssPools')
+const { getPool } = require('./ssPools')
 
 async function getSsStream(location) {
 	return new Promise( function (resolve, reject) {
@@ -13,11 +12,16 @@ async function getSsStream(location) {
 			if (location.fromto === 'source_location') {
 				const arrayOfSQL = []
 				let nonObjStream
-				const tablename = `${location.schemaname}.${location.tablename}`
+				const tablename = `[${location.schemaname}].[${location.tablename}]`
 				const connInfo = location.conn_info
 				const poolName = location.connection
-				const orderby = location.sortdesc ? ` order by ${location.sortdesc} desc `
-					: location.sortasc ? ` order by ${location.sortasc} asc `
+				const copy_since_query = location.copy_since 
+					? ` WHERE [${location.copy_since.column_to_filter}] >= DATEADD(WW,${location.copy_since.num_weeks * -1}, GETDATE() ) `
+					: ""
+				const orderby = location.sortdesc 
+					? ` order by [${location.sortdesc}] desc `
+					: location.sortasc 
+						? ` order by [${location.sortasc}] asc `
 						: ""
 				if (location.tableheaders) {
 					arrayOfSQL.push(`
@@ -34,7 +38,10 @@ async function getSsStream(location) {
 					arrayOfSQL.push('')
 				}
 
-				arrayOfSQL.push(`SELECT * FROM ${tablename} ${orderby}`)
+				let sqlString = `SELECT * FROM ${tablename} ${copy_since_query} ${orderby}`
+				arrayOfSQL.push(sqlString)
+
+				console.log(JSON.stringify(arrayOfSQL))
 
 				const config = {
 					server: connInfo.host,
