@@ -126,6 +126,11 @@
                 "Variable": "$.JobType",
                 "StringEquals": "encrypt",
                 "Next": "EncryptTask"
+              },
+              {
+                "Variable": "$.JobType",
+                "StringEquals": "file_copy",
+                "Next": "FileCopyTask"
               }
             ],
             "Default": "UnknownTask"
@@ -162,6 +167,13 @@
             "Comment": "Encrypt S3 file with PGP",
             "Type": "Task",
             "Resource": "${etl_task_encrypt_arn}",
+            "ResultPath": "$.TaskOutput",
+            "Next": "CheckTaskStatus"
+          },
+          "FileCopyTask": {
+            "Comment": "Copy Files",
+            "Type": "Task",
+            "Resource": "${etl_task_file_copy_arn}",
             "ResultPath": "$.TaskOutput",
             "Next": "CheckTaskStatus"
           },

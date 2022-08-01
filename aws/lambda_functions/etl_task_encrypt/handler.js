@@ -30,7 +30,7 @@ exports.lambda_handler = async function (event, context) {
         const encrypted_stream = await openpgp.encrypt({
             message: await openpgp.createMessage({ binary: readableStream }),
             encryptionKeys: publicKey,
-            // config: {rejectPublicKeyAlgorithms:new Set([])} // Needed if we add Delta Dental, whose key is ElGamal, which OpenPGP won't encrypt by default cuz sux}
+            config: {rejectPublicKeyAlgorithms:new Set([])} // Needed for Delta Dental, whose key is ElGamal, which OpenPGP won't encrypt by default cuz sux}
         });
 
         // put encrypted file 'encrypted_filename' to s3

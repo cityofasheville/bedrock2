@@ -8,7 +8,7 @@ WORKINGDIR = '/tmp/'
 region_name = "us-east-1"
 
 def fillDateTemplate(filename):
-    filename = filename.replace('$','')
+    filename = filename.replace('${','{')
     now = datetime.datetime.now()
     year = now.year
     month = now.strftime("%m")
@@ -87,7 +87,7 @@ def getConnection(secret_name):
 
 def connectToFTP(ftp_host, ftp_port, ftp_user, ftp_pw, ftp_keyfile):
     try:
-        transport = paramiko.Transport(ftp_host, int(ftp_port))
+        transport = paramiko.Transport((ftp_host, int(ftp_port)))
         transport.start_client(timeout=60)
         if ftp_pw is not None:
             transport.auth_password(username = ftp_user, password = ftp_pw)
