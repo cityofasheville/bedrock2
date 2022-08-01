@@ -41,8 +41,6 @@ async function getSsStream(location) {
 				let sqlString = `SELECT * FROM ${tablename} ${copy_since_query} ${orderby}`
 				arrayOfSQL.push(sqlString)
 
-				console.log(JSON.stringify(arrayOfSQL))
-
 				const config = {
 					server: connInfo.host,
 					port: connInfo.port,
