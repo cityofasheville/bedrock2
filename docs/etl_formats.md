@@ -29,6 +29,10 @@ Also see [Managed Data Assets README](https://github.com/cityofasheville/managed
       "target_location": {
             <TYPE INFO, see below>
       },
+      <OPTIONAL> "copy_since" : { (Only copy the latest data from a larger table.)
+                    "num_weeks": 1,
+                    "column_to_filter": "ACTIVITY_TIME"
+                }
       "active": true
     }
   ]
@@ -39,11 +43,12 @@ Also see [Managed Data Assets README](https://github.com/cityofasheville/managed
 #### database
             "connection": "localss1",
             "schemaname": "dbo",
-            "tablename": "testtable"
-            <OPTIONAL> "append_serial": "objectid"
+            "tablename": "testtable",
+            <OPTIONAL>: "tableheaders": true (this is mainly used for creating csv files)
+            <OPTIONAL> "append_serial": "fieldname"  (Adds an integer auto-numbering key field to target table. Put it in target instead of source like other options. A serial field with this name must appear as the last field in the taget table.)
             <OPTIONAL> "sortasc": "fieldname",
             <OPTIONAL> "sortdesc": "fieldname",
-            <OPTIONAL> "fixedwidth_noquotes": true                                  
+            <OPTIONAL> "fixedwidth_noquotes": true  (Tables converted to csv by default have strings with double quotes in the data quoted. For fixed width files we don't want that)                               
 
 #### CSV -S3
             "connection": "s3_data_files",
@@ -87,10 +92,9 @@ All locations have the same three fields: connection, filename, and path. Connec
 }
 ```
 
-## SFTP
-SFTP has mostly been superseded by file copy, which has more potential source and target destinations. It does include a few useful specialized FTP commands: list, delete, and getall
+## Encrypt
+Takes files from S3, encrypts them and writes them back to the same dir on S3.
 ```
-{
     "run_group": "daily",
     "tasks": [
       {
@@ -102,6 +106,14 @@ SFTP has mostly been superseded by file copy, which has more potential source an
         "encrypted_filename": "vendor_asheville_${YYYY}${MM}${DD}.csv.pgp",
         "active": true
       },
+```
+
+## SFTP
+SFTP has mostly been superseded by file copy, which has more potential source and target destinations. It does include a few useful specialized FTP commands: list, delete, and getall
+```
+{
+    "run_group": "daily",
+    "tasks": [
       {
         "type": "sftp",
         "description": "Copy vendor S3 to FTP site",

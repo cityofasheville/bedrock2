@@ -44,14 +44,14 @@ In Secrets Manager we create them as "Other type of secret" and then "Plaintext"
         "private_key": "-----BEGIN PRIVATE KEY-----ihflieurbvliasubfv....."
     }
 ```
-## For table_copy and file_copy
+## For table_copy and file_copy (S3 table_copy files are csv by default or fixed width, created in SQL and optionally given the "fixedwidth_noquotes".)
 ```
     {
         "type": "s3",
         "s3_bucket": "bedrock-data-files"
     }
 ```
-## For file_copy and sftp    
+## For file_copy and sftp and encrypt    
 ```
     {
         "type": "sftp",
@@ -59,6 +59,14 @@ In Secrets Manager we create them as "Other type of secret" and then "Plaintext"
         "port": 22,
         "username": "bedrock",
         "password": "xxxxx",
+        "pgp_key": "-----BEGIN PGP PUBLIC KEY BLOCK-iuygqwerfibhu...."
+    }
+```
+
+## For encrypt
+```
+    {
+        "type": "encrypt",
         "pgp_key": "-----BEGIN PGP PUBLIC KEY BLOCK-iuygqwerfibhu...."
     }
 ```

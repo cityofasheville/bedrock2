@@ -9,16 +9,19 @@
       {
         "type": "table_copy",
         "source_location": {
-          "connection": "munis/munprod/fme_jobs",
-          "schemaname": "avl",
-          "tablename": "PR_ARAG_Feed",
-          "sortdesc": "DATA",
-          "fixedwidth_noquotes": false
+          "connection": "pubrecdb1/mdastore1/dbadmin",
+          "schemaname": "internal",
+          "tablename": "tempjunk",
+          "sortdesc": "From"
         },
         "target_location": {
-          "connection": "s3_data_files",
-          "filename": "afile.${YYYY}${MM}${DD}.txt",
-          "s3_path": "test/"
+          "connection": "pubrecdb1/mdastore1/dbadmin",
+          "schemaname": "internal",
+          "tablename": "tempjunk2"
+        },
+        "copy_since" : {
+            "num_weeks": 12,
+            "column_to_filter": "From"
         },
         "active": true
       }

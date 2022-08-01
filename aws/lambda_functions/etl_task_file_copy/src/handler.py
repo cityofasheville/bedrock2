@@ -64,12 +64,16 @@ def lambda_handler(event, context):
             download_s3(source_location)
         elif source_location["connection_data"]["type"] == "sftp":
             get_ftp(source_location)
+        else:
+            raise Exception("Invalid file copy connection type " + source_location["connection_data"]["type"])
         
         target_location = locations[1]
         if target_location["connection_data"]["type"] == "s3":
             upload_s3(target_location)
         elif target_location["connection_data"]["type"] == "sftp":
             put_ftp(target_location)
+        else:
+            raise Exception("Invalid file copy connection type " + target_location["connection_data"]["type"])
             
         if os.path.exists(tempfile):
                 os.remove(tempfile)

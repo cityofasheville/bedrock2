@@ -27,6 +27,9 @@ exports.lambda_handler = async function (event, context) {
           eachloc.location = etl[eachloc.name]
           eachloc.location.fromto = eachloc.name
           eachloc.location.conn_info = await getConnection(eachloc.location.connection)
+          if(etl.copy_since) {
+            eachloc.location.copy_since = etl.copy_since
+          }          
 
           if (eachloc.location.conn_info.type === 'postgresql') {
             eachloc.stream = await getPgStream(eachloc.location)
