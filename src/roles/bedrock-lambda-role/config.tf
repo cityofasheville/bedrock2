@@ -1,7 +1,7 @@
 terraform {
   backend "s3" {
     bucket = "ca-tfstate-store"
-    key    = "terraform/bedrock-new/roles/bedrock-lambda-role/terraform_dev.tfstate"
+    key    = "terraform/bedrock-internal/roles/bedrock-lambda-role/terraform_dev.tfstate"
     region = "us-east-1"
   }
 }
@@ -9,6 +9,26 @@ terraform {
 provider "aws" {
   profile	= var.aws_profile
   region	= var.region
+}
+
+variable "region" {
+  type          = string
+  description   = "Region in which to create resources"
+}
+
+variable "aws_profile" {
+  type          = string
+  description   = "AWS User Profile to use"
+}
+
+variable "s3_bucket_arn" {
+  type          = string
+  description   = "ARN of the S3 Bucket that the key is allowed to decrypt"
+}
+
+variable "s3_key_arn" {
+  type          = string
+  description   = "ARN of KMS key to decrypt S3"
 }
 
 resource "aws_iam_role" "bedrock-lambda-role" {
@@ -25,9 +45,6 @@ resource "aws_iam_role" "bedrock-lambda-role" {
         Description   = "Role used by all Bedrock lambda functions."
     }
 }
-##################
-# List of Policies
-##################
 
 resource "aws_iam_role_policy_attachment" "lambda_basic" {
     role        = aws_iam_role.bedrock-lambda-role.name
