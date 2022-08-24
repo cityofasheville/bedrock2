@@ -1,5 +1,5 @@
 
-variable_files = ../lambda.tfvars ../../account.tfvars
+variable_files = ../../account.tfvars
 
 _allvars.tfvars: 
 	cat $(variable_files) > _allvars.tfvars
