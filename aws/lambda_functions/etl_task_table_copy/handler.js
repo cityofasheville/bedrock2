@@ -53,7 +53,7 @@ exports.lambda_handler = async function (event, context) {
           .then(() => {
             pipeline(
               locations[0].stream,
-              // streamDebug,
+              streamDebug,             /////////////////////// <====================
               locations[1].stream)
               .then(() => {
                 s3promise

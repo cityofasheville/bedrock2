@@ -11,17 +11,12 @@
         "source_location": {
           "connection": "pubrecdb1/mdastore1/dbadmin",
           "schemaname": "internal",
-          "tablename": "tempjunk",
-          "sortdesc": "From"
+          "tablename": "budget_categories"
         },
         "target_location": {
           "connection": "pubrecdb1/mdastore1/dbadmin",
           "schemaname": "internal",
-          "tablename": "tempjunk2"
-        },
-        "copy_since" : {
-            "num_weeks": 12,
-            "column_to_filter": "From"
+          "tablename": "budget_junk"
         },
         "active": true
       }

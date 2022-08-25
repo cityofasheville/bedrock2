@@ -2,6 +2,7 @@ const sql = require('mssql')
 const csv = require('csv')
 var MultiStream = require('multistream')
 const { getPool } = require('./ssPools')
+const createSsWritable = require('./createSsWritable')
 
 async function getSsStream(location) {
 	return new Promise( function (resolve, reject) {
@@ -113,7 +114,8 @@ async function getSsStream(location) {
 
 
 			} else if (location.fromto === 'target_location') {
-				reject(new Error("SQL Server 'To' not implemented"))
+				return createSsWritable(location);
+				// reject(new Error("SQL Server 'To' not implemented"))
 			}
 		} catch (err) {
 			reject(new Error('SQL Server stream error ' + err))
