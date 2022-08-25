@@ -19,6 +19,10 @@ init: backend.tf
 plan: terraform.tfvars $(config_files)
 	terraform plan
 
+.PHONY: apply
+apply: terraform.tfvars $(config_files)
+	terraform apply
+
 clean:
 	rm -f  terraform.tfvars backend.tf
 
