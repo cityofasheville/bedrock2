@@ -1,11 +1,3 @@
-terraform {
-  backend "s3" {
-    bucket = "avl-tfstate-store"
-    key    = "terraform/bedrock/roles/bedrock-lambda-role/terraform_dev.tfstate"
-    region = "us-east-1"
-  }
-}
-
 provider "aws" {
   profile	= var.aws_profile
   region	= var.region
