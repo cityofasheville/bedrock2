@@ -1,7 +1,7 @@
 terraform {
   backend "s3" {
-    bucket = "ca-tfstate-store"
-    key    = "terraform/bedrock-internal/roles/bedrock-lambda-role/terraform_dev.tfstate"
+    bucket = "avl-tfstate-store"
+    key    = "terraform/bedrock/roles/bedrock-lambda-role/terraform_dev.tfstate"
     region = "us-east-1"
   }
 }
@@ -11,29 +11,9 @@ provider "aws" {
   region	= var.region
 }
 
-variable "region" {
-  type          = string
-  description   = "Region in which to create resources"
-}
-
-variable "aws_profile" {
-  type          = string
-  description   = "AWS User Profile to use"
-}
-
-variable "s3_bucket_arn" {
-  type          = string
-  description   = "ARN of the S3 Bucket that the key is allowed to decrypt"
-}
-
-variable "s3_key_arn" {
-  type          = string
-  description   = "ARN of KMS key to decrypt S3"
-}
-
 resource "aws_iam_role" "bedrock-lambda-role" {
     name = "bedrock-lambda-role"
-    assume_role_policy = file("./role.json")
+    assume_role_policy = file("./policy_role.json")
     tags = {
         Name          = "bedrock-lambda-role"
         Application   = "bedrock"
@@ -44,6 +24,27 @@ resource "aws_iam_role" "bedrock-lambda-role" {
         DataClass     = "confidential"
         Description   = "Role used by all Bedrock lambda functions."
     }
+}
+
+resource "aws_iam_policy" "decrypt_policy" {
+  name        = "Decrypt_S3_managed-data-assets"
+  description = "Decrypt files in S3 bucket managed-data-assets"
+  policy = templatefile("./policy_decrypt.json", {
+    s3_key_arn: var.s3_key_arn
+    s3_bucket_arn: var.s3_bucket_arn
+  })
+}
+
+resource "aws_iam_policy" "secrets_manager_policy" {
+  name        = "secrets_manager_policy"
+  description = "Read secrets"
+  policy = templatefile("./policy_secrets_manager.json",{})
+}
+
+resource "aws_iam_policy" "invoke_lambda_policy" {
+  name        = "invoke_lambda_policy"
+  description = "Invoke another Lambda"
+  policy = templatefile("./policy_invoke_lambda.json",{})
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_basic" {
@@ -64,27 +65,6 @@ resource "aws_iam_role_policy_attachment" "lambda_ses_access" {
 resource "aws_iam_role_policy_attachment" "lambda_vpc_access" {
     role        = aws_iam_role.bedrock-lambda-role.name
     policy_arn  = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
-}
-
-resource "aws_iam_policy" "decrypt_policy" {
-  name        = "Decrypt_S3_managed-data-assets"
-  description = "Decrypt files in S3 bucket managed-data-assets"
-  policy = templatefile("./decrypt_policy.json", {
-    s3_key_arn: var.s3_key_arn
-    s3_bucket_arn: var.s3_bucket_arn
-  })
-}
-
-resource "aws_iam_policy" "secrets_manager_policy" {
-  name        = "secrets_manager_policy"
-  description = "Read secrets"
-  policy = templatefile("./secrets_manager_policy.json",{})
-}
-
-resource "aws_iam_policy" "invoke_lambda_policy" {
-  name        = "invoke_lambda_policy"
-  description = "Invoke another Lambda"
-  policy = templatefile("./invoke_lambda_policy.json",{})
 }
 
 resource "aws_iam_role_policy_attachment" "decrypt_s3" {

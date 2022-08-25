@@ -1,11 +1,11 @@
 
-variable_files = ../../account.tfvars
+variable_files = ../../account.tfvars ../roles.tfvars
 
-_allvars.tfvars: 
-	cat $(variable_files) > _allvars.tfvars
+_common.tfvars: $(variable_files)
+	cat $(variable_files) > _common.tfvars
 
 clean:
-	rm -f  _allvars.tfvars
+	rm -f  _common.tfvars
 
 
 
