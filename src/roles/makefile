@@ -1,4 +1,4 @@
-dirs = bedrock-lambda-role try
+dirs = bedrock-lambda-role
 
 .PHONY: all $(dirs)
 all: $(dirs)
