@@ -1,12 +1,12 @@
 dirs = bedrock-lambda-role
 
-.PHONY: test $(dirs) test init plan apply destroy
+.PHONY: $(dirs) test init plan apply destroy
 
-test: $(dirs)
 init: $(dirs)
 plan: $(dirs)
 apply: $(dirs)
 destroy: $(dirs)
+clean: $(dirs)
 
 $(dirs):
 	$(MAKE) -C $@ $(MAKECMDGOALS)
