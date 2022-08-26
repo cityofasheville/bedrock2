@@ -5,7 +5,7 @@ config_files = config.tf policy_*.json
 backends = ../../backend_common.input ./backend_local.input
 
 .PHONY: test
-test:
+test: # Starting to figure out how to customize for a given branch
 	@echo $(doit)
 	@echo $(MAKECMDGOALS)
 
