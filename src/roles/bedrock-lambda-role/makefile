@@ -2,7 +2,9 @@ include ../../_makefile.context
 
 variable_files = ../../account.tfvars ../roles.tfvars ./local.tfvars
 config_files = config.tf policy_*.json
-backends = ../../backend_common.input ./backend_local.input
+backends = ../../backend_common.input
+
+backend_key = \"terraform/bedrock/$(BRANCH)/roles/bedrock-lambda-role/terraform_dev.tfstat\"\\n
 
 .PHONY: test
 test: # Starting to figure out how to customize for a given branch
@@ -12,6 +14,7 @@ test: # Starting to figure out how to customize for a given branch
 backend.tf: $(backends)
 	@echo "terraform { \n  backend \"s3\" {" >> backend.tf
 	cat $(backends) >> backend.tf
+	@echo key = $(backend_key) >> backend.tf
 	@echo "  }\n}" >> backend.tf
 
 terraform.tfvars: $(variable_files)
