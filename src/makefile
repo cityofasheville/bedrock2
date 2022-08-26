@@ -1,4 +1,4 @@
-dirs = bedrock-lambda-role
+dirs = roles lambdas
 
 .PHONY: test $(dirs) test init plan apply destroy
 

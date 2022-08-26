@@ -12,7 +12,7 @@ test: # Starting to figure out how to customize for a given branch
 	@echo $(MAKECMDGOALS)
 
 backend.tf: $(backends)
-	@echo "terraform { \n  backend \"s3\" {" >> backend.tf
+	@echo "terraform { \n  backend \"s3\" {" > backend.tf
 	cat $(backends) >> backend.tf
 	@echo key = $(backend_key) >> backend.tf
 	@echo "  }\n}" >> backend.tf
