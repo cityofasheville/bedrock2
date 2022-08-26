@@ -18,15 +18,6 @@ resource "aws_iam_role" "bedrock-lambda-role" {
     }
 }
 
-resource "aws_iam_policy" "decrypt_policy" {
-  name        = "Decrypt_S3_managed-data-assets"
-  description = "Decrypt files in S3 bucket managed-data-assets"
-  policy = templatefile("./policy_decrypt.json", {
-    s3_key_arn: var.s3_key_arn
-    s3_bucket_arn: var.s3_bucket_arn
-  })
-}
-
 resource "aws_iam_policy" "secrets_manager_policy" {
   name        = "secrets_manager_policy"
   description = "Read secrets"
@@ -57,11 +48,6 @@ resource "aws_iam_role_policy_attachment" "lambda_ses_access" {
 resource "aws_iam_role_policy_attachment" "lambda_vpc_access" {
     role        = aws_iam_role.bedrock-lambda-role.name
     policy_arn  = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
-}
-
-resource "aws_iam_role_policy_attachment" "decrypt_s3" {
-  role       = aws_iam_role.bedrock-lambda-role.name
-  policy_arn =  aws_iam_policy.decrypt_policy.arn
 }
 
 resource "aws_iam_role_policy_attachment" "secrets_manager" {
