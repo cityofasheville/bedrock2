@@ -1,7 +1,13 @@
+include ../../_makefile.context
 
 variable_files = ../../account.tfvars ../roles.tfvars ./local.tfvars
 config_files = config.tf policy_*.json
 backends = ../../backend_common.input ./backend_local.input
+
+.PHONY: test
+test:
+	@echo $(doit)
+	@echo $(MAKECMDGOALS)
 
 backend.tf: $(backends)
 	@echo "terraform { \n  backend \"s3\" {" >> backend.tf

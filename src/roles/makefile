@@ -1,7 +1,9 @@
 dirs = bedrock-lambda-role
 
-.PHONY: all $(dirs)
+.PHONY: all $(dirs) test
 all: $(dirs)
 
+test: $(dirs)
+
 $(dirs):
-	$(MAKE) -C $@
+	$(MAKE) -C $@ $(MAKECMDGOALS)
