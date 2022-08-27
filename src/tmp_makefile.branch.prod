@@ -1,2 +1,0 @@
-export BRANCH = prod
-export doit = "HI THERE!"
