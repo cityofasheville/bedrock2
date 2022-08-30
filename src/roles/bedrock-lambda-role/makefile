@@ -8,7 +8,7 @@ backend_key = \"terraform/bedrock/$(BRANCH)/roles/bedrock-lambda-role/terraform_
 backend_head = "terraform { \n  backend \"s3\" {"
 backend_tail = "  }\n}"
 
-backend.tf: $(backends)
+backend.tf: $(backends) $(variable_files)
 	@echo $(backend_head) > backend.tf
 	@echo region = \"$(region)\" >> backend.tf
 	@echo bucket = \"$(statebucket)\" >> backend.tf
@@ -17,6 +17,7 @@ backend.tf: $(backends)
 
 terraform.tfvars: $(variable_files)
 	cat $(variable_files) > terraform.tfvars
+	echo branch = \"$(BRANCH)\" >> terraform.tfvars
 
 .PHONY: init
 init: backend.tf terraform.tfvars
@@ -30,9 +31,12 @@ plan: terraform.tfvars $(config_files)
 apply: terraform.tfvars $(config_files)
 	terraform apply
 
-.PHONY: destroy
+.PHONY: destroy itgoaway
 destroy: terraform.tfvars $(config_files)
 	terraform destroy
+
+itgoaway: destroy
+	@echo "All gone!"
 
 clean:
 	rm -f  terraform.tfvars backend.tf
