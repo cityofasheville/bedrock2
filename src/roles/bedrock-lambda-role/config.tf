@@ -31,32 +31,32 @@ resource "aws_iam_policy" "invoke_lambda_policy" {
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_basic" {
-    role        = format("aws_iam_role.bedrock-lambda-role-%s.name", var.branch)
+    role        = aws_iam_role.bedrock-lambda-role.name
     policy_arn  = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_s3_access" {
-    role        = format("aws_iam_role.bedrock-lambda-role-%s.name", var.branch)
+    role        = aws_iam_role.bedrock-lambda-role.name
     policy_arn  = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_ses_access" {
-    role        = format("aws_iam_role.bedrock-lambda-role-%s.name", var.branch)
+    role        = aws_iam_role.bedrock-lambda-role.name
     policy_arn  = "arn:aws:iam::aws:policy/AmazonSESFullAccess"
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_vpc_access" {
-    role        = format("aws_iam_role.bedrock-lambda-role-%s.name", var.branch)
+    role        = aws_iam_role.bedrock-lambda-role.name
     policy_arn  = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
 }
 
 resource "aws_iam_role_policy_attachment" "secrets_manager" {
-    role        = format("aws_iam_role.bedrock-lambda-role-%s.name", var.branch)
+    role        = aws_iam_role.bedrock-lambda-role.name
     policy_arn  = aws_iam_policy.secrets_manager_policy.arn
 }
 
 resource "aws_iam_role_policy_attachment" "invoke_lambda_policy" {
-    role        = format("aws_iam_role.bedrock-lambda-role-%s.name", var.branch)
+    role        = aws_iam_role.bedrock-lambda-role.name
     policy_arn  = aws_iam_policy.invoke_lambda_policy.arn
 }
 

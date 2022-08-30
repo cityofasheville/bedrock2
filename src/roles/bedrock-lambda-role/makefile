@@ -3,17 +3,17 @@ include ../../make_variables
 variable_files = ../../account.tfvars ../roles.tfvars ./local.tfvars
 config_files = config.tf policy_*.json
 
-backend_key = \"terraform/bedrock/$(BRANCH)/roles/bedrock-lambda-role/terraform_dev.tfstat\"\\n
+backend_key = \"terraform/bedrock/$(BRANCH)/roles/bedrock-lambda-role/terraform_dev.tfstat\"
 
-backend_head = "terraform { \n  backend \"s3\" {"
-backend_tail = "  }\n}"
+backend_head = "terraform { \n  backend \"s3\" {\n"
+backend_tail = "  }\n}\n"
 
 backend.tf: $(backends) $(variable_files)
-	@echo $(backend_head) > backend.tf
+	@printf $(backend_head) > backend.tf
 	@echo region = \"$(region)\" >> backend.tf
 	@echo bucket = \"$(statebucket)\" >> backend.tf
 	@echo key = $(backend_key) >> backend.tf
-	@echo $(backend_tail) >> backend.tf
+	@printf $(backend_tail) >> backend.tf
 
 terraform.tfvars: $(variable_files)
 	cat $(variable_files) > terraform.tfvars
