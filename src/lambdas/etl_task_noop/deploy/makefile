@@ -11,7 +11,6 @@ backend_tail = "  }\n}"
 
 role_key = \"terraform/bedrock/$(BRANCH)/roles/bedrock-lambda-role/terraform_dev.tfstat\"\\n
 
-
 backend.tf: $(backends)
 	@echo $(backend_head) > backend.tf
 	@echo region = \"$(region)\" >> backend.tf
