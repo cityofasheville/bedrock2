@@ -1,6 +1,6 @@
 dirs = bedrock-lambda-role
 
-.PHONY: $(dirs) test init plan apply destroy
+.PHONY: $(dirs) init plan apply destroy
 
 init: $(dirs)
 plan: $(dirs)

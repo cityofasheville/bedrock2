@@ -1,3 +1,2 @@
-- Allow AWS credentials to only be set in environment
 - Make BRANCH= files
 - 
