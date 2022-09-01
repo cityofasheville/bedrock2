@@ -9,17 +9,14 @@ if __name__ == "__main__":
 
   with (open(sys.argv[1], 'r')) as vfile:
     for line in vfile.read().split('\n'):
-      print(line)
       words = line.split('=')
       if (len(words) == 2):
         vmap[words[0].strip()] = words[1].strip() # Just skip anything else
-    print(vmap)
   with (open(sys.argv[2], 'r')) as tfile:
     template = tfile.read()
 
   for v in vmap:
     rtext = f"$${v}$$"
-    print(v, rtext, vmap[v])
     template = template.replace(rtext, vmap[v])
 
   with (open(sys.argv[3], 'w+')) as wfile:
