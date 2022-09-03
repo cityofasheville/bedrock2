@@ -12,5 +12,5 @@ resource "aws_lambda_function" "etl_task_noop-$$BRANCH$$" {
 }
 
 output "etl_task_noop_arn" {
-  value = "${aws_lambda_function.etl_task_noop.arn}"
+  value = "${aws_lambda_function.etl_task_noop-$$BRANCH$$.arn}"
 }

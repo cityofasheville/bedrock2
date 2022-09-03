@@ -2,15 +2,13 @@ include ../../make_variables
 
 dirs = build
 
-.PHONY: $(dirs) init plan apply destroy build transform
+.PHONY: $(dirs) init plan apply destroy prebuild
 
 SRC_DIR := ./deploy
 DEST_DIR := ./build
 TFFILES := config.tf datablocks.tf local.tfvars variables.tf makefile
 
 TF_TARGS := $(patsubst %,$(DEST_DIR)/%,$(TFFILES))
-
-#https://stackoverflow.com/questions/42661248/gnu-make-how-to-copy-files-from-source-to-destination
 
 prebuild:
 	mkdir -p ./build
@@ -31,5 +29,5 @@ clean: $(dirs)
 	rm -f BRANCH=*
 	\rm -Rf build
 
-# $(dirs):
-# 	$(MAKE) -C $@ $(MAKECMDGOALS)
+$(dirs):
+	$(MAKE) -C $@ $(MAKECMDGOALS)
