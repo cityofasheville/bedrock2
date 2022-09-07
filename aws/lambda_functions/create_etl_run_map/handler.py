@@ -7,6 +7,7 @@ from datetime import timedelta
 import datetime
 from pyawscron import AWSCron
 from zoneinfo import ZoneInfo
+import math
 
 utc = ZoneInfo('UTC')
 localtz = ZoneInfo('America/New_York')
@@ -74,7 +75,7 @@ def process_date(date):
 def rounder(t):
     # Rounds to nearest 15 minutes
     return (t.replace(second=0, microsecond=0, minute=0, hour=t.hour)
-               +timedelta(minutes=(round(t.minute/15)*15)))
+               +timedelta(minutes=(math.floor(t.minute/15)*15)))
 
 
 def get_table():
@@ -116,5 +117,4 @@ def lambda_handler(event, context):
         'body': json.loads(json.dumps(result, default=convert_set_to_list))
     }
 #-------------------------------------------------
-
 

@@ -5,6 +5,7 @@ import datetime
 from pyawscron import AWSCron
 from zoneinfo import ZoneInfo
 from boto3.dynamodb.conditions import Key
+import math
 
 utc = ZoneInfo('UTC')
 localtz = ZoneInfo('America/New_York')
@@ -27,7 +28,7 @@ def process_date(date):
 def rounder(t):
     # Rounds to nearest 15 minutes
     return (t.replace(second=0, microsecond=0, minute=0, hour=t.hour)
-               +timedelta(minutes=(round(t.minute/15)*15)))
+               +timedelta(minutes=(math.floor(t.minute/15)*15)))
 
 
 def get_table():
@@ -58,7 +59,7 @@ def get_rungroup_matches(data, date):
 
 #--------------------------------------------------
 
-#myDate = process_date("29/08/22 7:02")
+#myDate = process_date("09/09/22 1:58")
 #myDate = rounder(myDate)
 #data = get_table()
 #finalList = get_rungroup_matches(data, myDate)
