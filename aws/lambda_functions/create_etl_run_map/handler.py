@@ -17,7 +17,7 @@ dynamodb = boto3.resource('dynamodb')
 TIME_INTERVAL = 15
 
 def create_run_map_function(bucket_name, run_group=None):
-    WORKINGDIR = '.'
+    WORKINGDIR = '/tmp'
     s3 = boto3.client('s3', region_name='us-east-1')
     downloaded_file = WORKINGDIR + '/all_assets.json'
     s3.download_file(bucket_name, 'run/all_assets.json', downloaded_file)
@@ -26,13 +26,18 @@ def create_run_map_function(bucket_name, run_group=None):
     os.remove(downloaded_file)
     dependency_map = {}
 
-    my_date = process_date()
-    my_date = rounder(my_date)
-    data = get_table()
-    final_list = get_rungroup_matches(data, my_date)
-    for key, asset in all_assets.items():  # Ought to be a more pythonic approach using filter() and lambda, but punting for now
-        if (asset['run_group'] in final_list): 
-            dependency_map[key] = {a for a in asset['depends']}
+    if run_group == None:
+        my_date = process_date()
+        my_date = rounder(my_date)
+        data = get_table()
+        final_list = get_rungroup_matches(data, my_date)
+        for key, asset in all_assets.items():  # Ought to be a more pythonic approach using filter() and lambda, but punting for now
+            if (asset['run_group'] in final_list): 
+                dependency_map[key] = {a for a in asset['depends']}
+    else:
+        for key, asset in all_assets.items():  # Ought to be a more pythonic approach using filter() and lambda, but punting for now
+            if (asset['run_group'] ==run_group): 
+                dependency_map[key] = {a for a in asset['depends']}
 
     runsets= list(toposort(dependency_map))
     runs = []
@@ -60,6 +65,7 @@ def create_run_map_function(bucket_name, run_group=None):
 def process_date():
     #create datetime object, convert to utc
     dt = datetime.datetime.now()
+    #dt = datetime.datetime.strptime("09/09/22 1:58", "%d/%m/%y %H:%M")
     dt.replace(tzinfo=localtz)
     utctime = dt.astimezone(utc)
     return(utctime)
