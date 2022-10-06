@@ -7,6 +7,7 @@ backend_key = \"terraform/bedrock/$(BRANCH)/roles/bedrock-lambda-role/terraform_
 
 backend_head = "terraform { \n  backend \"s3\" {\n"
 backend_tail = "  }\n}\n"
+backends = backend_head backend_tail backend_key
 
 backend.tf: $(backends) $(variable_files)
 	@printf $(backend_head) > backend.tf
