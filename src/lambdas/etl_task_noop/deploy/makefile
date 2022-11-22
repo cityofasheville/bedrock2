@@ -4,19 +4,7 @@ variable_files = ../../../account.tfvars ../../lambda.tfvars ./local.tfvars
 config_files = config.tf
 code_files = ../handler.py
 
-backend_key = \"terraform/bedrock/$(BRANCH)/lambdas/etl_task_noop/terraform_dev.tfstat\"\\n
-
-backend_head = "terraform { \n  backend \"s3\" {"
-backend_tail = "  }\n}"
-
 role_key = \"terraform/bedrock/$(BRANCH)/roles/bedrock-lambda-role/terraform_dev.tfstat\"\\n
-
-backend.tf: $(backends)
-	@echo $(backend_head) > backend.tf
-	@echo region = \"$(region)\" >> backend.tf
-	@echo bucket = \"$(statebucket)\" >> backend.tf
-	@echo key = $(backend_key) >> backend.tf
-	@echo $(backend_tail) >> backend.tf
 
 terraform.tfvars: $(variable_files) ../../../make_variables
 	cat $(variable_files) > terraform.tfvars
@@ -28,7 +16,7 @@ function.zip: $(code_files)
 	zip -r9 ./function.zip *.py
 
 .PHONY: init
-init: backend.tf terraform.tfvars
+init: terraform.tfvars
 	terraform init -reconfigure
 
 .PHONY: plan
@@ -44,7 +32,7 @@ destroy: terraform.tfvars $(config_files)
 	terraform destroy
 
 clean:
-	rm -f  terraform.tfvars backend.tf function.zip
+	rm -f  terraform.tfvars function.zip
 
 
 

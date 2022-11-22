@@ -1,12 +1,11 @@
 include ../../make_variables
 
 dirs = build
-
 .PHONY: $(dirs) init plan apply destroy prebuild
 
 SRC_DIR := ./deploy
 DEST_DIR := ./build
-TFFILES := config.tf datablocks.tf local.tfvars variables.tf makefile
+TFFILES := config.tf datablocks.tf backend.tf local.tfvars variables.tf makefile
 
 TF_TARGS := $(patsubst %,$(DEST_DIR)/%,$(TFFILES))
 
@@ -14,7 +13,7 @@ prebuild:
 	mkdir -p ./build
 
 $(DEST_DIR)/%: $(SRC_DIR)/%
-	python3 ../../scripts/vreplace.py ../../make_variables $< $@
+	python3 ../../scripts/vreplace.py -f ../../make_variables $< $@
 
 init: prebuild $(TF_TARGS)
 	$(MAKE) -C build $(MAKECMDGOALS)
