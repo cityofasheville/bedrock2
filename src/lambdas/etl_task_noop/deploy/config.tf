@@ -4,7 +4,7 @@ provider "aws" {
 
 resource "aws_lambda_function" "etl_task_noop-$$BRANCH$$" {
     filename        = "function.zip"
-    function_name   = "etl_task_noop"
+    function_name   = "etl_task_noop-$$BRANCH$$"
     role            = data.terraform_remote_state.lambda_role.outputs.bedrock_lambda_role_arn
     handler         = "handler.lambda_handler"
     runtime         = "python3.8"
