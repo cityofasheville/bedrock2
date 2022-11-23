@@ -4,7 +4,7 @@ variable_files = ../../../account.tfvars ../../lambda.tfvars ./local.tfvars
 config_files = config.tf
 code_files = ../handler.py
 
-role_key = \"terraform/bedrock/$(BRANCH)/roles/bedrock-lambda-role/terraform_dev.tfstat\"\\n
+role_key = \"terraform/bedrock/$(INSTANCE)/roles/bedrock-lambda-role/terraform_dev.tfstat\"\\n
 
 terraform.tfvars: $(variable_files) ../../../make_variables
 	cat $(variable_files) > terraform.tfvars

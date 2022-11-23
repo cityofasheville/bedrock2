@@ -17,15 +17,15 @@ $(DEST_DIR)/%: $(SRC_DIR)/%
 
 init: prebuild $(TF_TARGS)
 	$(MAKE) -C build $(MAKECMDGOALS)
-	@rm -f BRANCH=*
-	@touch BRANCH=$(BRANCH)
+	@rm -f *.instance
+	@touch $(INSTANCE).instance		# Marker file to display the instance name
 
-plan: $(dirs)
-apply: $(dirs)
-destroy: $(dirs)
+plan: $(TF_TARGS) $(dirs)
+apply: $(TF_TARGS) $(dirs)
+destroy: $(TF_TARGS) $(dirs)
 
 clean: $(dirs)
-	rm -f BRANCH=*
+	rm -f *.instance
 	\rm -Rf build
 
 $(dirs):
