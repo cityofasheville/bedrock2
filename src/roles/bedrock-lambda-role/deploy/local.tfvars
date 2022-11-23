@@ -1,1 +1,1 @@
-branch = "$$BRANCH$$"
+instance = "$$INSTANCE$$"
