@@ -2,8 +2,7 @@ include ../../../make_variables
 
 variable_files = ../../../account.tfvars ../../lambda.tfvars ./local.tfvars
 config_files = config.tf datablocks.tf variables.tf local.tfvars
-
-code_files = ../handler.py
+code_files = ../*.js ../*.json
 
 role_key = \"terraform/bedrock/$(INSTANCE)/roles/bedrock-lambda-role/terraform_dev.tfstat\"\\n
 
@@ -14,7 +13,12 @@ terraform.tfvars: $(variable_files) ../../../make_variables
 
 function.zip: $(code_files)
 	cp -R $(code_files) .
-	zip -r9 ./function.zip *.py
+	rm -f ../function.zip
+	npm install
+	cd node_modules
+	zip -r9q ../function.zip .
+	cd ..
+	zip -gq function.zip ./*.js
 
 .PHONY: init
 init: terraform.tfvars
@@ -33,7 +37,7 @@ destroy: terraform.tfvars $(config_files)
 	terraform destroy
 
 clean:
-	rm -f  terraform.tfvars function.zip $(code_files)
+	rm -f  terraform.tfvars function.zip
 
 
 

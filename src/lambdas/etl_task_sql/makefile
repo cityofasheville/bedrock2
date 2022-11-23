@@ -26,7 +26,7 @@ destroy: $(TF_TARGS) $(dirs)
 
 clean:
 	rm -f *.instance
-	\rm -Rf build
+	\rm -Rf build function.zip
 
 $(dirs):
 	$(MAKE) -C $@ $(MAKECMDGOALS)
