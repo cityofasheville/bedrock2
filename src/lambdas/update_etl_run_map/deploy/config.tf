@@ -1,0 +1,16 @@
+provider "aws" {
+  region	= var.region
+}
+
+resource "aws_lambda_function" "update_etl_run_map-$$INSTANCE$$" {
+    filename        = "function.zip"
+    function_name   = "update_etl_run_map-$$INSTANCE$$"
+    role            = data.terraform_remote_state.lambda_role.outputs.bedrock_lambda_role_arn
+    handler         = "handler.lambda_handler"
+    runtime         = "python3.8"
+    source_code_hash = filebase64sha256("function.zip")
+}
+
+output "update_etl_run_map_arn" {
+  value = "${aws_lambda_function.update_etl_run_map-$$INSTANCE$$.arn}"
+}
