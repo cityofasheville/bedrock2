@@ -1,0 +1,22 @@
+{
+  "JobIsGo": true,
+  "ETLJob": {
+    "name": "arag_ftp",
+    "depends": [
+    ],
+    "path": "store/assets/arag_ftp/arag_ftp.json",
+    "run_group": "tues_night",
+    "etl_tasks": [
+      {
+        "type": "encrypt",
+        "s3_connection": "s3_data_files",
+        "ftp_connection": "arag_ftp",
+        "filename": "2022-05-31T05-12-31.517ZPerson.xml",
+        "encrypted_filename": "2022-05-31T05-12-31.517ZPerson.xml.pgp",
+        "s3_path": "telestaff-import-person/"
+      }
+    ]
+  },
+  "TaskIndex": 0,
+  "JobType": "table_copy"
+}

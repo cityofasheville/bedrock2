@@ -1,0 +1,1 @@
+sam local invoke "encrypt" -e sam_event.json
