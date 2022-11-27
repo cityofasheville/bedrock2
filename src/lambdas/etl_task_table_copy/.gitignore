@@ -1,0 +1,3 @@
+node_modules/
+bedrock_connections.json
+.terraform*

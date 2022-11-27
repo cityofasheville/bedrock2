@@ -1,6 +1,6 @@
 etl_task_sftp/
-etl_task_table_copy/
 etl_task_file_copy/
+# etl_task_table_copy/
 # etl_email_results/
 # etl_task_encrypt/
 # setup_etl_job_task/
