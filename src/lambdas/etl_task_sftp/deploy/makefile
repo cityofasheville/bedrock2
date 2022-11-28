@@ -2,7 +2,7 @@ include ../../../make_variables
 
 variable_files = ../../../account.tfvars ../../lambda.tfvars ./local.tfvars
 config_files = config.tf datablocks.tf variables.tf local.tfvars
-code_files = ../src/*
+code_files = ../*.py ../requirements.txt
 
 role_key = \"terraform/bedrock/$(INSTANCE)/roles/bedrock-lambda-role/terraform_dev.tfstat\"\\n
 
