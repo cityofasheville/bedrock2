@@ -14,14 +14,14 @@ prebuild:
 	mkdir -p ./build
 
 $(DEST_DIR)/%: $(SRC_DIR)/%
-	python3 ../../scripts/vreplace.py ../../make_variables $< $@
+	python3 ../../scripts/vreplace.py -f ../../make_variables $< $@
 
 
 init: prebuild $(TF_TARGS)
 	$(MAKE) -C build $(MAKECMDGOALS)
-	@rm -f BRANCH=*
-	@touch BRANCH=$(BRANCH)
-
+	@rm -f *.instance
+	@touch $(INSTANCE).instance		# Marker file to display the instance name
+	
 plan: $(dirs)
 apply: $(dirs)
 destroy: $(dirs)
