@@ -26,8 +26,8 @@ plan: $(dirs)
 apply: $(dirs)
 destroy: $(dirs)
 
-clean: $(dirs)
-	rm -f BRANCH=*
+clean:
+	rm -f *.instance
 	\rm -Rf build
 
 $(dirs):
