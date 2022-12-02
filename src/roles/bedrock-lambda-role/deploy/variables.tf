@@ -9,7 +9,7 @@ variable "aws_profile" {
   description   = "AWS User Profile to use"
 }
 
-variable "branch" {
+variable "instance" {
   type          = string
-  description   = "Github environment or branch"
+  description   = "Name of the current instance"
 }

@@ -10,6 +10,11 @@ What these two types have in common is a need for a managed interface between th
 
 Bedrock works in conjunction with the data inventory itself, which is maintained in the [managed-data-assets repository](https://github.com/cityofasheville/managed-data-assets).
 
+## Deployment
+
+BRANCH must be set on the resource name as well as the Name tag.
+
+## Older README Content - Delete or Move
 Bedrock consists of two parts, a set of command-line scripts and a collection of AWS infrastructure that implements an ETL system.
 
 ### Asset Preprocessing

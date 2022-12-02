@@ -1,4 +1,4 @@
-dirs = bedrock-lambda-role
+dirs = bedrock-lambda-role bedrock-stepfunction-role
 
 .PHONY: $(dirs) init plan apply destroy
 

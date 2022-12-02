@@ -10,6 +10,6 @@ def lambda_handler(event, context):
     return {
         'statusCode': 200,
         'body': {
-            "lambda_output": "This is a test of " + task['JobType']
+            "lambda_output": "This is a test of NOOP" + task['JobType']
         }
     }

@@ -1,0 +1,16 @@
+{
+  "name": "sql_task",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mssql": "^6.2.1",
+    "pg": "^8.3.0"
+  }
+}

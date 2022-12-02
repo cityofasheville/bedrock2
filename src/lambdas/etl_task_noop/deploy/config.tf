@@ -2,9 +2,9 @@ provider "aws" {
   region	= var.region
 }
 
-resource "aws_lambda_function" "etl_task_noop-$$BRANCH$$" {
+resource "aws_lambda_function" "etl_task_noop-$$INSTANCE$$" {
     filename        = "function.zip"
-    function_name   = "etl_task_noop"
+    function_name   = "etl_task_noop-$$INSTANCE$$"
     role            = data.terraform_remote_state.lambda_role.outputs.bedrock_lambda_role_arn
     handler         = "handler.lambda_handler"
     runtime         = "python3.8"
@@ -12,5 +12,5 @@ resource "aws_lambda_function" "etl_task_noop-$$BRANCH$$" {
 }
 
 output "etl_task_noop_arn" {
-  value = "${aws_lambda_function.etl_task_noop-$$BRANCH$$.arn}"
+  value = "${aws_lambda_function.etl_task_noop-$$INSTANCE$$.arn}"
 }

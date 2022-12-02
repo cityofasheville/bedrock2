@@ -8,8 +8,9 @@ function.zip
 data/
 bedrock_connections.json
 
+# Other additions
+.DS_Store
 # Terraform-specific
-backend.tf
 terraform.tfvars
 
 # Byte-compiled / optimized / DLL files

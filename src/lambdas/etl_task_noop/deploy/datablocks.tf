@@ -3,7 +3,7 @@ data "terraform_remote_state" "lambda_role" {
   config = {
     bucket = var.statebucket
     key = var.rolekey
-    region = "us-east-1"
+    region = var.region
   }
 }
 
