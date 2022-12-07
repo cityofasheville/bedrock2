@@ -13,11 +13,9 @@ terraform.tfvars: $(variable_files) ../../../make_variables
 
 function.zip: $(code_files)
 	cp -R $(code_files) .
-	rm -Rf ../function.zip ./package
+	rm -Rf ./function.zip ./package
 	pip install -r requirements.txt --target ./package
-	cd package
-	zip -r9 ../function.zip .
-	cd ..
+	cd package; zip -r9 ../function.zip .; cd ..
 	zip -g function.zip ./*.py
 
 .PHONY: init
