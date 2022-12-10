@@ -1,0 +1,110 @@
+{
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "source_location": {
+        "filename": "BudgetMappings",
+        "connection": "bedrock-googlesheets",
+        "spreadsheetid": "1mCG5vgN9SLyP1OOSGViOtjazC_lcltuuiTNRsHr51IE",
+        "range": "categories!A2:B"
+      },
+      "target_location": {
+        "connection": "pubrecdb1/mdastore1/dbadmin",
+        "schemaname": "internal",
+        "tablename": "budget_categories"
+      },
+      "active": true
+    },
+    {
+      "type": "table_copy",
+      "source_location": {
+        "filename": "BudgetMappings",
+        "connection": "bedrock-googlesheets",
+        "spreadsheetid": "1mCG5vgN9SLyP1OOSGViOtjazC_lcltuuiTNRsHr51IE",
+        "range": "deptdiv_mappings!A2:F"
+      },
+      "target_location": {
+        "connection": "pubrecdb1/mdastore1/dbadmin",
+        "schemaname": "internal",
+        "tablename": "budget_deptdiv_mappings"
+      },
+      "active": true
+    },
+    {
+      "type": "table_copy",
+      "source_location": {
+        "filename": "BudgetMappings",
+        "connection": "bedrock-googlesheets",
+        "spreadsheetid": "1mCG5vgN9SLyP1OOSGViOtjazC_lcltuuiTNRsHr51IE",
+        "range": "budget_sections!A2:B"
+      },
+      "target_location": {
+        "connection": "pubrecdb1/mdastore1/dbadmin",
+        "schemaname": "internal",
+        "tablename": "budget_sections"
+      },
+      "active": true
+    },
+    {
+      "type": "table_copy",
+      "source_location": {
+        "filename": "BudgetMappings",
+        "connection": "bedrock-googlesheets",
+        "spreadsheetid": "1mCG5vgN9SLyP1OOSGViOtjazC_lcltuuiTNRsHr51IE",
+        "range": "category_mapping!A2:C"
+      },
+      "target_location": {
+        "connection": "pubrecdb1/mdastore1/dbadmin",
+        "schemaname": "internal",
+        "tablename": "budget_category_mapping"
+      },
+      "active": true
+    },
+    {
+      "type": "table_copy",
+      "source_location": {
+        "filename": "BudgetMappings",
+        "connection": "bedrock-googlesheets",
+        "spreadsheetid": "1mCG5vgN9SLyP1OOSGViOtjazC_lcltuuiTNRsHr51IE",
+        "range": "budget_section_mapping!A2:D"
+      },
+      "target_location": {
+        "connection": "pubrecdb1/mdastore1/dbadmin",
+        "schemaname": "internal",
+        "tablename": "budget_section_mapping"
+      },
+      "active": true
+    },
+    {
+      "type": "table_copy",
+      "source_location": {
+        "filename": "BudgetMappings",
+        "connection": "bedrock-googlesheets",
+        "spreadsheetid": "1mCG5vgN9SLyP1OOSGViOtjazC_lcltuuiTNRsHr51IE",
+        "range": "exclusions!A2:B"
+      },
+      "target_location": {
+        "connection": "pubrecdb1/mdastore1/dbadmin",
+        "schemaname": "internal",
+        "tablename": "budget_exclusions"
+      },
+      "active": true
+    },
+    {
+      "type": "table_copy",
+      "source_location": {
+        "filename": "BudgetMappings",
+        "connection": "bedrock-googlesheets",
+        "spreadsheetid": "1mCG5vgN9SLyP1OOSGViOtjazC_lcltuuiTNRsHr51IE",
+        "range": "interfund_transfers!A2:B"
+      },
+      "target_location": {
+        "connection": "pubrecdb1/mdastore1/dbadmin",
+        "schemaname": "internal",
+        "tablename": "budget_interfund_transfers"
+      },
+      "active": true
+    }
+  ]
+}

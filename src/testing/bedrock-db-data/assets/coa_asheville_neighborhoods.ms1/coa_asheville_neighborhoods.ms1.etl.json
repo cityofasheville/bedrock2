@@ -1,0 +1,19 @@
+{
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "source_location": {
+          "connection": "coa-gis-edit1/coagisedit/coagis",
+          "schemaname": "coagis",
+          "tablename": "coa_asheville_neighborhoods"
+      },
+      "target_location": {
+          "connection": "pubrecdb1/mdastore1/dbadmin",
+          "schemaname": "internal",
+          "tablename": "coa_asheville_neighborhoods"
+      },
+      "active": true
+    }
+  ]
+}

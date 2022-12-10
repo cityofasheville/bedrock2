@@ -1,0 +1,19 @@
+{
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "source_location": {
+          "connection": "coa-acceladb/accela/mssqlgisadmin",
+          "schemaname": "amd",
+          "tablename": "permits"
+      },
+      "target_location": {
+          "connection": "pubrecdb1/mdastore1/dbadmin",
+          "schemaname": "internal",
+          "tablename": "permits"
+      },
+      "active": true
+    }
+  ]
+}

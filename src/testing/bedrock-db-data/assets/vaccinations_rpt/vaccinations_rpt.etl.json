@@ -1,0 +1,37 @@
+{
+  "run_group": "vaxrpt",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "source_location": {
+        "connection": "pubrecdb1/mdastore1/dbadmin",
+        "schemaname": "vax",
+        "tablename": "no_vax"
+      },
+      "target_location": {
+        "filename": "Vaccination Weekly Report",
+        "connection": "bedrock-googlesheets",
+        "spreadsheetid": "1T40hCdspVSWLn4LzM_IvF19h67FOAbdh6dOQLXdtecU",
+        "range": "MAIN!A2:H",
+        "append": false
+      },
+      "active": true
+    },
+    {
+      "type": "table_copy",
+      "source_location": {
+        "connection": "pubrecdb1/mdastore1/dbadmin",
+        "schemaname": "vax",
+        "tablename": "vax_notinmunis"
+      },
+      "target_location": {
+        "filename": "Vaccination Weekly Report (Error Messages)",
+        "connection": "bedrock-googlesheets",
+        "spreadsheetid": "1T40hCdspVSWLn4LzM_IvF19h67FOAbdh6dOQLXdtecU",
+        "range": "Error Messages!A2:D",
+        "append": false
+      },
+      "active": true
+    }
+  ]
+}

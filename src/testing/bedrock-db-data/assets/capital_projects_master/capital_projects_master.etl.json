@@ -1,0 +1,21 @@
+{
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "source_location": {
+        "filename": "Capital Projects Master",
+        "connection": "bedrock-googlesheets",
+        "spreadsheetid": "1IepJrSjqbGK7UcTmFHqknNUD6Iyx6-3_zpj6qHprBgY",
+        "range": "General Project Information!A2:Z"
+      },
+      "target_location": {
+        "connection": "pubrecdb1/mdastore1/dbadmin",
+        "schemaname": "internal",
+        "tablename": "capital_projects_master",
+        "append_serial": "objectid"
+        },
+      "active": true
+    }
+  ]
+}

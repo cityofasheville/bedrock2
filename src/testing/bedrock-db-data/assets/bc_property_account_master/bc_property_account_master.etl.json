@@ -1,0 +1,19 @@
+{
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "source_location": {
+          "connection": "coa-gis-warehouse1/coagiswarehouse/coagis",
+          "schemaname": "coagis",
+          "tablename": "bc_property_account_master"
+      },
+      "target_location": {
+          "connection": "pubrecdb1/mdastore1/dbadmin",
+          "schemaname": "internal",
+          "tablename": "bc_property_account_master"
+      },
+      "active": true
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "source_location": {
+        "connection": "pubrecdb1/mdastore1/dbadmin",
+        "schemaname": "bc",
+        "tablename": "buncombe_tax_inspections"
+      },
+      "target_location": {
+          "connection": "coa-publicdb1/coa_share/dbadmin",
+          "schemaname": "bc",
+          "tablename": "buncombe_tax_inspections"
+      },
+      "active": true
+    }
+  ]
+}

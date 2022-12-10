@@ -1,0 +1,19 @@
+{
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "source_location": {
+          "connection": "munis/munprod/mssqlgisadmin",
+          "schemaname": "amd",
+          "tablename": "pcard_transaction"
+      },
+      "target_location": {
+          "connection": "pubrecdb1/mdastore1/dbadmin",
+          "schemaname": "internal",
+          "tablename": "pcard_transaction"
+      },
+      "active": true
+    }
+  ]
+}

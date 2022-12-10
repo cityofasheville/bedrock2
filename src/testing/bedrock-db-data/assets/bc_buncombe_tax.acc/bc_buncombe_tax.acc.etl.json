@@ -1,0 +1,19 @@
+{
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "sql",
+      "file": "buncombe_tax_inspections.sql",
+      "connection": "coa-acceladb/accela/mssqlgisadmin",
+      "active": true
+    },
+    {
+      "type": "sql",
+      "file": "buncombe_tax_permits.sql",
+      "connection": "coa-acceladb/accela/mssqlgisadmin",
+      "active": true
+    }
+    
+  ]
+}
+

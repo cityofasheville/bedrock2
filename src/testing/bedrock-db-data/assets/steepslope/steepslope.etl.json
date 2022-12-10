@@ -1,0 +1,47 @@
+{
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "source_location": {
+          "connection": "coa-gis-warehouse1/coagiswarehouse/coagis",
+          "schemaname": "coagis",
+          "tablename": "bc_incorporated_areas"
+      },
+      "target_location": {
+          "connection": "pubrecdb1/steepslope/dbadmin",
+          "schemaname": "public",
+          "tablename": "bc_incorporated_areas"
+      },
+      "active": true
+    },
+    {
+      "type": "table_copy",
+      "source_location": {
+          "connection": "coa-gis-warehouse1/coagiswarehouse/coagis",
+          "schemaname": "coagis",
+          "tablename": "coa_active_jurisdictions"
+      },
+      "target_location": {
+          "connection": "pubrecdb1/steepslope/dbadmin",
+          "schemaname": "public",
+          "tablename": "coa_active_jurisdictions"
+      },
+      "active": true
+    },
+    {
+      "type": "table_copy",
+      "source_location": {
+          "connection": "coa-gis-warehouse1/coagiswarehouse/coagis",
+          "schemaname": "coagis",
+          "tablename": "bc_property"
+      },
+      "target_location": {
+          "connection": "pubrecdb1/steepslope/dbadmin",
+          "schemaname": "public",
+          "tablename": "bc_property"
+      },
+      "active": true
+    }
+  ]
+}

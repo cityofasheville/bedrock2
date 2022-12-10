@@ -1,0 +1,19 @@
+{
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "source_location": {
+        "connection": "munis/munprod/mssqlgisadmin",
+          "schemaname": "avl_bdv",
+          "tablename": "base_employee_private"
+      },
+      "target_location": {
+          "connection": "pubrecdb1/mdastore1/dbadmin",
+          "schemaname": "standard",
+          "tablename": "base_employee_private"
+      },
+      "active": true
+    }
+  ]
+}
