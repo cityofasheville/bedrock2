@@ -17,6 +17,7 @@ plan: terraform.tfvars $(config_files)
 .PHONY: apply
 apply: terraform.tfvars $(config_files)
 	terraform apply
+	terraform output > ../make_variables.local
 
 .PHONY: destroy itgoaway
 destroy: terraform.tfvars $(config_files)

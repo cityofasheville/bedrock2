@@ -1,4 +1,5 @@
 include ../../make_variables
+include ./make_variables.local
 
 dirs = build
 
@@ -26,9 +27,16 @@ plan: $(dirs) $(TF_TARGS)
 apply: $(TF_TARGS) $(dirs)
 destroy: $(dirs)
 
+db:	create_db.js package.json package-lock.json
+	npm install
+	echo $(DB_ENDPOINT)
+	DB_ENDPOINT=$(DB_ENDPOINT) node create_db.js
+
 clean:
 	rm -f *.instance
 	\rm -Rf build
+	\rm -Rf node_modules
+	echo "" > make_variables.local
 
 $(dirs):
 	$(MAKE) -C $@ $(MAKECMDGOALS)
