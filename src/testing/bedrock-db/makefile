@@ -1,5 +1,5 @@
 include ../../make_variables
-include ./make_variables.local
+include ../make_variables.local
 
 dirs = build
 
@@ -36,7 +36,7 @@ clean:
 	rm -f *.instance
 	\rm -Rf build
 	\rm -Rf node_modules
-	echo "" > make_variables.local
+	echo "" > ../make_variables.local
 
 $(dirs):
 	$(MAKE) -C $@ $(MAKECMDGOALS)
