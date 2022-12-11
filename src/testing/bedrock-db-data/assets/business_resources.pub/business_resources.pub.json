@@ -1,5 +1,5 @@
 {
-    "name": "business_resources",
+    "name": "business_resources.pub",
     "location": "publicdb1",
     "active": true,
     "type": "table",
