@@ -27,16 +27,15 @@ print("Database host is ", db_host)
 
 assets_directory = './assets'
 for item in os.listdir(assets_directory):
+  print('Processing ', item)
   d = os.path.join(assets_directory, item)
   if os.path.isdir(d):
-    print('Process ',item)
     configFile = None
     etlFile = None
     for file in os.listdir(d):
       if file == item + '.json':
         with open(os.path.join(d,file), 'r') as ff:
           config = json.load(ff)
-          print(json.dumps(config))
       elif file == item + '.etl.json':
         etl = None
     sql = f'''
@@ -45,25 +44,10 @@ for item in os.listdir(assets_directory):
       values('{config["name"]}', '{config["description"]}', '{config["location"]}', {"true" if config["active"] else "false"})
       returning asset_name;
     '''
-    print('   ', sql)
     cur.execute(sql)
-    nm = cur.fetchone()[0]
-    print('   Got the return value ', nm)
+    nm = cur.fetchone()[0] # probably can skip this, but maybe to double check
+
 
 conn.commit()
 cur.close()
 conn.close()
-
-
-
-# /*
-# INSERT INTO bedrock.tasks
-# (asset_name, seq_number, "type", active, "source", target, "configuration")
-# VALUES('ad_info', 1, 'table_copy', true, '{"connection": "munis/munprod/mssqlgisadmin","schemaname": "amd","tablename": "ad_info"}', 
-# '{"connection": "pubrecdb1/mdastore1/dbadmin","schemaname": "internal","tablename": "ad_info"}', null);
-
-# INSERT INTO bedrock.tasks
-# (asset_name, seq_number, "type", active, "source", target, "configuration")
-# VALUES('somesql', 1, 'sql', true, null, 
-# '{"connection": "pubrecdb1/mdastore1/dbadmin"}', 'select * from tablename');
-# */
