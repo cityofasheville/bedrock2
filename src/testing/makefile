@@ -1,4 +1,4 @@
-dirs = bedrock-db
+dirs = bedrock-db bedrock-db-data
 
 .PHONY: $(dirs) init plan apply destroy
 

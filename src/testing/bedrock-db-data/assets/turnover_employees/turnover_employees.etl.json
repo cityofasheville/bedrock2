@@ -1,0 +1,37 @@
+{
+  "run_group": "monthly",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "source_location": {
+        "connection": "pubrecdb1/mdastore1/dbadmin",
+        "schemaname": "standard",
+        "tablename": "turnover_employees"
+      },
+      "target_location": {
+        "filename": "Employee Turnover Report",
+        "connection": "bedrock-googlesheets",
+        "spreadsheetid": "1yE8pfp9nZ9nETDd2ypN4h6y8-m06giQ5O797ghBQHYc",
+        "range": "Terminations!A2:X",
+        "append": true
+      },
+      "active": true
+    },
+    {
+      "type": "table_copy",
+      "source_location": {
+        "connection": "pubrecdb1/mdastore1/dbadmin",
+        "schemaname": "standard",
+        "tablename": "turnover_counts"
+      },
+      "target_location": {
+        "filename": "Employee Turnover Report",
+        "connection": "bedrock-googlesheets",
+        "spreadsheetid": "1yE8pfp9nZ9nETDd2ypN4h6y8-m06giQ5O797ghBQHYc",
+        "range": "Counts!A2:P",
+        "append": true
+      },
+      "active": true
+    }
+  ]
+}

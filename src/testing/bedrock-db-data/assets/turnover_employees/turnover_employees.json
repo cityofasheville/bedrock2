@@ -1,0 +1,8 @@
+{
+  "name": "turnover_employees",
+  "location": "google_sheets",
+  "active": true,
+  "type": "spreadsheet",
+  "description": "Report of Employees who were termed this month",
+  "depends": []
+}

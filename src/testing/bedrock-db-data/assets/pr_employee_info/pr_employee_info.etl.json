@@ -1,0 +1,25 @@
+{
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "source_location": {
+          "connection": "munis/munprod/mssqlgisadmin",
+          "schemaname": "amd",
+          "tablename": "pr_employee_info"
+      },
+      "target_location": {
+          "connection": "pubrecdb1/mdastore1/dbadmin",
+          "schemaname": "internal",
+          "tablename": "pr_employee_info"
+      },
+      "active": true
+    },
+    {
+      "type": "sql",
+      "file": "create_bpt_testusers.sql",
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "active": true
+    }
+  ]
+}

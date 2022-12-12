@@ -1,0 +1,19 @@
+{
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "source_location": {
+          "connection": "coa-acceladb/accela/mssqlgisadmin",
+          "schemaname": "amd",
+          "tablename": "dsd_first_review_sla"
+      },
+      "target_location": {
+          "connection": "pubrecdb1/mdastore1/dbadmin",
+          "schemaname": "internal",
+          "tablename": "dsd_first_review_sla"
+      },
+      "active": true
+    }
+  ]
+}
