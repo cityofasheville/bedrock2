@@ -5,6 +5,7 @@ dirs = etl_task_noop etl_task_unknown etl_task_sql etl_task_table_copy etl_task_
 init: $(dirs)
 plan: $(dirs)
 apply: $(dirs)
+apply-y: $(dirs)
 destroy: $(dirs)
 clean: $(dirs)
 
