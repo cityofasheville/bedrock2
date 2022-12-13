@@ -24,6 +24,7 @@ init: prebuild $(TF_TARGS)
 	
 plan: $(dirs)
 apply: $(dirs)
+apply-y: $(dirs)
 destroy: $(dirs)
 
 clean:
