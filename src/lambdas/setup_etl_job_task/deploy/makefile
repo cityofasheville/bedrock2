@@ -28,6 +28,10 @@ plan: terraform.tfvars $(config_files) function.zip
 apply: terraform.tfvars $(config_files) function.zip
 	terraform apply
 
+.PHONY: apply-y
+apply-y: terraform.tfvars $(config_files) function.zip
+	terraform apply -auto-approve
+
 .PHONY: destroy
 destroy: terraform.tfvars $(config_files)
 	terraform destroy

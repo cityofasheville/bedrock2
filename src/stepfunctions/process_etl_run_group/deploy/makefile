@@ -20,6 +20,10 @@ plan: terraform.tfvars $(config_files)
 apply: terraform.tfvars $(config_files)
 	terraform apply
 
+.PHONY: apply-y
+apply-y: terraform.tfvars $(config_files)
+	terraform apply -auto-approve
+
 .PHONY: destroy
 destroy: terraform.tfvars $(config_files)
 	terraform destroy

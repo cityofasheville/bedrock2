@@ -29,7 +29,7 @@ apply: terraform.tfvars $(config_files) function.zip
 	terraform apply
 
 .PHONY: apply-y
-apply: terraform.tfvars $(config_files) function.zip
+apply-y: terraform.tfvars $(config_files) function.zip
 	terraform apply -auto-approve
 
 .PHONY: destroy
