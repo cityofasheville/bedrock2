@@ -5,6 +5,7 @@ dirs = bedrock-lambda-role bedrock-stepfunction-role
 init: $(dirs)
 plan: $(dirs)
 apply: $(dirs)
+apply-y: $(dirs)
 destroy: $(dirs)
 clean: $(dirs)
 

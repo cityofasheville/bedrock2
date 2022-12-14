@@ -1,9 +1,9 @@
 include ../../make_variables
-include ../make_variables.local
+-include ../make_variables.generated
 
 dirs = build
 
-.PHONY: $(dirs) init plan apply destroy prebuild
+.PHONY: $(dirs) init plan apply destroy prebuild db seed
 
 SRC_DIR := ./deploy
 DEST_DIR := ./build
@@ -25,6 +25,7 @@ init: prebuild $(TF_TARGS)
 	
 plan: $(dirs) $(TF_TARGS)
 apply: $(TF_TARGS) $(dirs)
+apply-y: $(TF_TARGS) $(dirs)
 destroy: $(dirs)
 
 db:	create_db.js package.json package-lock.json
@@ -36,7 +37,7 @@ clean:
 	rm -f *.instance
 	\rm -Rf build
 	\rm -Rf node_modules
-	echo "" > ../make_variables.local
+	echo "" > ../make_variables.generated
 
 $(dirs):
 	$(MAKE) -C $@ $(MAKECMDGOALS)

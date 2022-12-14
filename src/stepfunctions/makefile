@@ -5,6 +5,7 @@ dirs = process_etl_run_group
 init: $(dirs)
 plan: $(dirs)
 apply: $(dirs)
+apply-y: $(dirs)
 destroy: $(dirs)
 clean: $(dirs)
 
