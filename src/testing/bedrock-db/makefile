@@ -25,6 +25,7 @@ init: prebuild $(TF_TARGS)
 	
 plan: $(dirs) $(TF_TARGS)
 apply: $(TF_TARGS) $(dirs)
+apply-y: $(TF_TARGS) $(dirs)
 destroy: $(dirs)
 
 db:	create_db.js package.json package-lock.json

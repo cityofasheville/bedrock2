@@ -5,6 +5,7 @@ dirs = bedrock-db bedrock-db-data
 init: $(dirs)
 plan: $(dirs)
 apply: $(dirs)
+apply-y: $(dirs)
 destroy: $(dirs)
 clean: $(dirs)
 

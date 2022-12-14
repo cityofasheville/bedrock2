@@ -19,6 +19,11 @@ apply: terraform.tfvars $(config_files)
 	terraform apply
 	terraform output > ../../make_variables.local
 
+.PHONY: apply-y
+apply-y: terraform.tfvars $(config_files)
+	terraform apply -auto-approve
+	terraform output > ../../make_variables.local
+
 .PHONY: destroy itgoaway
 destroy: terraform.tfvars $(config_files)
 	terraform destroy
