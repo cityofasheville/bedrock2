@@ -17,12 +17,12 @@ plan: terraform.tfvars $(config_files)
 .PHONY: apply
 apply: terraform.tfvars $(config_files)
 	terraform apply
-	terraform output > ../../make_variables.local
+	terraform output > ../../make_variables.generated
 
 .PHONY: apply-y
 apply-y: terraform.tfvars $(config_files)
 	terraform apply -auto-approve
-	terraform output > ../../make_variables.local
+	terraform output > ../../make_variables.generated
 
 .PHONY: destroy itgoaway
 destroy: terraform.tfvars $(config_files)

@@ -1,9 +1,9 @@
 include ../../make_variables
-include ../make_variables.local
+-include ../make_variables.generated
 
 dirs = build
 
-.PHONY: $(dirs) init plan apply destroy prebuild
+.PHONY: $(dirs) init plan apply destroy prebuild db seed
 
 SRC_DIR := ./deploy
 DEST_DIR := ./build
@@ -37,7 +37,7 @@ clean:
 	rm -f *.instance
 	\rm -Rf build
 	\rm -Rf node_modules
-	echo "" > ../make_variables.local
+	echo "" > ../make_variables.generated
 
 $(dirs):
 	$(MAKE) -C $@ $(MAKECMDGOALS)
