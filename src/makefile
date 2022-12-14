@@ -1,4 +1,4 @@
-dirs = roles lambdas
+dirs = roles lambdas stepfunctions
 
 .PHONY: $(dirs) test init plan apply destroy
 
