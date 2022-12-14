@@ -14,8 +14,8 @@ terraform.tfvars: $(variable_files) ../../../make_variables
 function.zip: $(code_files)
 	cp -R $(code_files) .
 	rm -Rf ./function.zip ./package
-	pip install -r requirements.txt --target ./package
-	cd package; zip -r9 ../function.zip .; cd ..
+	sam build --use-container
+	pushd .aws-sam/build/createmap; zip -r9q ../../../function.zip .; popd
 	zip -g function.zip ./*.py
 
 .PHONY: init

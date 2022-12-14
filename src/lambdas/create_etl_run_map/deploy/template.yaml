@@ -3,10 +3,10 @@ Transform: AWS::Serverless-2016-10-31
 
 Description: SAM Local
 Resources:
-  cermNEW:
+  createmap:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ..
       Runtime: python3.8
-      Handler: handlerNEW.lambda_handler
+      Handler: handler.lambda_handler
       Timeout: 600
