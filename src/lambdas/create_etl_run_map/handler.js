@@ -1,5 +1,4 @@
 const { Client } = require('pg')
-const pgSql = require('./pgSql')
 const getConnection = require('./getConnection')
 
 function formatRes(code, result) {
