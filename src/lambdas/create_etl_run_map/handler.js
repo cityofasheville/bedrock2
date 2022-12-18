@@ -1,51 +1,6 @@
 const { Client } = require('pg')
 const pgSql = require('./pgSql')
 const getConnection = require('./getConnection')
-const toposort = require('toposort')
-// const getSqlFromFile = require('./getSqlFromFile')
-
-old_lambda_handler = async function (event, context) {
-    const task = new Promise(resolve => {
-        try {
-            let etl = event.ETLJob.etl_tasks[event.TaskIndex]
-            if (!etl.active) {
-                resolve(formatRes(200, "Inactive: skipped"))
-            } else {
-                let sql = etl.sql_string;
-                getConnection(etl.connection)
-                    .then(connection => {
-                        if (connection.type == 'postgresql') {
-                            pgSql(connection, sql)
-                                .then(result => {
-                                    resolve(formatRes(200, result))
-                                })
-                        } else if (connection.type == 'sqlserver') {
-                            ssSql(connection, sql)
-                                .then(result => {
-                                    resolve(formatRes(200, result))
-                                })
-                        } else {
-                            throw ("Invalid DB Type")
-                        }
-                    })
-            }
-        }
-        catch (err) {
-            resolve(formatRes(500, err))
-        }
-    })
-
-    // timeout task  
-    let timeleft = context.getRemainingTimeInMillis() - 300;
-    const timeout = new Promise((resolve) => {
-        setTimeout(() => resolve({ statusCode: 500, message: `Lambda timed out after ${Math.round(timeleft / 1000)} seconds` }), timeleft);
-    })
-    // race the timeout task with the real task
-    return Promise.race([task, timeout])
-        .then((res) => {
-            return res;
-        });
-}
 
 function formatRes(code, result) {
     return {
@@ -168,53 +123,57 @@ async function readTasks(connection, assetMap) {
 
 lambda_handler = async function (event, context) {
   let dbConnection = null;
-  const runMap = await getConnectionObject()
-  .then((connection) => {
-    dbConnection = connection;
-    return readEtlList(connection, event.rungroup)
-  })
-  .then(assetMap => readDependencies(dbConnection, assetMap))
-  .then(assetMap => readTasks(dbConnection, assetMap))
-  .then(assetMap => {
-    const graph = [];
-    const level = {};
-    // Set up the array of dependencies and of initial levels
-    for (a in assetMap) {
-      level[a] = 0;
-      graph.push(a);
-    }
-    let maxLevel = 0;
-    while (graph.length > 0) {
-      let a = graph.shift();
-      let asset = assetMap[a];
-      for (let i = 0; i < asset.depends.length; ++i) {
-        let depLevel = level[asset.depends[i]]
-        if (level[a] <= depLevel) level[a] = depLevel + 1;
-        if (level[a] > maxLevel) maxLevel = level[a];
+  try {
+    const runMap = await getConnectionObject()
+    .then((connection) => {
+      dbConnection = connection;
+      return readEtlList(connection, event.rungroup)
+    })
+    .then(assetMap => readDependencies(dbConnection, assetMap))
+    .then(assetMap => readTasks(dbConnection, assetMap))
+    .then(assetMap => {
+      const graph = [];
+      const level = {};
+      // Set up the array of dependencies and of initial levels
+      for (a in assetMap) {
+        level[a] = 0;
+        graph.push(a);
       }
-    }
-    // Now gather into groups of runsets
-    let runs = new Array(maxLevel + 1);
-    for (let i = 0; i<maxLevel + 1; ++i) runs[i] = [];
-    for (a in level) runs[level[a]].push(assetMap[a]);
-    // And create the final run map
-    let result = { 'RunSetIsGo': false };
-      if (runs.length > 0) {
-        result = {
-        'runsets': runs,
-        'RunSetIsGo': true,
-        'success': [],
-        'skipped': [],
-        'failure': [],
-        'results': null,
+      let maxLevel = 0;
+      while (graph.length > 0) {
+        let a = graph.shift();
+        let asset = assetMap[a];
+        for (let i = 0; i < asset.depends.length; ++i) {
+          let depLevel = level[asset.depends[i]]
+          if (level[a] <= depLevel) level[a] = depLevel + 1;
+          if (level[a] > maxLevel) maxLevel = level[a];
+        }
       }
-    };
-    return result;
-  })
-  .catch(err => {
-    console.log('Error in lambda_handler', err);
-  })
-  return runMap;
+      // Now gather into groups of runsets
+      let runs = new Array(maxLevel + 1);
+      for (let i = 0; i<maxLevel + 1; ++i) runs[i] = [];
+      for (a in level) runs[level[a]].push(assetMap[a]);
+      // And create the final run map
+      let result = { 'RunSetIsGo': false };
+        if (runs.length > 0) {
+          result = {
+          'runsets': runs,
+          'RunSetIsGo': true,
+          'success': [],
+          'skipped': [],
+          'failure': [],
+          'results': null,
+        }
+      };
+      return (formatRes(200, result))
+    })
+    .catch(err => {
+      throw err;
+    })
+  }
+  catch (err) {
+    return (formatRes(500, JSON.stringify(err, Object.getOwnPropertyNames(err))))
+  }
 }
 
 // Uncomment the below to run locally
