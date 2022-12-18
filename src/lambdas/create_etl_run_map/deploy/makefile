@@ -2,7 +2,7 @@ include ../../../make_variables
 
 variable_files = ../../../account.tfvars ../../lambda.tfvars ./local.tfvars
 config_files = config.tf datablocks.tf variables.tf local.tfvars
-code_files = ../*.py ../requirements.txt
+code_files = ../*.js ../*.json
 
 role_key = \"terraform/bedrock/$(INSTANCE)/roles/bedrock-lambda-role/terraform.tfstate\"\\n
 
@@ -13,10 +13,10 @@ terraform.tfvars: $(variable_files) ../../../make_variables
 
 function.zip: $(code_files)
 	cp -R $(code_files) .
-	rm -Rf ./function.zip ./package
-	sam build --use-container
-	pushd .aws-sam/build/createmap; zip -r9q ../../../function.zip .; popd
-	zip -g function.zip ./*.py
+	rm -f ./function.zip
+	npm install
+	cd node_modules; zip -r9q ../function.zip .; cd ..
+	zip -gq function.zip ./*.js
 
 .PHONY: init
 init: terraform.tfvars
