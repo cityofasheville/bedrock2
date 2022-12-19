@@ -21,6 +21,8 @@ async function getConnectionObject() {
     max: 10,
     idleTimeoutMillis: 10000,
   });
+
+  // If BEDROCK_DB_HOST is not in the environment, assume normal bedrock DB
   if (!('BEDROCK_DB_HOST' in process.env)) {
     return getConnection('nopubrecdb1/bedrock/bedrock_user')
     .then(
@@ -36,31 +38,33 @@ async function getConnectionObject() {
         }
         return connection;
       }
-    );
+    )
+    .catch(err => { // Just pass it on.
+      throw err;
+    });
   }
   return connection;
 }
 
+const pgErrorCodes = require("./pgErrorCodes")
+
 async function readEtlList(connection, rungroup) {
   let etlList = [];
-  try {
-    const client = new Client(connection);
-    await client.connect()
-    .catch((err) => {
-      const pgErrorCodes = require("./pgErrorCodes")
-      let errmsg = pgErrorCodes[err.code]
-      throw new Error([`Postgres error: ${errmsg}`, err]);
-    });
-    console.log('Run group is ', rungroup);
-    let sql = `SELECT * FROM bedrock.etl where run_group = '${rungroup}' and active = true;`;
-    const res = await client.query(sql)
-    etlList = res.rows;
-    await client.end()  
-  }
-  catch(err){
-    console.log('Gotta error');
-    console.log(err);
-  }
+  const client = new Client(connection);
+  await client.connect()
+  .catch((err) => {
+    let errmsg = pgErrorCodes[err.code]
+    throw new Error([`Postgres error: ${errmsg}`, err]);
+  });
+  let sql = `SELECT * FROM bedrock.etl where run_group = '${rungroup}' and active = true;`;
+  const res = await client.query(sql)
+  .catch (err => {
+    let errmsg = pgErrorCodes[err.code]
+    throw new Error([`Postgres error: ${errmsg}`, err]);
+  });
+  etlList = res.rows;
+  await client.end()  
+
   let assetMap = {}
     for (index in etlList) {
       const asset = etlList[index];
@@ -81,6 +85,11 @@ async function readDependencies(connection, assetMap) {
     const asset = assetMap[nm];
     let sql = `SELECT * FROM bedrock.dependencies where asset_name = '${nm}';`;
     const res = await client.query(sql)
+    .catch (err => {
+      let errmsg = pgErrorCodes[err.code]
+      throw new Error([`Postgres error: ${errmsg}`, err]);
+    }
+  );
     for (let i=0; i< res.rowCount; ++i) {
       const d = res.rows[i];
       asset['depends'].push(d['dependency']);
@@ -97,6 +106,10 @@ async function readTasks(connection, assetMap) {
     const asset = assetMap[nm];
     let sql = `SELECT * FROM bedrock.tasks where asset_name = '${nm}' order by seq_number;`;
     const res = await client.query(sql)
+    .catch (err => {
+      let errmsg = pgErrorCodes[err.code]
+      throw new Error([`Postgres error: ${errmsg}`, err]);
+    });
     for (let i=0; i < res.rowCount; ++i) {
       const task = res.rows[i];
       let thisTask = {
@@ -181,15 +194,14 @@ lambda_handler = async function (event, context) {
 }
 
 // Uncomment the below to run locally
-/*
-var event = {'rungroup':'daily'};
-try {
-  ret = lambda_handler(event, context=null);
-}
-catch (err) {
-  console.log('Error calling lambda_handler: ', err);
-}
-*/
+
+// var event = {'rungroup':'daily'};
+// try {
+//   ret = lambda_handler(event, context=null);
+// }
+// catch (err) {
+//   console.log('Error calling lambda_handler: ', err);
+// }
 
 module.exports = {
   lambda_handler
