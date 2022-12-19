@@ -1,11 +1,3 @@
-terraform {
-  backend "s3" {
-    bucket = "ca-tfstate-store"
-    key    = "terraform/bedrock-internal/roles/bedrock-eventbridge-role/terraform_dev.tfstate"
-    region = "us-east-1"
-  }
-}
-
 provider "aws" {
   profile	= var.aws_profile
   region	= var.region

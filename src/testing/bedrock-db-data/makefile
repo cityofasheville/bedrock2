@@ -1,7 +1,7 @@
 include ../../make_variables
-include ../make_variables.local
+-include ../make_variables.generated
 
-.PHONY: seed
+.PHONY: seed init plan apply apply-y destroy db seed
 
 seed:	load_assets.py
 	pip install -r ./requirements.txt

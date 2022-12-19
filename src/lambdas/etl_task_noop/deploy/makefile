@@ -5,7 +5,7 @@ config_files = config.tf datablocks.tf variables.tf local.tfvars
 
 code_files = ../handler.py
 
-role_key = \"terraform/bedrock/$(INSTANCE)/roles/bedrock-lambda-role/terraform_dev.tfstat\"\\n
+role_key = \"terraform/bedrock/$(INSTANCE)/roles/bedrock-lambda-role/terraform.tfstate\"\\n
 
 terraform.tfvars: $(variable_files) ../../../make_variables
 	cat $(variable_files) > terraform.tfvars
@@ -27,6 +27,10 @@ plan: terraform.tfvars $(config_files) function.zip
 .PHONY: apply
 apply: terraform.tfvars $(config_files) function.zip
 	terraform apply
+
+.PHONY: apply-y
+apply-y: terraform.tfvars $(config_files) function.zip
+	terraform apply -auto-approve
 
 .PHONY: destroy
 destroy: terraform.tfvars $(config_files)
