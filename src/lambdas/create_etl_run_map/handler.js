@@ -1,5 +1,6 @@
 const { Client } = require('pg')
 const getConnection = require('./getConnection')
+const toposort = require('toposort');
 
 function formatRes(code, result) {
     return {
@@ -135,12 +136,16 @@ lambda_handler = async function (event, context) {
       const level = {};
       // Set up the array of dependencies and of initial levels
       for (a in assetMap) {
+        let asset = assetMap[a];
         level[a] = 0;
-        graph.push(a);
+        for (let i = 0; i < asset.depends.length; ++i) {
+          graph.push([asset.depends[i], a]);
+        }
       }
+      const sorted = toposort(graph);
       let maxLevel = 0;
-      while (graph.length > 0) {
-        let a = graph.shift();
+      while (sorted.length > 0) {
+        let a = sorted.shift();
         let asset = assetMap[a];
         for (let i = 0; i < asset.depends.length; ++i) {
           let depLevel = level[asset.depends[i]]
