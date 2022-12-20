@@ -101,7 +101,7 @@ Takes files from S3, encrypts them and writes them back to the same dir on S3.
         "type": "encrypt",
         "s3_connection": "s3_data_files",
         "s3_path": "vendor/",
-        "ftp_connection": "vendor_ftp",
+        "encrypt_connection": "vendor_ftp",
         "filename": "vendor_asheville_${YYYY}${MM}${DD}.csv",
         "encrypted_filename": "vendor_asheville_${YYYY}${MM}${DD}.csv.pgp",
         "active": true
