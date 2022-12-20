@@ -172,7 +172,9 @@ lambda_handler = async function (event, context) {
       for (a in level) runs[level[a]].push(assetMap[a]);
       // And create the final run map
       let result = { 'RunSetIsGo': false };
-        if (runs.length > 0) {
+      runs = []; // DELETE THIS
+      console.log('Debugging - do not actually do anything');
+      if (runs.length > 0) {
           result = {
           'runsets': runs,
           'RunSetIsGo': true,

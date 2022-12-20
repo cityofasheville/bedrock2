@@ -21,3 +21,7 @@ resource "aws_sfn_state_machine" "sfn_state_machine-$$INSTANCE$$" {
     etl_email_results_arn:  data.terraform_remote_state.etl_email_results_lambda.outputs.etl_email_results_arn
     })
 }
+
+output "process_etl_run_group_arn" {
+  value = "${aws_sfn_state_machine.sfn_state_machine-$$INSTANCE$$.arn}"
+}
