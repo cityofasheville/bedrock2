@@ -1,4 +1,4 @@
-dirs = bedrock-lambda-role bedrock-stepfunction-role 
+dirs = bedrock-stepfunction-role process_etl_run_group
 
 .PHONY: $(dirs) init plan apply destroy
 

@@ -1,6 +1,6 @@
-dirs = bedrock-lambda-role bedrock-stepfunction-role 
+dirs = bedrock-cron-scheduler bedrock-eventbridge-role
 
-.PHONY: $(dirs) init plan apply destroy
+.PHONY: $(dirs) init plan apply destroy clean
 
 init: $(dirs)
 plan: $(dirs)
