@@ -2,6 +2,7 @@ const { Client } = require('pg')
 const getConnection = require('./getConnection')
 const awsCronParser = require('aws-cron-parser');
 const toposort = require('toposort');
+const TIME_INTERVAL = 15; // Frequency - must match Eventbridge scheduler
 let debug = false;
 
 function formatRes(code, result) {
@@ -154,7 +155,7 @@ async function getRungroups(connection) {
       const cname = res.rows[i]['run_group_name'];
       const cstring = res.rows[i]['cron_string'];
       const cron = awsCronParser.parse(cstring);
-      const minutes = 15;
+      const minutes = TIME_INTERVAL;
       const ms = 1000 * 60 * minutes;
       let curTime = new Date(Math.round(new Date().getTime() / ms) * ms);
       let nextTime = new Date(curTime);
