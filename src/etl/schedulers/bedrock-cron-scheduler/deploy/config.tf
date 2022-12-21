@@ -10,6 +10,8 @@ resource "aws_scheduler_schedule" "bedrock_cron_scheduler-$$INSTANCE$$" {
     mode = "OFF"
   }
 
+  state = "DISABLED"
+
   schedule_expression = "cron(0/15 * * * ? *)"
 
   target {

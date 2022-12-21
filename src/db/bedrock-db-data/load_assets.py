@@ -1,10 +1,11 @@
 import os
 import json
+import csv
 import sys
 import psycopg2
 
 def usage():
-    print('  Usage:  load_assets database-host')
+    print('  Usage:  load_assets database-host [data-directory]')
 
 if len(sys.argv) < 2:
     usage()
@@ -15,6 +16,10 @@ db_name = 'bedrock'
 db_user = 'bedrock'
 db_password = 'test-bedrock'
 
+data_directory = './test_data'
+if (len(sys.argv) > 2):
+  data_directory = sys.argv[2]
+
 conn = psycopg2.connect(
     host = db_host,
     dbname = db_name,
@@ -24,6 +29,7 @@ conn = psycopg2.connect(
 cur = conn.cursor()
 
 print("Database host is ", db_host)
+print("Data directory is ", data_directory)
 
 # clear out old data
 sql = f'''
@@ -31,13 +37,34 @@ sql = f'''
   truncate table bedrock.dependencies;
   truncate table bedrock.etl;
   truncate table bedrock.tasks;
+  truncate table bedrock.run_groups;
 '''
 cur.execute(sql)
+print('Truncated all tables')
 
-assets_directory = './assets'
+# Load the run groups
+sql = 'INSERT INTO bedrock.run_groups (run_group_name,	cron_string) VALUES '
+runGroups = []
+with open(os.path.join(data_directory,'run_groups.csv')) as ff:
+  rdr = csv.reader(ff)
+  
+  i = 0;
+  rows = list(rdr)
+  nrows = len(rows)
+  for row in rows:
+    i = i+1
+    sql = f"{sql} ('{row[0]}', '{row[1]}')"
+    if (i<nrows):
+      sql = sql + ','
+cur.execute(sql)
+print(f'Wrote {nrows} items to the run_groups table')
+
+# Load the assets
+print('Load all assets')
+assets_directory = data_directory + '/assets'
 for asset_name in os.listdir(assets_directory):
   # each asset
-  print('Processing ', asset_name)
+  print('  Processing ', asset_name)
   d = os.path.join(assets_directory, asset_name)
   if os.path.isdir(d):
     for file in os.listdir(d):
