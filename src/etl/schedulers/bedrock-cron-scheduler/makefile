@@ -1,4 +1,4 @@
-include ../../make_variables
+include ../../../make_variables
 
 dirs = build
 .PHONY: $(dirs) init plan apply destroy prebuild
@@ -13,7 +13,7 @@ prebuild:
 	mkdir -p ./build
 
 $(DEST_DIR)/%: $(SRC_DIR)/%
-	python3 ../../scripts/vreplace.py -f ../../make_variables $< $@
+	python3 ../../../scripts/vreplace.py -f ../../../make_variables $< $@
 
 init: prebuild $(TF_TARGS)
 	$(MAKE) -C build $(MAKECMDGOALS)

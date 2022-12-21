@@ -1,6 +1,6 @@
-include ../../../make_variables
+include ../../../../make_variables
 
-variable_files = ../../../account.tfvars ../../events.tfvars ./local.tfvars
+variable_files = ../../../../account.tfvars ../../events.tfvars ./local.tfvars
 config_files = backend.tf datablocks.tf variables.tf config.tf policy.json role.json
 
 terraform.tfvars: $(variable_files)

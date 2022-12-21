@@ -1,11 +1,11 @@
-include ../../../make_variables
+include ../../../../make_variables
 
-variable_files = ../../../account.tfvars ../../scheduler.tfvars ./local.tfvars
+variable_files = ../../../../account.tfvars ../../scheduler.tfvars ./local.tfvars
 config_files = config.tf datablocks.tf variables.tf local.tfvars
 
 role_key = \"terraform/bedrock/$(INSTANCE)/roles/bedrock-lambda-role/terraform.tfstate\"\\n
 
-terraform.tfvars: $(variable_files) ../../../make_variables
+terraform.tfvars: $(variable_files) ../../../../make_variables
 	cat $(variable_files) > terraform.tfvars
 	echo rolekey = $(role_key) >> terraform.tfvars
 	echo statebucket = \"$(statebucket)\" >> terraform.tfvars
