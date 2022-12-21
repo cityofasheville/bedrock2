@@ -7,22 +7,23 @@ Create a file `make_variables` based on `make_variables.prod`. Change INSTANCE t
 
 Then cd into each directory and run ```make``` commands to create the infrastructure.
 
-```
+```bash
 make init
-make plan
 make apply
 ```
-(When you are done you can run ```make destroy``` in each.)
+- You can also use ```apply-y``` instead of ```apply``` without having to reply 'yes' to each step.
+- When you are done you can run ```make destroy``` in each directory.
 
-### Build in correct order
-First create the asset database, in ```src/db/bedrock_db.```  Asset data can be loaded using ```src/db/bedrock_db_data.```
-The create the program in this order.
+### Build everything
+```bash
+cd src/db
+make init
+make apply-y #(Creates database server)
+make db      #(Creates bedrock database)
+make seed    #(Fill database with assets from Github)
+cd ../etl
+make init
+make apply-y
 ```
-src/lambda/roles
-src/lambda
-src/stepfunctions/roles
-src/stepfunctions
-src/events/roles
-src/events
-```
+
 ![directory-structure](./docs/deployment-folders.png)
