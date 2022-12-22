@@ -197,11 +197,17 @@ lambda_handler = async function (event, context) {
       const graph = [];
       const level = {};
       // Set up the array of dependencies and of initial levels
-      for (a in assetMap) {
-        let asset = assetMap[a];
-        level[a] = 0;
+      for (nm in assetMap) {
+        let asset = assetMap[nm];
+        level[nm] = 0;
         for (let i = 0; i < asset.depends.length; ++i) {
-          graph.push([asset.depends[i], a]);
+          // Test here is in case nm depends on an asset that has no etl
+          // job. The dependency information is then not relevant to the
+          // etl run, though it might be important in an application such
+          // as change management.
+          if (asset.depends[i] in assetMap) {
+            graph.push([asset.depends[i], nm]);
+          }
         }
       }
 
