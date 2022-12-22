@@ -1,6 +1,9 @@
 const { Client } = require('pg')
 const getConnection = require('./getConnection')
+const awsCronParser = require('aws-cron-parser');
 const toposort = require('toposort');
+const TIME_INTERVAL = 15; // Frequency - must match Eventbridge scheduler
+let debug = false;
 
 function formatRes(code, result) {
     return {
@@ -48,33 +51,40 @@ async function getConnectionObject() {
 
 const pgErrorCodes = require("./pgErrorCodes")
 
-async function readEtlList(connection, rungroup) {
+async function readEtlList(connection, rungroups) {
   let etlList = [];
-  const client = new Client(connection);
-  await client.connect()
-  .catch((err) => {
-    let errmsg = pgErrorCodes[err.code]
-    throw new Error([`Postgres error: ${errmsg}`, err]);
-  });
-  let sql = `SELECT * FROM bedrock.etl where run_group = '${rungroup}' and active = true;`;
-  const res = await client.query(sql)
-  .catch (err => {
-    let errmsg = pgErrorCodes[err.code]
-    throw new Error([`Postgres error: ${errmsg}`, err]);
-  });
-  etlList = res.rows;
-  await client.end()  
-
-  let assetMap = {}
-    for (index in etlList) {
-      const asset = etlList[index];
-      assetMap[asset['asset_name']] = {
-        'name': asset['asset_name'],
-        'run_group': rungroup,
-        'depends': [],
-        'etl_tasks': [],
-      };
-    }
+  if (rungroups.length > 0) {
+    const client = new Client(connection);
+    await client.connect()
+    .catch((err) => {
+      let errmsg = pgErrorCodes[err.code]
+      throw new Error([`Postgres error: ${errmsg}`, err]);
+    });
+    let rgString = rungroups.reduce(
+        (accumulator, currentValue) => {
+          let sep = (accumulator !== '') ? ', ': ''
+          return accumulator + sep + "'" + currentValue + "'"
+        }, ''
+    );
+    let sql = `SELECT * FROM bedrock.etl where run_group in (${rgString}) and active = true;`;
+    const res = await client.query(sql)
+    .catch (err => {
+      let errmsg = pgErrorCodes[err.code]
+      throw new Error([`Postgres error: ${errmsg}`, err]);
+    });
+    etlList = res.rows;
+    await client.end();
+  }
+  let assetMap = {};
+  for (index in etlList) {
+    const asset = etlList[index];
+    assetMap[asset['asset_name']] = {
+      'name': asset['asset_name'],
+      'run_group': asset['run_group'],
+      'depends': [],
+      'etl_tasks': [],
+    };
+  }
   return Promise.resolve(assetMap);
 }
 
@@ -88,8 +98,8 @@ async function readDependencies(connection, assetMap) {
     .catch (err => {
       let errmsg = pgErrorCodes[err.code]
       throw new Error([`Postgres error: ${errmsg}`, err]);
-    }
-  );
+      }
+    );
     for (let i=0; i< res.rowCount; ++i) {
       const d = res.rows[i];
       asset['depends'].push(d['dependency']);
@@ -134,13 +144,52 @@ async function readTasks(connection, assetMap) {
   return Promise.resolve(assetMap);
 }
 
+async function getRungroups(connection) {
+  const client = new Client(connection);
+  let sql = `SELECT run_group_name,	cron_string FROM bedrock.run_groups;`;
+  await client.connect();
+  return await client.query(sql)
+  .then(res => {
+    const rungroups = [];
+    for (let i = 0; i < res.rowCount; ++i) {
+      const cname = res.rows[i]['run_group_name'];
+      const cstring = res.rows[i]['cron_string'];
+      const cron = awsCronParser.parse(cstring);
+      const minutes = TIME_INTERVAL;
+      const ms = 1000 * 60 * minutes;
+      let curTime = new Date(Math.round(new Date().getTime() / ms) * ms);
+      let nextTime = new Date(curTime);
+      const delta = minutes * 60 * 1000;
+      nextTime.setTime(nextTime.getTime() + delta);
+      let occurrence = awsCronParser.next(cron, curTime);
+      if (occurrence.getTime() < nextTime.getTime()) {
+        rungroups.push(cname);
+      }
+    }
+    if (debug) console.log('Selected rungroups: ', rungroups);
+    return Promise.resolve(rungroups);
+  })
+  .catch (err => {
+    let errmsg = pgErrorCodes[err.code]
+    throw new Error([`Postgres error: ${errmsg}`, err]);
+  });
+
+}
+
 lambda_handler = async function (event, context) {
   let dbConnection = null;
   try {
     const runMap = await getConnectionObject()
-    .then((connection) => {
+    .then(async (connection) => {
+      let rungroups = [event.rungroup];
       dbConnection = connection;
-      return readEtlList(connection, event.rungroup)
+      if (event.rungroup === undefined) {
+        rungroups = await getRungroups(dbConnection);
+      }
+      return Promise.resolve(rungroups);
+    })
+    .then(rungroups => {
+      return readEtlList(dbConnection, rungroups)
     })
     .then(assetMap => readDependencies(dbConnection, assetMap))
     .then(assetMap => readTasks(dbConnection, assetMap))
@@ -155,25 +204,27 @@ lambda_handler = async function (event, context) {
           graph.push([asset.depends[i], a]);
         }
       }
-      const sorted = toposort(graph);
-      let maxLevel = 0;
-      while (sorted.length > 0) {
-        let a = sorted.shift();
-        let asset = assetMap[a];
-        for (let i = 0; i < asset.depends.length; ++i) {
-          let depLevel = level[asset.depends[i]]
-          if (level[a] <= depLevel) level[a] = depLevel + 1;
-          if (level[a] > maxLevel) maxLevel = level[a];
+
+      let runs = [];
+      if (graph.length > 0) {
+        const sorted = toposort(graph);
+        let maxLevel = 0;
+        while (sorted.length > 0) {
+          let a = sorted.shift();
+          let asset = assetMap[a];
+          for (let i = 0; i < asset.depends.length; ++i) {
+            let depLevel = level[asset.depends[i]]
+            if (level[a] <= depLevel) level[a] = depLevel + 1;
+            if (level[a] > maxLevel) maxLevel = level[a];
+          }
         }
+        // Now gather into groups of runsets
+        runs = new Array(maxLevel + 1);
+        for (let i = 0; i<maxLevel + 1; ++i) runs[i] = [];
+        for (a in level) runs[level[a]].push(assetMap[a]);
       }
-      // Now gather into groups of runsets
-      let runs = new Array(maxLevel + 1);
-      for (let i = 0; i<maxLevel + 1; ++i) runs[i] = [];
-      for (a in level) runs[level[a]].push(assetMap[a]);
       // And create the final run map
       let result = { 'RunSetIsGo': false };
-      runs = []; // DELETE THIS
-      console.log('Debugging - do not actually do anything');
       if (runs.length > 0) {
           result = {
           'runsets': runs,
@@ -184,26 +235,32 @@ lambda_handler = async function (event, context) {
           'results': null,
         }
       };
-      return (formatRes(200, result))
+
+      const finalResult = (formatRes(200, result));
+      if (debug) console.log(JSON.stringify(finalResult));
+      return Promise.resolve(finalResult);
     })
     .catch(err => {
       throw err;
     })
   }
   catch (err) {
-    return (formatRes(500, JSON.stringify(err, Object.getOwnPropertyNames(err))))
+    let res = formatRes(500, JSON.stringify(err, Object.getOwnPropertyNames(err)));
+    if (debug) console.log('Error: ', res);
+    return Promise.resolve(res);
   }
 }
+/* Uncomment next statement to run locally */
+// debug = 1;
+let event = {};
+// event = {'rungroup':'daily'};
+if (debug) {
+  (async () => {
+    await lambda_handler(event, context=null);
+    process.exit();
+  })();
+}
 
-// Uncomment the below to run locally
-
-// var event = {'rungroup':'daily'};
-// try {
-//   ret = lambda_handler(event, context=null);
-// }
-// catch (err) {
-//   console.log('Error calling lambda_handler: ', err);
-// }
 
 module.exports = {
   lambda_handler
