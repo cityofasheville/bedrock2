@@ -1,6 +1,0 @@
-1. Should abort an ETL job if any task fails. So we need 2 changes:
-    a. Either figure out how to stop the map or add a choice
-       which calls a "skip task" like "Unknown"
-    b. Change the logic in update_run_map to break out of the loop on the first task fail.
-
-2. Change all resources in Bedrock to use a single external role.

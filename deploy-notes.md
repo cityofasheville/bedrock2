@@ -15,13 +15,24 @@ make apply
 - When you are done you can run ```make destroy``` in each directory.
 
 ### Build everything
-```bash
+```sh
 cd src/db
 make init
 make apply-y #(Creates database server)
 make db      #(Creates bedrock database)
 make seed    #(Fill database with assets from Github)
 cd ../etl
+make init
+make apply-y
+```
+
+### Build one Lambda
+```sh
+# Make sure you create the role needed first
+cd src/etl/bedrock-lambda-role
+make init
+make apply-y
+cd ../etl_task_sql  #(for example)
 make init
 make apply-y
 ```
