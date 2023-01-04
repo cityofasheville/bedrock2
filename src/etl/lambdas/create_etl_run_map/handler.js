@@ -221,6 +221,10 @@ lambda_handler = async function (event, context) {
       runs = new Array(maxLevel + 1);
       for (let i = 0; i < maxLevel + 1; ++i) runs[i] = [];
       for (a in level) runs[level[a]].push(assetMap[a]);
+    }else{
+      for( asset in assetMap ) {
+        runs.push([assetMap[asset]]);
+      }
     }
     // And create the final run map
     let result = { 'RunSetIsGo': false };
