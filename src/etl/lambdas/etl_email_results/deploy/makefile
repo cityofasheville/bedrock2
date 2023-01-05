@@ -2,7 +2,7 @@ include ../../../../make_variables
 
 variable_files = ../../../../account.tfvars ../../lambda.tfvars ./local.tfvars
 config_files = config.tf datablocks.tf variables.tf local.tfvars
-code_files = ../*.js ../*.json
+code_files = ../*.js ../*.json ../*.pug
 
 role_key = \"terraform/bedrock/$(INSTANCE)/roles/bedrock-lambda-role/terraform.tfstate\"\\n
 
@@ -16,7 +16,7 @@ function.zip: $(code_files)
 	rm -f ./function.zip
 	npm install
 	cd node_modules; zip -r9q ../function.zip .; cd ..
-	zip -gq function.zip ./*.js
+	zip -gq function.zip ./*.js ./*.pug
 
 .PHONY: init
 init: terraform.tfvars
