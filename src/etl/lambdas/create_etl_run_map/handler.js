@@ -8,9 +8,7 @@ let debug = false;
 function formatRes(code, result) {
   return {
     'statusCode': code,
-    'body': {
-      "lambda_output": result
-    }
+    'body': result
   }
 }
 
