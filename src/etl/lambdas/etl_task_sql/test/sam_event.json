@@ -11,7 +11,7 @@
     "etl_tasks": [
       {
         "type": "sql",
-        "file": "fill_owner_names.sql",XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+        "sql_string": "select * from foo",
         "connection": "pubrecdb1/mdastore1/dbadmin",
         "active": true
       }
