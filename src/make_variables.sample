@@ -3,6 +3,7 @@ region = "us-east-1"
 statebucket = "avl-tfstate-store"
 account = 518970837364
 email_recipients = "['dummy@ashevillenc.gov']"
+build_mode = std
 
 reverse = $(if $(1),$(call reverse,$(wordlist 2,$(words $(1)),$(1)))) $(firstword $(1))
 
