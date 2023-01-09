@@ -6,7 +6,8 @@ Resources:
   filecopy:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: ../src
+      CodeUri: .
+#      CodeUri: ..
       Runtime: python3.8
       Handler: handler.lambda_handler
       Timeout: 600
