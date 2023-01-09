@@ -2,7 +2,7 @@ include ../../../../make_variables
 
 variable_files = ../../../../account.tfvars ../../lambda.tfvars ./local.tfvars
 config_files = config.tf datablocks.tf variables.tf local.tfvars
-code_files = ../*.py ../requirements.txt ./template.yaml
+code_files = ../*.py ../requirements.txt
 
 role_key = \"terraform/bedrock/$(INSTANCE)/roles/bedrock-lambda-role/terraform.tfstate\"\\n
 
@@ -19,7 +19,7 @@ ifeq ($(build_mode),sam)
 	pushd .aws-sam/build/filecopy; zip -r9q ../../../function.zip . -x \*terraform\*; popd
 else
 		pip install -r requirements.txt --target ./package
-		cd package; zip -r9q ../../../function.zip . -x \*terraform\*; cd ..
+		cd package; zip -r9q ../function.zip . -x \*terraform\*; cd ..
 		zip -g function.zip ./*.py
 endif
 
