@@ -14,9 +14,14 @@ terraform.tfvars: $(variable_files) ../../../../make_variables
 function.zip: $(code_files)
 	cp -R $(code_files) .
 	rm -Rf ./function.zip ./package
-	pip install -r requirements.txt --target ./package
-	cd package; zip -r9 ../function.zip .; cd ..
-	zip -g function.zip ./*.py
+ifeq ($(build_mode),sam)
+	sam build --use-container
+	pushd .aws-sam/build/filecopy; zip -r9q ../../../function.zip . -x \*terraform\*; popd
+else
+		pip install -r requirements.txt --target ./package
+		cd package; zip -r9q ../function.zip . -x \*terraform\*; cd ..
+		zip -g function.zip ./*.py
+endif
 
 .PHONY: init
 init: terraform.tfvars

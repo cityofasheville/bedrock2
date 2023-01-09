@@ -4,6 +4,7 @@ Included scripts will build a complete copy of Bedrock on AWS, including the ass
 You will need AdministratorAccess command line permissions to AWS.
 
 Create a file `make_variables` based on `make_variables.prod`. Change INSTANCE to a unique name for your instance, and set the region and account info.
+The variable build_mode can be set to "std" if deploying from Linux or "sam" to use a container. This is needed for two Python Lambdas that need Linux native compilation targets for encryption used by the paramiko package.
 
 Then cd into each directory and run ```make``` commands to create the infrastructure.
 

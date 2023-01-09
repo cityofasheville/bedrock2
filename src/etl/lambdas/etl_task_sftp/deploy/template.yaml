@@ -6,7 +6,7 @@ Resources:
   ftppy:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: ../src
+      CodeUri: $$codeuri$$
       Runtime: python3.8
       Handler: handler.lambda_handler
       Timeout: 600
