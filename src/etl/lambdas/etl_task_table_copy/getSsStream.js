@@ -1,26 +1,26 @@
 const sql = require('mssql')
 const csv = require('csv')
 var MultiStream = require('multistream')
-const { getPool } = require('./ssPools')
+const { getPool } = require('./ssPools');
 
 async function getSsStream(location) {
-	return new Promise( function (resolve, reject) {
-		sql.on('error', err => {
-			reject(err)
-		})
-		try {
-			if (location.fromto === 'source_location') {
+	if (location.fromto === 'source_location') {
+		return new Promise(function (resolve, reject) {
+			sql.on('error', err => {
+				reject(err)
+			})
+			try {
 				const arrayOfSQL = []
 				let nonObjStream
 				const tablename = `[${location.schemaname}].[${location.tablename}]`
 				const connInfo = location.conn_info
 				const poolName = location.connection
-				const copy_since_query = location.copy_since 
+				const copy_since_query = location.copy_since
 					? ` WHERE [${location.copy_since.column_to_filter}] >= DATEADD(WW,${location.copy_since.num_weeks * -1}, GETDATE() ) `
 					: ""
-				const orderby = location.sortdesc 
+				const orderby = location.sortdesc
 					? ` order by [${location.sortdesc}] desc `
-					: location.sortasc 
+					: location.sortasc
 						? ` order by [${location.sortasc}] asc `
 						: ""
 				if (location.tableheaders) {
@@ -64,61 +64,60 @@ async function getSsStream(location) {
 					if (connInfo.parameters.encrypt === false) config.options.encrypt = false // for <= SQL 2008
 				}
 				getPool(poolName, config)
-				.then(pool => {
-					const arrayOfStreams = arrayOfSQL.map((sqlString, index) => {
-						const request = pool.request()
+					.then(pool => {
+						const arrayOfStreams = arrayOfSQL.map((sqlString, index) => {
+							const request = pool.request()
 
-						request.stream = true
+							request.stream = true
 
-						request.query(sqlString)
+							request.query(sqlString)
 
-						request.on('error', err => {
-							reject(err)
-						})
-						if (index === 0) {
-							nonObjStream = request
-								.pipe(csv.stringify({
-									quote: ""
-								}))
-						} else {
-							let stringify_options = {
-								cast: {
-									date: (date) => {
-										return date.toISOString()
+							request.on('error', err => {
+								reject(err)
+							})
+							if (index === 0) {
+								nonObjStream = request
+									.pipe(csv.stringify({
+										quote: ""
+									}))
+							} else {
+								let stringify_options = {
+									cast: {
+										date: (date) => {
+											return date.toISOString()
+										},
+										boolean: (value) => {
+											return value ? '1' : '0'
+										}
 									},
-									boolean: (value) => {
-										return value ? '1' : '0'
-									}
-								},
-								quoted_match: /\r/ // csv.stringify already checks for \n and \r\n. Our data has \r too. ¯\_(ツ)_/¯
+									quoted_match: /\r/ // csv.stringify already checks for \n and \r\n. Our data has \r too. ¯\_(ツ)_/¯
+								}
+								if (location.fixedwidth_noquotes) {
+									stringify_options.quote = ""
+								}
+								nonObjStream = request
+									.pipe(csv.stringify(stringify_options))
 							}
-							if(location.fixedwidth_noquotes) { 
-								stringify_options.quote = ""
-							}
-							nonObjStream = request
-								.pipe(csv.stringify(stringify_options))
-						}
-						return nonObjStream
+							return nonObjStream
+						})
+
+						console.log('Copy from SQL Server: ', location.connection, tablename)
+						const retStream = new MultiStream(arrayOfStreams)
+
+						retStream.on('done', result => {
+							console.log('SQL Server rows affected: ' + result.rowsAffected);
+						})
+
+						resolve({ stream: retStream, promise: Promise.resolve() });
 					})
-
-					console.log('Copy from SQL Server: ', location.connection, tablename)
-					const retStream = new MultiStream(arrayOfStreams)
-
-					retStream.on('done', result => {
-						console.log('SQL Server rows affected: ' + result.rowsAffected)
-					})
-
-					resolve(retStream)
-				})
-
-
-			} else if (location.fromto === 'target_location') {
-				reject(new Error("SQL Server 'To' not implemented"))
+			} catch (err) {
+				reject(new Error('SQL Server stream error ' + err))
 			}
-		} catch (err) {
-			reject(new Error('SQL Server stream error ' + err))
-		}
-	})
+		});
+	}
+	else if (location.fromto === 'target_location') {
+		reject(new Error("SQL Server 'To' not implemented"))
+	}
 }
 
 module.exports = getSsStream

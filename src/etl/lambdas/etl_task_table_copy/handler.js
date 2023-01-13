@@ -6,12 +6,9 @@ const getGoogleStream = require('./getGoogleStream')
 const streamDebug = require('./streamDebug')
 const getConnection = require('./getConnection')
 
-const util = require('util')
-const stream = require('stream');
-const pipeline = util.promisify(stream.pipeline);
+const { pipeline } = require('node:stream/promises'); //nodejs 16+
 
 exports.lambda_handler = async function (event, context) {
-  let s3promise = Promise.resolve(); //For types other than s3 we just resolve immediately
   const task = new Promise((resolve) => {
     try {
       const etl = event.ETLJob.etl_tasks[event.TaskIndex]
@@ -24,29 +21,30 @@ exports.lambda_handler = async function (event, context) {
         ]
 
         Promise.all(locations.map(async (eachloc) => {
+          let streamObject;
           eachloc.location = etl[eachloc.name]
           eachloc.location.fromto = eachloc.name
           eachloc.location.conn_info = await getConnection(eachloc.location.connection)
-          if(etl.copy_since) {
+          if (etl.copy_since) {
             eachloc.location.copy_since = etl.copy_since
-          }          
+          }
 
           if (eachloc.location.conn_info.type === 'postgresql') {
-            eachloc.stream = await getPgStream(eachloc.location)
+            streamObject = await getPgStream(eachloc.location);
           } else if (eachloc.location.conn_info.type === 'sqlserver') {
-            eachloc.stream = await getSsStream(eachloc.location)
+            streamObject = await getSsStream(eachloc.location);
           } else if (eachloc.location.conn_info.type === 'google_sheets') {
-            eachloc.stream = await getGoogleStream(eachloc.location)
+            streamObject = await getGoogleStream(eachloc.location);
           } else if (eachloc.location.conn_info.type === 's3') {
-            let s3obj = getS3Stream(eachloc.location);  //returns both stream and promise
-            eachloc.stream = s3obj.s3stream;
-            s3promise = s3obj.promise;
+            streamObject = getS3Stream(eachloc.location);
           } else {
             resolve({
               statusCode: 500, body:
                 { lambda_output: 'Invalid connection type: ' + eachloc.location.conn_info.type }
             })
           }
+          eachloc.stream = streamObject.stream;
+          eachloc.promise = streamObject.promise;
 
           return eachloc
         }))
@@ -56,15 +54,18 @@ exports.lambda_handler = async function (event, context) {
               // streamDebug,
               locations[1].stream)
               .then(() => {
-                s3promise
+                locations[0].promise
                   .then(() => {
-                    resolve({
-                      statusCode: 200,
-                      body: {
-                        lambda_output: output_msg(etl.target_location)
-                      }
-                    })
-                  })
+                    locations[1].promise
+                      .then(() => {
+                        resolve({
+                          statusCode: 200,
+                          body: {
+                            lambda_output: output_msg(etl.target_location)
+                          }
+                        });
+                      });
+                  });
               })
               .catch(err => {
                 resolve(returnError(err))

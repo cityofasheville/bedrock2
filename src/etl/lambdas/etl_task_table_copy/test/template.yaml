@@ -6,21 +6,7 @@ Resources:
   TableCopy:
     Type: AWS::Serverless::Function
     Properties:
-      Runtime: nodejs14.x
+      Runtime: nodejs18.x
       Handler: handler.lambda_handler
       Timeout: 80
       CodeUri: ..
-  Test:
-    Type: AWS::Serverless::Function
-    Properties:
-      Runtime: nodejs14.x
-      Handler: test-callback-racing.lambda_handler
-      Timeout: 40
-      CodeUri: ..  
-  So:
-    Type: AWS::Serverless::Function
-    Properties:
-      Runtime: nodejs14.x
-      Handler: so.handler
-      Timeout: 40
-      CodeUri: ..  

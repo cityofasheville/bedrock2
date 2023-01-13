@@ -28,7 +28,7 @@ function getS3Stream (location) {
         })
         let promise = upload.done()
         console.log('Copy to S3 Bucket: ', bucket, s3Key)
-        return({s3stream,promise})
+        return({stream: s3stream, promise})
       }
     } catch (err) {
       console.log('err::', err)

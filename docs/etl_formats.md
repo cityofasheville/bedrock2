@@ -52,8 +52,8 @@ Also see [Managed Data Assets README](https://github.com/cityofasheville/managed
 
 #### CSV -S3
             "connection": "s3_data_files",
-            "filepath": "/tmp/data.csv",
-            "headerrow": 1
+            "filename": "users${YYYY}${MM}${DD}.csv",
+            "s3_path": "safetyskills/"
 
 #### google_sheets
             "connection": "bedrock-googlesheets",
