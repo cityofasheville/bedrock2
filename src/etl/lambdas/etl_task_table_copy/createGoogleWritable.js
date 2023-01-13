@@ -57,6 +57,5 @@ module.exports = async function createGoogleWritable (location) {
     }
     done()
   }
-
-  return googleStream
+  return { stream: googleStream, promise: Promise.resolve() };
 }

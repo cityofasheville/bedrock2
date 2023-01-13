@@ -38,4 +38,4 @@ make init
 make apply-y
 ```
 
-![directory-structure](./docs/deployment-folders.png)
+![directory-structure](./deployment-folders.png)

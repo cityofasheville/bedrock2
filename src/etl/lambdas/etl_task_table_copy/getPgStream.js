@@ -64,7 +64,7 @@ function getPgStream (location) {
             stream.on('error', err => { client.end(); reject(err) })
             stream.on('end', () => { client.end() })
             console.log('Copy from Postgres: ', location.connection, tablename)
-            resolve(stream)
+            resolve({ stream, promise: Promise.resolve() });
           } else if (location.fromto === 'target_location') {
             // create empty temp table
             const createtempString = `SELECT * INTO TEMP ${tempTablename} FROM ${tablename} WHERE 1=2;`
@@ -82,7 +82,7 @@ function getPgStream (location) {
                 stream.on('finish', copyFromTemp)
 
                 console.log('Copy to Postgres: ', location.connection, tablename)
-                resolve(stream)
+                resolve({ stream, promise: Promise.resolve() });
               })
           }
         })

@@ -9,19 +9,14 @@
       {
         "type": "table_copy",
         "source_location": {
-          "connection": "pubrecdb1/mdastore1/dbadmin",
-          "schemaname": "internal",
-          "tablename": "tempjunk",
-          "sortdesc": "From"
+          "connection": "localss",
+          "schemaname": "dbo",
+          "tablename": "frum"
         },
         "target_location": {
-          "connection": "pubrecdb1/mdastore1/dbadmin",
-          "schemaname": "internal",
-          "tablename": "tempjunk2"
-        },
-        "copy_since" : {
-            "num_weeks": 12,
-            "column_to_filter": "From"
+          "connection": "localss",
+          "schemaname": "dbo",
+          "tablename": "too"
         },
         "active": true
       }
