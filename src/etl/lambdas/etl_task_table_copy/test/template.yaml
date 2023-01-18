@@ -6,7 +6,7 @@ Resources:
   TableCopy:
     Type: AWS::Serverless::Function
     Properties:
-      Runtime: nodejs18.x
+      Runtime: nodejs16.x
       Handler: handler.lambda_handler
       Timeout: 80
       CodeUri: ..

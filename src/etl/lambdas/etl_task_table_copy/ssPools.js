@@ -1,30 +1,28 @@
-const sql = require('mssql')
+const sql = require('mssql');
 
-const pools = {}
+const pools = {};
 
 // SQL Server Advanced Pool Management https://github.com/tediousjs/node-mssql#advanced-pool-management
-async function getPool (name, config) {
+async function getPool(name, config) {
   if (!Object.prototype.hasOwnProperty.call(pools, name)) {
-    const pool = new sql.ConnectionPool(config)
-    const close = pool.close.bind(pool)
+    const pool = new sql.ConnectionPool(config);
+    const close = pool.close.bind(pool);
     pool.close = (...args) => {
-      delete pools[name]
-      return close(...args)
-    }
-    await pool.connect()
-    pools[name] = pool
+      delete pools[name];
+      return close(...args);
+    };
+    await pool.connect();
+    pools[name] = pool;
   }
-  return pools[name]
+  return pools[name];
 }
 
 // close all pools
-function closeAllPools () {
-  return Promise.all(Object.values(pools).map((pool) => {
-    return pool.close()
-  }))
+function closeAllPools() {
+  return Promise.all(Object.values(pools).map((pool) => pool.close()));
 }
 
 module.exports = {
   closeAllPools,
-  getPool
-}
+  getPool,
+};

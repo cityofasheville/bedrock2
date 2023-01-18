@@ -8,7 +8,7 @@ resource "aws_lambda_function" "etl_task_encrypt-$$INSTANCE$$" {
     description     = "Encrypts files read from and write back to S3."
     role            = data.terraform_remote_state.lambda_role.outputs.bedrock_lambda_role_arn
     handler         = "handler.lambda_handler"
-    runtime         = "nodejs14.x"
+    runtime         = "nodejs16.x"
     source_code_hash = filebase64sha256("function.zip")
     timeout         = 900
     vpc_config {

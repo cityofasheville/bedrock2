@@ -1,24 +1,34 @@
 {
   "JobIsGo": true,
   "ETLJob": {
-    "name": "aetna",
+    "name": "local",
     "depends": [],
-    "path": "store/assets/aetna/aetna.json",
     "run_group": "tues_night",
     "etl_tasks": [
       {
         "type": "sftp",
-        "description": "Copy Aetna S3 to FTP site",
+        "description": "local",
         "action": "put",
         "s3_connection": "s3_data_files",
-        "s3_path": "aetna/",
-        "ftp_connection": "aetna_ftp",
-        "ftp_path": "/AetnaSRC_Reports/toAetna/",
-        "filename": "aetna_asheville_${YYYY}${MM}${DD}.csv",
+        "s3_path": "test/",
+        "ftp_connection": "localsftp",
+        "ftp_path": "/Users/sftp_user/",
+        "filename": "frum.csv",
+        "active": true
+      },
+      {
+        "type": "sftp",
+        "description": "local",
+        "action": "get",
+        "s3_connection": "s3_data_files",
+        "s3_path": "test2/",
+        "ftp_connection": "localsftp",
+        "ftp_path": "/Users/sftp_user/",
+        "filename": "frum.csv",
         "active": true
       }
     ]
   },
-  "TaskIndex": 0,
+  "TaskIndex": 1,
   "JobType": "sftp"
 }

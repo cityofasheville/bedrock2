@@ -6,17 +6,16 @@
       "bc_property_account_master",
       "bc_property"
     ],
-    "path": "store/assets/bc_property_pinnum_formatted_owner_names/bc_property_pinnum_formatted_owner_names.json",
     "run_group": "tues_night",
     "etl_tasks": [
       {
         "type": "sql",
-        "sql_string": "select * from foo",
-        "connection": "pubrecdb1/mdastore1/dbadmin",
+        "sql_string": "update dbo.toot set field1 = 'thistoot';",
+        "connection": "localss",
         "active": true
       }
     ]
   },
   "TaskIndex": 0,
-  "JobType": "table_copy"
+  "JobType": "sql"
 }
