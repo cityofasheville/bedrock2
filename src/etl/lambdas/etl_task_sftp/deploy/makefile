@@ -16,7 +16,7 @@ function.zip: $(code_files)
 	rm -Rf ./function.zip ./package
 ifeq ($(build_mode),sam)
 	sam build --use-container
-	pushd .aws-sam/build/filecopy; zip -r9q ../../../function.zip . -x \*terraform\*; popd
+	pushd .aws-sam/build/ftppy; zip -r9q ../../../function.zip . -x \*terraform\*; popd
 else
 		pip install -r requirements.txt --target ./package
 		cd package; zip -r9q ../function.zip . -x \*terraform\*; cd ..
