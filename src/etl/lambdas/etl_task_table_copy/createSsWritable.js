@@ -1,11 +1,12 @@
+/* eslint-disable no-console */
 const sql = require('mssql');
 const csv = require('csv');
 const { getPool } = require('./ssPools');
 
 async function createSsWritable(location) {
   const tablename = `[${location.schemaname}].[${location.tablename}]`;
-  const tempTablename = `[${location.schemaname}].[tempbedrock_${location.tablename}]`;
-  // const tempTablename = `[#tempbedrock_${location.tablename}]`;
+  // const tempTablename = `[${location.schemaname}].[tempbedrock_${location.tablename}]`;
+  const tempTablename = `[#tempbedrock_${location.tablename}]`;
   const dropTempQuery = `IF OBJECT_ID('${tempTablename}', 'U') IS NOT NULL DROP TABLE ${tempTablename}`;
   const copySinceQuery = location.copy_since
     ? ` where [${location.copy_since.column_to_filter}] >= dateadd(WEEK,-${location.copy_since.num_weeks},GETDATE())`
@@ -16,7 +17,6 @@ async function createSsWritable(location) {
   const timeout = 900_000; // 15 min
   const recordsToLoad = 100_000;
   let promiseResolve;
-  let promiseReject;
 
   const config = {
     server: connInfo.host,
@@ -72,7 +72,7 @@ async function createSsWritable(location) {
   }
 
   // loadTempTable: Load batch of rows into temp table
-  function loadTempTable(tableArr) {
+  function loadTempTable(tableArr, numCols) {
     return new Promise((resolve, reject) => {
       try {
         // create a generic temp table with same number of cols as target.
@@ -94,7 +94,6 @@ async function createSsWritable(location) {
           console.log('Bulk results: ', res);
           resolve(0);
         });
-
       } catch (err) {
         console.log('Table load error: ', err);
         reject(err);
@@ -124,7 +123,7 @@ async function createSsWritable(location) {
       }
       tableArr.push(record);
       if (tableArr.length >= recordsToLoad) {
-        resPromiseArr.push(loadTempTable(tableArr));
+        resPromiseArr.push(loadTempTable(tableArr, numCols));
         tableArr = [];
       }
     }
@@ -134,9 +133,9 @@ async function createSsWritable(location) {
     console.error(err.message);
   });
 
-  SsStream.on('finish', () => {   // 'end' is readable event, 'finish' is writable event
+  SsStream.on('finish', () => { // 'end' is readable event, 'finish' is writable event
     if (tableArr.length > 0) {
-      resPromiseArr.push(loadTempTable(tableArr));
+      resPromiseArr.push(loadTempTable(tableArr, numCols));
     }
     Promise.all(resPromiseArr)
       .then(() => {
@@ -144,16 +143,15 @@ async function createSsWritable(location) {
       })
       .then(() => {
         promiseResolve();
-      })
+      });
   });
   console.log(`Copy to SQL Server ${location.connection} ${tablename}`);
 
   // Return the results promise immediatly, but resolve when all data is copied.
-  const promise = new Promise((resolve, reject) => {
+  const promise = new Promise((resolve) => {
     promiseResolve = resolve;
-    promiseReject = reject;
   });
-  
+
   return { promise, stream: SsStream };
 }
 

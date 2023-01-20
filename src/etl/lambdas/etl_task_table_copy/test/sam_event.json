@@ -9,14 +9,14 @@
       {
         "type": "table_copy",
         "source_location": {
-          "connection": "localss",
-          "schemaname": "dbo",
-          "tablename": "frum"
+          "connection": "s3_data_files",
+          "filename": "frum.csv",
+          "s3_path": "test/"
         },
         "target_location": {
-          "connection": "localss",
-          "schemaname": "dbo",
-          "tablename": "too"
+          "connection": "s3_data_files",
+          "filename": "too.csv",
+          "s3_path": "test/"
         },
         "active": true
       }
@@ -24,6 +24,4 @@
   },
   "TaskIndex": 0,
   "JobType": "table_copy"
-
-
 }
