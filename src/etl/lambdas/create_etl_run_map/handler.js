@@ -5,7 +5,7 @@ const toposort = require('toposort');
 const getConnection = require('./getConnection');
 
 const TIME_INTERVAL = 15; // Frequency - must match Eventbridge scheduler
-// eslint-disable-next-line prefer-const
+
 let debug = false;
 
 function formatRes(code, result) {
@@ -74,28 +74,25 @@ async function readEtlList(connection, rungroups) {
     etlList = res.rows;
     await client.end();
   }
+
   const assetMap = {};
-  // eslint-disable-next-line no-restricted-syntax, guard-for-in
-  for (const index in etlList) {
-    const asset = etlList[index];
+  etlList.values().forEach((asset) => {
     assetMap[asset.asset_name] = {
       name: asset.asset_name,
       run_group: asset.run_group,
       depends: [],
       etl_tasks: [],
     };
-  }
+  });
   return Promise.resolve(assetMap);
 }
 
 async function readDependencies(connection, assetMap) {
   const client = new Client(connection);
   await client.connect();
-  // eslint-disable-next-line no-restricted-syntax, guard-for-in
-  for (const nm in assetMap) {
-    const asset = assetMap[nm];
-    const sql = `SELECT * FROM bedrock.dependencies where asset_name = '${nm}';`;
-    // eslint-disable-next-line no-await-in-loop
+  assetMap.entries.forEach(async (e) => {
+    const asset = e[1];
+    const sql = `SELECT * FROM bedrock.dependencies where asset_name = '${e[0]}';`;
     const res = await client.query(sql)
       .catch((err) => {
         const errmsg = pgErrorCodes[err.code];
@@ -105,7 +102,7 @@ async function readDependencies(connection, assetMap) {
       const d = res.rows[i];
       asset.depends.push(d.dependency);
     }
-  }
+  });
   await client.end();
   return Promise.resolve(assetMap);
 }
@@ -113,11 +110,11 @@ async function readDependencies(connection, assetMap) {
 async function readTasks(connection, assetMap) {
   const client = new Client(connection);
   await client.connect();
-  // eslint-disable-next-line no-restricted-syntax, guard-for-in
-  for (const nm in assetMap) {
-    const asset = assetMap[nm];
-    const sql = `SELECT * FROM bedrock.tasks where asset_name = '${nm}' order by seq_number;`;
-    // eslint-disable-next-line no-await-in-loop
+
+  assetMap.entries.forEach(async (e) => {
+    const asset = e[1];
+    const sql = `SELECT * FROM bedrock.tasks where asset_name = '${e[0]}' order by seq_number;`;
+
     const res = await client.query(sql)
       .catch((err) => {
         const errmsg = pgErrorCodes[err.code];
@@ -129,7 +126,7 @@ async function readTasks(connection, assetMap) {
         type: task.type,
         active: task.active,
       };
-      if (task.type === 'table_copy' || task.type == 'file_copy') {
+      if (task.type === 'table_copy' || task.type === 'file_copy') {
         thisTask.source_location = task.source;
         thisTask.target_location = task.target;
       } else if (task.type === 'sql') {
@@ -140,7 +137,7 @@ async function readTasks(connection, assetMap) {
       }
       asset.etl_tasks.push(thisTask);
     }
-  }
+  });
   await client.end();
   return Promise.resolve(assetMap);
 }
@@ -191,20 +188,19 @@ const lambda_handler = async function x(event) {
     const graph = [];
     const level = {};
     // Set up the array of dependencies and of initial levels
-    // eslint-disable-next-line no-restricted-syntax, guard-for-in
-    for (const nm in assetMap) {
-      const asset = assetMap[nm];
-      level[nm] = 0;
+    assetMap.entries().forEach((e) => {
+      const asset = e[1];
+      level[e[0]] = 0;
       for (let i = 0; i < asset.depends.length; i += 1) {
         // Test here is in case nm depends on an asset that has no etl
         // job. The dependency information is then not relevant to the
         // etl run, though it might be important in an application such
         // as change management.
         if (asset.depends[i] in assetMap) {
-          graph.push([asset.depends[i], nm]);
+          graph.push([asset.depends[i], e[0]]);
         }
       }
-    }
+    });
 
     let runs = [];
     if (graph.length > 0) {
@@ -222,13 +218,11 @@ const lambda_handler = async function x(event) {
       // Now gather into groups of runsets
       runs = new Array(maxLevel + 1);
       for (let i = 0; i < maxLevel + 1; i += 1) runs[i] = [];
-      // eslint-disable-next-line no-restricted-syntax, guard-for-in
-      for (const a in level) runs[level[a]].push(assetMap[a]);
+      level.keys().forEach((a) => runs[level[a]].push(assetMap[a]));
     } else {
-      // eslint-disable-next-line no-restricted-syntax, guard-for-in
-      for (const asset in assetMap) {
-        runs.push([assetMap[asset]]);
-      }
+      assetMap.values().forEach((asset) => {
+        runs.push([asset]);
+      });
     }
     // And create the final run map
     let result = { RunSetIsGo: false };
@@ -252,8 +246,8 @@ const lambda_handler = async function x(event) {
     return res;
   }
 };
-/* Uncomment next statement to run locally */
-// debug = 1;
+/* Set debug to true to run locally */
+debug = false;
 const event = {};
 // event = { rungroup: 'daily' };
 if (debug) {
