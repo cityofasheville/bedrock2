@@ -76,33 +76,37 @@ async function readEtlList(connection, rungroups) {
   }
 
   const assetMap = {};
-  etlList.values().forEach((asset) => {
+  const arr = Object.values(etlList);
+  for (let i = 0; i < arr.length; i += 1) {
+    const asset = arr[i];
     assetMap[asset.asset_name] = {
       name: asset.asset_name,
       run_group: asset.run_group,
       depends: [],
       etl_tasks: [],
     };
-  });
+  }
   return Promise.resolve(assetMap);
 }
 
 async function readDependencies(connection, assetMap) {
   const client = new Client(connection);
   await client.connect();
-  assetMap.entries.forEach(async (e) => {
-    const asset = e[1];
-    const sql = `SELECT * FROM bedrock.dependencies where asset_name = '${e[0]}';`;
+  const arr = Object.entries(assetMap);
+  for (let i = 0; i < arr.length; i += 1) {
+    const asset = arr[i][1];
+    const sql = `SELECT * FROM bedrock.dependencies where asset_name = '${arr[i][0]}';`;
+    // eslint-disable-next-line no-await-in-loop
     const res = await client.query(sql)
       .catch((err) => {
         const errmsg = pgErrorCodes[err.code];
         throw new Error([`Postgres error: ${errmsg}`, err]);
       });
-    for (let i = 0; i < res.rowCount; i += 1) {
-      const d = res.rows[i];
+    for (let j = 0; j < res.rowCount; j += 1) {
+      const d = res.rows[j];
       asset.depends.push(d.dependency);
     }
-  });
+  }
   await client.end();
   return Promise.resolve(assetMap);
 }
@@ -111,17 +115,19 @@ async function readTasks(connection, assetMap) {
   const client = new Client(connection);
   await client.connect();
 
-  assetMap.entries.forEach(async (e) => {
-    const asset = e[1];
-    const sql = `SELECT * FROM bedrock.tasks where asset_name = '${e[0]}' order by seq_number;`;
+  const arr = Object.entries(assetMap);
+  for (let i = 0; i < arr.length; i += 1) {
+    const asset = arr[i][1];
+    const sql = `SELECT * FROM bedrock.tasks where asset_name = '${arr[i][0]}' order by seq_number;`;
 
+    // eslint-disable-next-line no-await-in-loop
     const res = await client.query(sql)
       .catch((err) => {
         const errmsg = pgErrorCodes[err.code];
         throw new Error([`Postgres error: ${errmsg}`, err]);
       });
-    for (let i = 0; i < res.rowCount; i += 1) {
-      const task = res.rows[i];
+    for (let j = 0; j < res.rowCount; j += 1) {
+      const task = res.rows[j];
       let thisTask = {
         type: task.type,
         active: task.active,
@@ -137,7 +143,7 @@ async function readTasks(connection, assetMap) {
       }
       asset.etl_tasks.push(thisTask);
     }
-  });
+  }
   await client.end();
   return Promise.resolve(assetMap);
 }
@@ -188,7 +194,7 @@ const lambda_handler = async function x(event) {
     const graph = [];
     const level = {};
     // Set up the array of dependencies and of initial levels
-    assetMap.entries().forEach((e) => {
+    Object.entries(assetMap).forEach((e) => {
       const asset = e[1];
       level[e[0]] = 0;
       for (let i = 0; i < asset.depends.length; i += 1) {
@@ -218,9 +224,9 @@ const lambda_handler = async function x(event) {
       // Now gather into groups of runsets
       runs = new Array(maxLevel + 1);
       for (let i = 0; i < maxLevel + 1; i += 1) runs[i] = [];
-      level.keys().forEach((a) => runs[level[a]].push(assetMap[a]));
+      Object.keys(level).forEach((a) => runs[level[a]].push(assetMap[a]));
     } else {
-      assetMap.values().forEach((asset) => {
+      Object.values(assetMap).forEach((asset) => {
         runs.push([asset]);
       });
     }
@@ -247,10 +253,10 @@ const lambda_handler = async function x(event) {
   }
 };
 /* Set debug to true to run locally */
-debug = false;
-const event = {};
-// event = { rungroup: 'daily' };
+debug = true;
+let event = {};
 if (debug) {
+  event = { rungroup: 'daily' };
   (async () => {
     await lambda_handler(event);
     process.exit();
