@@ -253,7 +253,7 @@ const lambda_handler = async function x(event) {
   }
 };
 /* Set debug to true to run locally */
-debug = true;
+debug = false;
 let event = {};
 if (debug) {
   event = { rungroup: 'daily' };
