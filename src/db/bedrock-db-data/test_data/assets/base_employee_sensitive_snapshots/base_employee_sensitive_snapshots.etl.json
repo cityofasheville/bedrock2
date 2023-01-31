@@ -1,0 +1,11 @@
+{
+  "run_group": "monthly",
+  "tasks": [
+    {
+      "type": "sql",
+      "file": "fill_snapshot_table.sql",
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "active": true
+    }
+  ]
+}

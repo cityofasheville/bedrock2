@@ -8,6 +8,11 @@ function.zip
 data/
 bedrock_connections.json
 
+# Other additions
+.DS_Store
+# Terraform-specific
+terraform.tfvars
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

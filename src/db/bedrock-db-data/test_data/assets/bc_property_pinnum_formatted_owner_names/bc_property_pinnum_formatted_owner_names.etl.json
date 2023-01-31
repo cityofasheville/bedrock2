@@ -1,0 +1,12 @@
+{
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "sql",
+      "file": "fill_owner_names.sql",
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "active": true
+    }
+  ]
+}
+

@@ -1,0 +1,28 @@
+{
+  "name": "table_copy",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.87.0",
+    "@aws-sdk/lib-storage": "^3.87.0",
+    "aws-sdk": "^2.963.0",
+    "csv": "^5.5.0",
+    "googleapis": "^84.0.0",
+    "mssql": "^8.1.2",
+    "multistream": "^4.1.0",
+    "pg": "^8.7.1",
+    "pg-copy-streams": "^5.1.1"
+  },
+  "description": "",
+  "devDependencies": {
+    "eslint": "^8.32.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.27.5"
+  }
+}

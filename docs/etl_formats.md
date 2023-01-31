@@ -52,8 +52,8 @@ Also see [Managed Data Assets README](https://github.com/cityofasheville/managed
 
 #### CSV -S3
             "connection": "s3_data_files",
-            "filepath": "/tmp/data.csv",
-            "headerrow": 1
+            "filename": "users${YYYY}${MM}${DD}.csv",
+            "s3_path": "safetyskills/"
 
 #### google_sheets
             "connection": "bedrock-googlesheets",
@@ -101,7 +101,7 @@ Takes files from S3, encrypts them and writes them back to the same dir on S3.
         "type": "encrypt",
         "s3_connection": "s3_data_files",
         "s3_path": "vendor/",
-        "ftp_connection": "vendor_ftp",
+        "encrypt_connection": "vendor_ftp",
         "filename": "vendor_asheville_${YYYY}${MM}${DD}.csv",
         "encrypted_filename": "vendor_asheville_${YYYY}${MM}${DD}.csv.pgp",
         "active": true

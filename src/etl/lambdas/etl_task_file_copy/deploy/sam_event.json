@@ -1,0 +1,27 @@
+{
+  "JobIsGo": true,
+  "ETLJob": {
+    "name": "xxx",
+    "depends": [],
+    "run_group": "tues_night",
+    "etl_tasks": [
+      {
+        "type": "file_copy",
+        "description": "Copy Safety Skills S3 to FTP site",
+        "target_location": {
+          "connection": "s3_data_files",
+          "filename": "test66.csv",
+          "path": "safetyskills/"
+        },
+        "source_location": {
+          "connection": "safetyskills_ftp",
+          "filename": "test6.csv",
+          "path": "/35408/"
+        },
+        "active": true
+      }
+    ]
+  },
+  "TaskIndex": 0,
+  "JobType": "file_copy"
+}

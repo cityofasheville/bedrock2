@@ -1,0 +1,34 @@
+{
+  "JobIsGo": true,
+  "ETLJob": {
+    "name": "local",
+    "depends": [],
+    "run_group": "tues_night",
+    "etl_tasks": [
+      {
+        "type": "sftp",
+        "description": "local",
+        "action": "put",
+        "s3_connection": "s3_data_files",
+        "s3_path": "test/",
+        "ftp_connection": "localsftp",
+        "ftp_path": "/Users/sftp_user/",
+        "filename": "frum.csv",
+        "active": true
+      },
+      {
+        "type": "sftp",
+        "description": "local",
+        "action": "get",
+        "s3_connection": "s3_data_files",
+        "s3_path": "test2/",
+        "ftp_connection": "localsftp",
+        "ftp_path": "/Users/sftp_user/",
+        "filename": "frum.csv",
+        "active": true
+      }
+    ]
+  },
+  "TaskIndex": 1,
+  "JobType": "sftp"
+}

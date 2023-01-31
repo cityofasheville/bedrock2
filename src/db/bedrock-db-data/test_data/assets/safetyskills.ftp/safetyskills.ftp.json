@@ -1,0 +1,8 @@
+{
+    "name": "safetyskills.ftp",
+    "location": "ftp_site",
+    "active": true,
+    "type": "ftp_site",
+    "description": "Uploaded staff data to Safety Skills",
+    "depends": []
+  }

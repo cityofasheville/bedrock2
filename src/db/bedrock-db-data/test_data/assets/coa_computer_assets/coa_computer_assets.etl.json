@@ -1,0 +1,26 @@
+{
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "noop",
+      "note": "Bedrock does not yet read MySQL, so first step is an FME job on coa-gis-fme2: copy KASE to internal.coa_computer_assets. Runs at 11:00 PM",
+      "active": true
+    },
+    {
+      "type": "table_copy",
+      "source_location": {
+        "connection": "pubrecdb1/mdastore1/dbadmin",
+        "schemaname": "internal",
+        "tablename": "coa_computer_assets"
+      },
+      "target_location": {
+        "filename": "coa_computer_assets",
+        "connection": "bedrock-googlesheets",
+        "spreadsheetid": "1P9tdY7lawwoZXJmn09UgRMgH7JoauYG8h00MEkGzv8Q",
+        "range": "ComputerAssets!A2:AO",
+        "append": false
+      },
+      "active": true
+    }
+  ]
+}

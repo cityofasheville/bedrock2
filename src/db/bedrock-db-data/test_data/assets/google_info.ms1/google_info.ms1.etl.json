@@ -1,0 +1,19 @@
+{
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "source_location": {
+          "connection": "munis/munprod/mssqlgisadmin",
+          "schemaname": "avl",
+          "tablename": "Google_Info"
+      },
+      "target_location": {
+          "connection": "pubrecdb1/mdastore1/dbadmin",
+          "schemaname": "internal",
+          "tablename": "google_info"
+      },
+      "active": true
+    }
+  ]
+}

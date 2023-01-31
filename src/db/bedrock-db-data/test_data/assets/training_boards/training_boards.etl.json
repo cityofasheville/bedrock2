@@ -1,0 +1,21 @@
+{
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "source_location": {
+          "filename": "Boards+Commission Member Training",
+          "connection": "bedrock-googlesheets",
+          "spreadsheetid": "1Efr6hn24-9e4eENkZy3Y_8uaYlYqFv4Iz2uqzrUwuRw",
+          "range": "Member Training!A2:F"
+      },
+      "target_location": {
+          "connection": "pubrecdb1/mdastore1/dbadmin",
+          "schemaname": "internal",
+          "tablename": "training_boards",
+          "append_serial": "objectid"
+        },
+      "active": true
+    }
+  ]
+}

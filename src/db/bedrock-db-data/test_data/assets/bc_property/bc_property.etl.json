@@ -1,0 +1,19 @@
+{
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "source_location": {
+          "connection": "coa-gis-edit1/coagisedit/coagis",
+          "schemaname": "coagis",
+          "tablename": "bc_property"
+      },
+      "target_location": {
+          "connection": "pubrecdb1/mdastore1/dbadmin",
+          "schemaname": "internal",
+          "tablename": "bc_property"
+      },
+      "active": true
+    }
+  ]
+}

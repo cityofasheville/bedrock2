@@ -1,0 +1,10 @@
+{
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "noop",
+      "note": "Just to make create a 'successful' ETL run for dependency purposes",
+      "active": true
+    }
+  ]
+}

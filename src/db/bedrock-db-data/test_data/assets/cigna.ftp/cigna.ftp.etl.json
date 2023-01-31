@@ -1,0 +1,36 @@
+{
+  "run_group": "cigna",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "description": "Copy Cigna to S3",
+      "source_location": {
+        "connection": "munis/munprod/fme_jobs",
+        "schemaname": "avl",
+        "tablename": "PR_CIGNA_Feed_2",
+        "fixedwidth_noquotes": true
+      },
+      "target_location": {
+        "connection": "s3_data_files",
+        "filename": "XO16000__xo10001i.77103.${YYYY}${MM}${DD}.txt",
+        "s3_path": "cigna/"
+      },
+      "active": true
+    },
+    {
+      "type": "file_copy",
+      "description": "Copy Cigna S3 to FTP site",
+      "source_location": {
+        "connection": "s3_data_files",
+        "filename": "XO16000__xo10001i.77103.${YYYY}${MM}${DD}.txt",
+        "path": "cigna/"
+      },
+      "target_location": {
+        "connection": "cigna_ftp",
+        "filename": "XO16000__xo10001i.77103.${YYYY}${MM}${DD}.txt",
+        "path": "/Outbox/"
+      },
+      "active": true
+    }
+  ]
+}
