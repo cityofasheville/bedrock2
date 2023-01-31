@@ -52,7 +52,6 @@
       "Type": "Fail",
       "Cause": "Not Hello World"
     },
-
     "EmailResults": {
       "Comment": "Send Results Email",
       "Type": "Task",
@@ -60,7 +59,6 @@
       "ResultPath": "$.TaskOutput",
       "Next": "Done"
     },
-
     "Done": {
       "Type": "Succeed"
     },
@@ -140,49 +138,112 @@
             "Type": "Task",
             "Resource": "${etl_task_noop_arn}",
             "ResultPath": "$.TaskOutput",
-            "Next": "CheckTaskStatus"
+            "Next": "CheckTaskStatus",
+            "Catch": [
+              {
+                "ErrorEquals": [
+                  "States.TaskFailed"
+                ],
+                "Next": "CheckTaskStatus",
+                "ResultPath": "$.TaskOutput"
+              }
+            ]
           },
           "SQLTask": {
             "Comment": "Run SQL Command",
             "Type": "Task",
             "Resource": "${etl_task_sql_arn}",
             "ResultPath": "$.TaskOutput",
-            "Next": "CheckTaskStatus"
+            "Next": "CheckTaskStatus",
+            "Catch": [
+              {
+                "ErrorEquals": [
+                  "States.TaskFailed"
+                ],
+                "Next": "CheckTaskStatus",
+                "ResultPath": "$.TaskOutput"
+              }
+            ]
           },
           "TableCopyTask": {
             "Comment": "Copy Table",
             "Type": "Task",
             "Resource": "${etl_task_table_copy_arn}",
             "ResultPath": "$.TaskOutput",
-            "Next": "CheckTaskStatus"
+            "Next": "CheckTaskStatus",
+            "Catch": [
+              {
+                "ErrorEquals": [
+                  "States.TaskFailed"
+                ],
+                "Next": "CheckTaskStatus",
+                "ResultPath": "$.TaskOutput"
+              }
+            ]
           },
           "SFTPTask": {
             "Comment": "Copy SFTP files",
             "Type": "Task",
             "Resource": "${etl_task_sftp_arn}",
             "ResultPath": "$.TaskOutput",
-            "Next": "CheckTaskStatus"
+            "Next": "CheckTaskStatus",
+            "Catch": [
+              {
+                "ErrorEquals": [
+                  "States.TaskFailed"
+                ],
+                "Next": "CheckTaskStatus",
+                "ResultPath": "$.TaskOutput"
+              }
+            ]
           },
           "EncryptTask": {
             "Comment": "Encrypt S3 file with PGP",
             "Type": "Task",
             "Resource": "${etl_task_encrypt_arn}",
             "ResultPath": "$.TaskOutput",
-            "Next": "CheckTaskStatus"
+            "Next": "CheckTaskStatus",
+            "Catch": [
+              {
+                "ErrorEquals": [
+                  "States.TaskFailed"
+                ],
+                "Next": "CheckTaskStatus",
+                "ResultPath": "$.TaskOutput"
+              }
+            ]
           },
           "FileCopyTask": {
             "Comment": "Copy Files",
             "Type": "Task",
             "Resource": "${etl_task_file_copy_arn}",
             "ResultPath": "$.TaskOutput",
-            "Next": "CheckTaskStatus"
+            "Next": "CheckTaskStatus",
+            "Catch": [
+              {
+                "ErrorEquals": [
+                  "States.TaskFailed"
+                ],
+                "Next": "CheckTaskStatus",
+                "ResultPath": "$.TaskOutput"
+              }
+            ]
           },
           "UnknownTask": {
             "Comment": "Unknown task type.",
             "Type": "Task",
             "Resource": "${etl_task_unknown_arn}",
             "ResultPath": "$.TaskOutput",
-            "Next": "CheckTaskStatus"
+            "Next": "CheckTaskStatus",
+            "Catch": [
+              {
+                "ErrorEquals": [
+                  "States.TaskFailed"
+                ],
+                "Next": "CheckTaskStatus",
+                "ResultPath": "$.TaskOutput"
+              }
+            ]
           },
           "CheckTaskStatus": {
             "Comment": "Check the status of the last task.",
@@ -194,11 +255,11 @@
             "ResultPath": "$",
             "OutputPath": "$.body",
             "Next": "ProcessOneETLJob"
-          }, 
+          },
           "TasksDone": {
             "Type": "Pass",
             "End": true,
-            "ResultPath": "$.results"      
+            "ResultPath": "$.results"
           }
         }
       }
