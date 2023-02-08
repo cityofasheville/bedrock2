@@ -6,14 +6,12 @@ resource "aws_iam_role" "bedrock-eventbridge-role-$$INSTANCE$$" {
     name = "bedrock-eventbridge-role-$$INSTANCE$$"
     assume_role_policy = file("./role.json")
     tags = {
-        Name          = "bedrock-eventbridge-role-$$INSTANCE$$"
-        Application   = "bedrock"
-        Environment   = "development"
-        TechnicalLead = "custom-dev"
-        SupportLead   = "tbd"
-        Department    = "citywide"
-        DataClass     = "confidential"
-        Description   = "Role used by Bedrock eventbridge step function events."
+      Name          = "bedrock-eventbridge-role-$$INSTANCE$$"
+      "coa:application" = "bedrock"
+      "coa:department"  = "information-technology"
+      "coa:owner"       = "jtwilson@ashevillenc.gov"
+      "coa:owner-team"  = "dev"
+      Description   = "Role used by Bedrock eventbridge step function events."
     }
 }
 

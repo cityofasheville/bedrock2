@@ -10,6 +10,12 @@ resource "aws_lambda_function" "create_etl_run_map-$$INSTANCE$$" {
     runtime         = "nodejs16.x"
     source_code_hash = filebase64sha256("function.zip")
     timeout         = 900
+    tags = {
+      "coa:application" = "bedrock"
+      "coa:department"  = "information-technology"
+      "coa:owner"       = "jtwilson@ashevillenc.gov"
+      "coa:owner-team"  = "dev"
+    }
     vpc_config {
       subnet_ids         = var.subnet_ids
       security_group_ids = var.security_group_ids

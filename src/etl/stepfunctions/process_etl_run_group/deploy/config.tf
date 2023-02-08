@@ -20,6 +20,12 @@ resource "aws_sfn_state_machine" "sfn_state_machine-$$INSTANCE$$" {
     check_etl_job_task_status_arn:  data.terraform_remote_state.check_etl_job_task_status_lambda.outputs.check_etl_job_task_status_arn,
     etl_email_results_arn:  data.terraform_remote_state.etl_email_results_lambda.outputs.etl_email_results_arn
     })
+    tags = {
+      "coa:application" = "bedrock"
+      "coa:department"  = "information-technology"
+      "coa:owner"       = "jtwilson@ashevillenc.gov"
+      "coa:owner-team"  = "dev"
+    }
 }
 
 output "process_etl_run_group_arn" {
