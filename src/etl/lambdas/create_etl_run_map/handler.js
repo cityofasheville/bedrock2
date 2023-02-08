@@ -162,10 +162,10 @@ async function getRungroups(connection) {
         const minutes = TIME_INTERVAL;
         const ms = 1000 * 60 * minutes;
         const curTime = new Date();
-        const prevOccurenceMS = (awsCronParser.prev(cron, curTime)).getTime();
-        const nextOccurrenceMS = prevOccurenceMS + ms;
-
-        if (nextOccurrenceMS >= curTime.getTime()) {
+        const latestPreviousTimeMS = (awsCronParser.prev(cron, curTime)).getTime();
+        const endPreviousTimeSlot = latestPreviousTimeMS + ms;
+        // See if current time falls within TIME_INTERVAL following the latest run time
+        if (endPreviousTimeSlot >= curTime.getTime()) {
           rungroups.push(cname);
         }
       }

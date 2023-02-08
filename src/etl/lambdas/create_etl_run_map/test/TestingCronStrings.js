@@ -20,13 +20,13 @@ for (let i = 0; i < 5; i += 1) {
     const minutes = TIME_INTERVAL;
     const ms = 1000 * 60 * minutes;
     // const curTime = new Date();
-    const prevOccurenceMS = (awsCronParser.prev(cron, curTime)).getTime();
-    const nextOccurrenceMS = prevOccurenceMS + ms;
-
-    if (nextOccurrenceMS >= curTime.getTime()) {
-      console.log('yes', cstring, new Date(prevOccurenceMS).toLocaleString(), curTime.toLocaleString(), new Date(nextOccurrenceMS).toLocaleString());
+    const latestPreviousTimeMS = (awsCronParser.prev(cron, curTime)).getTime();
+    const endPreviousTimeSlot = latestPreviousTimeMS + ms;
+    // See if current time falls within TIME_INTERVAL following the latest run time
+    if (endPreviousTimeSlot >= curTime.getTime()) {
+      console.log('yes', cstring, new Date(latestPreviousTimeMS).toLocaleString(), curTime.toLocaleString(), new Date(endPreviousTimeSlot).toLocaleString());
     } else {
-      console.log('no-', cstring, new Date(prevOccurenceMS).toLocaleString(), curTime.toLocaleString(), new Date(nextOccurrenceMS).toLocaleString());
+      console.log('no-', cstring, new Date(latestPreviousTimeMS).toLocaleString(), curTime.toLocaleString(), new Date(endPreviousTimeSlot).toLocaleString());
     }
   });
   console.log('====================');
