@@ -1,7 +1,25 @@
 {
   "Comment": "State machine to run a single ETL run group",
-  "StartAt": "Init",
+  "StartAt": "CheckForRunGroup",
   "States": {
+    "CheckForRunGroup": {
+      "Comment": "See if rungroup is set",
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.rungroup",
+          "IsPresent": true,
+          "Next": "Init"
+        }
+      ],
+      "Default": "AddRunGroupFlag"
+    },
+    "AddRunGroupFlag": {
+      "Type": "Pass",
+      "Result": "UseCronStrings",
+      "ResultPath": "$.rungroup",
+      "Next": "Init"
+    },
     "Init": {
       "Comment": "Initialize the run map.",
       "Type": "Task",

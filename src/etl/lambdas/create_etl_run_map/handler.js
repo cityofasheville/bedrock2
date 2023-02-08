@@ -161,12 +161,11 @@ async function getRungroups(connection) {
         const cron = awsCronParser.parse(cstring);
         const minutes = TIME_INTERVAL;
         const ms = 1000 * 60 * minutes;
-        const curTime = new Date(Math.round(new Date().getTime() / ms) * ms);
-        const nextTime = new Date(curTime);
-        const delta = minutes * 60 * 1000;
-        nextTime.setTime(nextTime.getTime() + delta);
-        const occurrence = awsCronParser.next(cron, curTime);
-        if (occurrence.getTime() < nextTime.getTime()) {
+        const curTime = new Date();
+        const prevOccurenceMS = (awsCronParser.prev(cron, curTime)).getTime();
+        const nextOccurrenceMS = prevOccurenceMS + ms;
+
+        if (nextOccurrenceMS >= curTime.getTime()) {
           rungroups.push(cname);
         }
       }
@@ -184,7 +183,7 @@ const lambda_handler = async function x(event) {
   try {
     const dbConnection = await getConnectionObject();
     let rungroups = [event.rungroup];
-    if (event.rungroup === undefined) {
+    if (event.rungroup === 'UseCronStrings') {
       rungroups = await getRungroups(dbConnection);
     }
     let assetMap = await readEtlList(dbConnection, rungroups);
@@ -256,7 +255,7 @@ const lambda_handler = async function x(event) {
 debug = false;
 let event = {};
 if (debug) {
-  event = { rungroup: 'daily' };
+  event = { rungroup: 'UseCronStrings' };
   (async () => {
     await lambda_handler(event);
     process.exit();
