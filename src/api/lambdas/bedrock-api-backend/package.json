@@ -1,8 +1,8 @@
 {
-  "name": "create_etl_run_map",
+  "name": "bedrock-api-backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "handler.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -10,11 +10,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "aws-cron-parser": "^1.1.12",
     "aws-sdk": "^2.1275.0",
     "mssql": "^6.2.1",
-    "pg": "^8.3.0",
-    "toposort": "^2.0.2"
+    "pg": "^8.3.0"
   },
   "devDependencies": {
     "eslint": "^8.32.0",

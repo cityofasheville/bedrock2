@@ -2,9 +2,9 @@ provider "aws" {
   region	= var.region
 }
 
-resource "aws_lambda_function" "create_etl_run_map-$$INSTANCE$$" {
+resource "aws_lambda_function" "bedrock-api-backend-$$INSTANCE$$" {
     filename        = "function.zip"
-    function_name   = "create_etl_run_map-$$INSTANCE$$"
+    function_name   = "bedrock-api-backend-$$INSTANCE$$"
     role            = data.terraform_remote_state.lambda_role.outputs.bedrock_lambda_role_arn
     handler         = "handler.lambda_handler"
     runtime         = "nodejs16.x"
@@ -22,6 +22,6 @@ resource "aws_lambda_function" "create_etl_run_map-$$INSTANCE$$" {
     }
 }
 
-output "create_etl_run_map_arn" {
-  value = "${aws_lambda_function.create_etl_run_map-$$INSTANCE$$.arn}"
+output "bedrock-api-backend_arn" {
+  value = "${aws_lambda_function.bedrock-api-backend-$$INSTANCE$$.arn}"
 }
