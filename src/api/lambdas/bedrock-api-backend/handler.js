@@ -1,8 +1,9 @@
 /* eslint-disable no-console */
-const { Client } = require('pg');
 const getConnection = require('./getConnection');
+const pgErrorCodes = require('./pgErrorCodes');
 
-let debug = false;
+const handleAssets = require('./handleAssets');
+const handleRungroups = require('./handleRungroups');
 
 async function getConnectionObject() {
   let connection = Promise.resolve({
@@ -39,66 +40,55 @@ async function getConnectionObject() {
   return connection;
 }
 
-const pgErrorCodes = require('./pgErrorCodes');
-
-function handleAssets(event, pathElements, verb) {
-  return {
-    body: `Yay I got the verb ${verb}`,
-  };
-}
-
 // eslint-disable-next-line camelcase
 const lambda_handler = async function x(event) {
-  let time = 'day';
-  let responseCode = 200;
-  let result = { body: 'No result' };
-  console.log(`request: ${JSON.stringify(event)}`);
+  /* This is the default response for anything we don't recognize.
+   * I'm not certain about whether I need to set cookies, headers, or
+   * isBase64Encoded or whether I'm doing it right.
+   */
+  let response = {
+    cookies: event.cookies,
+    isBase64Encoded: event.isBase64Encoded,
+    statusCode: 404,
+    headers: event.headers,
+    body: 'Unknown resource',
+  };
+  let result;
+  const connection = getConnectionObject();
 
-  // Parse event.path to pick up the elements of path
+  // Parse event.path to pick up the path elements and verb
   const pathElements = event.requestContext.http.path.substring(1).split('/');
+  const queryParams = event.queryStringParameters;
   const verb = event.requestContext.http.method;
+
+  // First path element identifies the resource
   switch (pathElements[0]) {
-    case 'helloworld':
-      result = handleAssets(event, pathElements, verb);
+    case 'rungroups':
+      try {
+        result = handleRungroups(event, pathElements, queryParams, verb, connection);
+      } catch (e) {
+        response.body = e;
+        response.statusCode = 500;
+        return response;
+      }
       break;
+
     case 'assets':
-      result = handleAssets(event, pathElements, verb);
+      try {
+        result = handleAssets(event, pathElements, queryParams, verb, connection);
+      } catch (e) {
+        response.body = e;
+        response.statusCode = 500;
+        return response;
+      }
       break;
+
     default:
-      console.log('I do not know what is happening!');
+      console.log('Unknown path ', pathElements[0]);
+      return response;
   }
 
-  if (event.body) {
-    const body = JSON.parse(event.body);
-    if (body.time) time = body.time;
-    console.log('Got the time: ', time);
-    responseCode = 300;
-  }
-
-  const greeting = 'Hello';
-
-  const responseBody = {
-    elements: pathElements,
-    result,
-    message: greeting,
-    input: event,
-  };
-
-  // The output from a Lambda proxy integration must be
-  // in the following JSON object. The 'headers' property
-  // is for custom response headers in addition to standard
-  // ones. The 'body' property  must be a JSON string. For
-  // base64-encoded payload, you must also set the 'isBase64Encoded'
-  // property to 'true'.
-  const response = {
-    statusCode: responseCode,
-    headers: {
-      'x-custom-header': 'my custom header value',
-    },
-    body: JSON.stringify(responseBody),
-  };
-  console.log(`response: ${JSON.stringify(response)}`);
-  return response;
+  return result;
 };
 
 module.exports = {
