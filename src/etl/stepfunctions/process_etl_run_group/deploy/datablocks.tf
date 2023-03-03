@@ -98,6 +98,14 @@ data "terraform_remote_state" "etl_task_file_copy_lambda" {
   }
 }
 
+data "terraform_remote_state" "etl_task_run_lambda" {
+  backend = "s3"
+  config = {
+    bucket = var.statebucket
+    key    = "terraform/bedrock/$$INSTANCE$$/lambdas/etl_task_run_lambda/terraform.tfstate"
+    region = var.region
+  }
+}
 data "terraform_remote_state" "etl_task_unknown_lambda" {
   backend = "s3"
   config = {
