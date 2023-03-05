@@ -34,6 +34,21 @@ async function getAsset(pathElements, queryParams, connection) {
   return result;
 }
 
+async function addAsset(requestBody, pathElements, queryParams, connection) {
+  const result = {
+    error: false,
+    message: '',
+    result: null,
+  };
+
+  // In postman send request data as raw JSON body
+  result.message = 'Add asset not implemented';
+  result.error = true;
+  result.result = requestBody;
+
+  return result;
+}
+
 // eslint-disable-next-line no-unused-vars
 async function handleAssets(event, pathElements, queryParams, verb, connection) {
   let result = {
@@ -57,8 +72,7 @@ async function handleAssets(event, pathElements, queryParams, verb, connection) 
           break;
 
         case 'POST':
-          result.message = 'Add asset not implemented';
-          result.error = true;
+          result = await addAsset(event.body, pathElements, queryParams, connection);
           break;
 
         case 'PUT':
