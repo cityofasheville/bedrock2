@@ -20,6 +20,11 @@ resource "aws_lambda_function" "bedrock-api-backend-$$INSTANCE$$" {
       subnet_ids         = var.subnet_ids
       security_group_ids = var.security_group_ids
     }
+    environment {
+      variables = {
+        BEDROCK_DB_HOST = $$BEDROCK_DB_HOST$$
+      }
+    }
 }
 
 output "bedrock-api-backend_arn" {
