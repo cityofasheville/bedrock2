@@ -168,6 +168,21 @@ SFTP has mostly been superseded by file copy, which has more potential source an
         }
 
 ```
+## Run Lambda
+Note: Called Lambda must return standard format: ```{statusCode: 200,body: {lambda_output: ""}}```
+```
+{
+    "run_group": "daily",
+    "tasks": [
+        {
+            "type": "run_lambda",
+            "lambda_arn": "arn:aws:lambda:us-east-1:acct:function:functionname",
+            "otherparams: "params required by called lambda",
+            "active": true
+        }
+    ]
+}
+```
 ## No-op
 ```
 {

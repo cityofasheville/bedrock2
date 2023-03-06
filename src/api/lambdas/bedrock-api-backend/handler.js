@@ -1,6 +1,5 @@
 /* eslint-disable no-console */
 const getConnection = require('./getConnection');
-const pgErrorCodes = require('./pgErrorCodes');
 
 const handleAssets = require('./handleAssets');
 const handleRungroups = require('./handleRungroups');
@@ -42,19 +41,12 @@ async function getConnectionObject() {
 
 // eslint-disable-next-line camelcase
 const lambda_handler = async function x(event) {
-  /* This is the default response for anything we don't recognize.
-   * I'm not certain about whether I need to set cookies, headers, or
-   * isBase64Encoded or whether I'm doing it right.
-   */
-  let response = {
-    cookies: event.cookies,
-    isBase64Encoded: event.isBase64Encoded,
-    statusCode: 404,
-    headers: event.headers,
-    body: 'Unknown resource',
+  let result = {
+    error: true,
+    message: 'Unknown resource',
+    result: null,
   };
-  let result;
-  const connection = getConnectionObject();
+  const connection = await getConnectionObject();
 
   // Parse event.path to pick up the path elements and verb
   const pathElements = event.requestContext.http.path.substring(1).split('/');
@@ -67,25 +59,21 @@ const lambda_handler = async function x(event) {
       try {
         result = handleRungroups(event, pathElements, queryParams, verb, connection);
       } catch (e) {
-        response.body = e;
-        response.statusCode = 500;
-        return response;
+        result.message = e;
       }
       break;
 
     case 'assets':
       try {
-        result = handleAssets(event, pathElements, queryParams, verb, connection);
+        result = await handleAssets(event, pathElements, queryParams, verb, connection);
       } catch (e) {
-        response.body = e;
-        response.statusCode = 500;
-        return response;
+        result.message = e;
       }
       break;
 
     default:
       console.log('Unknown path ', pathElements[0]);
-      return response;
+      break;
   }
 
   return result;
