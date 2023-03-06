@@ -147,6 +147,11 @@
                 "Variable": "$.JobType",
                 "StringEquals": "file_copy",
                 "Next": "FileCopyTask"
+              },
+              {
+                "Variable": "$.JobType",
+                "StringEquals": "run_lambda",
+                "Next": "RunLambdaTask"
               }
             ],
             "Default": "UnknownTask"
@@ -235,6 +240,22 @@
             "Comment": "Copy Files",
             "Type": "Task",
             "Resource": "${etl_task_file_copy_arn}",
+            "ResultPath": "$.TaskOutput",
+            "Next": "CheckTaskStatus",
+            "Catch": [
+              {
+                "ErrorEquals": [
+                  "States.TaskFailed"
+                ],
+                "Next": "CheckTaskStatus",
+                "ResultPath": "$.TaskOutput"
+              }
+            ]
+          },
+          "RunLambdaTask": {
+            "Comment": "Run outside Lambda",
+            "Type": "Task",
+            "Resource": "${etl_task_run_lambda_arn}",
             "ResultPath": "$.TaskOutput",
             "Next": "CheckTaskStatus",
             "Catch": [
