@@ -1,45 +1,11 @@
 /* eslint-disable no-console */
-const getConnection = require('./getConnection');
+// Disabling import/no-unresolved because the dependency as defined
+// in package.json only works in the build subdirectory.
+// eslint-disable-next-line import/no-unresolved
+const { getDBConnection } = require('bedrock_common');
 
 const handleAssets = require('./handleAssets');
 const handleRungroups = require('./handleRungroups');
-
-async function getConnectionObject() {
-  let connection = Promise.resolve({
-    host: process.env.BEDROCK_DB_HOST || 'localhost',
-    port: 5432,
-    user: process.env.BEDROCK_DB_USER || 'bedrock',
-    password: process.env.BEDROCK_DB_PASSWORD || 'test-bedrock',
-    database: process.env.BEDROCK_DB_NAME || 'bedrock',
-    max: 10,
-    idleTimeoutMillis: 10000,
-  });
-
-  // If BEDROCK_DB_HOST is not in the environment, assume normal bedrock DB
-  if (!('BEDROCK_DB_HOST' in process.env)
-      || process.env.BEDROCK_DB_HOST === null
-      || process.env.BEDROCK_DB_HOST.trim().length === 0) {
-    return getConnection('nopubrecdb1/bedrock/bedrock_user')
-      .then(
-        (cpValue) => {
-          connection = {
-            host: cpValue.host,
-            port: cpValue.port,
-            user: cpValue.username,
-            password: cpValue.password,
-            database: cpValue.database,
-            max: 10,
-            idleTimeoutMillis: 10000,
-          };
-          return connection;
-        },
-      )
-      .catch((err) => { // Just pass it on.
-        throw err;
-      });
-  }
-  return connection;
-}
 
 // eslint-disable-next-line camelcase
 const lambda_handler = async function x(event) {
@@ -48,7 +14,7 @@ const lambda_handler = async function x(event) {
     message: 'Unknown resource',
     result: null,
   };
-  const connection = await getConnectionObject();
+  const connection = await getDBConnection();
 
   // Parse event.path to pick up the path elements and verb
   const pathElements = event.requestContext.http.path.substring(1).split('/');
