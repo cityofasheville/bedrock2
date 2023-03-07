@@ -1,4 +1,7 @@
 /* eslint-disable no-console */
+// Disabling import/no-unresolved because the dependency as defined
+// in package.json only works in the build subdirectory.
+// eslint-disable-next-line import/no-unresolved
 const { getDBConnection } = require('bedrock_common');
 
 const handleAssets = require('./handleAssets');
