@@ -16,7 +16,9 @@ async function getConnectionObject() {
   });
 
   // If BEDROCK_DB_HOST is not in the environment, assume normal bedrock DB
-  if (!('BEDROCK_DB_HOST' in process.env)) {
+  if (!('BEDROCK_DB_HOST' in process.env)
+      || process.env.BEDROCK_DB_HOST === null
+      || process.env.BEDROCK_DB_HOST.trim().length === 0) {
     return getConnection('nopubrecdb1/bedrock/bedrock_user')
       .then(
         (cpValue) => {
