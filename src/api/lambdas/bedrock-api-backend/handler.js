@@ -1,6 +1,5 @@
 /* eslint-disable no-console */
-// eslint-disable-next-line import/no-unresolved, import/extensions
-const { getDBConnection } = require('./getConnection');
+const { getDBConnection } = require('bedrock_common');
 
 const handleAssets = require('./handleAssets');
 const handleRungroups = require('./handleRungroups');

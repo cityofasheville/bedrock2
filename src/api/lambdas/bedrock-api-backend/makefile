@@ -15,10 +15,7 @@ prebuild:
 $(DEST_DIR)/%: $(SRC_DIR)/%
 	python3 ../../../scripts/vreplace.py -f ../../../make_variables $< $@
 
-$(DEST_DIR)/getConnection.js:
-	cp ../../../common/getConnection.js $(DEST_DIR)/getConnection.js
-
-init: prebuild $(TF_TARGS) $(DEST_DIR)/getConnection.js
+init: prebuild $(TF_TARGS)
 	$(MAKE) -C build $(MAKECMDGOALS)
 	@rm -f *.instance
 	@touch $(INSTANCE).instance		# Marker file to display the instance name
