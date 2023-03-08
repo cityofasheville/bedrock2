@@ -18,8 +18,9 @@ async function getAsset(pathElements, queryParams, connection) {
       throw new Error([`Postgres error: ${errmsg}`, err]);
     });
 
-  const sql = `SELECT * FROM bedrock.assets where asset_name like '${pathElements[1]}';`;
-  const res = await client.query(sql)
+  const sql = 'SELECT * FROM bedrock.assets where asset_name like $1';
+
+  const res = await client.query(sql, [pathElements[1]])
     .catch((err) => {
       const errmsg = pgErrorCodes[err.code];
       throw new Error([`Postgres error: ${errmsg}`, err]);
@@ -52,6 +53,12 @@ async function addAsset(requestBody, pathElements, queryParams, connection) {
     result.result = body;
     return result;
   }
+  if (pathElements[1] !== body.asset_name) {
+    result.error = true;
+    result.message = `Asset name ${pathElements[1]} in path does not match asset name ${body.asset_name} in body`;
+    return result;
+  }
+
   const client = new Client(connection);
   await client.connect()
     .catch((err) => {
@@ -59,21 +66,40 @@ async function addAsset(requestBody, pathElements, queryParams, connection) {
       throw new Error([`Postgres error: ${errmsg}`, err]);
     });
 
-  const sql = `SELECT * FROM bedrock.assets where asset_name like '${pathElements[1]}';`;
-  const res = await client.query(sql)
+  const sql = 'SELECT * FROM bedrock.assets where asset_name like $1';
+  let res = await client.query(sql, [pathElements[1]])
+    .catch((err) => {
+      const errmsg = pgErrorCodes[err.code];
+      throw new Error([`Postgres error: ${errmsg}`, err]);
+    });
+  if (res.rowCount > 0) {
+    result.error = true;
+    result.message = 'Asset already exists';
+    await client.end();
+    return result;
+  }
+
+  res = await client.query(
+    'INSERT INTO assets (asset_name, description, location, active) VALUES($1, $2, $3, $4)',
+    [body.asset_name, body.description, body.location, body.active],
+  )
     .catch((err) => {
       const errmsg = pgErrorCodes[err.code];
       throw new Error([`Postgres error: ${errmsg}`, err]);
     });
   await client.end();
-  console.log('Now check row count');
-  if (res.rowCount > 0) {
+  if (res.rowCount !== 1) {
     result.error = true;
-    result.message = 'Asset already exists';
+    result.message = 'Unknown error inserting new asset';
     return result;
   }
-  console.log('All good?');
-  // write the add.
+  result.result = {
+    asset_name: body.asset_name,
+    description: body.description,
+    location: body.location,
+    active: body.active,
+  };
+
   return result;
 }
 
@@ -84,7 +110,7 @@ async function handleAssets(event, pathElements, queryParams, verb, connection) 
     message: '',
     result: null,
   };
-  console.log('path length = ', pathElements.length);
+
   switch (pathElements.length) {
     // GET assets
     case 1:
@@ -96,12 +122,10 @@ async function handleAssets(event, pathElements, queryParams, verb, connection) 
     case 2:
       switch (verb) {
         case 'GET':
-          console.log('GOTTA GET');
           result = await getAsset(pathElements, queryParams, connection);
           break;
 
         case 'POST':
-          console.log('GOTTA POST');
           result = await addAsset(event.body, pathElements, queryParams, connection);
           break;
 
