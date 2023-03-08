@@ -40,12 +40,40 @@ async function addAsset(requestBody, pathElements, queryParams, connection) {
     message: '',
     result: null,
   };
+  const body = JSON.parse(requestBody);
 
-  // In postman send request data as raw JSON body
-  result.message = 'Add asset not implemented';
-  result.error = true;
-  result.result = requestBody;
+  // Make sure that we have required information
+  if (!('asset_name' in body)
+   || !('description' in body)
+   || !('location' in body)
+   || !('active' in body)) {
+    result.error = true;
+    result.message = 'Asset lacks required property (one of asset_name, description, location, active)';
+    result.result = body;
+    return result;
+  }
+  const client = new Client(connection);
+  await client.connect()
+    .catch((err) => {
+      const errmsg = pgErrorCodes[err.code];
+      throw new Error([`Postgres error: ${errmsg}`, err]);
+    });
 
+  const sql = `SELECT * FROM bedrock.assets where asset_name like '${pathElements[1]}';`;
+  const res = await client.query(sql)
+    .catch((err) => {
+      const errmsg = pgErrorCodes[err.code];
+      throw new Error([`Postgres error: ${errmsg}`, err]);
+    });
+  await client.end();
+  console.log('Now check row count');
+  if (res.rowCount > 0) {
+    result.error = true;
+    result.message = 'Asset already exists';
+    return result;
+  }
+  console.log('All good?');
+  // write the add.
   return result;
 }
 
@@ -56,7 +84,7 @@ async function handleAssets(event, pathElements, queryParams, verb, connection) 
     message: '',
     result: null,
   };
-
+  console.log('path length = ', pathElements.length);
   switch (pathElements.length) {
     // GET assets
     case 1:
@@ -68,10 +96,12 @@ async function handleAssets(event, pathElements, queryParams, verb, connection) 
     case 2:
       switch (verb) {
         case 'GET':
+          console.log('GOTTA GET');
           result = await getAsset(pathElements, queryParams, connection);
           break;
 
         case 'POST':
+          console.log('GOTTA POST');
           result = await addAsset(event.body, pathElements, queryParams, connection);
           break;
 
@@ -152,6 +182,7 @@ async function handleAssets(event, pathElements, queryParams, verb, connection) 
       break;
   }
   if (result.error) {
+    console.log('We have an error but do not know why!');
     console.log(result.message);
   }
   return result;
