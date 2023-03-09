@@ -2,7 +2,88 @@
 const { Client } = require('pg');
 const pgErrorCodes = require('./pgErrorCodes');
 
-// eslint-disable-next-line no-unused-vars
+async function getAssetList(pathElements, queryParams, connection) {
+  let offset = 0;
+  let count = 25;
+  let total = -1;
+  let where = ' where';
+  const result = {
+    error: false,
+    message: '',
+    result: null,
+  };
+  const client = new Client(connection);
+  await client.connect()
+    .catch((err) => {
+      console.log(JSON.stringify(err));
+      const errmsg = pgErrorCodes[err.code];
+      throw new Error([`Postgres error: ${errmsg}`, err]);
+    });
+
+  // Override start, count, or offset, if set in query
+  if ('offset' in queryParams) {
+    offset = queryParams.offset;
+  }
+  if ('count' in queryParams) {
+    count = queryParams.count;
+  }
+
+  // Read the DB
+  const sqlParams = [];
+  let sql2 = '';
+  if ('pattern' in queryParams) {
+    sql2 += `${where} asset_name like $1`;
+    where = ' ';
+    sqlParams.push(`%${queryParams.pattern}%`);
+  }
+  if ('rungroups' in queryParams) {
+    result.message += 'Query parameter rungroups not yet implemented. ';
+  }
+  if ('period' in queryParams) {
+    result.message += 'Query parameter period not yet implemented. ';
+  }
+  let sql = `SELECT count(*) FROM bedrock.assets  ${sql2}`;
+
+  let res = await client.query(sql, sqlParams)
+    .catch((err) => {
+      const errmsg = pgErrorCodes[err.code];
+      console.log(err, errmsg);
+      throw new Error([`Postgres error: ${errmsg}`, err]);
+    });
+
+  if (res.rowCount === 0) {
+    throw new Error('No results for count call in getAssetsList');
+  } else {
+    total = Number(res.rows[0].count);
+  }
+
+  sql = `SELECT * FROM bedrock.assets ${sql2}`;
+  sql += ' order by asset_name asc';
+  sql += ` offset ${offset} limit ${count} `;
+
+  res = await client.query(sql, sqlParams)
+    .catch((err) => {
+      const errmsg = pgErrorCodes[err.code];
+      console.log(err, errmsg);
+      throw new Error([`Postgres error: ${errmsg}`, err]);
+    });
+  await client.end();
+
+  if (res.rowCount === 0) {
+    result.error = true;
+    result.message += 'Asset not found';
+  } else {
+    result.result = {
+      items: res.rows,
+      offset,
+      count: res.rowCount,
+      total,
+      url: '',
+    };
+  }
+  return result;
+}
+
 async function getAsset(pathElements, queryParams, connection) {
   const result = {
     error: false,
@@ -116,6 +197,7 @@ async function handleAssets(event, pathElements, queryParams, verb, connection) 
     case 1:
       result.message = 'Get all assets not yet implemented';
       result.error = true;
+      result = await getAssetList(pathElements, queryParams, connection);
       break;
 
     // VERB assets/{assetname}
