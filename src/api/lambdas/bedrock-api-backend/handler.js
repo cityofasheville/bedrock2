@@ -25,7 +25,7 @@ const lambda_handler = async function x(event) {
   switch (pathElements[0]) {
     case 'rungroups':
       try {
-        result = handleRungroups(event, pathElements, queryParams, verb, connection);
+        result = handleRungroups(event, pathElements, queryParams || {}, verb, connection);
       } catch (e) {
         result.message = e;
       }
@@ -33,9 +33,10 @@ const lambda_handler = async function x(event) {
 
     case 'assets':
       try {
-        result = await handleAssets(event, pathElements, queryParams, verb, connection);
+        result = await handleAssets(event, pathElements, queryParams || {}, verb, connection);
       } catch (e) {
         result.message = e;
+        console.log('Error in handleAssets ', e);
       }
       break;
 
