@@ -97,6 +97,7 @@ async function getSsStream(location) {
                 };
                 if (location.fixedwidth_noquotes) {
                   stringifyOptions.quote = '';
+                  stringifyOptions.escape = '';
                 }
                 nonObjStream = request
                   .pipe(csv.stringify(stringifyOptions));
