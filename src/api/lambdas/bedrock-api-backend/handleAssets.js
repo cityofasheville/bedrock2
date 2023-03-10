@@ -2,11 +2,13 @@
 const { Client } = require('pg');
 const pgErrorCodes = require('./pgErrorCodes');
 
-async function getAssetList(pathElements, queryParams, connection) {
+async function getAssetList(domainName, pathElements, queryParams, connection) {
   let offset = 0;
   let count = 25;
   let total = -1;
   let where = ' where';
+  let qPrefix = '?'
+  let qParams = ''
   const result = {
     error: false,
     message: '',
@@ -26,6 +28,8 @@ async function getAssetList(pathElements, queryParams, connection) {
   }
   if ('count' in queryParams) {
     count = queryParams.count;
+    qParams += `${qPrefix}count=${count}`;
+    qPrefix = '&';
   }
 
   // Read the DB
@@ -35,11 +39,17 @@ async function getAssetList(pathElements, queryParams, connection) {
     sql2 += `${where} asset_name like $1`;
     where = ' ';
     sqlParams.push(`%${queryParams.pattern}%`);
+    qParams += `${qPrefix}pattern=${pattern}`;
+    qPrefix = '&';
   }
   if ('rungroups' in queryParams) {
+    qParams += `${qPrefix}rungroups=${queryParams.rungroups}`;
+    qPrefix = '&';
     result.message += 'Query parameter rungroups not yet implemented. ';
   }
   if ('period' in queryParams) {
+    qParams += `${qPrefix}period=${queryParams.period}`;
+    qPrefix = '&';
     result.message += 'Query parameter period not yet implemented. ';
   }
   let sql = `SELECT count(*) FROM bedrock.assets  ${sql2}`;
@@ -73,12 +83,18 @@ async function getAssetList(pathElements, queryParams, connection) {
     result.error = true;
     result.message += 'Asset not found';
   } else {
+    let url = null;
+    if (offset + res.rowCount < total) {
+      const newOffset = parseInt(offset, 10) + res.rowCount;
+      url = `https://${domainName}/${pathElements.join('/')}${qParams}`;
+      url += `${qPrefix}offset=${newOffset.toString()}`;
+    }
     result.result = {
       items: res.rows,
       offset,
       count: res.rowCount,
       total,
-      url: '',
+      url,
     };
   }
   return result;
@@ -197,7 +213,12 @@ async function handleAssets(event, pathElements, queryParams, verb, connection) 
     case 1:
       result.message = 'Get all assets not yet implemented';
       result.error = true;
-      result = await getAssetList(pathElements, queryParams, connection);
+      result = await getAssetList(
+        event.requestContext.domainName,
+        pathElements,
+        queryParams,
+        connection,
+      );
       break;
 
     // VERB assets/{assetname}
