@@ -7,8 +7,8 @@ async function getAssetList(domainName, pathElements, queryParams, connection) {
   let count = 25;
   let total = -1;
   let where = ' where';
-  let qPrefix = '?'
-  let qParams = ''
+  let qPrefix = '?';
+  let qParams = '';
   const result = {
     error: false,
     message: '',
@@ -36,6 +36,7 @@ async function getAssetList(domainName, pathElements, queryParams, connection) {
   const sqlParams = [];
   let sql2 = '';
   if ('pattern' in queryParams) {
+    const { pattern } = queryParams;
     sql2 += `${where} asset_name like $1`;
     where = ' ';
     sqlParams.push(`%${queryParams.pattern}%`);
@@ -53,7 +54,7 @@ async function getAssetList(domainName, pathElements, queryParams, connection) {
     result.message += 'Query parameter period not yet implemented. ';
   }
   let sql = `SELECT count(*) FROM bedrock.assets  ${sql2}`;
-
+  console.log('run sql1 = ', sql);
   let res = await client.query(sql, sqlParams)
     .catch((err) => {
       const errmsg = pgErrorCodes[err.code];
@@ -70,6 +71,7 @@ async function getAssetList(domainName, pathElements, queryParams, connection) {
   sql = `SELECT * FROM bedrock.assets ${sql2}`;
   sql += ' order by asset_name asc';
   sql += ` offset ${offset} limit ${count} `;
+  console.log('run sql2 = ', sql);
 
   res = await client.query(sql, sqlParams)
     .catch((err) => {
@@ -211,14 +213,14 @@ async function handleAssets(event, pathElements, queryParams, verb, connection) 
   switch (pathElements.length) {
     // GET assets
     case 1:
-      result.message = 'Get all assets not yet implemented';
-      result.error = true;
+      console.log('Calling getAssetList');
       result = await getAssetList(
         event.requestContext.domainName,
         pathElements,
         queryParams,
         connection,
       );
+      console.log('Back from getAssetList');
       break;
 
     // VERB assets/{assetname}
