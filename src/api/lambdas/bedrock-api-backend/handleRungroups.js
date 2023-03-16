@@ -1,22 +1,22 @@
 /* eslint-disable no-console */
-const { Client } = require("pg");
-const pgErrorCodes = require("./pgErrorCodes");
+const { Client } = require('pg');
+const pgErrorCodes = require('./pgErrorCodes');
 
 async function getRungroupsList(
   domainName,
   pathElements,
   queryParams,
-  connection
+  connection,
 ) {
   let offset = 0;
   let count = 25;
   let total = -1;
-  let where = " where";
-  let qPrefix = "?";
-  let qParams = "";
+  let where = ' where';
+  let qPrefix = '?';
+  let qParams = '';
   const result = {
     error: false,
-    message: "",
+    message: '',
     result: null,
   };
   const client = new Client(connection);
@@ -27,33 +27,33 @@ async function getRungroupsList(
   });
 
   // Override start, count, or offset, if set in query
-  if ("offset" in queryParams) {
+  if ('offset' in queryParams) {
     offset = queryParams.offset;
   }
-  if ("count" in queryParams) {
+  if ('count' in queryParams) {
     count = queryParams.count;
     qParams += `${qPrefix}count=${count}`;
-    qPrefix = "&";
+    qPrefix = '&';
   }
 
   // Read the DB
   const sqlParams = [];
-  let sql2 = "";
-  if ("pattern" in queryParams) {
+  let sql2 = '';
+  if ('pattern' in queryParams) {
     const { pattern } = queryParams;
     sql2 += `${where} run_group_name like $1`;
-    where = " ";
+    where = ' ';
     sqlParams.push(`%${queryParams.pattern}%`);
     qParams += `${qPrefix}pattern=${pattern}`;
-    qPrefix = "&";
+    qPrefix = '&';
   }
-  if ("period" in queryParams) {
+  if ('period' in queryParams) {
     qParams += `${qPrefix}period=${queryParams.period}`;
-    qPrefix = "&";
-    result.message += "Query parameter period not yet implemented. ";
+    qPrefix = '&';
+    result.message += 'Query parameter period not yet implemented. ';
   }
   let sql = `SELECT count(*) FROM bedrock.run_groups  ${sql2}`;
-  console.log("run sql1 = ", sql);
+  console.log('run sql1 = ', sql);
   let res = await client.query(sql, sqlParams).catch((err) => {
     const errmsg = pgErrorCodes[err.code];
     console.log(err, errmsg);
@@ -61,15 +61,15 @@ async function getRungroupsList(
   });
 
   if (res.rowCount === 0) {
-    throw new Error("No results for count call in getRungroupsList");
+    throw new Error('No results for count call in getRungroupsList');
   } else {
     total = Number(res.rows[0].count);
   }
 
   sql = `SELECT * FROM bedrock.run_groups ${sql2}`;
-  sql += " order by run_group_name asc";
+  sql += ' order by run_group_name asc';
   sql += ` offset ${offset} limit ${count} `;
-  console.log("run sql2 = ", sql);
+  console.log('run sql2 = ', sql);
 
   res = await client.query(sql, sqlParams).catch((err) => {
     const errmsg = pgErrorCodes[err.code];
@@ -80,12 +80,12 @@ async function getRungroupsList(
 
   if (res.rowCount === 0) {
     result.error = true;
-    result.message += "Rungroup not found";
+    result.message += 'Rungroup not found';
   } else {
     let url = null;
     if (offset + res.rowCount < total) {
       const newOffset = parseInt(offset, 10) + res.rowCount;
-      url = `https://${domainName}/${pathElements.join("/")}${qParams}`;
+      url = `https://${domainName}/${pathElements.join('/')}${qParams}`;
       url += `${qPrefix}offset=${newOffset.toString()}`;
     }
     result.result = {
@@ -102,7 +102,7 @@ async function getRungroupsList(
 async function getRungroup(pathElements, queryParams, connection) {
   const result = {
     error: false,
-    message: "",
+    message: '',
     result: null,
   };
 
@@ -113,7 +113,7 @@ async function getRungroup(pathElements, queryParams, connection) {
     throw new Error([`Postgres error: ${errmsg}`, err]);
   });
 
-  const sql = "SELECT * FROM bedrock.run_groups where run_group_name like $1";
+  const sql = 'SELECT * FROM bedrock.run_groups where run_group_name like $1';
 
   const res = await client.query(sql, [pathElements[1]]).catch((err) => {
     const errmsg = pgErrorCodes[err.code];
@@ -122,7 +122,7 @@ async function getRungroup(pathElements, queryParams, connection) {
   await client.end();
   if (res.rowCount === 0) {
     result.error = true;
-    result.message = "Rungroup not found";
+    result.message = 'Rungroup not found';
   } else {
     [result.result] = res.rows;
   }
@@ -135,46 +135,46 @@ async function handleRungroups(
   pathElements,
   queryParams,
   verb,
-  connection
+  connection,
 ) {
   let result = {
     error: false,
-    message: "",
+    message: '',
     result: null,
   };
 
   switch (pathElements.length) {
     // GET rungroups
     case 1:
-      console.log("Calling getRungroupList");
+      console.log('Calling getRungroupList');
       result = await getRungroupsList(
         event.requestContext.domainName,
         pathElements,
         queryParams,
-        connection
+        connection,
       );
-      console.log("Back from getRungroupList");
+      console.log('Back from getRungroupList');
       break;
 
     // VERB rungroups/{rungroupname}
     case 2:
       switch (verb) {
-        case "GET":
+        case 'GET':
           result = await getRungroup(pathElements, queryParams, connection);
           break;
 
-        case "POST":
-          result.message = "Update rungroup not implemented";
+        case 'POST':
+          result.message = 'Update rungroup not implemented';
           result.error = true;
           break;
 
-        case "PUT":
-          result.message = "Update rungroup not implemented";
+        case 'PUT':
+          result.message = 'Update rungroup not implemented';
           result.error = true;
           break;
 
-        case "DELETE":
-          result.message = "Delete rungroup not implemented";
+        case 'DELETE':
+          result.message = 'Delete rungroup not implemented';
           result.error = true;
           break;
 
@@ -191,7 +191,7 @@ async function handleRungroups(
       break;
   }
   if (result.error) {
-    console.log("We have an error but do not know why!");
+    console.log('We have an error but do not know why!');
     console.log(result.message);
   }
   return result;
