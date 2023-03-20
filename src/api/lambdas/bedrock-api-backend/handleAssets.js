@@ -37,7 +37,7 @@ async function getAssetList(domainName, pathElements, queryParams, connection) {
   let sql2 = '';
   if ('pattern' in queryParams) {
     const { pattern } = queryParams;
-    sql2 += `${where} asset_name like $1`;
+    sql2 += `${where} a.asset_name like $1`;
     where = ' ';
     sqlParams.push(`%${queryParams.pattern}%`);
     qParams += `${qPrefix}pattern=${pattern}`;
@@ -53,7 +53,7 @@ async function getAssetList(domainName, pathElements, queryParams, connection) {
     qPrefix = '&';
     result.message += 'Query parameter period not yet implemented. ';
   }
-  let sql = `SELECT count(*) FROM bedrock.assets  ${sql2}`;
+  let sql = `SELECT count(*) FROM bedrock.assets a  ${sql2}`;
   console.log('run sql1 = ', sql);
   let res = await client.query(sql, sqlParams)
     .catch((err) => {
@@ -68,8 +68,10 @@ async function getAssetList(domainName, pathElements, queryParams, connection) {
     total = Number(res.rows[0].count);
   }
 
-  sql = `SELECT * FROM bedrock.assets ${sql2}`;
-  sql += ' order by asset_name asc';
+  sql = 'SELECT * FROM bedrock.assets a';
+  sql += ' left join bedrock.etl e on a.asset_name = e.asset_name';
+  sql += ` ${sql2}`;
+  sql += ' order by a.asset_name asc';
   sql += ` offset ${offset} limit ${count} `;
   console.log('run sql2 = ', sql);
 
@@ -91,8 +93,20 @@ async function getAssetList(domainName, pathElements, queryParams, connection) {
       url = `https://${domainName}/${pathElements.join('/')}${qParams}`;
       url += `${qPrefix}offset=${newOffset.toString()}`;
     }
+    const rows = [];
+    for (let i = 0; i < res.rowCount; i += 1) {
+      rows.push(
+        {
+          asset_name: res.rows[i].asset_name,
+          description: res.rows[i].description,
+          location: res.rows[i].location,
+          etl_run_group: res.rows[i].run_group,
+          etl_active: res.rows[i].active,
+        },
+      );
+    }
     result.result = {
-      items: res.rows,
+      items: rows,
       offset,
       count: res.rowCount,
       total,
