@@ -117,7 +117,11 @@ async function getAsset(pathElements, queryParams, connection) {
       throw new Error([`Postgres error: ${errmsg}`, err]);
     });
 
-  const sql = 'SELECT * FROM bedrock.assets where asset_name like $1';
+  const sql = `SELECT a.*, e.run_group, e.active, d.dependency
+  FROM bedrock.assets a 
+  left join bedrock.etl e on e.asset_name = a.asset_name
+  left join bedrock.dependencies d on d.asset_name = a.asset_name
+  where a.asset_name like $1`;
 
   const res = await client.query(sql, [pathElements[1]])
     .catch((err) => {
@@ -129,7 +133,19 @@ async function getAsset(pathElements, queryParams, connection) {
     result.error = true;
     result.message = 'Asset not found';
   } else {
-    [result.result] = res.rows;
+    result.result = {
+      asset_name: res.rows[0].asset_name,
+      description: res.rows[0].description,
+      location: res.rows[0].location,
+      etl_run_group: res.rows[0].run_group,
+      etl_active: res.rows[0].active,
+      dependencies: [],
+    };
+    for (let i = 0; i < res.rowCount; i += 1) {
+      if (res.rows[i].dependency !== null) {
+        result.result.dependencies.push(res.rows[i].dependency);
+      }
+    }
   }
   return result;
 }
