@@ -81,7 +81,6 @@ async function getAssetList(domainName, pathElements, queryParams, connection) {
       console.log(err, errmsg);
       throw new Error([`Postgres error: ${errmsg}`, err]);
     });
-  await client.end();
 
   if (res.rowCount === 0) {
     result.error = true;
@@ -93,8 +92,11 @@ async function getAssetList(domainName, pathElements, queryParams, connection) {
       url = `https://${domainName}/${pathElements.join('/')}${qParams}`;
       url += `${qPrefix}offset=${newOffset.toString()}`;
     }
+    const assets = [];
     const rows = [];
+    const currentCount = res.rowCount;
     for (let i = 0; i < res.rowCount; i += 1) {
+      assets.push(`'${res.rows[i].asset_name}'`);
       rows.push(
         {
           asset_name: res.rows[i].asset_name,
@@ -102,13 +104,37 @@ async function getAssetList(domainName, pathElements, queryParams, connection) {
           location: res.rows[i].location,
           etl_run_group: res.rows[i].run_group,
           etl_active: res.rows[i].active,
+          dependencies: [],
         },
       );
+    }
+    sql = `select asset_name, dependency from bedrock.dependencies where asset_name in (${assets.join()})`;
+    res = await client.query(sql)
+      .catch((err) => {
+        const errmsg = pgErrorCodes[err.code];
+        console.log(err, errmsg);
+        throw new Error([`Postgres error: ${errmsg}`, err]);
+      });
+    await client.end();
+    const map = {};
+    if (res.rowCount > 0) {
+      for (let i = 0; i < res.rowCount; i += 1) {
+        if (res.rows[i].asset_name in map) {
+          map[res.rows[i].asset_name].push(res.rows[i].dependency);
+        } else {
+          map[res.rows[i].asset_name] = [res.rows[i].dependency];
+        }
+      }
+    }
+    for (let i = 0; i < rows.length; i += 1) {
+      if (rows[i].asset_name in map) {
+        rows[i].dependencies = map[rows[i].asset_name];
+      }
     }
     result.result = {
       items: rows,
       offset,
-      count: res.rowCount,
+      count: currentCount,
       total,
       url,
     };
