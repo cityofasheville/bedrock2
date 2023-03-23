@@ -18,10 +18,11 @@ exports.lambda_handler = async function x(event, context) {
     const client = new LambdaClient(config);
     const command = new InvokeCommand(input);
     const response = await client.send(command);
+
     return {
       statusCode: response.StatusCode,
       body: {
-        lambda_output: response.Payload.toString(),
+        lambda_output: FunctionName + ':\n' + Buffer.from(response.LogResult, 'base64').toString('utf-8')
       },
     };
   } catch (err) {
