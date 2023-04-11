@@ -37,7 +37,7 @@ async function getAssetList(domainName, pathElements, queryParams, connection) {
   let sql2 = '';
   if ('pattern' in queryParams) {
     const { pattern } = queryParams;
-    sql2 += `${where} asset_name like $1`;
+    sql2 += `${where} a.asset_name like $1`;
     where = ' ';
     sqlParams.push(`%${queryParams.pattern}%`);
     qParams += `${qPrefix}pattern=${pattern}`;
@@ -53,7 +53,7 @@ async function getAssetList(domainName, pathElements, queryParams, connection) {
     qPrefix = '&';
     result.message += 'Query parameter period not yet implemented. ';
   }
-  let sql = `SELECT count(*) FROM bedrock.assets  ${sql2}`;
+  let sql = `SELECT count(*) FROM bedrock.assets a  ${sql2}`;
   console.log('run sql1 = ', sql);
   let res = await client.query(sql, sqlParams)
     .catch((err) => {
@@ -68,8 +68,10 @@ async function getAssetList(domainName, pathElements, queryParams, connection) {
     total = Number(res.rows[0].count);
   }
 
-  sql = `SELECT * FROM bedrock.assets ${sql2}`;
-  sql += ' order by asset_name asc';
+  sql = 'SELECT * FROM bedrock.assets a';
+  sql += ' left join bedrock.etl e on a.asset_name = e.asset_name';
+  sql += ` ${sql2}`;
+  sql += ' order by a.asset_name asc';
   sql += ` offset ${offset} limit ${count} `;
   console.log('run sql2 = ', sql);
 
@@ -79,7 +81,6 @@ async function getAssetList(domainName, pathElements, queryParams, connection) {
       console.log(err, errmsg);
       throw new Error([`Postgres error: ${errmsg}`, err]);
     });
-  await client.end();
 
   if (res.rowCount === 0) {
     result.error = true;
@@ -91,10 +92,49 @@ async function getAssetList(domainName, pathElements, queryParams, connection) {
       url = `https://${domainName}/${pathElements.join('/')}${qParams}`;
       url += `${qPrefix}offset=${newOffset.toString()}`;
     }
+    const assets = [];
+    const rows = [];
+    const currentCount = res.rowCount;
+    for (let i = 0; i < res.rowCount; i += 1) {
+      assets.push(`'${res.rows[i].asset_name}'`);
+      rows.push(
+        {
+          asset_name: res.rows[i].asset_name,
+          description: res.rows[i].description,
+          location: res.rows[i].location,
+          etl_run_group: res.rows[i].run_group,
+          etl_active: res.rows[i].active,
+          dependencies: [],
+        },
+      );
+    }
+    sql = `select asset_name, dependency from bedrock.dependencies where asset_name in (${assets.join()})`;
+    res = await client.query(sql)
+      .catch((err) => {
+        const errmsg = pgErrorCodes[err.code];
+        console.log(err, errmsg);
+        throw new Error([`Postgres error: ${errmsg}`, err]);
+      });
+    await client.end();
+    const map = {};
+    if (res.rowCount > 0) {
+      for (let i = 0; i < res.rowCount; i += 1) {
+        if (res.rows[i].asset_name in map) {
+          map[res.rows[i].asset_name].push(res.rows[i].dependency);
+        } else {
+          map[res.rows[i].asset_name] = [res.rows[i].dependency];
+        }
+      }
+    }
+    for (let i = 0; i < rows.length; i += 1) {
+      if (rows[i].asset_name in map) {
+        rows[i].dependencies = map[rows[i].asset_name];
+      }
+    }
     result.result = {
-      items: res.rows,
+      items: rows,
       offset,
-      count: res.rowCount,
+      count: currentCount,
       total,
       url,
     };
@@ -117,7 +157,11 @@ async function getAsset(pathElements, queryParams, connection) {
       throw new Error([`Postgres error: ${errmsg}`, err]);
     });
 
-  const sql = 'SELECT * FROM bedrock.assets where asset_name like $1';
+  const sql = `SELECT a.*, e.run_group, e.active, d.dependency
+  FROM bedrock.assets a 
+  left join bedrock.etl e on e.asset_name = a.asset_name
+  left join bedrock.dependencies d on d.asset_name = a.asset_name
+  where a.asset_name like $1`;
 
   const res = await client.query(sql, [pathElements[1]])
     .catch((err) => {
@@ -129,7 +173,19 @@ async function getAsset(pathElements, queryParams, connection) {
     result.error = true;
     result.message = 'Asset not found';
   } else {
-    [result.result] = res.rows;
+    result.result = {
+      asset_name: res.rows[0].asset_name,
+      description: res.rows[0].description,
+      location: res.rows[0].location,
+      etl_run_group: res.rows[0].run_group,
+      etl_active: res.rows[0].active,
+      dependencies: [],
+    };
+    for (let i = 0; i < res.rowCount; i += 1) {
+      if (res.rows[i].dependency !== null) {
+        result.result.dependencies.push(res.rows[i].dependency);
+      }
+    }
   }
   return result;
 }
