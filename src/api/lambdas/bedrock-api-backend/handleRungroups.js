@@ -147,7 +147,7 @@ async function addRungroup(requestBody, pathElements, queryParams, connection) {
   }
   if (pathElements[1] !== body.run_group_name) {
     result.error = true;
-    result.message = `Rungroup name ${pathElements[1]} in path does not match asset name ${body.run_group_name} in body`;
+    result.message = `Rungroup name ${pathElements[1]} in path does not match rungroup name ${body.run_group_name} in body`;
     return result;
   }
 
@@ -181,7 +181,7 @@ async function addRungroup(requestBody, pathElements, queryParams, connection) {
   await client.end();
   if (res.rowCount !== 1) {
     result.error = true;
-    result.message = "Unknown error inserting new asset";
+    result.message = "Unknown error inserting new rungroup";
     return result;
   }
   result.result = {
