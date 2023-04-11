@@ -6,7 +6,7 @@ async function getRungroupsList(
   domainName,
   pathElements,
   queryParams,
-  connection
+  connection,
 ) {
   let offset = 0;
   let count = 25;
@@ -172,7 +172,7 @@ async function addRungroup(requestBody, pathElements, queryParams, connection) {
   res = await client
     .query(
       'INSERT INTO run_groups (run_group_name, cron_string) VALUES($1, $2)',
-      [body.run_group_name, body.cron_string]
+      [body.run_group_name, body.cron_string],
     )
     .catch((err) => {
       const errmsg = pgErrorCodes[err.code];
@@ -198,7 +198,7 @@ async function handleRungroups(
   pathElements,
   queryParams,
   verb,
-  connection
+  connection,
 ) {
   let result = {
     error: false,
@@ -214,7 +214,7 @@ async function handleRungroups(
         event.requestContext.domainName,
         pathElements,
         queryParams,
-        connection
+        connection,
       );
       console.log('Back from getRungroupList');
       break;
@@ -232,7 +232,7 @@ async function handleRungroups(
             event.body,
             pathElements,
             queryParams,
-            connection
+            connection,
           );
           break;
 
