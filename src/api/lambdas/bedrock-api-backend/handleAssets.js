@@ -367,8 +367,7 @@ async function handleAssets(event, pathElements, queryParams, verb, connection) 
       break;
   }
   if (result.error) {
-    console.log('We have an error but do not know why!');
-    console.log(result.message);
+    console.log(`We have an error but do not know why! - ${result.message}`);
   }
   return result;
 }
