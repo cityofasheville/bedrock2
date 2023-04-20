@@ -61,7 +61,8 @@ Also see [Managed Data Assets README](https://github.com/cityofasheville/managed
             "connection": "bedrock-googlesheets",
             "spreadsheetid": "9876234HIUFQER872345T",
             "range": 'Bad Actors!A5:B'
-            
+            __TARGET OPTIONS__
+            <OPTIONAL> "append": true  (By default, data is overwritten in sheet. Set to true to append as new rows.)       
 #### CSV -winshare
             "connection": "fileshare_g",
             "filepath": "/winshares/dont/work/on/lambda/(yet?)/data.csv",
