@@ -164,12 +164,12 @@ async function getAsset(pathElements, queryParams, connection) {
   left join bedrock.dependencies d on d.asset_name = a.asset_name
   where a.asset_name like $1`;
 
-  const res = await client.query(sql, [pathElements[1]])
+  let res = await client.query(sql, [pathElements[1]])
     .catch((err) => {
       const errmsg = pgErrorCodes[err.code];
       throw new Error([`Postgres error: ${errmsg}`, err]);
     });
-  await client.end();
+
   if (res.rowCount === 0) {
     result.error = true;
     result.message = 'Asset not found';
@@ -182,6 +182,7 @@ async function getAsset(pathElements, queryParams, connection) {
       etl_run_group: res.rows[0].run_group,
       etl_active: res.rows[0].active,
       dependencies: [],
+      tags: []
     };
     for (let i = 0; i < res.rowCount; i += 1) {
       if (res.rows[i].dependency !== null) {
@@ -189,6 +190,22 @@ async function getAsset(pathElements, queryParams, connection) {
       }
     }
   }
+
+  // Now get tags
+  res = await client.query('SELECT * from bedrock.tags where asset_name like $1', [pathElements[1]])
+    .catch((err) => {
+      const errmsg = pgErrorCodes[err.code];
+      throw new Error([`Postgres error: ${errmsg}`, err]);
+    });
+
+  if (res.rowCount > 0) {
+    for (let i = 0; i < res.rowCount; i += 1) {
+      if (res.rows[i].tag !== null) {
+        result.result.tags.push(res.rows[i].tag);
+      }
+    }
+  }
+  await client.end();
   return result;
 }
 
