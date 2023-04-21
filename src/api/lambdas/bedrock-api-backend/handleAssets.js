@@ -102,6 +102,7 @@ async function getAssetList(domainName, pathElements, queryParams, connection) {
           asset_name: res.rows[i].asset_name,
           description: res.rows[i].description,
           location: res.rows[i].location,
+          active: res.rows[i].active,
           etl_run_group: res.rows[i].run_group,
           etl_active: res.rows[i].active,
           dependencies: [],
@@ -177,6 +178,7 @@ async function getAsset(pathElements, queryParams, connection) {
       asset_name: res.rows[0].asset_name,
       description: res.rows[0].description,
       location: res.rows[0].location,
+      active: res.rows[0].active,
       etl_run_group: res.rows[0].run_group,
       etl_active: res.rows[0].active,
       dependencies: [],
@@ -214,6 +216,14 @@ async function addAsset(requestBody, pathElements, queryParams, connection) {
     return result;
   }
 
+  if (('etl_run_group' in body || 'etl_active' in body)) {
+    if (!('etl_run_group' in body && 'etl_active' in body)) {
+      result.error = true;
+      result.message = 'Addition of ETL information requires both etl_run_group and etl_active elements';
+      return result;
+    }
+  }
+
   const client = new Client(connection);
   await client.connect()
     .catch((err) => {
@@ -230,30 +240,63 @@ async function addAsset(requestBody, pathElements, queryParams, connection) {
   if (res.rowCount > 0) {
     result.error = true;
     result.message = 'Asset already exists';
-    await client.end();
     return result;
   }
 
+  // All is well - let's go ahead and add
   res = await client.query(
     'INSERT INTO assets (asset_name, description, location, active) VALUES($1, $2, $3, $4)',
     [body.asset_name, body.description, body.location, body.active],
   )
     .catch((err) => {
       const errmsg = pgErrorCodes[err.code];
-      throw new Error([`Postgres error: ${errmsg}`, err]);
+      throw new Error([`Postgres error inserting asset: ${errmsg}`, err]);
     });
-  await client.end();
   if (res.rowCount !== 1) {
     result.error = true;
     result.message = 'Unknown error inserting new asset';
+    await client.end();
     return result;
   }
+
   result.result = {
     asset_name: body.asset_name,
     description: body.description,
     location: body.location,
     active: body.active,
   };
+
+  // Now add any dependencies
+  if (('dependencies' in body) && body.dependencies.length > 0) {
+    for (let i = 0; i < body.dependencies.length; i += 1) {
+      const dependency = body.dependencies[i];
+      // eslint-disable-next-line no-await-in-loop
+      res = await client.query(
+        'INSERT INTO dependencies (asset_name, dependency) VALUES ($1, $2)',
+        [body.asset_name, dependency],
+      )
+        .catch((err) => {
+          const errmsg = pgErrorCodes[err.code];
+          throw new Error([`Postgres error inserting asset dependencies: ${errmsg}`, err]);
+        });
+    }
+    result.result.dependencies = body.dependencies;
+  }
+
+  // Now add any ETL information
+  if (('etl_run_group' in body && 'etl_active' in body)) {
+    res = await client.query(
+      'INSERT INTO etl (asset_name, run_group, active) VALUES ($1, $2, $3)',
+      [body.asset_name, body.etl_run_group, body.etl_active],
+    )
+      .catch((err) => {
+        const errmsg = pgErrorCodes[err.code];
+        throw new Error([`Postgres error inserting asset etl info: ${errmsg}`, err]);
+      });
+    result.result.etl_run_group = body.etl_run_group;
+    result.result.etl_active = body.etl_active;
+  }
+  await client.end();
 
   return result;
 }
