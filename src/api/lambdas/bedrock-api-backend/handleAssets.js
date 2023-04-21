@@ -164,12 +164,12 @@ async function getAsset(pathElements, queryParams, connection) {
   left join bedrock.dependencies d on d.asset_name = a.asset_name
   where a.asset_name like $1`;
 
-  const res = await client.query(sql, [pathElements[1]])
+  let res = await client.query(sql, [pathElements[1]])
     .catch((err) => {
       const errmsg = pgErrorCodes[err.code];
       throw new Error([`Postgres error: ${errmsg}`, err]);
     });
-  await client.end();
+
   if (res.rowCount === 0) {
     result.error = true;
     result.message = 'Asset not found';
@@ -182,6 +182,7 @@ async function getAsset(pathElements, queryParams, connection) {
       etl_run_group: res.rows[0].run_group,
       etl_active: res.rows[0].active,
       dependencies: [],
+      tags: []
     };
     for (let i = 0; i < res.rowCount; i += 1) {
       if (res.rows[i].dependency !== null) {
@@ -189,6 +190,22 @@ async function getAsset(pathElements, queryParams, connection) {
       }
     }
   }
+
+  // Now get tags
+  res = await client.query('SELECT * from bedrock.tags where asset_name like $1', [pathElements[1]])
+    .catch((err) => {
+      const errmsg = pgErrorCodes[err.code];
+      throw new Error([`Postgres error: ${errmsg}`, err]);
+    });
+
+  if (res.rowCount > 0) {
+    for (let i = 0; i < res.rowCount; i += 1) {
+      if (res.rows[i].tag !== null) {
+        result.result.tags.push(res.rows[i].tag);
+      }
+    }
+  }
+  await client.end();
   return result;
 }
 
@@ -296,8 +313,103 @@ async function addAsset(requestBody, pathElements, queryParams, connection) {
     result.result.etl_run_group = body.etl_run_group;
     result.result.etl_active = body.etl_active;
   }
+
+  // Now add any tags
+  if ('tags' in body) {
+    let tags = [];
+    if (Array.isArray(body.tags)) {
+      tags = body.tags;
+    } else {
+      tags = body.tags.split(',');
+    }
+    for (let i = 0; i < tags.length; i += 1) {
+      const tag = tags[i].trim();
+      if (tag.length > 0) {
+        // eslint-disable-next-line no-await-in-loop
+        res = await client.query(
+          'INSERT INTO tags (asset_name, tag) VALUES ($1, $2)',
+          [body.asset_name, tag],
+        )
+          .catch((err) => {
+            const errmsg = pgErrorCodes[err.code];
+            throw new Error([`Postgres error inserting asset tags: ${errmsg}`, err]);
+          });
+      }
+    }
+    result.result.tags = body.tags;
+  }
+
   await client.end();
 
+  return result;
+}
+
+async function deleteAsset(pathElements, queryParams, connection) {
+  const assetName = pathElements[1];
+  const result = {
+    error: false,
+    message: `Successfully deleted asset ${assetName}`,
+    result: null,
+  };
+  const client = new Client(connection);
+  await client.connect()
+    .catch((err) => {
+      console.log(JSON.stringify(err));
+      const errmsg = pgErrorCodes[err.code];
+      throw new Error([`Postgres error: ${errmsg}`, err]);
+    });
+
+  const sql = 'SELECT * FROM bedrock.assets where asset_name like $1';
+
+  let res = await client.query(sql, [assetName])
+    .catch((err) => {
+      const errmsg = pgErrorCodes[err.code];
+      throw new Error([`Postgres error: ${errmsg}`, err]);
+    });
+
+  if (res.rowCount === 0) {
+    result.error = true;
+    result.message = 'Asset not found';
+    await client.end();
+  } else {
+    await client.query('delete from tasks where asset_name = $1', [pathElements[1]])
+      .catch((err) => {
+        const errmsg = pgErrorCodes[err.code];
+        result.error = true;
+        result.message = `Postgres error deleting asset tasks: ${errmsg}`;
+        throw new Error([result.message, err]);
+      });
+
+    await client.query('delete from etl where asset_name = $1', [assetName])
+      .catch((err) => {
+        const errmsg = pgErrorCodes[err.code];
+        result.error = true;
+        result.message = `Postgres error deleting asset etl: ${errmsg}`;
+        throw new Error([result.message, err]);
+      });
+    await client.query('delete from dependencies where asset_name = $1', [assetName])
+      .catch((err) => {
+        const errmsg = pgErrorCodes[err.code];
+        result.error = true;
+        result.message = `Postgres error deleting asset dependencies: ${errmsg}`;
+        throw new Error([result.message, err]);
+      });
+    await client.query('delete from tags where asset_name = $1', [assetName])
+      .catch((err) => {
+        const errmsg = pgErrorCodes[err.code];
+        result.error = true;
+        result.message = `Postgres error deleting asset tags: ${errmsg}`;
+        throw new Error([result.message, err]);
+      });
+    await client.query('delete from assets where asset_name = $1;', [assetName])
+      .catch((err) => {
+        const errmsg = pgErrorCodes[err.code];
+        result.error = true;
+        result.message = `Postgres error deleting asset: ${errmsg}`;
+        throw new Error([result.message, err]);
+      });
+    await client.end();
+  }
   return result;
 }
 
@@ -339,8 +451,7 @@ async function handleAssets(event, pathElements, queryParams, verb, connection) 
           break;
 
         case 'DELETE':
-          result.message = 'Delete asset not implemented';
-          result.error = true;
+          result = deleteAsset(pathElements, queryParams, connection);
           break;
 
         default:
