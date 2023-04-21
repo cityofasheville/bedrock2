@@ -129,6 +129,69 @@ async function getRungroup(pathElements, queryParams, connection) {
   return result;
 }
 
+async function addRungroup(requestBody, pathElements, queryParams, connection) {
+  const result = {
+    error: false,
+    message: '',
+    result: null,
+  };
+  const body = JSON.parse(requestBody);
+
+  // Make sure that we have required information
+  if (!('run_group_name' in body) || !('cron_string' in body)) {
+    result.error = true;
+    result.message =
+      'Rungroup lacks required property (one of run_group_name or cron_string)';
+    result.result = body;
+    return result;
+  }
+  if (pathElements[1] !== body.run_group_name) {
+    result.error = true;
+    result.message = `Rungroup name ${pathElements[1]} in path does not match rungroup name ${body.run_group_name} in body`;
+    return result;
+  }
+
+  const client = new Client(connection);
+  await client.connect().catch((err) => {
+    const errmsg = pgErrorCodes[err.code];
+    throw new Error([`Postgres error: ${errmsg}`, err]);
+  });
+
+  const sql = 'SELECT * FROM bedrock.run_groups where run_group_name like $1';
+  let res = await client.query(sql, [pathElements[1]]).catch((err) => {
+    const errmsg = pgErrorCodes[err.code];
+    throw new Error([`Postgres error: ${errmsg}`, err]);
+  });
+  if (res.rowCount > 0) {
+    result.error = true;
+    result.message = 'Rungroup already exists';
+    await client.end();
+    return result;
+  }
+
+  res = await client
+    .query(
+      'INSERT INTO run_groups (run_group_name, cron_string) VALUES($1, $2)',
+      [body.run_group_name, body.cron_string],
+    )
+    .catch((err) => {
+      const errmsg = pgErrorCodes[err.code];
+      throw new Error([`Postgres error: ${errmsg}`, err]);
+    });
+  await client.end();
+  if (res.rowCount !== 1) {
+    result.error = true;
+    result.message = 'Unknown error inserting new rungroup';
+    return result;
+  }
+  result.result = {
+    run_group_name: body.run_group_name,
+    crong_string: body.cron_string,
+  };
+
+  return result;
+}
+
 // eslint-disable-next-line no-unused-vars
 async function handleRungroups(
   event,
@@ -164,8 +227,13 @@ async function handleRungroups(
           break;
 
         case 'POST':
-          result.message = 'Update rungroup not implemented';
-          result.error = true;
+        case 'POST':
+          result = await addRungroup(
+            event.body,
+            pathElements,
+            queryParams,
+            connection,
+          );
           break;
 
         case 'PUT':
