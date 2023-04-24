@@ -128,7 +128,7 @@ async function readTasks(connection, assetMap) {
       });
     for (let j = 0; j < res.rowCount; j += 1) {
       const task = res.rows[j];
-      let thisTask = {
+      const thisTask = {
         type: task.type,
         active: task.active,
       };
@@ -138,8 +138,6 @@ async function readTasks(connection, assetMap) {
       } else if (task.type === 'sql') {
         thisTask.connection = task.target.connection;
         thisTask.sql_string = task.configuration;
-      } else {
-        thisTask = task.target; // Really just noop
       }
       asset.etl_tasks.push(thisTask);
     }
