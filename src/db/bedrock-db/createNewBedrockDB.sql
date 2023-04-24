@@ -46,7 +46,7 @@ create table bedrock.tasks (
 create table bedrock.tags (
 	asset_name text not null,
 	tag text not null,
-	CONSTRAINT tasks_pk PRIMARY KEY (asset_name, tag)
+	CONSTRAINT tags_pk PRIMARY KEY (asset_name, tag)
 );
 
 /*
