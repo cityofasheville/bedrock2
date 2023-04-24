@@ -1,4 +1,4 @@
-INSTANCE = <YOU MUST PICK A UNIQUE INSTANCE STRING LIKE ejtest>
+INSTANCE = <YOU MUST PICK A UNIQUE INSTANCE STRING LIKE ejtest: lowercase alphanumeric characters and hyphens only>
 region = "us-east-1"
 statebucket = "avl-tfstate-store"
 account = 518970837364
