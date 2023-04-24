@@ -20,6 +20,11 @@ resource "aws_lambda_function" "create_etl_run_map-$$INSTANCE$$" {
       subnet_ids         = var.subnet_ids
       security_group_ids = var.security_group_ids
     }
+    environment {
+      variables = {
+        BEDROCK_DB_HOST = $$BEDROCK_DB_HOST$$
+      }
+    }
 }
 
 output "create_etl_run_map_arn" {
