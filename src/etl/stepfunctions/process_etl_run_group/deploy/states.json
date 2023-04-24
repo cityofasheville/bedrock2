@@ -120,11 +120,6 @@
             "Choices": [
               {
                 "Variable": "$.JobType",
-                "StringEquals": "noop",
-                "Next": "NoopTask"
-              },
-              {
-                "Variable": "$.JobType",
                 "StringEquals": "sql",
                 "Next": "SQLTask"
               },
@@ -155,22 +150,6 @@
               }
             ],
             "Default": "UnknownTask"
-          },
-          "NoopTask": {
-            "Comment": "Actively do nothing.",
-            "Type": "Task",
-            "Resource": "${etl_task_noop_arn}",
-            "ResultPath": "$.TaskOutput",
-            "Next": "CheckTaskStatus",
-            "Catch": [
-              {
-                "ErrorEquals": [
-                  "States.TaskFailed"
-                ],
-                "Next": "CheckTaskStatus",
-                "ResultPath": "$.TaskOutput"
-              }
-            ]
           },
           "SQLTask": {
             "Comment": "Run SQL Command",
