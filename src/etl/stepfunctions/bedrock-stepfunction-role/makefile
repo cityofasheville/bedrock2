@@ -13,7 +13,7 @@ TF_TARGS := $(patsubst %,$(DEST_DIR)/%,$(TFFILES))
 prebuild:
 	mkdir -p ./build
 
-$(DEST_DIR)/%: $(SRC_DIR)/%
+$(DEST_DIR)/%: $(SRC_DIR)/% ../../../make_variables
 	python3 ../../../scripts/vreplace.py -f ../../../make_variables $< $@
 
 

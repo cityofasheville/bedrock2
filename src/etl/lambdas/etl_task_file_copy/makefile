@@ -12,7 +12,7 @@ TF_TARGS := $(patsubst %,$(DEST_DIR)/%,$(TFFILES))
 prebuild:
 	mkdir -p ./build
 
-$(DEST_DIR)/%: $(SRC_DIR)/%
+$(DEST_DIR)/%: $(SRC_DIR)/% ../../../make_variables
 ifeq ($(build_mode),sam)
 	python3 ../../../scripts/vreplace.py -v codeuri=.. -f ../../../make_variables $< $@
 else
