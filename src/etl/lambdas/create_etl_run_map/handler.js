@@ -103,6 +103,17 @@ async function readTasks(connection, assetMap) {
       if (task.type === 'table_copy' || task.type === 'file_copy') {
         thisTask.source_location = task.source;
         thisTask.target_location = task.target;
+        if ('asset' in task.target) { // final target data is in asset location
+          const sql1 = `SELECT location FROM bedrock.assets where asset_name = '${arr[i][0]}';`;
+          // eslint-disable-next-line no-await-in-loop
+          const res1 = await client.query(sql1)
+            .catch((err) => {
+              const errmsg = pgErrorCodes[err.code];
+              throw new Error([`Postgres error: ${errmsg}`, err]);
+            });
+          const locData = res1.rows[0].location[task.target.asset];
+          thisTask.target_location = { ...task.target, ...locData };
+        }
       } else if (task.type === 'sql') {
         thisTask.connection = task.target.connection;
         thisTask.sql_string = task.configuration;

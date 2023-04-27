@@ -78,7 +78,7 @@ for asset_name in os.listdir(assets_directory):
             values(%s, %s, %s, %s);
           '''
           cur.execute(sql,
-          (asset_name, config["description"], config["location"], config["active"]
+          (asset_name, config["description"], json.dumps(config["location"]), config["active"]
           ))
           dependencies = config['depends']
           

@@ -4,7 +4,7 @@ create schema if not exists bedrock;
 create table bedrock.assets (
 	asset_name text primary key not null,
 	description text null,
-	location text null,
+	location json null,
 	active bool not null
 );
 
