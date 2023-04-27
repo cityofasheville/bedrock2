@@ -1,9 +1,11 @@
-INSTANCE = ejdev
+INSTANCE = <YOU MUST PICK A UNIQUE INSTANCE STRING LIKE ejtest: lowercase alphanumeric characters and hyphens only>
 region = "us-east-1"
 statebucket = "avl-tfstate-store"
 account = 518970837364
 email_recipients = "['dummy@ashevillenc.gov']"
 build_mode = std # Set to sam to build using SAM
+BEDROCK_DB_HOST = ""
 
+# Do not edit or delete the next line
 reverse = $(if $(1),$(call reverse,$(wordlist 2,$(words $(1)),$(1)))) $(firstword $(1))
 

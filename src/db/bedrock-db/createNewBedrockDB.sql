@@ -42,6 +42,12 @@ create table bedrock.tasks (
 	CONSTRAINT tasks_pk PRIMARY KEY (asset_name, seq_number)
 );
 
+-- drop table bedrock.tags;
+create table bedrock.tags (
+	asset_name text not null,
+	tag text not null,
+	CONSTRAINT tags_pk PRIMARY KEY (asset_name, tag)
+);
 
 /*
 INSERT INTO bedrock.tasks

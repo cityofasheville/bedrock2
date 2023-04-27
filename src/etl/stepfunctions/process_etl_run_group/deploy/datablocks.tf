@@ -44,14 +44,6 @@ data "terraform_remote_state" "check_etl_job_task_status_lambda" {
   }
 }
 
-data "terraform_remote_state" "etl_task_noop_lambda" {
-  backend = "s3"
-  config = {
-    bucket = var.statebucket
-    key    = "terraform/bedrock/$$INSTANCE$$/lambdas/etl_task_noop/terraform.tfstate"
-    region = var.region
-  }
-}
 
 data "terraform_remote_state" "etl_task_sql_lambda" {
   backend = "s3"
@@ -98,6 +90,14 @@ data "terraform_remote_state" "etl_task_file_copy_lambda" {
   }
 }
 
+data "terraform_remote_state" "etl_task_run_lambda" {
+  backend = "s3"
+  config = {
+    bucket = var.statebucket
+    key    = "terraform/bedrock/$$INSTANCE$$/lambdas/etl_task_run_lambda/terraform.tfstate"
+    region = var.region
+  }
+}
 data "terraform_remote_state" "etl_task_unknown_lambda" {
   backend = "s3"
   config = {

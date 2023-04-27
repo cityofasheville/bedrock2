@@ -6,14 +6,12 @@ resource "aws_iam_role" "bedrock-lambda-role-$$INSTANCE$$" {
     name = "bedrock-lambda-role-${var.instance}"
     assume_role_policy = file("./policy_role.json")
     tags = {
-        Name          = "bedrock-lambda-role-${var.instance}"
-        Application   = "bedrock"
-        Environment   = "development"
-        TechnicalLead = "custom-dev"
-        SupportLead   = "TBD"
-        Department    = "citywide"
-        DataClass     = "confidential"
-        Description   = "Role used by all Bedrock lambda functions."
+      Name          = "bedrock-lambda-role-${var.instance}"
+      "coa:application" = "bedrock"
+      "coa:department"  = "information-technology"
+      "coa:owner"       = "jtwilson@ashevillenc.gov"
+      "coa:owner-team"  = "dev"
+      Description   = "Role used by all Bedrock lambda functions."
     }
 }
 

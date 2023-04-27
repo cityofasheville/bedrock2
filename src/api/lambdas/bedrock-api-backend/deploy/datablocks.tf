@@ -6,4 +6,3 @@ data "terraform_remote_state" "lambda_role" {
     region = var.region
   }
 }
-

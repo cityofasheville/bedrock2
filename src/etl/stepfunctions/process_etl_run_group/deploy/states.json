@@ -1,7 +1,25 @@
 {
   "Comment": "State machine to run a single ETL run group",
-  "StartAt": "Init",
+  "StartAt": "CheckForRunGroup",
   "States": {
+    "CheckForRunGroup": {
+      "Comment": "See if rungroup is set",
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.rungroup",
+          "IsPresent": true,
+          "Next": "Init"
+        }
+      ],
+      "Default": "AddRunGroupFlag"
+    },
+    "AddRunGroupFlag": {
+      "Type": "Pass",
+      "Result": "UseCronStrings",
+      "ResultPath": "$.rungroup",
+      "Next": "Init"
+    },
     "Init": {
       "Comment": "Initialize the run map.",
       "Type": "Task",
@@ -102,11 +120,6 @@
             "Choices": [
               {
                 "Variable": "$.JobType",
-                "StringEquals": "noop",
-                "Next": "NoopTask"
-              },
-              {
-                "Variable": "$.JobType",
                 "StringEquals": "sql",
                 "Next": "SQLTask"
               },
@@ -129,25 +142,14 @@
                 "Variable": "$.JobType",
                 "StringEquals": "file_copy",
                 "Next": "FileCopyTask"
+              },
+              {
+                "Variable": "$.JobType",
+                "StringEquals": "run_lambda",
+                "Next": "RunLambdaTask"
               }
             ],
             "Default": "UnknownTask"
-          },
-          "NoopTask": {
-            "Comment": "Actively do nothing.",
-            "Type": "Task",
-            "Resource": "${etl_task_noop_arn}",
-            "ResultPath": "$.TaskOutput",
-            "Next": "CheckTaskStatus",
-            "Catch": [
-              {
-                "ErrorEquals": [
-                  "States.TaskFailed"
-                ],
-                "Next": "CheckTaskStatus",
-                "ResultPath": "$.TaskOutput"
-              }
-            ]
           },
           "SQLTask": {
             "Comment": "Run SQL Command",
@@ -217,6 +219,22 @@
             "Comment": "Copy Files",
             "Type": "Task",
             "Resource": "${etl_task_file_copy_arn}",
+            "ResultPath": "$.TaskOutput",
+            "Next": "CheckTaskStatus",
+            "Catch": [
+              {
+                "ErrorEquals": [
+                  "States.TaskFailed"
+                ],
+                "Next": "CheckTaskStatus",
+                "ResultPath": "$.TaskOutput"
+              }
+            ]
+          },
+          "RunLambdaTask": {
+            "Comment": "Run outside Lambda",
+            "Type": "Task",
+            "Resource": "${etl_task_run_lambda_arn}",
             "ResultPath": "$.TaskOutput",
             "Next": "CheckTaskStatus",
             "Catch": [

@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-const { S3Client } = require('@aws-sdk/client-s3');
+const { S3Client, GetObjectCommand } = require('@aws-sdk/client-s3');
 const { Upload } = require('@aws-sdk/lib-storage');
 const stream = require('stream');
 
@@ -37,17 +37,18 @@ function fillDateTemplate(template) {
 
 async function getS3Stream(location) {
   try {
+    const s3Client = new S3Client({ region: s3Region });
+    const s3Key = location.s3_path + fillDateTemplate(location.filename);
+    const bucket = location.conn_info.s3_bucket;
+    let s3stream;
+    let promise;
     if (location.fromto === 'source_location') {
-      throw (new Error("S3 'From' not implemented"));
-      // TODO: S3 'From' might look like this:
-      // const obj = s3.send(new GetObjectCommand({ Bucket, Key}));
-      // obj.Body.pipe(process.stdout);
+      promise = Promise.resolve();
+      const response = await s3Client.send(new GetObjectCommand({ Bucket: bucket, Key: s3Key }));
+      s3stream = response.Body;
+      console.log('Copy from S3 Bucket: ', bucket, s3Key);
     } else if (location.fromto === 'target_location') {
-      const s3Client = new S3Client({ region: s3Region });
-      const s3Key = location.s3_path + fillDateTemplate(location.filename);
-      const bucket = location.conn_info.s3_bucket;
-
-      const s3stream = new stream.PassThrough();
+      s3stream = new stream.PassThrough();
 
       const upload = new Upload({
         client: s3Client,
@@ -58,15 +59,14 @@ async function getS3Stream(location) {
           ContentType: 'text/plain',
         },
       });
-      const promise = upload.done();
+      promise = upload.done();
       console.log('Copy to S3 Bucket: ', bucket, s3Key);
-      return ({ stream: s3stream, promise });
     }
+    return ({ stream: s3stream, promise });
   } catch (err) {
     console.log('err::', err);
     throw (new Error(err));
   }
-  return (0);
 }
 
 module.exports = getS3Stream;

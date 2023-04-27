@@ -5,15 +5,10 @@ const ses_sendemail = require('./ses_sendemail');
 const compiledFunction = pug.compileFile(path.join(__dirname, '/email.pug'));
 
 function sendEmails(results) {
-  let doSend = true;
-  let emailAddrs = JSON.parse(process.env.EMAIL_RECIPIENT_JSON);
-  let htmlEmail, emailSubject;
-  if (!results.failure || !results.success || !results.skipped) {
-    emailSubject = "ETL Jobs Status: No valid results"
-    htmlEmail = "No valid results. Invalid rungroup?"
-  } else {
-    const totalResults = results.failure.length + results.success.length + results.skipped.length;
-    if (totalResults > 0) {
+  const totalResults = results?.failure?.length + results?.success?.length + results?.skipped?.length;
+  if (totalResults > 0) {
+    let emailAddrs = JSON.parse(process.env.EMAIL_RECIPIENT_JSON);
+    let htmlEmail, emailSubject;
       results.failure = results.failure.map(res => res.name)
       results.failure.sort()
       results.success.sort()
@@ -27,13 +22,10 @@ function sendEmails(results) {
       let pugObj = {};
       pugObj.results = results;
       htmlEmail = compiledFunction(pugObj);
-    }
-    else {
-      doSend = false;
-    }
+      ses_sendemail(emailAddrs, htmlEmail, emailSubject);
+  }else{
+    console.log('No email sent')
   }
-
-  if (doSend) ses_sendemail(emailAddrs, htmlEmail, emailSubject);
 }
 
 module.exports = sendEmails;

@@ -1,19 +1,21 @@
 include ../../../make_variables
 
 dirs = build
+
 .PHONY: $(dirs) init plan apply destroy prebuild
 
 SRC_DIR := ./deploy
 DEST_DIR := ./build
-TFFILES := config.tf datablocks.tf backend.tf local.tfvars variables.tf makefile
+TFFILES := backend.tf config.tf local.tfvars variables.tf policy_invoke_lambda.json policy_role.json policy_secrets_manager.json makefile
 
 TF_TARGS := $(patsubst %,$(DEST_DIR)/%,$(TFFILES))
 
 prebuild:
 	mkdir -p ./build
 
-$(DEST_DIR)/%: $(SRC_DIR)/%
+$(DEST_DIR)/%: $(SRC_DIR)/% ../../../make_variables
 	python3 ../../../scripts/vreplace.py -f ../../../make_variables $< $@
+
 
 init: prebuild $(TF_TARGS)
 	$(MAKE) -C build $(MAKECMDGOALS)

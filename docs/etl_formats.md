@@ -44,11 +44,13 @@ Also see [Managed Data Assets README](https://github.com/cityofasheville/managed
             "connection": "localss1",
             "schemaname": "dbo",
             "tablename": "testtable",
+            __SOURCE OPTIONS__
             <OPTIONAL>: "tableheaders": true (this is mainly used for creating csv files)
-            <OPTIONAL> "append_serial": "fieldname"  (Adds an integer auto-numbering key field to target table. Put it in target instead of source like other options. A serial field with this name must appear as the last field in the taget table.)
             <OPTIONAL> "sortasc": "fieldname",
             <OPTIONAL> "sortdesc": "fieldname",
-            <OPTIONAL> "fixedwidth_noquotes": true  (Tables converted to csv by default have strings with double quotes in the data quoted. For fixed width files we don't want that)                               
+            <OPTIONAL> "fixedwidth_noquotes": true  (Tables converted to csv by default have strings with double quotes in the data quoted. For fixed width and XML files we don't want that)                               
+            __TARGET OPTIONS__
+            <OPTIONAL> "append_serial": "fieldname"  (Adds an integer auto-numbering key field to target table. A serial field with this name must appear as the last field in the target table.)
 
 #### CSV -S3
             "connection": "s3_data_files",
@@ -59,7 +61,8 @@ Also see [Managed Data Assets README](https://github.com/cityofasheville/managed
             "connection": "bedrock-googlesheets",
             "spreadsheetid": "9876234HIUFQER872345T",
             "range": 'Bad Actors!A5:B'
-            
+            __TARGET OPTIONS__
+            <OPTIONAL> "append": true  (By default, data is overwritten in sheet. Set to true to append as new rows.)       
 #### CSV -winshare
             "connection": "fileshare_g",
             "filepath": "/winshares/dont/work/on/lambda/(yet?)/data.csv",
@@ -168,13 +171,16 @@ SFTP has mostly been superseded by file copy, which has more potential source an
         }
 
 ```
-## No-op
+## Run Lambda
+Note: Called Lambda must return standard format: ```{statusCode: 200,body: {lambda_output: ""}}```
 ```
 {
     "run_group": "daily",
     "tasks": [
         {
-            "type": "noop",
+            "type": "run_lambda",
+            "lambda_arn": "arn:aws:lambda:us-east-1:acct:function:functionname",
+            "otherparams: "params required by called lambda",
             "active": true
         }
     ]

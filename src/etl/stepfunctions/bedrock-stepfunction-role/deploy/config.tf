@@ -7,12 +7,10 @@ resource "aws_iam_role" "bedrock-stepfunction-role-$$INSTANCE$$" {
     assume_role_policy = file("./role.json")
     tags = {
         Name          = "bedrock-stepfunction-role-$$INSTANCE$$"
-        Application   = "bedrock"
-        Environment   = "development"
-        TechnicalLead = "custom-dev"
-        SupportLead   = "tbd"
-        Department    = "citywide"
-        DataClass     = "confidential"
+      "coa:application" = "bedrock"
+      "coa:department"  = "information-technology"
+      "coa:owner"       = "jtwilson@ashevillenc.gov"
+      "coa:owner-team"  = "dev"
         Description   = "Role used by Bedrock step functions."
     }
 }

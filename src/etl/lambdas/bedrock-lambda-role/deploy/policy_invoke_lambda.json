@@ -4,7 +4,10 @@
         {
             "Sid": "AllowInvokeAnotherLambda",
             "Effect": "Allow",
-            "Action": "lambda:InvokeFunction",
+            "Action": [
+                "lambda:InvokeFunction",
+                "lambda:InvokeAsync"
+            ],
             "Resource": "*"
         }
     ]

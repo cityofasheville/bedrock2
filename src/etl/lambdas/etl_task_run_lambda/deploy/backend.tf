@@ -2,6 +2,6 @@ terraform {
   backend "s3" {
     region = $$region$$
     bucket = $$statebucket$$
-    key = "terraform/bedrock/$$INSTANCE$$/lambdas/etl_task_noop/terraform.tfstate"
+    key = "terraform/bedrock/$$INSTANCE$$/lambdas/etl_task_run_lambda/terraform.tfstate"
   }
 }

@@ -11,6 +11,12 @@ resource "aws_lambda_function" "etl_email_results-$$INSTANCE$$" {
     source_code_hash = filebase64sha256("function.zip")
     timeout         = 30
     memory_size     = 256
+    tags = {
+      "coa:application" = "bedrock"
+      "coa:department"  = "information-technology"
+      "coa:owner"       = "jtwilson@ashevillenc.gov"
+      "coa:owner-team"  = "dev"
+    }
     environment {
       variables = {
           "EMAIL_RECIPIENT_JSON" = jsonencode(
