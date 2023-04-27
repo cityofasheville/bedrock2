@@ -9,9 +9,7 @@
           "tablename": "BUNCOMBE_TAX_PERMITS"
       },
       "target_location": {
-          "connection": "pubrecdb1/mdastore1/dbadmin",
-          "schemaname": "bc",
-          "tablename": "buncombe_tax_permits"
+        "asset": 0
       },
       "active": true
     }

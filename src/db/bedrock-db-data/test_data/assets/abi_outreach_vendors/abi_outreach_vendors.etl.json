@@ -9,10 +9,7 @@
         "tablename": "mwbe_vendors_by_commodity"
       },
       "target_location": {
-        "filename": "abi_outreach_vendors",
-        "connection": "bedrock-googlesheets",
-        "spreadsheetid": "1lm_LdZS6yhniDEuVGyaj3vdD7ACU8Eo_pCkmNr81TvA",
-        "range": "Vendors!A2:Z",
+        "asset": 0,
         "append": false
       },
       "active": true
@@ -26,10 +23,7 @@
         "range": "Vendors!A2:Z"
       },
       "target_location": {
-        "filename": "abi_outreach_vendors",
-        "connection": "bedrock-googlesheets",
-        "spreadsheetid": "1lm_LdZS6yhniDEuVGyaj3vdD7ACU8Eo_pCkmNr81TvA",
-        "range": "Vendors!A2:Z",
+        "asset": 0,
         "append": true
       },
       "active": true
@@ -42,10 +36,7 @@
         "tablename": "mwbe_vendors_by_commodity_non_aggregated"
       },
       "target_location": {
-        "filename": "abi_outreach_vendors",
-        "connection": "bedrock-googlesheets",
-        "spreadsheetid": "1lm_LdZS6yhniDEuVGyaj3vdD7ACU8Eo_pCkmNr81TvA",
-        "range": "Vendors By Commodity Code!A2:Z",
+        "asset": 1,
         "append": false
       },
       "active": true

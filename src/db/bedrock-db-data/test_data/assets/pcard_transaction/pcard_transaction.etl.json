@@ -9,9 +9,7 @@
           "tablename": "pcard_transaction"
       },
       "target_location": {
-          "connection": "pubrecdb1/mdastore1/dbadmin",
-          "schemaname": "internal",
-          "tablename": "pcard_transaction"
+        "asset": 0
       },
       "active": true
     }

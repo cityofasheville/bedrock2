@@ -1,6 +1,12 @@
 {
     "name": "capital_projects_master",
-    "location": "google_sheets",
+    "location": [
+      {
+        "connection": "pubrecdb1/mdastore1/dbadmin",
+        "schemaname": "internal",
+        "tablename": "capital_projects_master"
+      }
+    ],
     "active": true,
     "type": "table",
     "description": "Capital Projects General Project Information",

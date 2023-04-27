@@ -9,9 +9,7 @@
           "tablename": "permit_tasks"
       },
       "target_location": {
-          "connection": "pubrecdb1/mdastore1/dbadmin",
-          "schemaname": "internal",
-          "tablename": "permit_tasks"
+        "asset": 0
       },
       "active": true
     }

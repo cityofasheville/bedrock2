@@ -1,8 +1,24 @@
 {
   "name": "steepslope",
-  "location": "mdastore1",
+  "location": [
+    {
+      "connection": "pubrecdb1/steepslope/dbadmin",
+      "schemaname": "public",
+      "tablename": "bc_incorporated_areas"
+    },
+    {
+      "connection": "pubrecdb1/steepslope/dbadmin",
+      "schemaname": "public",
+      "tablename": "coa_active_jurisdictions"
+    },
+    {
+      "connection": "pubrecdb1/steepslope/dbadmin",
+      "schemaname": "public",
+      "tablename": "bc_property"
+    }
+  ],
   "active": true,
-  "type": "multitable",
+  "type": "multi-table",
   "description": "Steep Slope App tables",
   "depends": [],
   "objects": [],

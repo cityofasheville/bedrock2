@@ -1,6 +1,12 @@
 {
   "name": "base_employee_private",
-  "location": "mdastore1",
+  "location": [
+    {
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "schemaname": "standard",
+      "tablename": "base_employee_private"
+    }
+  ],
   "active": true,
   "type": "table",
   "description": "Standard Employee-Non public fields",

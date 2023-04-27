@@ -1,6 +1,19 @@
 {
   "name": "coa_mwbe_vendors",
-  "location": "google_sheets",
+  "location": [
+    {
+      "filename": "abi_outreach_vendors",
+      "connection": "bedrock-googlesheets",
+      "spreadsheetid": "1lm_LdZS6yhniDEuVGyaj3vdD7ACU8Eo_pCkmNr81TvA",
+      "range": "Vendors!A2:Z"
+    },
+    {
+      "filename": "abi_outreach_vendors",
+      "connection": "bedrock-googlesheets",
+      "spreadsheetid": "1lm_LdZS6yhniDEuVGyaj3vdD7ACU8Eo_pCkmNr81TvA",
+      "range": "Vendors By Commodity Code!A2:Z"
+    }
+  ],
   "active": true,
   "type": "spreadsheet",
   "description": "List of MWBE vendors registered in Munis (not necessarily certified)",

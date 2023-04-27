@@ -1,6 +1,12 @@
 {
   "name": "coa_zoning_overlays",
-  "location": "mdastore1",
+  "location": [
+    {
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "schemaname": "internal",
+      "tablename": "coa_zoning_overlays"
+    }
+  ],
   "active": true,
   "type": "table",
   "description": "Asheville zoning overlays",

@@ -9,9 +9,7 @@
           "tablename": "coa_active_jurisdictions"
       },
       "target_location": {
-          "connection": "pubrecdb1/mdastore1/dbadmin",
-          "schemaname": "internal",
-          "tablename": "coa_active_jurisdictions"
+        "asset": 0
       },
       "active": true
     }

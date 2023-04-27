@@ -10,9 +10,7 @@
           "range": "Categories!A2:B"
         },
         "target_location": {
-          "connection": "pubrecdb1/mdastore1/dbadmin",
-          "schemaname": "internal",
-          "tablename": "capital_projects_master_categories"
+          "asset": 0
         },
         "active": true
       }

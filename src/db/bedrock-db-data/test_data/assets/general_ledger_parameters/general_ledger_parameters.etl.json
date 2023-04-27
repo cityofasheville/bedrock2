@@ -9,9 +9,7 @@
           "tablename": "GeneralLedgerParameters"
       },
       "target_location": {
-          "connection": "pubrecdb1/mdastore1/dbadmin",
-          "schemaname": "internal",
-          "tablename": "general_ledger_parameters"
+        "asset": 0
       },
       "active": true
     }

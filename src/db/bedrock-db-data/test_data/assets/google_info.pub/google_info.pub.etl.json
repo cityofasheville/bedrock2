@@ -9,9 +9,7 @@
           "tablename": "google_info"
       },
       "target_location": {
-          "connection": "coa-publicdb1/coa_share/dbadmin",
-          "schemaname": "open",
-          "tablename": "google_info"
+        "asset": 0
       },
       "active": true
     }

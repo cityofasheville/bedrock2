@@ -9,9 +9,7 @@
         "tablename": "permits"
       },
       "target_location": {
-        "connection": "coa-publicdb1/coa_share/dbadmin",
-        "schemaname": "bc",
-        "tablename": "permits"
+        "asset": 0
       },
       "active": true
     }

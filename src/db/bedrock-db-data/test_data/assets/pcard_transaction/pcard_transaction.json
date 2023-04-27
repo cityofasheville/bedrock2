@@ -1,6 +1,12 @@
 {
   "name": "pcard_transaction",
-  "location": "mdastore1",
+  "location": [
+    {
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "schemaname": "internal",
+      "tablename": "pcard_transaction"
+    }
+  ],
   "active": true,
   "type": "table",
   "description": "PCard transaction",

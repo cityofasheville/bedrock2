@@ -9,9 +9,7 @@
           "tablename": "coa_zoning_overlays"
       },
       "target_location": {
-          "connection": "pubrecdb1/mdastore1/dbadmin",
-          "schemaname": "internal",
-          "tablename": "coa_zoning_overlays"
+        "asset": 0
       },
       "active": true
     }

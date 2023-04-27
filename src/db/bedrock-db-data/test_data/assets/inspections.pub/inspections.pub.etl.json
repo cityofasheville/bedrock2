@@ -9,9 +9,7 @@
         "tablename": "inspections"
       },
       "target_location": {
-          "connection": "coa-publicdb1/coa_share/dbadmin",
-          "schemaname": "bc",
-          "tablename": "inspections"
+        "asset": 0
       },
       "active": true
     }

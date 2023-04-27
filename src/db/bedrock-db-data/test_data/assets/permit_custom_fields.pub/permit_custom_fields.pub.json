@@ -1,6 +1,12 @@
 {
   "name": "permit_custom_fields.pub",
-  "location": "coa-publicdb1/coa_share/dbadmin",
+  "location": [
+    {
+      "connection": "coa-publicdb1/coa_share/dbadmin",
+      "schemaname": "bc",
+      "tablename": "permit_custom_fields"
+    }
+  ],
   "active": true,
   "type": "table",
   "description": "Permit custom fields data for Buncombe",

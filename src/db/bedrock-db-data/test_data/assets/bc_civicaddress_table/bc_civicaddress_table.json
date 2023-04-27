@@ -1,6 +1,12 @@
 {
   "name": "bc_civicaddress_table",
-  "location": "mdastore1",
+  "location": [
+    {
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "schemaname": "internal",
+      "tablename": "bc_civicaddress_table"
+    }
+  ],
   "active": true,
   "type": "table",
   "description": "Civic address table from County",

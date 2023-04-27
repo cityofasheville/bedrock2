@@ -1,6 +1,12 @@
 {
   "name": "training_students",
-  "location": "mdastore1",
+  "location": [
+    {
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "schemaname": "internal",
+      "tablename": "training_students"
+    }
+  ],
   "active": true,
   "type": "table",
   "description": "Student registrations for training classes",

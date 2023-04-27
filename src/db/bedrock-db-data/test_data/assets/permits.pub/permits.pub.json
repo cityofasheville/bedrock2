@@ -1,6 +1,12 @@
 {
   "name": "permits.pub",
-  "location": "coa-publicdb1/coa_share/dbadmin",
+  "location": [
+    {
+      "connection": "coa-publicdb1/coa_share/dbadmin",
+      "schemaname": "bc",
+      "tablename": "permits"
+    }
+  ],
   "active": true,
   "type": "table",
   "description": "Permits data for Buncombe",

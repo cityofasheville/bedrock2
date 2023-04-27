@@ -1,6 +1,12 @@
 {
   "name": "permit_contractors.pub",
-  "location": "coa-publicdb1/coa_share/dbadmin",
+  "location": [
+    {
+      "connection": "coa-publicdb1/coa_share/dbadmin",
+      "schemaname": "bc",
+      "tablename": "permit_contractors"
+    }
+  ],
   "active": true,
   "type": "table",
   "description": "Permit contractors data for Buncombe",

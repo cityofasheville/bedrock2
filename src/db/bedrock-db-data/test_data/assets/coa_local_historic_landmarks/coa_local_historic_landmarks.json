@@ -1,6 +1,12 @@
 {
   "name": "coa_local_historic_landmarks",
-  "location": "mdastore1",
+  "location": [
+    {
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "schemaname": "internal",
+      "tablename": "coa_local_historic_landmarks"
+    }
+  ],
   "active": true,
   "type": "table",
   "description": "coa_local_historic_landmarks",

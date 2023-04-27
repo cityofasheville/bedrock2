@@ -1,6 +1,12 @@
 {
   "name": "bc_property",
-  "location": "mdastore1",
+  "location": [
+    {
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "schemaname": "internal",
+      "tablename": "bc_property"
+    }
+  ],
   "active": true,
   "type": "table",
   "description": "Property table from County",

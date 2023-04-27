@@ -1,6 +1,12 @@
 {
   "name": "coa_apd_incident_data",
-  "location": "mdastore1",
+  "location": [
+    {
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "schemaname": "internal",
+      "tablename": "coa_apd_incident_data"
+    }
+  ],
   "active": true,
   "type": "table",
   "description": "Crime incident data from Buncombe County RMS bc_public_incident_data",

@@ -9,9 +9,7 @@
           "tablename": "coa_street_maintenance"
       },
       "target_location": {
-          "connection": "pubrecdb1/mdastore1/dbadmin",
-          "schemaname": "internal",
-          "tablename": "coa_street_maintenance"
+        "asset": 0
       },
       "active": true
     }

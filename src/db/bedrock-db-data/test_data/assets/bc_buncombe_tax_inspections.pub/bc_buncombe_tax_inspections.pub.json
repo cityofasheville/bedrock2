@@ -1,6 +1,12 @@
 {
   "name": "bc_buncombe_tax_inspections.pub",
-  "location": "coa-publicdb1/coa_share/dbadmin",
+  "location": [
+    {
+      "connection": "coa-publicdb1/coa_share/dbadmin",
+      "schemaname": "bc",
+      "tablename": "buncombe_tax_inspections"
+    }
+  ],
   "active": true,
   "type": "table",
   "description": "",

@@ -1,6 +1,12 @@
 {
   "name": "coa_bc_address_master",
-  "location": "mdastore1",
+  "location": [
+    {
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "schemaname": "internal",
+      "tablename": "coa_bc_address_master"
+    }
+  ],
   "active": true,
   "type": "table",
   "description": "Master address table",

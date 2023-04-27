@@ -29,6 +29,27 @@ lastdate as (
 			'Approved with Conditions',
 			'Disapproved',
 			'Hold for Revision'
+			-- 'Approved',  -- As per Mark email 4/14/22 just these 4
+			-- 'Approved with Conditions',
+			-- 'CA Issued',
+			-- 'CC Issued',
+			-- 'Closed',
+			-- 'CO Issued',
+			-- 'Disapproved',
+			-- 'Finaled',
+			-- 'In Review',
+			-- 'Issued',
+			-- 'Partial Issued',
+			-- 'Pending Applicant Action',
+			-- 'Permit Verification',
+			-- 'Reissued',
+			-- 'TCC Issued',
+			-- 'TCC Issued 60 Days',
+			-- 'TCC Issued 90 Days',
+			-- 'TCO Issued',
+			-- 'TCO Issued 30 Days',
+			-- 'TCO Issued 60 Days',
+			-- 'TCO Issued 90 Days'
 	  )
 	group by RECORD_ID
 )

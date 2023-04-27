@@ -9,9 +9,7 @@
           "tablename": "permit_custom_fields"
       },
       "target_location": {
-          "connection": "pubrecdb1/mdastore1/dbadmin",
-          "schemaname": "internal",
-          "tablename": "permit_custom_fields"
+        "asset": 0
       },
       "active": true
     }

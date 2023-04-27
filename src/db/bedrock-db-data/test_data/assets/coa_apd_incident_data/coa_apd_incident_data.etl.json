@@ -9,9 +9,7 @@
           "tablename": "coa_apd_incident_data"
       },
       "target_location": {
-          "connection": "pubrecdb1/mdastore1/dbadmin",
-          "schemaname": "internal",
-          "tablename": "coa_apd_incident_data"
+        "asset": 0
       },
       "active": true
     }

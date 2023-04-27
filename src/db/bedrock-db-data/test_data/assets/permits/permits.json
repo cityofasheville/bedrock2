@@ -1,6 +1,12 @@
 {
   "name": "permits",
-  "location": "mdastore1",
+  "location": [
+    {
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "schemaname": "internal",
+      "tablename": "permits"
+    }
+  ],
   "active": true,
   "type": "table",
   "description": "Permits data",

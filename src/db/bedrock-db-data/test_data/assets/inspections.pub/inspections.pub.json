@@ -1,6 +1,12 @@
 {
   "name": "inspections.pub",
-  "location": "coa-publicdb1/coa_share/dbadmin",
+  "location": [
+    {
+      "connection": "coa-publicdb1/coa_share/dbadmin",
+      "schemaname": "bc",
+      "tablename": "inspections"
+    }
+  ],
   "active": true,
   "type": "table",
   "description": "",

@@ -1,6 +1,12 @@
 {
   "name": "permit_owners",
-  "location": "mdastore1",
+  "location": [
+    {
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "schemaname": "internal",
+      "tablename": "permit_owners"
+    }
+  ],
   "active": true,
   "type": "table",
   "description": "Owners associated with permits",

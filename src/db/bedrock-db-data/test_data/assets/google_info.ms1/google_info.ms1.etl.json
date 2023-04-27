@@ -9,9 +9,7 @@
           "tablename": "Google_Info"
       },
       "target_location": {
-          "connection": "pubrecdb1/mdastore1/dbadmin",
-          "schemaname": "internal",
-          "tablename": "google_info"
+        "asset": 0
       },
       "active": true
     }

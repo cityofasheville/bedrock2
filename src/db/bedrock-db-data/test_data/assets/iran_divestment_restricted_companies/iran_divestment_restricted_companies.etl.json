@@ -10,9 +10,7 @@
           "range": "Bad Actors!A5:B"
         },
         "target_location": {
-          "connection": "pubrecdb1/mdastore1/dbadmin",
-          "schemaname": "internal",
-          "tablename": "iran_divestment_restricted_companies"
+          "asset": 0
         },
         "active": true
     }

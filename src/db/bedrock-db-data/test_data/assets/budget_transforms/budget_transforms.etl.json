@@ -10,9 +10,7 @@
         "range": "categories!A2:B"
       },
       "target_location": {
-        "connection": "pubrecdb1/mdastore1/dbadmin",
-        "schemaname": "internal",
-        "tablename": "budget_categories"
+        "asset": 0
       },
       "active": true
     },
@@ -25,9 +23,7 @@
         "range": "deptdiv_mappings!A2:F"
       },
       "target_location": {
-        "connection": "pubrecdb1/mdastore1/dbadmin",
-        "schemaname": "internal",
-        "tablename": "budget_deptdiv_mappings"
+        "asset": 1
       },
       "active": true
     },
@@ -40,9 +36,7 @@
         "range": "budget_sections!A2:B"
       },
       "target_location": {
-        "connection": "pubrecdb1/mdastore1/dbadmin",
-        "schemaname": "internal",
-        "tablename": "budget_sections"
+        "asset": 2
       },
       "active": true
     },
@@ -55,9 +49,7 @@
         "range": "category_mapping!A2:C"
       },
       "target_location": {
-        "connection": "pubrecdb1/mdastore1/dbadmin",
-        "schemaname": "internal",
-        "tablename": "budget_category_mapping"
+        "asset": 3
       },
       "active": true
     },
@@ -70,9 +62,7 @@
         "range": "budget_section_mapping!A2:D"
       },
       "target_location": {
-        "connection": "pubrecdb1/mdastore1/dbadmin",
-        "schemaname": "internal",
-        "tablename": "budget_section_mapping"
+        "asset": 4
       },
       "active": true
     },
@@ -85,9 +75,7 @@
         "range": "exclusions!A2:B"
       },
       "target_location": {
-        "connection": "pubrecdb1/mdastore1/dbadmin",
-        "schemaname": "internal",
-        "tablename": "budget_exclusions"
+        "asset": 5
       },
       "active": true
     },
@@ -100,9 +88,7 @@
         "range": "interfund_transfers!A2:B"
       },
       "target_location": {
-        "connection": "pubrecdb1/mdastore1/dbadmin",
-        "schemaname": "internal",
-        "tablename": "budget_interfund_transfers"
+        "asset": 6
       },
       "active": true
     }

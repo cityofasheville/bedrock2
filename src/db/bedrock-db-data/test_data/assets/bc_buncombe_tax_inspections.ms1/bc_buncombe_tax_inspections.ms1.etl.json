@@ -4,14 +4,12 @@
     {
       "type": "table_copy",
       "source_location": {
-          "connection": "coa-acceladb/accela/mssqlgisadmin",
-          "schemaname": "dbo",
-          "tablename": "BUNCOMBE_TAX_INSPECTIONS"
+        "connection": "coa-acceladb/accela/mssqlgisadmin",
+        "schemaname": "dbo",
+        "tablename": "BUNCOMBE_TAX_INSPECTIONS"
       },
       "target_location": {
-          "connection": "pubrecdb1/mdastore1/dbadmin",
-          "schemaname": "bc",
-          "tablename": "buncombe_tax_inspections"
+        "asset": 0
       },
       "active": true
     }

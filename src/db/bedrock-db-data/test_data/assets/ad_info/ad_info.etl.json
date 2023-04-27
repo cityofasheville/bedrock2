@@ -9,9 +9,7 @@
           "tablename": "ad_info"
       },
       "target_location": {
-          "connection": "pubrecdb1/mdastore1/dbadmin",
-          "schemaname": "internal",
-          "tablename": "ad_info"
+          "asset": 0
       },
       "active": true
     }

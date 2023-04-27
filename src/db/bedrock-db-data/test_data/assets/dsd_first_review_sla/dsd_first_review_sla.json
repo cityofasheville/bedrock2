@@ -1,6 +1,12 @@
 {
   "name": "dsd_first_review_sla",
-  "location": "mdastore1",
+  "location": [
+    {
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "schemaname": "internal",
+      "tablename": "dsd_first_review_sla"
+    }
+  ],
   "active": true,
   "type": "table",
   "description": "DSD first-review SLA performance",

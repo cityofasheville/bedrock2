@@ -9,9 +9,7 @@
           "tablename": "inspections"
       },
       "target_location": {
-          "connection": "pubrecdb1/mdastore1/dbadmin",
-          "schemaname": "internal",
-          "tablename": "inspections"
+        "asset": 0
       },
       "active": true
     }

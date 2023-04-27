@@ -1,6 +1,12 @@
 {
   "name": "coa_districts_public_works",
-  "location": "mdastore1",
+  "location": [
+    {
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "schemaname": "internal",
+      "tablename": "coa_districts_public_works"
+    }
+  ],
   "active": true,
   "type": "table",
   "description": "Public works districts",

@@ -9,9 +9,7 @@
           "tablename": "coa_national_register_properties"
       },
       "target_location": {
-          "connection": "pubrecdb1/mdastore1/dbadmin",
-          "schemaname": "internal",
-          "tablename": "coa_national_register_properties"
+        "asset": 0
       },
       "active": true
     }

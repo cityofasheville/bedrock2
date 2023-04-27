@@ -9,9 +9,7 @@
           "tablename": "gl_budget"
       },
       "target_location": {
-          "connection": "pubrecdb1/mdastore1/dbadmin",
-          "schemaname": "internal",
-          "tablename": "gl_budget"
+        "asset": 0
       },
       "active": true
     }

@@ -11,9 +11,7 @@
           "range": "Sheet1!A2:Q"
         },
         "target_location": {
-          "connection": "pubrecdb1/mdastore1/dbadmin",
-          "schemaname": "internal",
-          "tablename": "business_resources"
+          "asset": 0
         },
         "active": true
     }

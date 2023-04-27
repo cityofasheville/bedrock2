@@ -1,6 +1,42 @@
 {
   "name": "budget_transforms",
-  "location": "mdastore1",
+  "location": [
+    {
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "schemaname": "internal",
+      "tablename": "budget_categories"
+    },
+    {
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "schemaname": "internal",
+      "tablename": "budget_deptdiv_mappings"
+    },
+    {
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "schemaname": "internal",
+      "tablename": "budget_sections"
+    },
+    {
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "schemaname": "internal",
+      "tablename": "budget_category_mapping"
+    },
+    {
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "schemaname": "internal",
+      "tablename": "budget_section_mapping"
+    },
+    {
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "schemaname": "internal",
+      "tablename": "budget_exclusions"
+    },
+    {
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "schemaname": "internal",
+      "tablename": "budget_interfund_transfers"
+    }
+  ],
   "active": true,
   "type": "multi-table",
   "description": "Category and section mappings, exclusions, etc. for GL data for budget",

@@ -1,6 +1,12 @@
 {
   "name": "permit_tasks",
-  "location": "mdastore1",
+  "location": [
+    {
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "schemaname": "internal",
+      "tablename": "permit_tasks"
+    }
+  ],
   "active": true,
   "type": "table",
   "description": "Permit tasks data",

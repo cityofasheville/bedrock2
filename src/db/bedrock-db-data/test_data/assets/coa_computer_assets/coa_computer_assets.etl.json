@@ -9,10 +9,7 @@
         "tablename": "coa_computer_assets"
       },
       "target_location": {
-        "filename": "coa_computer_assets",
-        "connection": "bedrock-googlesheets",
-        "spreadsheetid": "1P9tdY7lawwoZXJmn09UgRMgH7JoauYG8h00MEkGzv8Q",
-        "range": "ComputerAssets!A2:AO",
+        "asset": 0,
         "append": false
       },
       "active": true

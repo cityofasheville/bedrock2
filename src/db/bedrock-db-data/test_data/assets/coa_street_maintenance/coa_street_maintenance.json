@@ -1,6 +1,12 @@
 {
   "name": "coa_street_maintenance",
-  "location": "mdastore1",
+  "location": [
+    {
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "schemaname": "internal",
+      "tablename": "coa_street_maintenance"
+    }
+  ],
   "active": true,
   "type": "table",
   "description": "Street Maintenance",

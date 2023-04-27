@@ -1,6 +1,12 @@
 {
   "name": "coa_districts_water",
-  "location": "mdastore1",
+  "location": [
+    {
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "schemaname": "internal",
+      "tablename": "coa_districts_water"
+    }
+  ],
   "active": true,
   "type": "table",
   "description": "Asheville water districts",

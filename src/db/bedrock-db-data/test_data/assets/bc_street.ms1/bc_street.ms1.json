@@ -1,6 +1,12 @@
 {
   "name": "bc_street.ms1",
-  "location": "mdastore1",
+  "location": [
+    {
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "schemaname": "internal",
+      "tablename": "bc_street"
+    }
+  ],
   "active": true,
   "type": "table",
   "description": "Street table from Edit-DB",

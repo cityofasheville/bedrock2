@@ -1,6 +1,22 @@
 {
   "name": "coa_cip_project_shapes",
-  "location": "mdastore1",
+  "location": [
+    {
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "schemaname": "internal",
+      "tablename": "coa_cip_project_points"
+    },
+    {
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "schemaname": "internal",
+      "tablename": "coa_cip_project_lines"
+    },
+    {
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "schemaname": "internal",
+      "tablename": "coa_cip_project_polygons"
+    }
+  ],
   "active": true,
   "type": "multi-table",
   "description": "Point, line and polygon shapes for CIP projects",

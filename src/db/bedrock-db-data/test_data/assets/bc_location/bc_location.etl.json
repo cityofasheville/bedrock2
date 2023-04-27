@@ -9,9 +9,7 @@
           "tablename": "bc_location"
       },
       "target_location": {
-          "connection": "pubrecdb1/mdastore1/dbadmin",
-          "schemaname": "internal",
-          "tablename": "bc_location"
+        "asset": 0
       },
       "active": true
     }

@@ -1,6 +1,12 @@
 {
   "name": "coa_active_jurisdictions",
-  "location": "mdastore1",
+  "location": [
+    {
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "schemaname": "internal",
+      "tablename": "coa_active_jurisdictions"
+    }
+  ],
   "active": true,
   "type": "table",
   "description": "Asheville corporate limits",

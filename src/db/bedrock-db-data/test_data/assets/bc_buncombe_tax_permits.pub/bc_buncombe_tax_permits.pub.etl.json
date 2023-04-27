@@ -9,9 +9,7 @@
         "tablename": "buncombe_tax_permits"
       },
       "target_location": {
-          "connection": "coa-publicdb1/coa_share/dbadmin",
-          "schemaname": "bc",
-          "tablename": "buncombe_tax_permits"
+        "asset": 0
       },
       "active": true
     }

@@ -1,6 +1,12 @@
 {
   "name": "bc_buncombe_tax_permits.ms1",
-  "location": "mdastore1",
+  "location": [
+    {
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "schemaname": "bc",
+      "tablename": "buncombe_tax_permits"
+    }
+  ],
   "active": true,
   "type": "table",
   "description": "",

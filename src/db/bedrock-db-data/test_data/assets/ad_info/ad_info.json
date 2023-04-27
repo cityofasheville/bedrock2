@@ -1,6 +1,12 @@
 {
   "name": "ad_info",
-  "location": "mdastore1",
+  "location": [
+    {
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "schemaname": "internal",
+      "tablename": "ad_info"
+    }
+  ],
   "active": true,
   "type": "table",
   "description": "Active Directory info",

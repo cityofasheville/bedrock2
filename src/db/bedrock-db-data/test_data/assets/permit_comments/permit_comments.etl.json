@@ -9,9 +9,7 @@
           "tablename": "permit_comments"
       },
       "target_location": {
-          "connection": "pubrecdb1/mdastore1/dbadmin",
-          "schemaname": "internal",
-          "tablename": "permit_comments"
+        "asset": 0
       },
       "active": true
     }

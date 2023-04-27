@@ -1,10 +1,18 @@
 {
-  "name": "vaccinations_rpt",
-  "location": "google sheets",
+  "name": "bike_counters.pub",
+  "location": [
+    {
+      "connection": "coa-publicdb1/coa_share/dbadmin",
+      "schemaname": "open",
+      "tablename": "bike_counters_by_type"
+    }
+  ],
   "active": true,
-  "type": "multitable",
-  "description": "Covid vaccination report sheets ",
-  "depends": [],
+  "type": "table",
+  "description": "Counting Pedestrians and Bicycles",
+  "depends": [
+    "bike_counters.ms1"
+  ],
   "objects": [],
   "category": "",
   "tags": [],

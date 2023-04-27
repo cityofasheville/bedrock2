@@ -1,8 +1,14 @@
 {
   "name": "base_employee_sensitive_snapshots",
-  "location": "mdastore1",
+  "location": [
+    {
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "schemaname": "standard",
+      "tablename": "base_employee_sensitive_snapshots"
+    }
+  ],
   "active": true,
-  "type": "multitable",
+  "type": "table",
   "description": "Monthly Snapshots of employee_sensitive view",
   "depends": [],
   "objects": [],

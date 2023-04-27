@@ -1,6 +1,12 @@
 {
   "name": "general_ledger_parameters",
-  "location": "mdastore1",
+  "location": [
+    {
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "schemaname": "internal",
+      "tablename": "general_ledger_parameters"
+    }
+  ],
   "active": true,
   "type": "table",
   "description": "Various GL parameters, especially budget year",

@@ -1,0 +1,17 @@
+{
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "source_location": {
+          "connection": "pubrecdb1/mdastore1/dbadmin",
+          "schemaname": "bike_counter",
+          "tablename": "bike_counters_by_type"
+      },
+      "target_location": {
+        "asset": 0
+      },
+      "active": true
+    }
+  ]
+}

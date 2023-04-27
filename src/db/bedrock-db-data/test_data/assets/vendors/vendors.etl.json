@@ -9,9 +9,7 @@
           "tablename": "ap_vendor"
       },
       "target_location": {
-          "connection": "pubrecdb1/mdastore1/dbadmin",
-          "schemaname": "internal",
-          "tablename": "vendors"
+        "asset": 0
       },
       "active": true
     }

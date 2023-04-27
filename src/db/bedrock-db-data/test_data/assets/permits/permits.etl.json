@@ -9,9 +9,7 @@
           "tablename": "permits"
       },
       "target_location": {
-          "connection": "pubrecdb1/mdastore1/dbadmin",
-          "schemaname": "internal",
-          "tablename": "permits"
+        "asset": 0
       },
       "active": true
     }

@@ -1,6 +1,12 @@
 {
   "name": "pr_employee_info",
-  "location": "mdastore1",
+  "location": [
+    {
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "schemaname": "internal",
+      "tablename": "pr_employee_info"
+    }
+  ],
   "active": true,
   "type": "table",
   "description": "Basic information for employees",

@@ -1,6 +1,12 @@
 {
   "name": "bc_location",
-  "location": "mdastore1",
+  "location": [
+    {
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "schemaname": "internal",
+      "tablename": "bc_location"
+    }
+  ],
   "active": true,
   "type": "table",
   "description": "Locations table from County",

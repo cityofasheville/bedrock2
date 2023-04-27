@@ -1,6 +1,12 @@
 {
   "name": "coa_asheville_neighborhoods.ms1",
-  "location": "mdastore1",
+  "location": [
+    {
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "schemaname": "internal",
+      "tablename": "coa_asheville_neighborhoods"
+    }
+  ],
   "active": true,
   "type": "table",
   "description": "Asheville neighborhoods",

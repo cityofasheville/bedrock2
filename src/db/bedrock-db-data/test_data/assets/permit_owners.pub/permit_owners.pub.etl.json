@@ -9,9 +9,7 @@
         "tablename": "permit_owners"
       },
       "target_location": {
-        "connection": "coa-publicdb1/coa_share/dbadmin",
-        "schemaname": "bc",
-        "tablename": "permit_owners"
+        "asset": 0
       },
       "active": true
     }

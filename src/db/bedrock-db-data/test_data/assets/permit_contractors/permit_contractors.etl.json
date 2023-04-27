@@ -9,9 +9,7 @@
           "tablename": "permit_contractors"
       },
       "target_location": {
-          "connection": "pubrecdb1/mdastore1/dbadmin",
-          "schemaname": "internal",
-          "tablename": "permit_contractors"
+        "asset": 0
       },
       "active": true
     }

@@ -10,10 +10,7 @@
 
       },
       "target_location": {
-        "filename": "equity_students_completed",
-        "connection": "bedrock-googlesheets",
-        "spreadsheetid": "1xGD2jVSveuYjDLRc6Z8dlwGIA78LKJKxu0ck0Y7easg",
-        "range": "Sheet1!A2:Z",
+        "asset": 0,
         "append": false
       },
       "active": true

@@ -1,6 +1,12 @@
 {
   "name": "permit_review_times",
-  "location": "mdastore1",
+  "location": [
+    {
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "schemaname": "internal",
+      "tablename": "permit_review_times"
+  }
+  ],
   "active": true,
   "type": "table",
   "description": "Count days to review permits",

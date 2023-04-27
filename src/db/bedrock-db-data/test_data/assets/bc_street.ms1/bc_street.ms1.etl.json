@@ -4,14 +4,12 @@
     {
       "type": "table_copy",
       "source_location": {
-          "connection": "coa-gis-warehouse1/coagiswarehouse/coagis",
-          "schemaname": "coagis",
-          "tablename": "bc_street"
+        "connection": "coa-gis-warehouse1/coagiswarehouse/coagis",
+        "schemaname": "coagis",
+        "tablename": "bc_street"
       },
       "target_location": {
-          "connection": "pubrecdb1/mdastore1/dbadmin",
-          "schemaname": "internal",
-          "tablename": "bc_street"
+        "asset": 0
       },
       "active": true
     }

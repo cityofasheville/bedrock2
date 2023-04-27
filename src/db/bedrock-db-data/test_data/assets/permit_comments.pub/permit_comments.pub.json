@@ -1,6 +1,12 @@
 {
   "name": "permit_comments.pub",
-  "location": "coa-publicdb1/coa_share/dbadmin",
+  "location": [
+    {
+      "connection": "coa-publicdb1/coa_share/dbadmin",
+      "schemaname": "bc",
+      "tablename": "permit_comments"
+    }
+  ],
   "active": true,
   "type": "table",
   "description": "Permit comments data for Buncombe",

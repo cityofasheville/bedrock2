@@ -1,6 +1,12 @@
 {
     "name": "business_resources.ms1",
-    "location": "mdastore1",
+    "location": [
+      {
+        "connection": "pubrecdb1/mdastore1/dbadmin",
+        "schemaname": "internal",
+        "tablename": "business_resources"
+      }
+    ],
     "active": true,
     "type": "table",
     "description": "Planning and Development Business Resources",

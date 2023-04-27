@@ -1,6 +1,12 @@
 {
   "name": "permit_comments",
-  "location": "mdastore1",
+  "location": [
+    {
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "schemaname": "internal",
+      "tablename": "permit_comments"
+    }
+  ],
   "active": true,
   "type": "table",
   "description": "Permit comments data",

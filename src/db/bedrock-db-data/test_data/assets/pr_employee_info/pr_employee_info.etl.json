@@ -9,9 +9,7 @@
           "tablename": "pr_employee_info"
       },
       "target_location": {
-          "connection": "pubrecdb1/mdastore1/dbadmin",
-          "schemaname": "internal",
-          "tablename": "pr_employee_info"
+        "asset": 0
       },
       "active": true
     },

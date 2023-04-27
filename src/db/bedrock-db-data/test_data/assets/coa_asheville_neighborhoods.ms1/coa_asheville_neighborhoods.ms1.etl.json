@@ -9,9 +9,7 @@
           "tablename": "coa_asheville_neighborhoods"
       },
       "target_location": {
-          "connection": "pubrecdb1/mdastore1/dbadmin",
-          "schemaname": "internal",
-          "tablename": "coa_asheville_neighborhoods"
+        "asset": 0
       },
       "active": true
     }

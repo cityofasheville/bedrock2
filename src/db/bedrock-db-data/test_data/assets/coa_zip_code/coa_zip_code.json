@@ -1,6 +1,12 @@
 {
   "name": "coa_zip_code",
-  "location": "mdastore1",
+  "location": [
+    {
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "schemaname": "internal",
+      "tablename": "coa_zip_code"
+    }
+  ],
   "active": true,
   "type": "table",
   "description": "Asheville zip code areas",

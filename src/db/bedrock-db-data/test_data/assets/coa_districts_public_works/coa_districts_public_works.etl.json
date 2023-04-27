@@ -8,10 +8,8 @@
           "schemaname": "coagis",
           "tablename": "coa_districts_public_works"
       },
-      "target_location": {
-          "connection": "pubrecdb1/mdastore1/dbadmin",
-          "schemaname": "internal",
-          "tablename": "coa_districts_public_works"
+      "target_location":{
+        "asset": 0
       },
       "active": true
     }

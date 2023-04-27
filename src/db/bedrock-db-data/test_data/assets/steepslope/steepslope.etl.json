@@ -9,9 +9,7 @@
           "tablename": "bc_incorporated_areas"
       },
       "target_location": {
-          "connection": "pubrecdb1/steepslope/dbadmin",
-          "schemaname": "public",
-          "tablename": "bc_incorporated_areas"
+        "asset": 0
       },
       "active": true
     },
@@ -23,9 +21,7 @@
           "tablename": "coa_active_jurisdictions"
       },
       "target_location": {
-          "connection": "pubrecdb1/steepslope/dbadmin",
-          "schemaname": "public",
-          "tablename": "coa_active_jurisdictions"
+        "asset": 1
       },
       "active": true
     },
@@ -37,9 +33,7 @@
           "tablename": "bc_property"
       },
       "target_location": {
-          "connection": "pubrecdb1/steepslope/dbadmin",
-          "schemaname": "public",
-          "tablename": "bc_property"
+        "asset": 2
       },
       "active": true
     }

@@ -9,9 +9,7 @@
           "tablename": "training_students"
       },
       "target_location": {
-          "connection": "pubrecdb1/mdastore1/dbadmin",
-          "schemaname": "internal",
-          "tablename": "training_students"
+        "asset": 0
       },
       "active": true
     }

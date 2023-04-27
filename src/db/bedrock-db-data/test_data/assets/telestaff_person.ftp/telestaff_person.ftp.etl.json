@@ -1,0 +1,37 @@
+{
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "description": "Copy Telestaff XML file to S3",
+      "source_location": {
+        "connection": "munis/munprod/mssqlgisadmin",
+        "schemaname": "avl",
+        "tablename": "telestaff_person01_xml",
+        "fixedwidth_noquotes": true
+      },
+      "target_location": {
+        "connection": "s3_data_files",
+        "filename": "${YYYY}-${MM}-${DD}-Person.xml",
+        "s3_path": "telestaff-import-person/"
+      },
+      "active": true
+    },
+    {
+      "type": "file_copy",
+      "description": "Copy Telestaff XML file to FTP site",
+      "source_location": {
+        "connection": "s3_data_files",
+        "filename": "${YYYY}-${MM}-${DD}-Person.xml",
+        "path": "telestaff-import-person/"
+      },
+      "target_location": {
+        "connection": "telestaff_ftp",
+        "filename": "${YYYY}-${MM}-${DD}T${HH}-${mm}-${SS}.000ZPerson.xml",
+        "path": "/PROD/import/ongoing.unprocessed/"
+      },
+      "active": true
+    }
+  ],
+  "active": true
+}

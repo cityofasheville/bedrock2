@@ -1,6 +1,12 @@
 {
   "name": "permit_contractors",
-  "location": "mdastore1",
+  "location": [
+    {
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "schemaname": "internal",
+      "tablename": "permit_contractors"
+    }
+  ],
   "active": true,
   "type": "table",
   "description": "Permit contractors data",

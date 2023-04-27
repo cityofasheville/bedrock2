@@ -10,9 +10,7 @@
           "tablename": "business_resources"
         },
         "target_location": {
-          "connection": "coa-publicdb1/coa_share/dbadmin",
-          "schemaname": "open",
-          "tablename": "business_resources"
+          "asset": 0
         },
         "active": true
     }

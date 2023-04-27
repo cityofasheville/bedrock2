@@ -1,6 +1,12 @@
 {
   "name": "gl_budget",
-  "location": "mdastore1",
+  "location": [
+    {
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "schemaname": "internal",
+      "tablename": "gl_budget"
+    }
+  ],
   "active": true,
   "type": "table",
   "description": "Master budget table",

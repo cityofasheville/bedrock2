@@ -1,6 +1,12 @@
 {
   "name": "permit_contacts",
-  "location": "mdastore1",
+  "location": [
+    {
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "schemaname": "internal",
+      "tablename": "permit_contacts"
+    }
+  ],
   "active": true,
   "type": "table",
   "description": "Contacts associated with permits",

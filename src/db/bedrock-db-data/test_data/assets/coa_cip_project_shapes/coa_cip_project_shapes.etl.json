@@ -9,9 +9,7 @@
           "tablename": "coa_cip_project_points"
       },
       "target_location": {
-          "connection": "pubrecdb1/mdastore1/dbadmin",
-          "schemaname": "internal",
-          "tablename": "coa_cip_project_points"
+        "asset": 0
       },
       "active": true
     },
@@ -23,9 +21,7 @@
           "tablename": "coa_cip_project_lines"
       },
       "target_location": {
-          "connection": "pubrecdb1/mdastore1/dbadmin",
-          "schemaname": "internal",
-          "tablename": "coa_cip_project_lines"
+        "asset": 1
       },
       "active": true
     },
@@ -37,9 +33,7 @@
           "tablename": "coa_cip_project_polygons"
       },
       "target_location": {
-          "connection": "pubrecdb1/mdastore1/dbadmin",
-          "schemaname": "internal",
-          "tablename": "coa_cip_project_polygons"
+        "asset": 2
       },
       "active": true
     }

@@ -1,6 +1,12 @@
 {
   "name": "google_info.ms1",
-  "location": "mdastore1",
+  "location": [
+    {
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "schemaname": "internal",
+      "tablename": "google_info"
+    }
+  ],
   "active": true,
   "type": "table",
   "description": "Google Group info",

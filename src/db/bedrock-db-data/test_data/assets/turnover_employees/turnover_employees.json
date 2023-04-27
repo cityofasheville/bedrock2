@@ -1,6 +1,19 @@
 {
   "name": "turnover_employees",
-  "location": "google_sheets",
+  "location": [
+    {
+      "filename": "Employee Turnover Report",
+      "connection": "bedrock-googlesheets",
+      "spreadsheetid": "1yE8pfp9nZ9nETDd2ypN4h6y8-m06giQ5O797ghBQHYc",
+      "range": "Terminations!A2:X"
+    },
+    {
+      "filename": "Employee Turnover Report",
+      "connection": "bedrock-googlesheets",
+      "spreadsheetid": "1yE8pfp9nZ9nETDd2ypN4h6y8-m06giQ5O797ghBQHYc",
+      "range": "Counts!A2:P"
+    }
+  ],
   "active": true,
   "type": "spreadsheet",
   "description": "Report of Employees who were termed this month",

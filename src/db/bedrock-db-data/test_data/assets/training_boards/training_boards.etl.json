@@ -10,11 +10,9 @@
           "range": "Member Training!A2:F"
       },
       "target_location": {
-          "connection": "pubrecdb1/mdastore1/dbadmin",
-          "schemaname": "internal",
-          "tablename": "training_boards",
-          "append_serial": "objectid"
-        },
+        "asset": 0,
+        "append_serial": "objectid"
+      },
       "active": true
     }
   ]

@@ -4,14 +4,12 @@
     {
       "type": "table_copy",
       "source_location": {
-          "connection": "coa-gis-warehouse1/coagiswarehouse/coagis",
-          "schemaname": "coagis",
-          "tablename": "bc_civicaddress_table"
+        "connection": "coa-gis-warehouse1/coagiswarehouse/coagis",
+        "schemaname": "coagis",
+        "tablename": "bc_civicaddress_table"
       },
       "target_location": {
-          "connection": "pubrecdb1/mdastore1/dbadmin",
-          "schemaname": "internal",
-          "tablename": "bc_civicaddress_table"
+        "asset": 0
       },
       "active": true
     }

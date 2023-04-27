@@ -1,12 +1,16 @@
 {
   "name": "permit_custom_fields",
-  "location": "mdastore1",
+  "location": [
+    {
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "schemaname": "internal",
+      "tablename": "permit_custom_fields"
+    }
+  ],
   "active": true,
   "type": "table",
   "description": "Permit custom fields data ADD THIS depends BACK!!!! \"permits\"",
-  "depends": [
-    
-  ],
+  "depends": [],
   "objects": [],
   "category": "",
   "tags": [],

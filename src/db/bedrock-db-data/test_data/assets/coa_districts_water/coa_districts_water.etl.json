@@ -9,9 +9,7 @@
           "tablename": "coa_districts_water"
       },
       "target_location": {
-          "connection": "pubrecdb1/mdastore1/dbadmin",
-          "schemaname": "internal",
-          "tablename": "coa_districts_water"
+        "asset": 0
       },
       "active": true
     }

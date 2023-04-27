@@ -1,6 +1,12 @@
 {
   "name": "coa_national_register_properties",
-  "location": "mdastore1",
+  "location": [
+    {
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "schemaname": "internal",
+      "tablename": "coa_national_register_properties"
+    }
+  ],
   "active": true,
   "type": "table",
   "description": "National register properties",

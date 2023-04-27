@@ -9,9 +9,7 @@
           "tablename": "coa_local_historic_landmarks"
       },
       "target_location": {
-          "connection": "pubrecdb1/mdastore1/dbadmin",
-          "schemaname": "internal",
-          "tablename": "coa_local_historic_landmarks"
+        "asset": 0
       },
       "active": true
     }

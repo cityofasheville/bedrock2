@@ -1,6 +1,10 @@
 {
   "name": "base_employee",
-  "location": "mdastore1",
+  "location": [{
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "standard",
+    "tablename": "base_employee"
+  }],
   "active": true,
   "type": "table",
   "description": "Standard Employee",

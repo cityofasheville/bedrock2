@@ -9,9 +9,7 @@
           "tablename": "pcard_statement_status_history"
       },
       "target_location": {
-          "connection": "pubrecdb1/mdastore1/dbadmin",
-          "schemaname": "internal",
-          "tablename": "pcard_statement_status_history"
+        "asset": 0
       },
       "active": true
     }

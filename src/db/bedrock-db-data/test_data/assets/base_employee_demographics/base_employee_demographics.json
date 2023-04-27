@@ -1,6 +1,10 @@
 {
   "name": "base_employee_demographics",
-  "location": "mdastore1",
+  "location": {
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "standard",
+    "tablename": "base_employee_demographics"
+  },
   "active": true,
   "type": "table",
   "description": "Standard Employee - demographic data",

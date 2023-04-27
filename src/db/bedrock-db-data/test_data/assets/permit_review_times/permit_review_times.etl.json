@@ -15,9 +15,7 @@
           "tablename": "permit_review_times"
       },
       "target_location": {
-          "connection": "pubrecdb1/mdastore1/dbadmin",
-          "schemaname": "internal",
-          "tablename": "permit_review_times"
+        "asset": 0
       },
       "active": true
     }

@@ -1,10 +1,27 @@
 {
-  "name": "vaccinations",
-  "location": "mdastore1",
+  "name": "bike_counters.ms1",
+  "location": [
+    {
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "schemaname": "bike_counter",
+      "tablename": "counters"
+    },
+    {
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "schemaname": "bike_counter",
+      "tablename": "counter_channels"
+    },
+    {
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "schemaname": "bike_counter",
+      "tablename": "counter_counts"
+    }
+  ],
   "active": true,
-  "type": "multitable",
-  "description": "Covid emp list, vaccinations and tests; ",
-  "depends": [],
+  "type": "multi-table",
+  "description": "Counting Pedestrians and Bicycles",
+  "depends": [
+  ],
   "objects": [],
   "category": "",
   "tags": [],
