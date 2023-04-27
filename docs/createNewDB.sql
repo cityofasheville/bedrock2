@@ -7,7 +7,7 @@ drop table bedrock.assets;
 CREATE TABLE bedrock.assets (
 	asset_name text NOT NULL,
 	description text NULL,
-	"location" text NULL,
+	"location" json NULL,
 	active bool NOT NULL,
 	CONSTRAINT assets_pkey PRIMARY KEY (asset_name)
 );
