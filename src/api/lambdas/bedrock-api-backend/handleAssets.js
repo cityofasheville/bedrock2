@@ -40,8 +40,7 @@ async function handleAssets(event, pathElements, queryParams, verb, connection) 
           break;
 
         case 'PUT':
-          result.message = 'Update asset not implemented';
-          result.error = true;
+          result = await updateAsset(event.body, pathElements, queryParams, connection);
           break;
 
         case 'DELETE':
