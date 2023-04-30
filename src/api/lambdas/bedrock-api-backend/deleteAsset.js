@@ -52,7 +52,7 @@ async function deleteAsset(pathElements, queryParams, connection) {
         result.message = `Postgres error deleting asset dependencies: ${errmsg}`;
         throw new Error([result.message, err]);
       });
-    await client.query('delete from tags where asset_name = $1', [assetName])
+    await client.query('delete from bedrock.asset_tags where asset_name = $1', [assetName])
       .catch((err) => {
         const errmsg = pgErrorCodes[err.code];
         result.error = true;

@@ -51,7 +51,7 @@ async function getAsset(pathElements, queryParams, connection) {
   }
 
   // Now get tags
-  res = await client.query('SELECT * from bedrock.tags where asset_name like $1', [pathElements[1]])
+  res = await client.query('SELECT * from bedrock.asset_tags where asset_name like $1', [pathElements[1]])
     .catch((err) => {
       const errmsg = pgErrorCodes[err.code];
       throw new Error([`Postgres error: ${errmsg}`, err]);
@@ -59,8 +59,8 @@ async function getAsset(pathElements, queryParams, connection) {
 
   if (res.rowCount > 0) {
     for (let i = 0; i < res.rowCount; i += 1) {
-      if (res.rows[i].tag !== null) {
-        result.result.tags.push(res.rows[i].tag);
+      if (res.rows[i].tag_name !== null) {
+        result.result.tags.push(res.rows[i].tag_name);
       }
     }
   }

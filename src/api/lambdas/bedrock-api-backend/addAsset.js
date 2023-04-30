@@ -41,7 +41,7 @@ async function addAsset(requestBody, pathElements, queryParams, connection) {
       throw new Error([`Postgres error: ${errmsg}`, err]);
     });
 
-  const sql = 'SELECT * FROM bedrock.assets where asset_name like $1';
+  let sql = 'SELECT * FROM bedrock.assets where asset_name like $1';
   let res = await client.query(sql, [pathElements[1]])
     .catch((err) => {
       const errmsg = pgErrorCodes[err.code];
@@ -109,25 +109,59 @@ async function addAsset(requestBody, pathElements, queryParams, connection) {
 
   // Now add any tags
   if ('tags' in body) {
-    let tags = [];
+    const tags = []; let tmpTags = [];
     if (Array.isArray(body.tags)) {
-      tags = body.tags;
+      tmpTags = body.tags;
     } else {
-      tags = body.tags.split(',');
+      tmpTags = body.tags.split(',');
     }
-    for (let i = 0; i < tags.length; i += 1) {
-      const tag = tags[i].trim();
+
+    for (let i = 0; i < tmpTags.length; i += 1) {
+      const tag = tmpTags[i].trim();
       if (tag.length > 0) {
-        // eslint-disable-next-line no-await-in-loop
-        res = await client.query(
-          'INSERT INTO tags (asset_name, tag) VALUES ($1, $2)',
-          [body.asset_name, tag],
-        )
-          .catch((err) => {
-            const errmsg = pgErrorCodes[err.code];
-            throw new Error([`Postgres error inserting asset tags: ${errmsg}`, err]);
-          });
+        tags.push(tag); // Make sure they're cleaned up
       }
+    }
+    // For now, just add any tags that aren't in the tags table
+    sql = 'SELECT tag_name from bedrock.tags where tag_name in (';
+    for (let i = 0, cnt = 1, comma = ''; i < tags.length; i += 1) {
+      sql += `${comma}$${cnt}`;
+      cnt += 1;
+      comma = ', ';
+    }
+    sql += ');';
+    res = await client.query(sql, tags)
+      .catch((err) => {
+        const errmsg = pgErrorCodes[err.code];
+        throw new Error([`Postgres error reading asset tags: ${errmsg}`, err]);
+      });
+    if (res.rowCount !== tags.length) {
+      for (let i = 0; i < tags.length; i += 1) {
+        if (!res.rows.includes(tags[i])) {
+          // eslint-disable-next-line no-await-in-loop
+          await client.query(
+            'INSERT INTO tags (tag_name) VALUES ($1)',
+            [tags[i]],
+          )
+            .catch((err) => {
+              const errmsg = pgErrorCodes[err.code];
+              throw new Error([`Postgres error inserting asset tags: ${errmsg}`, err]);
+            });
+        }
+      }
+    }
+    // End of just adding any tags that aren't in the tags table for now
+
+    for (let i = 0; i < tags.length; i += 1) {
+      // eslint-disable-next-line no-await-in-loop
+      res = await client.query(
+        'INSERT INTO bedrock.asset_tags (asset_name, tag_name) VALUES ($1, $2)',
+        [body.asset_name, tags[i]],
+      )
+        .catch((err) => {
+          const errmsg = pgErrorCodes[err.code];
+          throw new Error([`Postgres error adding asset tags: ${errmsg}`, err]);
+        });
     }
     result.result.tags = body.tags;
   }
