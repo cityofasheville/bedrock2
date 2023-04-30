@@ -186,15 +186,3 @@ Note: Called Lambda must return standard format: ```{statusCode: 200,body: {lamb
     ]
 }
 ```
-## No-op
-```
-{
-    "run_group": "daily",
-    "tasks": [
-        {
-            "type": "noop",
-            "active": true
-        }
-    ]
-}
-```

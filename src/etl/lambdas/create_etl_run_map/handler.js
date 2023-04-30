@@ -2,7 +2,10 @@
 const { Client } = require('pg');
 const awsCronParser = require('aws-cron-parser');
 const toposort = require('toposort');
-const getConnection = require('./getConnection');
+// Disabling import/no-unresolved because the dependency as defined
+// in package.json only works in the build subdirectory.
+// eslint-disable-next-line import/no-unresolved
+const { getDBConnection } = require('bedrock_common');
 
 const TIME_INTERVAL = 15; // Frequency - must match Eventbridge scheduler
 
@@ -13,41 +16,6 @@ function formatRes(code, result) {
     statusCode: code,
     body: result,
   };
-}
-
-async function getConnectionObject() {
-  let connection = Promise.resolve({
-    host: process.env.BEDROCK_DB_HOST || 'localhost',
-    port: 5432,
-    user: process.env.BEDROCK_DB_USER || 'bedrock',
-    password: process.env.BEDROCK_DB_PASSWORD || 'test-bedrock',
-    database: process.env.BEDROCK_DB_NAME || 'bedrock',
-    max: 10,
-    idleTimeoutMillis: 10000,
-  });
-
-  // If BEDROCK_DB_HOST is not in the environment, assume normal bedrock DB
-  if (!('BEDROCK_DB_HOST' in process.env)) {
-    return getConnection('nopubrecdb1/bedrock/bedrock_user')
-      .then(
-        (cpValue) => {
-          connection = {
-            host: cpValue.host,
-            port: cpValue.port,
-            user: cpValue.username,
-            password: cpValue.password,
-            database: cpValue.database,
-            max: 10,
-            idleTimeoutMillis: 10000,
-          };
-          return connection;
-        },
-      )
-      .catch((err) => { // Just pass it on.
-        throw err;
-      });
-  }
-  return connection;
 }
 
 const pgErrorCodes = require('./pgErrorCodes');
@@ -139,7 +107,7 @@ async function readTasks(connection, assetMap) {
         thisTask.connection = task.target.connection;
         thisTask.sql_string = task.configuration;
       } else {
-        thisTask = task.target; // Really just noop
+        thisTask = task.target;
       }
       asset.etl_tasks.push(thisTask);
     }
@@ -181,7 +149,7 @@ async function getRungroups(connection) {
 // eslint-disable-next-line camelcase
 const lambda_handler = async function x(event) {
   try {
-    const dbConnection = await getConnectionObject();
+    const dbConnection = await getDBConnection();
     let rungroups = [event.rungroup];
     if (event.rungroup === 'UseCronStrings') {
       rungroups = await getRungroups(dbConnection);
