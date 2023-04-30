@@ -136,8 +136,12 @@ async function addAsset(requestBody, pathElements, queryParams, connection) {
         throw new Error([`Postgres error reading asset tags: ${errmsg}`, err]);
       });
     if (res.rowCount !== tags.length) {
+      const dbTags = [];
+      for (let i = 0; i < res.rowCount; i += 1) {
+        dbTags.push(res.rows[i].tag_name);
+      }
       for (let i = 0; i < tags.length; i += 1) {
-        if (!res.rows.includes(tags[i])) {
+        if (!dbTags.includes(tags[i])) {
           // eslint-disable-next-line no-await-in-loop
           await client.query(
             'INSERT INTO tags (tag_name) VALUES ($1)',

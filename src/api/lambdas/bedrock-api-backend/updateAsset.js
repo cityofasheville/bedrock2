@@ -142,9 +142,77 @@ async function updateAsset(requestBody, pathElements, queryParams, connection) {
       }
       await client.query('COMMIT');
     }
-    console.log('Returning result: ', JSON.stringify(result));
+
+    // Finally, update any tags.
+    if ('tags' in body) {
+      const tags = []; let tmpTags = [];
+      if (Array.isArray(body.tags)) {
+        tmpTags = body.tags;
+      } else {
+        tmpTags = body.tags.split(',');
+      }
+
+      for (let i = 0; i < tmpTags.length; i += 1) {
+        const tag = tmpTags[i].trim();
+        if (tag.length > 0) {
+          tags.push(tag); // Make sure they're cleaned up
+        }
+      }
+      // For now, just add any tags that aren't in the tags table
+      sql = 'SELECT tag_name from bedrock.tags where tag_name in (';
+      cnt = 1;
+      comma = '';
+      for (let i = 0; i < tags.length; i += 1) {
+        sql += `${comma}$${cnt}`;
+        cnt += 1;
+        comma = ', ';
+      }
+      sql += ');';
+      res = await client.query(sql, tags)
+        .catch((err) => {
+          const errmsg = pgErrorCodes[err.code];
+          throw new Error([`Postgres error reading asset tags: ${errmsg}`, err]);
+        });
+      if (res.rowCount !== tags.length) {
+        const dbTags = [];
+        for (let i = 0; i < res.rowCount; i += 1) {
+          dbTags.push(res.rows[i].tag_name);
+        }
+        for (let i = 0; i < tags.length; i += 1) {
+          if (!dbTags.includes(tags[i])) {
+            // eslint-disable-next-line no-await-in-loop
+            await client.query(
+              'INSERT INTO tags (tag_name) VALUES ($1)',
+              [tags[i]],
+            )
+              .catch((err) => {
+                const errmsg = pgErrorCodes[err.code];
+                throw new Error([`Postgres error inserting asset tags: ${errmsg}`, err]);
+              });
+          }
+        }
+      }
+      // End of just adding any tags that aren't in the tags table for now
+      // Now delete any existing tags
+      await client.query('DELETE FROM bedrock.asset_tags where asset_name = $1', [assetName]);
+
+      // And add the new ones back in
+      for (let i = 0; i < tags.length; i += 1) {
+        // eslint-disable-next-line no-await-in-loop
+        res = await client.query(
+          'INSERT INTO bedrock.asset_tags (asset_name, tag_name) VALUES ($1, $2)',
+          [body.asset_name, tags[i]],
+        )
+          .catch((err) => {
+            const errmsg = pgErrorCodes[err.code];
+            throw new Error([`Postgres error adding asset tags: ${errmsg}`, err]);
+          });
+      }
+      result.result.tags = body.tags;
+    }
     return result;
   }
+  return result;
 }
 
 module.exports = updateAsset;
