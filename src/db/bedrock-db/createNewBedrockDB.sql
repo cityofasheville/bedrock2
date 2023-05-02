@@ -44,9 +44,16 @@ create table bedrock.tasks (
 
 -- drop table bedrock.tags;
 create table bedrock.tags (
+  tag_name text not null,
+  display_name text,
+  constraint tags_pk PRIMARY KEY (tag_name)
+);
+
+-- drop table bedrock.asset_tags
+create table bedrock.asset_tags (
 	asset_name text not null,
-	tag text not null,
-	CONSTRAINT tags_pk PRIMARY KEY (asset_name, tag)
+	tag_name text not null,
+	CONSTRAINT asset_tags_pk PRIMARY KEY (asset_name, tag_name)
 );
 
 /*
