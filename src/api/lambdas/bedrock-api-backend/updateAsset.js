@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 /* eslint-disable no-console */
 const { Client } = require('pg');
 const pgErrorCodes = require('./pgErrorCodes');
@@ -85,7 +86,6 @@ async function updateAsset(requestBody, pathElements, queryParams, connection) {
       if (body.dependencies.length > 0) {
         for (let i = 0; i < body.dependencies.length; i += 1) {
           const dependency = body.dependencies[i];
-          // eslint-disable-next-line no-await-in-loop
           res = await client.query(
             'INSERT INTO dependencies (asset_name, dependency) VALUES ($1, $2)',
             [assetName, dependency],
@@ -170,9 +170,16 @@ async function updateAsset(requestBody, pathElements, queryParams, connection) {
       sql += ');';
       res = await client.query(sql, tags)
         .catch((err) => {
-          const errmsg = pgErrorCodes[err.code];
-          throw new Error([`Postgres error reading asset tags: ${errmsg}`, err]);
+          result.error = true;
+          result.message = `Postgres error: ${pgErrorCodes[err.code]}`;
+          result.result = null;
         });
+      if (result.error) {
+        await client.query('ROLLBACK');
+        await client.end();
+        return result;
+      }
+
       if (res.rowCount !== tags.length) {
         const dbTags = [];
         for (let i = 0; i < res.rowCount; i += 1) {
@@ -180,15 +187,20 @@ async function updateAsset(requestBody, pathElements, queryParams, connection) {
         }
         for (let i = 0; i < tags.length; i += 1) {
           if (!dbTags.includes(tags[i])) {
-            // eslint-disable-next-line no-await-in-loop
             await client.query(
               'INSERT INTO tags (tag_name) VALUES ($1)',
               [tags[i]],
             )
               .catch((err) => {
-                const errmsg = pgErrorCodes[err.code];
-                throw new Error([`Postgres error inserting asset tags: ${errmsg}`, err]);
+                result.error = true;
+                result.message = `Postgres error: ${pgErrorCodes[err.code]}`;
+                result.result = null;
               });
+            if (result.error) {
+              await client.query('ROLLBACK');
+              await client.end();
+              return result;
+            }
           }
         }
       }
@@ -198,15 +210,20 @@ async function updateAsset(requestBody, pathElements, queryParams, connection) {
 
       // And add the new ones back in
       for (let i = 0; i < tags.length; i += 1) {
-        // eslint-disable-next-line no-await-in-loop
         res = await client.query(
           'INSERT INTO bedrock.asset_tags (asset_name, tag_name) VALUES ($1, $2)',
           [body.asset_name, tags[i]],
         )
           .catch((err) => {
-            const errmsg = pgErrorCodes[err.code];
-            throw new Error([`Postgres error adding asset tags: ${errmsg}`, err]);
+            result.error = true;
+            result.message = `Postgres error: ${pgErrorCodes[err.code]}`;
+            result.result = null;
           });
+        if (result.error) {
+          await client.query('ROLLBACK');
+          await client.end();
+          return result;
+        }
       }
       result.result.tags = body.tags;
     }
