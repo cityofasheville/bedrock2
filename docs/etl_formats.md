@@ -50,6 +50,7 @@ Also see [Managed Data Assets README](https://github.com/cityofasheville/managed
             <OPTIONAL> "sortdesc": "fieldname",
             <OPTIONAL> "fixedwidth_noquotes": true  (Tables converted to csv by default have strings with double quotes in the data quoted. For fixed width and XML files we don't want that)                               
             __TARGET OPTIONS__
+            <OPTIONAL> "append": true  (By default, data is overwritten in table. Set to true to append as new rows.)       
             <OPTIONAL> "append_serial": "fieldname"  (Adds an integer auto-numbering key field to target table. A serial field with this name must appear as the last field in the target table.)
 
 #### CSV -S3
