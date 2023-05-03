@@ -26,7 +26,7 @@ async function updateAsset(requestBody, pathElements, queryParams, connection) {
       const errmsg = pgErrorCodes[err.code];
       console.log(JSON.stringify(err));
       result.error = true;
-      result.message = `Postgres error: ${errmsg}`;
+      result.message = `Postgres error connecting: ${errmsg}`;
       result.result = null;
     });
 
@@ -38,7 +38,7 @@ async function updateAsset(requestBody, pathElements, queryParams, connection) {
   let res = await client.query(sql, [assetName])
     .catch((err) => {
       result.error = true;
-      result.message = `Postgres error: ${pgErrorCodes[err.code]}`;
+      result.message = `Postgres error verifying that asset exists: ${pgErrorCodes[err.code]}`;
       result.result = null;
     });
 
@@ -75,14 +75,20 @@ async function updateAsset(requestBody, pathElements, queryParams, connection) {
   res = await client.query(sql, args)
     .catch((err) => {
       result.error = true;
-      result.message = `Postgres error: ${pgErrorCodes[err.code]}`;
+      result.message = `Postgres error updating base asset: ${pgErrorCodes[err.code]}`;
       result.result = null;
     });
 
   // Now add any dependencies, always replacing existing with new
   if (!result.error && 'dependencies' in body) {
-    res = await client.query('DELETE FROM dependencies WHERE asset_name = $1', [assetName]);
-    if (body.dependencies.length > 0) {
+    res = await client.query('DELETE FROM dependencies WHERE asset_name = $1', [assetName])
+      .catch((err) => {
+        result.error = true;
+        result.message = `Postgres error deleting dependencies for update: ${pgErrorCodes[err.code]}`;
+        result.result = null;
+      });
+
+    if (body.dependencies.length > 0 && !result.error) {
       for (let i = 0; i < body.dependencies.length && !result.error; i += 1) {
         const dependency = body.dependencies[i];
         res = await client.query(
@@ -91,7 +97,7 @@ async function updateAsset(requestBody, pathElements, queryParams, connection) {
         )
           .catch((err) => {
             result.error = true;
-            result.message = `Postgres error: ${pgErrorCodes[err.code]}`;
+            result.message = `Postgres error updating dependencies: ${pgErrorCodes[err.code]}`;
             result.result = null;
           });
       }
@@ -110,14 +116,14 @@ async function updateAsset(requestBody, pathElements, queryParams, connection) {
       await client.query('DELETE FROM etl where asset_name = $1', [assetName])
         .catch((err) => {
           result.error = true;
-          result.message = `Postgres error: ${pgErrorCodes[err.code]}`;
+          result.message = `Postgres error deleting from etl for update: ${pgErrorCodes[err.code]}`;
           result.result = null;
         });
       if (!result.error) {
         await client.query('DELETE FROM tasks where asset_name = $1', [assetName])
           .catch((err) => {
             result.error = true;
-            result.message = `Postgres error: ${pgErrorCodes[err.code]}`;
+            result.message = `Postgres error deleting from tasks for update: ${pgErrorCodes[err.code]}`;
             result.result = null;
           });
       }
@@ -138,7 +144,7 @@ async function updateAsset(requestBody, pathElements, queryParams, connection) {
       await client.query(sql, args)
         .catch((err) => {
           result.error = true;
-          result.message = `Postgres error: ${pgErrorCodes[err.code]}`;
+          result.message = `Postgres error updating etl: ${pgErrorCodes[err.code]}`;
           result.result = null;
         });
     }
@@ -169,7 +175,7 @@ async function updateAsset(requestBody, pathElements, queryParams, connection) {
     res = await client.query(sql, tags)
       .catch((err) => {
         result.error = true;
-        result.message = `Postgres error: ${pgErrorCodes[err.code]}`;
+        result.message = `Postgres error reading tags for update: ${pgErrorCodes[err.code]}`;
         result.result = null;
       });
 
@@ -186,7 +192,7 @@ async function updateAsset(requestBody, pathElements, queryParams, connection) {
           )
             .catch((err) => {
               result.error = true;
-              result.message = `Postgres error: ${pgErrorCodes[err.code]}`;
+              result.message = `Postgres error adding tags to tag table for update: ${pgErrorCodes[err.code]}`;
               result.result = null;
             });
         }
@@ -199,7 +205,7 @@ async function updateAsset(requestBody, pathElements, queryParams, connection) {
       await client.query('DELETE FROM bedrock.asset_tags where asset_name = $1', [assetName])
         .catch((err) => {
           result.error = true;
-          result.message = `Postgres error: ${pgErrorCodes[err.code]}`;
+          result.message = `Postgres error deleting tags for update: ${pgErrorCodes[err.code]}`;
           result.result = null;
         });
     }
@@ -212,7 +218,7 @@ async function updateAsset(requestBody, pathElements, queryParams, connection) {
       )
         .catch((err) => {
           result.error = true;
-          result.message = `Postgres error: ${pgErrorCodes[err.code]}`;
+          result.message = `Postgres error inserting tags for update: ${pgErrorCodes[err.code]}`;
           result.result = null;
         });
     }
