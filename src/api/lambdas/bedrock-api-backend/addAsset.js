@@ -43,7 +43,7 @@ async function addAsset(requestBody, pathElements, queryParams, connection) {
   await client.connect()
     .catch((err) => {
       result.error = true;
-      result.message = `Postgres error connecting: ${pgErrorCodes[err.code]}`;
+      result.message = `PG error connecting: ${pgErrorCodes[err.code]}`;
     });
 
   if (!result.error) {
@@ -51,7 +51,7 @@ async function addAsset(requestBody, pathElements, queryParams, connection) {
     res = await client.query(sql, [pathElements[1]])
       .catch((err) => {
         result.error = true;
-        result.message = `Postgres error checking if asset already exists: ${pgErrorCodes[err.code]}`;
+        result.message = `PG error checking if asset already exists: ${pgErrorCodes[err.code]}`;
       });
     if (!result.error && res.rowCount > 0) {
       result.error = true;
@@ -74,7 +74,7 @@ async function addAsset(requestBody, pathElements, queryParams, connection) {
   )
     .catch((err) => {
       result.error = true;
-      result.message = `Postgres error adding new base asset: ${pgErrorCodes[err.code]}`;
+      result.message = `PG error adding new base asset: ${pgErrorCodes[err.code]}`;
     });
 
   if (!result.error) {
@@ -101,7 +101,7 @@ async function addAsset(requestBody, pathElements, queryParams, connection) {
       )
         .catch((err) => {
           result.error = true;
-          result.message = `Postgres error adding dependencies: ${pgErrorCodes[err.code]}`;
+          result.message = `PG error adding dependencies: ${pgErrorCodes[err.code]}`;
         });
     }
     result.result.dependencies = body.dependencies;
@@ -115,7 +115,7 @@ async function addAsset(requestBody, pathElements, queryParams, connection) {
     )
       .catch((err) => {
         result.error = true;
-        result.message = `Postgres error adding etl information: ${pgErrorCodes[err.code]}`;
+        result.message = `PG error adding etl information: ${pgErrorCodes[err.code]}`;
       });
     result.result.etl_run_group = body.etl_run_group;
     result.result.etl_active = body.etl_active;
@@ -147,7 +147,7 @@ async function addAsset(requestBody, pathElements, queryParams, connection) {
     res = await client.query(sql, tags)
       .catch((err) => {
         result.error = true;
-        result.message = `Postgres error reading tags table: ${pgErrorCodes[err.code]}`;
+        result.message = `PG error reading tags table: ${pgErrorCodes[err.code]}`;
       });
     if (!result.error && res.rowCount !== tags.length) {
       const dbTags = [];
@@ -162,7 +162,7 @@ async function addAsset(requestBody, pathElements, queryParams, connection) {
           )
             .catch((err) => {
               result.error = true;
-              result.message = `Postgres error adding to tags table: ${pgErrorCodes[err.code]}`;
+              result.message = `PG error adding to tags table: ${pgErrorCodes[err.code]}`;
             });
         }
       }
@@ -176,7 +176,7 @@ async function addAsset(requestBody, pathElements, queryParams, connection) {
       )
         .catch((err) => {
           result.error = true;
-          result.message = `Postgres error adding asset_tags: ${pgErrorCodes[err.code]}`;
+          result.message = `PG error adding asset_tags: ${pgErrorCodes[err.code]}`;
         });
     }
     result.result.tags = body.tags;

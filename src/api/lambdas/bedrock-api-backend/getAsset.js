@@ -14,7 +14,7 @@ async function getAsset(pathElements, queryParams, connection) {
   await client.connect()
     .catch((err) => {
       result.error = true;
-      result.message = `Postgres error connecting: ${pgErrorCodes[err.code]}`;
+      result.message = `PG error connecting: ${pgErrorCodes[err.code]}`;
     });
 
   if (!result.error) {
@@ -27,7 +27,7 @@ async function getAsset(pathElements, queryParams, connection) {
     res = await client.query(sql, [pathElements[1]])
       .catch((err) => {
         result.error = true;
-        result.message = `Postgres error getting asset information: ${pgErrorCodes[err.code]}`;
+        result.message = `PG error getting asset information: ${pgErrorCodes[err.code]}`;
       });
   }
 
@@ -61,7 +61,7 @@ async function getAsset(pathElements, queryParams, connection) {
   res = await client.query('SELECT * from bedrock.asset_tags where asset_name like $1', [pathElements[1]])
     .catch((err) => {
       result.error = true;
-      result.message = `Postgres error getting asset_tags: ${pgErrorCodes[err.code]}`;
+      result.message = `PG error getting asset_tags: ${pgErrorCodes[err.code]}`;
       result.result = null;
     });
 
