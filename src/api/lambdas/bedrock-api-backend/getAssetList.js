@@ -17,10 +17,10 @@ async function getAssetList(domainName, pathElements, queryParams, connection) {
   const client = new Client(connection);
   await client.connect()
     .catch((err) => {
-      console.log(JSON.stringify(err));
-      const errmsg = pgErrorCodes[err.code];
-      throw new Error([`Postgres error: ${errmsg}`, err]);
+      result.error = true;
+      result.message = `PG error connecting: ${pgErrorCodes[err.code]}`;
     });
+  if (result.error) return result;
 
   // Override start, count, or offset, if set in query
   if ('offset' in queryParams) {
@@ -57,66 +57,75 @@ async function getAssetList(domainName, pathElements, queryParams, connection) {
   console.log('run sql1 = ', sql);
   let res = await client.query(sql, sqlParams)
     .catch((err) => {
-      const errmsg = pgErrorCodes[err.code];
-      console.log(err, errmsg);
-      throw new Error([`Postgres error: ${errmsg}`, err]);
+      result.error = true;
+      result.message = `PG error getting asset count: ${pgErrorCodes[err.code]}`;
     });
 
-  if (res.rowCount === 0) {
-    throw new Error('No results for count call in getAssetsList');
-  } else {
-    total = Number(res.rows[0].count);
+  if (!result.error && res.rowCount === 0) {
+    result.error = true;
+    result.message = 'No results for count call in getAssetsList';
   }
+  if (result.error) {
+    await client.end();
+    return result;
+  }
+
+  total = Number(res.rows[0].count);
 
   sql = 'SELECT * FROM bedrock.assets a';
   sql += ' left join bedrock.etl e on a.asset_name = e.asset_name';
   sql += ` ${sql2}`;
   sql += ' order by a.asset_name asc';
   sql += ` offset ${offset} limit ${count} `;
-  console.log('run sql2 = ', sql);
 
   res = await client.query(sql, sqlParams)
     .catch((err) => {
-      const errmsg = pgErrorCodes[err.code];
-      console.log(err, errmsg);
-      throw new Error([`Postgres error: ${errmsg}`, err]);
+      result.error = true;
+      result.message = `PG error getting assets: ${pgErrorCodes[err.code]}`;
     });
 
-  if (res.rowCount === 0) {
+  if (!result.error && res.rowCount === 0) {
     result.error = true;
-    result.message += 'Asset not found';
-  } else {
-    let url = null;
-    if (offset + res.rowCount < total) {
-      const newOffset = parseInt(offset, 10) + res.rowCount;
-      url = `https://${domainName}/${pathElements.join('/')}${qParams}`;
-      url += `${qPrefix}offset=${newOffset.toString()}`;
-    }
-    const assets = [];
-    const rows = [];
-    const currentCount = res.rowCount;
-    for (let i = 0; i < res.rowCount; i += 1) {
-      assets.push(`'${res.rows[i].asset_name}'`);
-      rows.push(
-        {
-          asset_name: res.rows[i].asset_name,
-          description: res.rows[i].description,
-          location: res.rows[i].location,
-          active: res.rows[i].active,
-          etl_run_group: res.rows[i].run_group,
-          etl_active: res.rows[i].active,
-          dependencies: [],
-        },
-      );
-    }
-    sql = `select asset_name, dependency from bedrock.dependencies where asset_name in (${assets.join()})`;
-    res = await client.query(sql)
-      .catch((err) => {
-        const errmsg = pgErrorCodes[err.code];
-        console.log(err, errmsg);
-        throw new Error([`Postgres error: ${errmsg}`, err]);
-      });
+    result.message = 'No assets found';
+  }
+  if (result.error) {
     await client.end();
+    return result;
+  }
+
+  let url = null;
+  if (offset + res.rowCount < total) {
+    const newOffset = parseInt(offset, 10) + res.rowCount;
+    url = `https://${domainName}/${pathElements.join('/')}${qParams}`;
+    url += `${qPrefix}offset=${newOffset.toString()}`;
+  }
+  const assets = [];
+  const rows = [];
+  const currentCount = res.rowCount;
+  for (let i = 0; i < res.rowCount; i += 1) {
+    assets.push(`'${res.rows[i].asset_name}'`);
+    rows.push(
+      {
+        asset_name: res.rows[i].asset_name,
+        description: res.rows[i].description,
+        location: res.rows[i].location,
+        active: res.rows[i].active,
+        etl_run_group: res.rows[i].run_group,
+        etl_active: res.rows[i].active,
+        dependencies: [],
+      },
+    );
+  }
+
+  sql = `select asset_name, dependency from bedrock.dependencies where asset_name in (${assets.join()})`;
+  res = await client.query(sql)
+    .catch((err) => {
+      result.error = true;
+      result.message = `PG error getting asset dependencies: ${pgErrorCodes[err.code]}`;
+    });
+  await client.end();
+
+  if (!result.error) {
     const map = {};
     if (res.rowCount > 0) {
       for (let i = 0; i < res.rowCount; i += 1) {
@@ -140,6 +149,7 @@ async function getAssetList(domainName, pathElements, queryParams, connection) {
       url,
     };
   }
+
   return result;
 }
 
