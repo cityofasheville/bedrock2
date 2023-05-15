@@ -1,0 +1,16 @@
+{
+  "name": "delta_dental.s3",
+  "run_group": "delta_dental",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "pr_deltadental_feed.mun"
+      },
+      "target_location": {
+        "asset": "delta_dental.s3"
+      }
+    }
+  ]
+}

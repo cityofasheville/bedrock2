@@ -1,0 +1,16 @@
+{
+  "name": "abi_outreach_vendors.commodity.goog",
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "mwbe_vendors_by_commodity_non_aggregated.mun"
+      },
+      "target_location": {
+        "asset": "abi_outreach_vendors.commodity.goog"
+      }
+    }
+  ]
+}

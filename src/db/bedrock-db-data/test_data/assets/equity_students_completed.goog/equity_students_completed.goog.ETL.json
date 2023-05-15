@@ -1,0 +1,16 @@
+{
+  "name": "equity_students_completed.goog",
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "equity_students_completed.lib"
+      },
+      "target_location": {
+        "asset": "equity_students_completed.goog"
+      }
+    }
+  ]
+}

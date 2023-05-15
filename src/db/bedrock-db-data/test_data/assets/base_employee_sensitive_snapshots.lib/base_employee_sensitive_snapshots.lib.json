@@ -1,0 +1,17 @@
+{
+  "name": "base_employee_sensitive_snapshots.lib",
+  "active": true,
+  "description": "",
+  "location": {
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "standard",
+    "tablename": "base_employee_sensitive_snapshots"
+  },
+  "depends": [
+    "base_employee_private.lib",
+    "base_employee_position.lib",
+    "base_employee_demographics.lib",
+    "base_employee.lib"
+  ],
+  "tags": []
+}

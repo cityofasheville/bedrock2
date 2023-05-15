@@ -1,0 +1,16 @@
+{
+  "name": "coa_computer_assets.goog",
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "coa_computer_assets.lib"
+      },
+      "target_location": {
+        "asset": "coa_computer_assets.goog"
+      }
+    }
+  ]
+}

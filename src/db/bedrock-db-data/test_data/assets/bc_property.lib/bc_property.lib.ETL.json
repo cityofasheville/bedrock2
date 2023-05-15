@@ -1,0 +1,16 @@
+{
+  "name": "bc_property.lib",
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "bc_property.edit"
+      },
+      "target_location": {
+        "asset": "bc_property.lib"
+      }
+    }
+  ]
+}

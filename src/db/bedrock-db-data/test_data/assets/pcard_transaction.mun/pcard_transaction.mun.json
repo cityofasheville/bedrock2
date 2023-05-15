@@ -1,0 +1,13 @@
+{
+  "name": "pcard_transaction.mun",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "pcard_transaction.mun",
+    "tablename": "pcard_transaction",
+    "connection": "munis/munprod/mssqlgisadmin",
+    "schemaname": "amd"
+  },
+  "depends": [],
+  "tags": []
+}

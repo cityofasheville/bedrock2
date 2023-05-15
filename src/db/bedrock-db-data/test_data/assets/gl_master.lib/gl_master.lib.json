@@ -1,0 +1,15 @@
+{
+  "name": "gl_master.lib",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "gl_master.lib",
+    "tablename": "gl_master",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "internal"
+  },
+  "depends": [
+    "gl_master.mun"
+  ],
+  "tags": []
+}

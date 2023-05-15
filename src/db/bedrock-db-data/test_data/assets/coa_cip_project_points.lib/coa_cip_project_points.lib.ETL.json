@@ -1,0 +1,16 @@
+{
+  "name": "coa_cip_project_points.lib",
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "coa_cip_project_points.edit"
+      },
+      "target_location": {
+        "asset": "coa_cip_project_points.lib"
+      }
+    }
+  ]
+}

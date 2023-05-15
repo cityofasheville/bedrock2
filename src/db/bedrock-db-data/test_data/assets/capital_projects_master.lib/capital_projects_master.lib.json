@@ -1,0 +1,16 @@
+{
+  "name": "capital_projects_master.lib",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "capital_projects_master.lib",
+    "append_serial": "objectid",
+    "tablename": "capital_projects_master",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "internal"
+  },
+  "depends": [
+    "capital_projects_master.goog"
+  ],
+  "tags": []
+}

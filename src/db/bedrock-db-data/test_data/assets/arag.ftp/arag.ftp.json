@@ -1,8 +1,15 @@
 {
-    "name": "arag.ftp",
-    "location": "ftp_site",
-    "active": true,
-    "type": "ftp_site",
-    "description": "Uploaded staff data to ARAG",
-    "depends": []
-  }
+  "name": "arag.ftp",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "arag.ftp",
+    "path": "/",
+    "filename": "arag_asheville_${YYYY}${MM}${DD}.csv.pgp",
+    "connection": "arag_ftp"
+  },
+  "depends": [
+    "arag.encrypt.s3"
+  ],
+  "tags": []
+}

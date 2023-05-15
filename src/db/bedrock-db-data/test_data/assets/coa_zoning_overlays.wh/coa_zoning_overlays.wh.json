@@ -1,0 +1,13 @@
+{
+  "name": "coa_zoning_overlays.wh",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "coa_zoning_overlays.wh",
+    "tablename": "coa_zoning_overlays",
+    "connection": "coa-gis-warehouse1/coagiswarehouse/coagis",
+    "schemaname": "coagis"
+  },
+  "depends": [],
+  "tags": []
+}

@@ -1,8 +1,0 @@
-{
-    "name": "everbridge.ftp",
-    "location": "ftp_site",
-    "active": true,
-    "type": "ftp_site",
-    "description": "Uploaded staff and customer data to Everbridge",
-    "depends": []
-  }

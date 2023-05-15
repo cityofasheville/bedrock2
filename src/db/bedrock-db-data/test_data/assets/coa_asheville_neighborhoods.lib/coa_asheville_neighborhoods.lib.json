@@ -1,0 +1,15 @@
+{
+  "name": "coa_asheville_neighborhoods.lib",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "coa_asheville_neighborhoods.lib",
+    "tablename": "coa_asheville_neighborhoods",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "internal"
+  },
+  "depends": [
+    "coa_asheville_neighborhoods.edit"
+  ],
+  "tags": []
+}

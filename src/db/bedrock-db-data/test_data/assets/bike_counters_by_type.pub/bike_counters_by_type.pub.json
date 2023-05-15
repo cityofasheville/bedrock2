@@ -1,0 +1,15 @@
+{
+  "name": "bike_counters_by_type.pub",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "bike_counters_by_type.pub",
+    "tablename": "bike_counters_by_type",
+    "connection": "coa-publicdb1/coa_share/dbadmin",
+    "schemaname": "open"
+  },
+  "depends": [
+    "bike_counters_by_type.lib"
+  ],
+  "tags": []
+}

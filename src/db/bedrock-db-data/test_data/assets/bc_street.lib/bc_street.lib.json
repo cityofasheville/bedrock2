@@ -1,0 +1,15 @@
+{
+  "name": "bc_street.lib",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "bc_street.lib",
+    "tablename": "bc_street",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "internal"
+  },
+  "depends": [
+    "bc_street.wh"
+  ],
+  "tags": []
+}

@@ -1,0 +1,13 @@
+{
+  "name": "pr_employee_info.mun",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "pr_employee_info.mun",
+    "tablename": "pr_employee_info",
+    "connection": "munis/munprod/mssqlgisadmin",
+    "schemaname": "amd"
+  },
+  "depends": [],
+  "tags": []
+}

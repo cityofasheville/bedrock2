@@ -1,0 +1,16 @@
+{
+  "name": "training_students.lib",
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "training_students.mun"
+      },
+      "target_location": {
+        "asset": "training_students.lib"
+      }
+    }
+  ]
+}

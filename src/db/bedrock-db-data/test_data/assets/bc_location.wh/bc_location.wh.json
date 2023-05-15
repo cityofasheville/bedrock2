@@ -1,0 +1,13 @@
+{
+  "name": "bc_location.wh",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "bc_location.wh",
+    "tablename": "bc_location",
+    "connection": "coa-gis-warehouse1/coagiswarehouse/coagis",
+    "schemaname": "coagis"
+  },
+  "depends": [],
+  "tags": []
+}

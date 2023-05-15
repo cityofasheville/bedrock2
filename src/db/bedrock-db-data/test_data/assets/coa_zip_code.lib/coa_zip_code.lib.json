@@ -1,0 +1,15 @@
+{
+  "name": "coa_zip_code.lib",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "coa_zip_code.lib",
+    "tablename": "coa_zip_code",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "internal"
+  },
+  "depends": [
+    "coa_zip_code.edit"
+  ],
+  "tags": []
+}

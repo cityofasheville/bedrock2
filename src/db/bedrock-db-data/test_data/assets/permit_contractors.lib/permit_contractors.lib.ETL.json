@@ -1,0 +1,16 @@
+{
+  "name": "permit_contractors.lib",
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "permit_contractors.acc"
+      },
+      "target_location": {
+        "asset": "permit_contractors.lib"
+      }
+    }
+  ]
+}

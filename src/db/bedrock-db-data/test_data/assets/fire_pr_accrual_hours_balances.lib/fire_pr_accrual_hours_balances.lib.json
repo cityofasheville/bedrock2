@@ -1,0 +1,13 @@
+{
+  "name": "fire_pr_accrual_hours_balances.lib",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "fire_pr_accrual_hours_balances.lib",
+    "tablename": "fire_pr_accrual_hours_balances",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "bc"
+  },
+  "depends": [],
+  "tags": []
+}

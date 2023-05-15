@@ -1,0 +1,16 @@
+{
+  "name": "everbridge.emp.ftp",
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "file_copy",
+      "active": true,
+      "source_location": {
+        "asset": "everbridge.emp.s3"
+      },
+      "target_location": {
+        "asset": "everbridge.emp.ftp"
+      }
+    }
+  ]
+}

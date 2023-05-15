@@ -1,0 +1,15 @@
+{
+  "name": "bc_civicaddress_table.lib",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "bc_civicaddress_table.lib",
+    "tablename": "bc_civicaddress_table",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "internal"
+  },
+  "depends": [
+    "bc_civicaddress_table.wh"
+  ],
+  "tags": []
+}

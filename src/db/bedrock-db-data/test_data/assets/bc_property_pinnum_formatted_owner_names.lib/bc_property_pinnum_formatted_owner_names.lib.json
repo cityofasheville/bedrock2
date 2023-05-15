@@ -1,0 +1,15 @@
+{
+  "name": "bc_property_pinnum_formatted_owner_names.lib",
+  "active": true,
+  "description": "",
+  "location": {
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "internal",
+    "tablename": "bc_property_pinnum_formatted_owner_names"
+  },
+  "depends": [
+    "bc_property_account_master.lib",
+    "bc_property.lib"
+  ],
+  "tags": []
+}

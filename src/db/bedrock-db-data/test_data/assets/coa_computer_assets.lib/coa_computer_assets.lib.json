@@ -1,0 +1,13 @@
+{
+  "name": "coa_computer_assets.lib",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "coa_computer_assets.lib",
+    "tablename": "coa_computer_assets",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "internal"
+  },
+  "depends": [],
+  "tags": []
+}

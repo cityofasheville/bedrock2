@@ -1,19 +1,16 @@
 {
+  "name": "fire_pr_accrual_hours_balances.pub",
   "run_group": "daily",
   "tasks": [
     {
       "type": "table_copy",
+      "active": true,
       "source_location": {
-        "connection": "pubrecdb1/mdastore1/dbadmin",
-        "schemaname": "bc",
-        "tablename": "fire_pr_accrual_hours_balances"
+        "asset": "fire_pr_accrual_hours_balances.lib"
       },
       "target_location": {
-          "connection": "coa-publicdb1/coa_share/dbadmin",
-          "schemaname": "bc",
-          "tablename": "fire_pr_accrual_hours_balances"
-      },
-      "active": true
+        "asset": "fire_pr_accrual_hours_balances.pub"
+      }
     }
   ]
 }

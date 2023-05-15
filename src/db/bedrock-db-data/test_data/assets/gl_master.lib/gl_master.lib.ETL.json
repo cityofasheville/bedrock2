@@ -1,0 +1,16 @@
+{
+  "name": "gl_master.lib",
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "gl_master.mun"
+      },
+      "target_location": {
+        "asset": "gl_master.lib"
+      }
+    }
+  ]
+}

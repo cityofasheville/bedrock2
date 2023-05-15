@@ -1,0 +1,12 @@
+{
+  "name": "bike_counters_by_type.lib",
+  "active": true,
+  "description": "",
+  "location": {
+    "tablename": "bike_counters_by_type",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "bike_counter"
+  },
+  "depends": [],
+  "tags": []
+}

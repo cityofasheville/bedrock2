@@ -1,0 +1,15 @@
+{
+  "name": "ad_info.lib",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "ad_info.lib",
+    "tablename": "ad_info",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "internal"
+  },
+  "depends": [
+    "ad_info.mun"
+  ],
+  "tags": []
+}

@@ -1,0 +1,14 @@
+{
+  "name": "delta_dental.encrypted.s3",
+  "active": true,
+  "description": "",
+  "location": {
+    "s3_path": "delta_dental/",
+    "filename": "deltadental_asheville_${YYYY}${MM}${DD}.txt.asc",
+    "connection": "s3_data_files"
+  },
+  "depends": [
+    "delta_dental.s3"
+  ],
+  "tags": []
+}

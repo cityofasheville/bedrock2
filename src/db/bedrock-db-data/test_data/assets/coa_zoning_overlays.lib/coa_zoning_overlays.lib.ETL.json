@@ -1,0 +1,16 @@
+{
+  "name": "coa_zoning_overlays.lib",
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "coa_zoning_overlays.wh"
+      },
+      "target_location": {
+        "asset": "coa_zoning_overlays.lib"
+      }
+    }
+  ]
+}

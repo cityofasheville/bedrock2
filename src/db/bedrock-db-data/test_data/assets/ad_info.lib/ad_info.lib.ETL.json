@@ -1,0 +1,16 @@
+{
+  "name": "ad_info.lib",
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "ad_info.mun"
+      },
+      "target_location": {
+        "asset": "ad_info.lib"
+      }
+    }
+  ]
+}

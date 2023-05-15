@@ -1,0 +1,16 @@
+{
+  "name": "capital_projects_master.lib",
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "capital_projects_master.goog"
+      },
+      "target_location": {
+        "asset": "capital_projects_master.lib"
+      }
+    }
+  ]
+}

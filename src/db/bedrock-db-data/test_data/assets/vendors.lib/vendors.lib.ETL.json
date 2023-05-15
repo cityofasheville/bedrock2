@@ -1,0 +1,16 @@
+{
+  "name": "vendors.lib",
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "ap_vendor.mun"
+      },
+      "target_location": {
+        "asset": "vendors.lib"
+      }
+    }
+  ]
+}

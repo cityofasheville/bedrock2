@@ -1,0 +1,22 @@
+{
+  "name": "permit_review_times.lib",
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "sql",
+      "active": true,
+      "connection": "coa-acceladb/accela/mssqlgisadmin",
+      "sql_string": "\n\n\n\n\ntruncate table dbo.permit_review_times;\nwith \nmain as (\n\tSELECT\n\t[RECORD_ID],[RECORD_NAME],[TASK],\n\tIIF([PROCESS_NAME] = 'DIV REVIEW-RES', 'Residential','Commercial') AS ResOrComm,\t\n\t[RECORD_TYPE],\n\t[UPDATED_DATE], -- datetime that record was updated\n\t[DATE_STATUS],  -- date status change effective\n\n\t[STATUS]\n\tFROM [dbo].[V_WORKFLOW_HISTORY]\n\twhere PROCESS_NAME in( 'DIV REVIEW-RES','DIVISION REVIEW')\n\tand TASK in ('Building Review') -- maybe expand to: ,'Zoning Review')\n), \nfirstdate as (\n\tselect [RECORD_ID], MIN([UPDATED_DATE]) startdate  from main\n\tgroup by RECORD_ID\n),\nlastdate as (\n\tselect [RECORD_ID], MIN([UPDATED_DATE]) enddate  from main\n\t\t  WHERE STATUS IN (\n\t\t\t'Approved',\n\t\t\t'Approved with Conditions',\n\t\t\t'Disapproved',\n\t\t\t'Hold for Revision'\n\t\t\t-- 'Approved',  -- As per Mark email 4/14/22 just these 4\n\t\t\t-- 'Approved with Conditions',\n\t\t\t-- 'CA Issued',\n\t\t\t-- 'CC Issued',\n\t\t\t-- 'Closed',\n\t\t\t-- 'CO Issued',\n\t\t\t-- 'Disapproved',\n\t\t\t-- 'Finaled',\n\t\t\t-- 'In Review',\n\t\t\t-- 'Issued',\n\t\t\t-- 'Partial Issued',\n\t\t\t-- 'Pending Applicant Action',\n\t\t\t-- 'Permit Verification',\n\t\t\t-- 'Reissued',\n\t\t\t-- 'TCC Issued',\n\t\t\t-- 'TCC Issued 60 Days',\n\t\t\t-- 'TCC Issued 90 Days',\n\t\t\t-- 'TCO Issued',\n\t\t\t-- 'TCO Issued 30 Days',\n\t\t\t-- 'TCO Issued 60 Days',\n\t\t\t-- 'TCO Issued 90 Days'\n\t  )\n\tgroup by RECORD_ID\n)\ninsert into dbo.permit_review_times(\n            [RECORD_ID]\n           ,[RECORD_NAME]\n           ,[TASK]\n           ,[ResOrComm]\n           ,[RECORD_TYPE]\n           ,[firststatus]\n           ,[firststatusdate]\n           ,[laststatus]\n           ,[laststatusdate]\n           ,[days]\n           ,[yyyymm]\n\t\t   ,[completed])\n-- completed\t\t   \nselect first.[RECORD_ID],first.[RECORD_NAME],first.[TASK],first.ResOrComm,first.[RECORD_TYPE],first.[STATUS] firststatus, first.[DATE_STATUS] as firststatusdate, \nlast.[STATUS] laststatus, last.[DATE_STATUS] as laststatusdate, datediff(DAY, first.[DATE_STATUS], last.[DATE_STATUS]) days,\nconvert(char(7), last.[DATE_STATUS],23) yyyymm, 1 as completed\nfrom (\n\tselect main.*, startdate from main\n\tinner join firstdate\n\ton main.RECORD_ID = firstdate.RECORD_ID\n\tand  main.[UPDATED_DATE] = firstdate.startdate\n) as first\ninner join (\n\tselect main.*, enddate from main\n\tinner join lastdate\n\ton main.RECORD_ID = lastdate.RECORD_ID\n\tand  main.[UPDATED_DATE] = lastdate.enddate\n) as last\non first.RECORD_ID = last.RECORD_ID\n\nunion\n-- not completed as of today\nselect first.[RECORD_ID],first.[RECORD_NAME],first.[TASK],first.ResOrComm,first.[RECORD_TYPE],first.[STATUS] firststatus, first.[DATE_STATUS] as firststatusdate, \nlast.[STATUS] laststatus, getdate() as laststatusdate, datediff(DAY, first.[DATE_STATUS], getdate()) days,\nnull as yyyymm, 0 as completed\nfrom (\n\tselect main.*, startdate from main\n\tinner join firstdate\n\ton main.RECORD_ID = firstdate.RECORD_ID\n\tand  main.[UPDATED_DATE] = firstdate.startdate\n) as first\nleft join (\n\tselect main.*, enddate from main\n\tinner join lastdate\n\ton main.RECORD_ID = lastdate.RECORD_ID\n\tand  main.[UPDATED_DATE] = lastdate.enddate\n) as last\non first.RECORD_ID = last.RECORD_ID\nwhere last.RECORD_ID is null"
+    },
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "permit_review_times.acc"
+      },
+      "target_location": {
+        "asset": "permit_review_times.lib"
+      }
+    }
+  ]
+}

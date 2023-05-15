@@ -1,0 +1,16 @@
+{
+  "name": "pcard_statement_status_history.lib",
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "pcard_statement_status_history.mun"
+      },
+      "target_location": {
+        "asset": "pcard_statement_status_history.lib"
+      }
+    }
+  ]
+}

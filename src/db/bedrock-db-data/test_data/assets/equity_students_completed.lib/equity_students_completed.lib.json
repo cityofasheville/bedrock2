@@ -1,0 +1,13 @@
+{
+  "name": "equity_students_completed.lib",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "equity_students_completed.lib",
+    "tablename": "equity_students_completed",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "aux"
+  },
+  "depends": [],
+  "tags": []
+}

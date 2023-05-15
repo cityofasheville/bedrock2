@@ -1,0 +1,14 @@
+{
+  "name": "base_employee.lib",
+  "active": true,
+  "description": "",
+  "location": {
+    "tablename": "base_employee",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "standard"
+  },
+  "depends": [
+    "base_employee_temp.lib"
+  ],
+  "tags": []
+}

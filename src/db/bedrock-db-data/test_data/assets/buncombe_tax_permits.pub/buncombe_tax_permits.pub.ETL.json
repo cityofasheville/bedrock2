@@ -1,0 +1,16 @@
+{
+  "name": "buncombe_tax_permits.pub",
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "buncombe_tax_permits.lib"
+      },
+      "target_location": {
+        "asset": "buncombe_tax_permits.pub"
+      }
+    }
+  ]
+}

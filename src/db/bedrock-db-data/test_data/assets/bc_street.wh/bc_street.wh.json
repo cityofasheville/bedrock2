@@ -1,0 +1,13 @@
+{
+  "name": "bc_street.wh",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "bc_street.wh",
+    "tablename": "bc_street",
+    "connection": "coa-gis-warehouse1/coagiswarehouse/coagis",
+    "schemaname": "coagis"
+  },
+  "depends": [],
+  "tags": []
+}

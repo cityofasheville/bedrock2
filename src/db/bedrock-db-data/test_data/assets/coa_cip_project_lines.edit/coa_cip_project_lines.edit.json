@@ -1,0 +1,13 @@
+{
+  "name": "coa_cip_project_lines.edit",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "coa_cip_project_lines.edit",
+    "tablename": "coa_cip_project_lines",
+    "connection": "coa-gis-edit1/coagisedit/coagis",
+    "schemaname": "coagis"
+  },
+  "depends": [],
+  "tags": []
+}

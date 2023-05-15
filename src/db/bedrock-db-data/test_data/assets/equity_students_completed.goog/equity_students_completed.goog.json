@@ -1,0 +1,17 @@
+{
+  "name": "equity_students_completed.goog",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "equity_students_completed.goog",
+    "append": false,
+    "range": "Sheet1!A2:Z",
+    "filename": "equity_students_completed",
+    "connection": "bedrock-googlesheets",
+    "spreadsheetid": "1xGD2jVSveuYjDLRc6Z8dlwGIA78LKJKxu0ck0Y7easg"
+  },
+  "depends": [
+    "training_students.lib"
+  ],
+  "tags": []
+}

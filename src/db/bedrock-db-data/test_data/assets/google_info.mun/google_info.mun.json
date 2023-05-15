@@ -1,0 +1,13 @@
+{
+  "name": "google_info.mun",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "google_info.mun",
+    "tablename": "Google_Info",
+    "connection": "munis/munprod/mssqlgisadmin",
+    "schemaname": "avl"
+  },
+  "depends": [],
+  "tags": []
+}

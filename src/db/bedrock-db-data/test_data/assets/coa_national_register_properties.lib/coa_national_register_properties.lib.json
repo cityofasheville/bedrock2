@@ -1,0 +1,15 @@
+{
+  "name": "coa_national_register_properties.lib",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "coa_national_register_properties.lib",
+    "tablename": "coa_national_register_properties",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "internal"
+  },
+  "depends": [
+    "coa_national_register_properties.wh"
+  ],
+  "tags": []
+}

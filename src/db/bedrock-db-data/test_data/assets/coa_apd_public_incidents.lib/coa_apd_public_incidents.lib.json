@@ -1,0 +1,15 @@
+{
+  "name": "coa_apd_public_incidents.lib",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "coa_apd_public_incidents.lib",
+    "tablename": "coa_apd_public_incidents",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "internal"
+  },
+  "depends": [
+    "coa_apd_public_incidents.wh"
+  ],
+  "tags": []
+}

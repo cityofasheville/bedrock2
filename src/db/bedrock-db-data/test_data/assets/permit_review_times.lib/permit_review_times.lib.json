@@ -1,0 +1,14 @@
+{
+  "name": "permit_review_times.lib",
+  "active": true,
+  "description": "",
+  "location": {
+    "tablename": "permit_review_times",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "internal"
+  },
+  "depends": [
+    "permit_review_times.acc"
+  ],
+  "tags": []
+}

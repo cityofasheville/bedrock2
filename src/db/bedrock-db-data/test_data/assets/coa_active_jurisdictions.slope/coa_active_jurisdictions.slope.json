@@ -1,0 +1,15 @@
+{
+  "name": "coa_active_jurisdictions.slope",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "coa_active_jurisdictions.slope",
+    "tablename": "coa_active_jurisdictions",
+    "connection": "pubrecdb1/steepslope/dbadmin",
+    "schemaname": "public"
+  },
+  "depends": [
+    "coa_active_jurisdictions.wh"
+  ],
+  "tags": []
+}

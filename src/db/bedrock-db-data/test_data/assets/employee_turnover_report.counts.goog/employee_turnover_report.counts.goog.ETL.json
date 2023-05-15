@@ -1,0 +1,16 @@
+{
+  "name": "employee_turnover_report.counts.goog",
+  "run_group": "monthly",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "turnover_employees.lib"
+      },
+      "target_location": {
+        "asset": "employee_turnover_report.counts.goog"
+      }
+    }
+  ]
+}

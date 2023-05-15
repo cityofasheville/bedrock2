@@ -1,0 +1,13 @@
+{
+  "name": "permit_contacts.acc",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "permit_contacts.acc",
+    "tablename": "permit_contacts",
+    "connection": "coa-acceladb/accela/mssqlgisadmin",
+    "schemaname": "amd"
+  },
+  "depends": [],
+  "tags": []
+}

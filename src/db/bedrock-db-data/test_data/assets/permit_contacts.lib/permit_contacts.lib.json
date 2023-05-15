@@ -1,0 +1,15 @@
+{
+  "name": "permit_contacts.lib",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "permit_contacts.lib",
+    "tablename": "permit_contacts",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "internal"
+  },
+  "depends": [
+    "permit_contacts.acc"
+  ],
+  "tags": []
+}

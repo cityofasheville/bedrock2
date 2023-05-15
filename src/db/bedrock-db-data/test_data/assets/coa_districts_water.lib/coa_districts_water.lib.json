@@ -1,0 +1,15 @@
+{
+  "name": "coa_districts_water.lib",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "coa_districts_water.lib",
+    "tablename": "coa_districts_water",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "internal"
+  },
+  "depends": [
+    "coa_districts_water.wh"
+  ],
+  "tags": []
+}

@@ -1,0 +1,16 @@
+{
+  "name": "bc_location.lib",
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "bc_location.wh"
+      },
+      "target_location": {
+        "asset": "bc_location.lib"
+      }
+    }
+  ]
+}

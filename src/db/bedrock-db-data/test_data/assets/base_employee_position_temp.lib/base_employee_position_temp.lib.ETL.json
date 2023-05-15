@@ -1,0 +1,16 @@
+{
+  "name": "base_employee_position_temp.lib",
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "base_employee_position.mun"
+      },
+      "target_location": {
+        "asset": "base_employee_position_temp.lib"
+      }
+    }
+  ]
+}

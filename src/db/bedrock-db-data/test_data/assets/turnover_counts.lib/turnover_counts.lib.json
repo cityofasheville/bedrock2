@@ -1,0 +1,13 @@
+{
+  "name": "turnover_counts.lib",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "turnover_counts.lib",
+    "tablename": "turnover_counts",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "standard"
+  },
+  "depends": [],
+  "tags": []
+}
