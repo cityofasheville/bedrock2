@@ -4,7 +4,6 @@
   "description": "",
   "location": {
     "asset": "sunlife_eligibility.mun",
-    "tableheaders": true,
     "tablename": "sunlife_eligibility",
     "connection": "munis/munprod/fme_jobs",
     "schemaname": "avl"

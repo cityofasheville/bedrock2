@@ -4,7 +4,6 @@
   "description": "",
   "location": {
     "asset": "pr_allstate_feed.mun",
-    "tableheaders": true,
     "tablename": "PR_ALLSTATE_Feed",
     "connection": "munis/munprod/fme_jobs",
     "schemaname": "avl"

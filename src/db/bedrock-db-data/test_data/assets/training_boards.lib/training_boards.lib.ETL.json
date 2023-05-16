@@ -9,7 +9,8 @@
         "asset": "boards+commission_member_training.goog"
       },
       "target_location": {
-        "asset": "training_boards.lib"
+        "asset": "training_boards.lib",
+        "append_serial": "objectid"
       }
     }
   ]

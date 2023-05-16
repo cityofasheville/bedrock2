@@ -6,7 +6,8 @@
       "type": "table_copy",
       "active": true,
       "source_location": {
-        "asset": "pr_city_employees_everbridge.mun"
+        "asset": "pr_city_employees_everbridge.mun",
+        "tableheaders": true
       },
       "target_location": {
         "asset": "everbridge.emp.s3"

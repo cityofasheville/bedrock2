@@ -6,7 +6,9 @@
       "type": "table_copy",
       "active": true,
       "source_location": {
-        "asset": "pr_deltadental_feed.mun"
+        "asset": "pr_deltadental_feed.mun",
+        "tableheaders": false,
+        "fixedwidth_noquotes": true
       },
       "target_location": {
         "asset": "delta_dental.s3"

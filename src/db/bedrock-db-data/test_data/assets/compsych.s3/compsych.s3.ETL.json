@@ -6,7 +6,8 @@
       "type": "table_copy",
       "active": true,
       "source_location": {
-        "asset": "sunlife_eligibility.mun"
+        "asset": "sunlife_eligibility.mun",
+        "tableheaders": true
       },
       "target_location": {
         "asset": "compsych.s3"

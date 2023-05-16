@@ -4,7 +4,6 @@
   "description": "",
   "location": {
     "asset": "pr_city_employees_everbridge.mun",
-    "tableheaders": true,
     "tablename": "PR_City_Employees_Everbridge",
     "connection": "munis/munprod/fme_jobs",
     "schemaname": "avl"

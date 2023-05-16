@@ -4,7 +4,6 @@
   "description": "",
   "location": {
     "asset": "coa_computer_assets.goog",
-    "append": false,
     "range": "ComputerAssets!A2:AO",
     "filename": "coa_computer_assets",
     "connection": "bedrock-googlesheets",

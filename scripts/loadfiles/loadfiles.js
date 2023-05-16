@@ -16,8 +16,7 @@ async function readEtlList(connection) {
       const errmsg = [err.code];
       throw new Error([`Postgres error: ${errmsg}`, err]);
     });
-
-  const sql = `SELECT * FROM bedrock.etl where  active = true;`; //asset_name = 'ad_info.lib' and
+  const sql = `SELECT * FROM bedrock.etl where active = true;`;
   const res = await client.query(sql)
     .catch((err) => {
       const errmsg = [err.code];
@@ -62,9 +61,8 @@ async function readDependencies(connection, assetMap) {
   return Promise.resolve(assetMap);
 }
 
-async function readLocationFromAsset(client, assetName) {
-  // final target data is in asset location
-  const sql = `SELECT location FROM bedrock.assets where asset_name = '${assetName}';`;
+async function readAsset(client, assetName) {
+  const sql = `SELECT * FROM bedrock.assets where asset_name = '${assetName}';`;
   // eslint-disable-next-line no-await-in-loop
   const res = await client.query(sql)
     .catch((err) => {
@@ -74,8 +72,8 @@ async function readLocationFromAsset(client, assetName) {
   if (res.rowCount === 0) {
     throw new Error(`Asset ${assetName} not found`);
   }
-  const locData = res.rows[0].location;
-  return locData;
+  const assetData = res.rows[0];
+  return assetData;
 }
 
 async function readTasks(connection, assetMap) {
@@ -102,21 +100,19 @@ async function readTasks(connection, assetMap) {
       };
 
       if (task.type === 'table_copy' || task.type === 'file_copy') {
-        let sourceLoc;
-        let targetLoc;
         if (task?.source?.asset) { // source data is in asset location
-          sourceLoc = await readLocationFromAsset(client, task.source.asset);
+          thisTask.source_etl = task.source;
+          thisTask.source_assetData = await readAsset(client, task.source.asset);
         }
         if (task?.target?.asset) { // target data is in asset location
-          targetLoc = await readLocationFromAsset(client, task.target.asset);
+          thisTask.target_etl = task.target;
+          thisTask.target_assetData = await readAsset(client, task.target.asset);
         }
-        thisTask.source_location = { ...task.source, ...sourceLoc };
-        thisTask.target_location = { ...task.target, ...targetLoc };
       } else if (task.type === 'run_lambda' || task.type === 'encrypt') {
         thisTask = task.target;
-        thisTask.assetLoc = await readLocationFromAsset(client, task.asset_name);
+        thisTask.assetData = await readAsset(client, task.asset_name);
       } else if (task.type === 'sql') {
-        thisTask.assetLoc = await readLocationFromAsset(client, task.asset_name);
+        thisTask.assetData = await readAsset(client, task.asset_name);
         thisTask.connection = task.target.connection;
         thisTask.sql_string = task.configuration;
       } else {
@@ -131,18 +127,19 @@ async function readTasks(connection, assetMap) {
 }
 
 ////////////////////////////////////////////
-function writeAsset(name, location, depends) {
+function writeAsset(assetData, depends) {
+  let name = assetData.asset_name;
   // create dir
   if (!fs.existsSync('assets/' + name)) {
     fs.mkdirSync('assets/' + name);
   }
   let assetcontent = {
-    'name': name,
-    'active': true,
-    'description': '',
-    'location': location,
-    'depends': depends ? depends : [],
-    'tags': [],
+    name: assetData.asset_name,
+    active: assetData.active,
+    description: assetData.description,
+    location: assetData.location,
+    depends: depends ? depends : [],
+    tags: assetData.tags ? assetData.tags : [],
   };
   // merge exisitng file (fix dependencies when asset is both a target and a source)
   if (fs.existsSync('assets/' + name + '/' + name + '.json')) {
@@ -207,27 +204,33 @@ const lambda_handler = async function x() {
     fs.readdirSync('./assets').forEach(f => fs.rmSync(`./assets/${f}`, { recursive: true }));
     runs.forEach((topogrp) => {
       topogrp.forEach((asset) => {
-        console.log(`Processing ${asset.name}`);
+        console.log(`Processing ${asset.name} :${JSON.stringify(asset)}`); // 
         let new_tasks = [];
         if (!fs.existsSync('assets/' + asset.name)) {
           fs.mkdirSync('assets/' + asset.name);
         }
         asset.etl_tasks.forEach((task) => {
-          let new_task = { ...task };
+          let new_task = {
+            type: task.type,
+            active: task.active,
+          };
           if (task.type === 'table_copy' || task.type === 'file_copy') {
-            new_task.source_location = { 'asset': task.source_location.asset };
-            new_task.target_location = { 'asset': task.target_location.asset };
+            new_task.source_location = task.source_etl;
+            new_task.target_location = task.target_etl;
             new_tasks.push(new_task);
-            writeAsset(task.source_location.asset, task.source_location, null);
-            writeAsset(task.target_location.asset, task.target_location, asset.depends);
+            //writeAsset(assetData, depends) 
+            writeAsset(task.source_assetData, null);
+            writeAsset(task.target_assetData, asset.depends);
           } else if (task.type === 'sql') {
-            delete new_task.assetLoc;
+            new_task = { ...task };
+            delete new_task.assetData;
             new_tasks.push(new_task);
-            writeAsset(asset.name, task.assetLoc, asset.depends);
+            writeAsset(task.assetData, asset.depends);
           } else if (task.type === 'encrypt' || task.type === 'run_lambda') {
-            delete new_task.assetLoc;
+            new_task = { ...task };
+            delete new_task.assetData;
             new_tasks.push(new_task);
-            writeAsset(asset.name, task.assetLoc, asset.depends);
+            writeAsset(task.assetData, asset.depends);
           }
         })
         const etlcontent = {

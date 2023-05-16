@@ -9,7 +9,8 @@
         "asset": "mwbe_vendors_by_commodity.mun"
       },
       "target_location": {
-        "asset": "abi_outreach_vendors.goog"
+        "asset": "abi_outreach_vendors.goog",
+        "append": false
       }
     },
     {
@@ -19,7 +20,8 @@
         "asset": "abi_potential_vendors.goog"
       },
       "target_location": {
-        "asset": "abi_outreach_vendors.goog"
+        "asset": "abi_outreach_vendors.goog",
+        "append": true
       }
     }
   ]

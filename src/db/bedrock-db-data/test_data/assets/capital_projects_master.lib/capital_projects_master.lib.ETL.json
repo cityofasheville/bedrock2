@@ -9,7 +9,8 @@
         "asset": "capital_projects_master.goog"
       },
       "target_location": {
-        "asset": "capital_projects_master.lib"
+        "asset": "capital_projects_master.lib",
+        "append_serial": "objectid"
       }
     }
   ]

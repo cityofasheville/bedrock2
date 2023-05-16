@@ -6,7 +6,8 @@
       "type": "table_copy",
       "active": true,
       "source_location": {
-        "asset": "pr_employee_info_safety.mun"
+        "asset": "pr_employee_info_safety.mun",
+        "tableheaders": true
       },
       "target_location": {
         "asset": "safetyskills.s3"

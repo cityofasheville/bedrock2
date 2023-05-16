@@ -9,7 +9,8 @@
         "asset": "turnover_employees.lib"
       },
       "target_location": {
-        "asset": "employee_turnover_report.counts.goog"
+        "asset": "employee_turnover_report.counts.goog",
+        "append": true
       }
     }
   ]

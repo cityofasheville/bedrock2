@@ -4,7 +4,6 @@
   "description": "",
   "location": {
     "asset": "abi_outreach_vendors.commodity.goog",
-    "append": false,
     "range": "Vendors By Commodity Code!A2:Z",
     "filename": "abi_outreach_vendors",
     "connection": "bedrock-googlesheets",

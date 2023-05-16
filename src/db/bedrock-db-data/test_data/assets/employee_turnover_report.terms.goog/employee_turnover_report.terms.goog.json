@@ -4,7 +4,6 @@
   "description": "",
   "location": {
     "asset": "employee_turnover_report.terms.goog",
-    "append": true,
     "range": "Terminations!A2:X",
     "filename": "Employee Turnover Report",
     "connection": "bedrock-googlesheets",

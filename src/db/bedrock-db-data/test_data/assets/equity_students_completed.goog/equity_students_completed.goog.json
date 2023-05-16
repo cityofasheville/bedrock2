@@ -4,7 +4,6 @@
   "description": "",
   "location": {
     "asset": "equity_students_completed.goog",
-    "append": false,
     "range": "Sheet1!A2:Z",
     "filename": "equity_students_completed",
     "connection": "bedrock-googlesheets",

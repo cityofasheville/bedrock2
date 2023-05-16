@@ -4,7 +4,6 @@
   "description": "",
   "location": {
     "asset": "ub_water_customers_everbridge.mun",
-    "tableheaders": true,
     "tablename": "UB_Water_Customers_Everbridge",
     "connection": "munis/munprod/fme_jobs",
     "schemaname": "avl"
