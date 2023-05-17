@@ -1,0 +1,15 @@
+{
+  "name": "permit_owners.lib",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "permit_owners.lib",
+    "tablename": "permit_owners",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "internal"
+  },
+  "depends": [
+    "permit_owners.acc"
+  ],
+  "tags": []
+}

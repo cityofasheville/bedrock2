@@ -1,0 +1,13 @@
+{
+  "name": "bc_civicaddress_table.wh",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "bc_civicaddress_table.wh",
+    "tablename": "bc_civicaddress_table",
+    "connection": "coa-gis-warehouse1/coagiswarehouse/coagis",
+    "schemaname": "coagis"
+  },
+  "depends": [],
+  "tags": []
+}

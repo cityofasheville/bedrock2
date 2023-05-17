@@ -1,0 +1,15 @@
+{
+  "name": "training_students.lib",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "training_students.lib",
+    "tablename": "training_students",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "internal"
+  },
+  "depends": [
+    "training_students.mun"
+  ],
+  "tags": []
+}

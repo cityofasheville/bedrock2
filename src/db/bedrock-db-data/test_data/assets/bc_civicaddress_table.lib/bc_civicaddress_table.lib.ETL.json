@@ -1,0 +1,16 @@
+{
+  "name": "bc_civicaddress_table.lib",
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "bc_civicaddress_table.wh"
+      },
+      "target_location": {
+        "asset": "bc_civicaddress_table.lib"
+      }
+    }
+  ]
+}

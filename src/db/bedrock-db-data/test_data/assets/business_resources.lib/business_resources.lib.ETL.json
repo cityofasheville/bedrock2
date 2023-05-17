@@ -1,0 +1,16 @@
+{
+  "name": "business_resources.lib",
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "business_resources.goog"
+      },
+      "target_location": {
+        "asset": "business_resources.lib"
+      }
+    }
+  ]
+}

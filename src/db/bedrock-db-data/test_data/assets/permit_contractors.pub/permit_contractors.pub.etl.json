@@ -1,19 +1,16 @@
 {
+  "name": "permit_contractors.pub",
   "run_group": "daily",
   "tasks": [
     {
       "type": "table_copy",
+      "active": true,
       "source_location": {
-        "connection": "pubrecdb1/mdastore1/dbadmin",
-        "schemaname": "internal",
-        "tablename": "permit_contractors"
+        "asset": "permit_contractors.lib"
       },
       "target_location": {
-        "connection": "coa-publicdb1/coa_share/dbadmin",
-        "schemaname": "bc",
-        "tablename": "permit_contractors"
-      },
-      "active": true
+        "asset": "permit_contractors.pub"
+      }
     }
   ]
 }

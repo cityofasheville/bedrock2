@@ -1,0 +1,13 @@
+{
+  "name": "dsd_first_review_sla.acc",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "dsd_first_review_sla.acc",
+    "tablename": "dsd_first_review_sla",
+    "connection": "coa-acceladb/accela/mssqlgisadmin",
+    "schemaname": "amd"
+  },
+  "depends": [],
+  "tags": []
+}

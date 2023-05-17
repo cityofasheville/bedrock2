@@ -1,0 +1,15 @@
+{
+  "name": "training_boards.lib",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "training_boards.lib",
+    "tablename": "training_boards",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "internal"
+  },
+  "depends": [
+    "boards+commission_member_training.goog"
+  ],
+  "tags": []
+}

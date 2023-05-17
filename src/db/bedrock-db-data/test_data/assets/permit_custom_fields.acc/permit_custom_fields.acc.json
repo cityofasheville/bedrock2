@@ -1,0 +1,13 @@
+{
+  "name": "permit_custom_fields.acc",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "permit_custom_fields.acc",
+    "tablename": "permit_custom_fields",
+    "connection": "coa-acceladb/accela/mssqlgisadmin",
+    "schemaname": "amd"
+  },
+  "depends": [],
+  "tags": []
+}

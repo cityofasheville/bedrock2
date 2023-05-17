@@ -1,0 +1,15 @@
+{
+  "name": "permit_tasks.lib",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "permit_tasks.lib",
+    "tablename": "permit_tasks",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "internal"
+  },
+  "depends": [
+    "permit_tasks.acc"
+  ],
+  "tags": []
+}

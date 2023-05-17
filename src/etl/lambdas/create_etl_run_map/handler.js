@@ -1,4 +1,6 @@
+/* eslint-disable no-await-in-loop */
 /* eslint-disable no-console */
+
 const { Client } = require('pg');
 const awsCronParser = require('aws-cron-parser');
 const toposort = require('toposort');
@@ -79,14 +81,31 @@ async function readDependencies(connection, assetMap) {
   return Promise.resolve(assetMap);
 }
 
+async function readLocationFromAsset(client, assetName) {
+  // final target data is in asset location
+  const sql = `SELECT location FROM bedrock.assets where asset_name = '${assetName}';`;
+  // eslint-disable-next-line no-await-in-loop
+  const res = await client.query(sql)
+    .catch((err) => {
+      const errmsg = pgErrorCodes[err.code];
+      throw new Error([`Postgres error: ${errmsg}`, err]);
+    });
+  if (res.rowCount === 0) {
+    throw new Error(`Asset ${assetName} not found`);
+  }
+  const locData = res.rows[0].location;
+  return locData;
+}
+
 async function readTasks(connection, assetMap) {
   const client = new Client(connection);
   await client.connect();
-
   const arr = Object.entries(assetMap);
+
   for (let i = 0; i < arr.length; i += 1) {
+    const assetName = arr[i][0];
     const asset = arr[i][1];
-    const sql = `SELECT * FROM bedrock.tasks where asset_name = '${arr[i][0]}' order by seq_number;`;
+    const sql = `SELECT * FROM bedrock.tasks where asset_name = '${assetName}' order by seq_number;`;
 
     // eslint-disable-next-line no-await-in-loop
     const res = await client.query(sql)
@@ -100,14 +119,26 @@ async function readTasks(connection, assetMap) {
         type: task.type,
         active: task.active,
       };
+
       if (task.type === 'table_copy' || task.type === 'file_copy') {
-        thisTask.source_location = task.source;
-        thisTask.target_location = task.target;
+        let sourceLoc;
+        let targetLoc;
+        if (task?.source?.asset) { // source data is in asset location
+          sourceLoc = await readLocationFromAsset(client, task.source.asset);
+        }
+        if (task?.target?.asset) { // target data is in asset location
+          targetLoc = await readLocationFromAsset(client, task.target.asset);
+        }
+        thisTask.source_location = { ...task.source, ...sourceLoc };
+        thisTask.target_location = { ...task.target, ...targetLoc };
+      } else if (task.type === 'run_lambda' || task.type === 'encrypt') {
+        thisTask = task.target;
       } else if (task.type === 'sql') {
         thisTask.connection = task.target.connection;
         thisTask.sql_string = task.configuration;
       } else {
-        thisTask = task.target;
+        thisTask.source_location = task.source;
+        thisTask.target_location = task.target;
       }
       asset.etl_tasks.push(thisTask);
     }
@@ -211,7 +242,7 @@ const lambda_handler = async function x(event) {
     }
 
     const finalResult = (formatRes(200, result));
-    if (debug) console.log(JSON.stringify(finalResult));
+    if (debug) console.log(JSON.stringify(finalResult, null, 2));
     return finalResult;
   } catch (err) {
     const res = formatRes(500, JSON.stringify(err, Object.getOwnPropertyNames(err)));

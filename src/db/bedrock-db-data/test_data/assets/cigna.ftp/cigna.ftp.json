@@ -1,8 +1,15 @@
 {
-    "name": "cigna.ftp",
-    "location": "ftp_site",
-    "active": true,
-    "type": "ftp_site",
-    "description": "Uploaded staff data to Cigna",
-    "depends": []
-  }
+  "name": "cigna.ftp",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "cigna.ftp",
+    "path": "/Outbox/",
+    "filename": "XO16000__xo10001i.77103.${YYYY}${MM}${DD}.txt",
+    "connection": "cigna_ftp"
+  },
+  "depends": [
+    "cigna.s3"
+  ],
+  "tags": []
+}

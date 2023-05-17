@@ -1,0 +1,13 @@
+{
+  "name": "permit_review_times.acc",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "permit_review_times.acc",
+    "tablename": "permit_review_times",
+    "connection": "coa-acceladb/accela/mssqlgisadmin",
+    "schemaname": "dbo"
+  },
+  "depends": [],
+  "tags": []
+}

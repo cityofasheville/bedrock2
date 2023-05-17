@@ -1,0 +1,15 @@
+{
+  "name": "general_ledger_parameters.lib",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "general_ledger_parameters.lib",
+    "tablename": "general_ledger_parameters",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "internal"
+  },
+  "depends": [
+    "generalledgerparameters.mun"
+  ],
+  "tags": []
+}

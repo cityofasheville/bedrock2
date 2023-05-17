@@ -1,0 +1,16 @@
+{
+  "name": "bc_incorporated_areas.slope",
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "bc_incorporated_areas.wh"
+      },
+      "target_location": {
+        "asset": "bc_incorporated_areas.slope"
+      }
+    }
+  ]
+}

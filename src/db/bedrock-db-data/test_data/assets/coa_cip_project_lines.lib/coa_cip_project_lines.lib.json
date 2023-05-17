@@ -1,0 +1,15 @@
+{
+  "name": "coa_cip_project_lines.lib",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "coa_cip_project_lines.lib",
+    "tablename": "coa_cip_project_lines",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "internal"
+  },
+  "depends": [
+    "coa_cip_project_lines.edit"
+  ],
+  "tags": []
+}

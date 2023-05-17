@@ -1,0 +1,15 @@
+{
+  "name": "google_info.lib",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "google_info.lib",
+    "tablename": "google_info",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "internal"
+  },
+  "depends": [
+    "google_info.mun"
+  ],
+  "tags": []
+}

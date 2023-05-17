@@ -1,0 +1,13 @@
+{
+  "name": "permit_comments.acc",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "permit_comments.acc",
+    "tablename": "permit_comments",
+    "connection": "coa-acceladb/accela/mssqlgisadmin",
+    "schemaname": "amd"
+  },
+  "depends": [],
+  "tags": []
+}

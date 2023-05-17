@@ -1,0 +1,16 @@
+{
+  "name": "telestaff_person.ftp",
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "file_copy",
+      "active": true,
+      "source_location": {
+        "asset": "telestaff_person.s3"
+      },
+      "target_location": {
+        "asset": "telestaff_person.ftp"
+      }
+    }
+  ]
+}

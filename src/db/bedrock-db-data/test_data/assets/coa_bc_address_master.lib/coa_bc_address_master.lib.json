@@ -1,0 +1,23 @@
+{
+  "name": "coa_bc_address_master.lib",
+  "active": true,
+  "description": "",
+  "location": {
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "internal",
+    "tablename": "coa_bc_address_master"
+  },
+  "depends": [
+    "coa_districts_zoning.lib",
+    "bc_property_account_master.lib",
+    "coa_zip_code.lib",
+    "bc_property.lib",
+    "bc_location.lib",
+    "bc_civicaddress_table.lib",
+    "coa_active_jurisdictions.lib",
+    "coa_districts_public_works.lib",
+    "coa_districts_water.lib",
+    "bc_property_pinnum_formatted_owner_names.lib"
+  ],
+  "tags": []
+}

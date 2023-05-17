@@ -1,0 +1,16 @@
+{
+  "name": "iran_divestment_restricted_companies.lib",
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "iran_divestment_companies.goog"
+      },
+      "target_location": {
+        "asset": "iran_divestment_restricted_companies.lib"
+      }
+    }
+  ]
+}

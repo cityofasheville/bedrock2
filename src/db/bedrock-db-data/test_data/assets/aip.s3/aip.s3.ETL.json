@@ -1,0 +1,17 @@
+{
+  "name": "aip.s3",
+  "run_group": "aip",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "pr_allstate_feed.mun",
+        "tableheaders": true
+      },
+      "target_location": {
+        "asset": "aip.s3"
+      }
+    }
+  ]
+}

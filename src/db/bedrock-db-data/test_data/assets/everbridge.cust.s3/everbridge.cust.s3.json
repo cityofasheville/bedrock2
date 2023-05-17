@@ -1,0 +1,15 @@
+{
+  "name": "everbridge.cust.s3",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "everbridge.cust.s3",
+    "s3_path": "everbridge/",
+    "filename": "avl.UB_Water_Customers_Everbridge.csv",
+    "connection": "s3_data_files"
+  },
+  "depends": [
+    "ub_water_customers_everbridge.mun"
+  ],
+  "tags": []
+}

@@ -1,0 +1,13 @@
+{
+  "name": "coa_districts_zoning.edit",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "coa_districts_zoning.edit",
+    "tablename": "coa_districts_zoning",
+    "connection": "coa-gis-edit1/coagisedit/coagis",
+    "schemaname": "coagis"
+  },
+  "depends": [],
+  "tags": []
+}

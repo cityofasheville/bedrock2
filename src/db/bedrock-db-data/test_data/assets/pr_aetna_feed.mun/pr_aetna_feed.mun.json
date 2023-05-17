@@ -1,0 +1,13 @@
+{
+  "name": "pr_aetna_feed.mun",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "pr_aetna_feed.mun",
+    "tablename": "PR_AETNA_Feed",
+    "connection": "munis/munprod/fme_jobs",
+    "schemaname": "avl"
+  },
+  "depends": [],
+  "tags": []
+}

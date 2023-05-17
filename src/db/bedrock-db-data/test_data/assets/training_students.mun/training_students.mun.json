@@ -1,0 +1,13 @@
+{
+  "name": "training_students.mun",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "training_students.mun",
+    "tablename": "training_students",
+    "connection": "munis/munprod/mssqlgisadmin",
+    "schemaname": "amd"
+  },
+  "depends": [],
+  "tags": []
+}

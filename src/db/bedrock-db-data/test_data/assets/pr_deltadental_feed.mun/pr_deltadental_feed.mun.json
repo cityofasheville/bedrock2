@@ -1,0 +1,13 @@
+{
+  "name": "pr_deltadental_feed.mun",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "pr_deltadental_feed.mun",
+    "tablename": "PR_DeltaDental_Feed",
+    "connection": "munis/munprod/fme_jobs",
+    "schemaname": "avl"
+  },
+  "depends": [],
+  "tags": []
+}

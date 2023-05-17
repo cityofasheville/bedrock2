@@ -1,0 +1,15 @@
+{
+  "name": "compsych.s3",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "compsych.s3",
+    "s3_path": "compsych/",
+    "filename": "compsych_CityofAsheville_${YYYY}${MM}${DD}.csv",
+    "connection": "s3_data_files"
+  },
+  "depends": [
+    "sunlife_eligibility.mun"
+  ],
+  "tags": []
+}

@@ -1,0 +1,15 @@
+{
+  "name": "bc_property.slope",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "bc_property.slope",
+    "tablename": "bc_property",
+    "connection": "pubrecdb1/steepslope/dbadmin",
+    "schemaname": "public"
+  },
+  "depends": [
+    "bc_property.wh"
+  ],
+  "tags": []
+}

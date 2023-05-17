@@ -1,0 +1,13 @@
+{
+  "name": "bc_property.edit",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "bc_property.edit",
+    "tablename": "bc_property",
+    "connection": "coa-gis-edit1/coagisedit/coagis",
+    "schemaname": "coagis"
+  },
+  "depends": [],
+  "tags": []
+}

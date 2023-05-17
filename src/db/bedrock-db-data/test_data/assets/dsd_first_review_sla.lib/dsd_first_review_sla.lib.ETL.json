@@ -1,0 +1,16 @@
+{
+  "name": "dsd_first_review_sla.lib",
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "dsd_first_review_sla.acc"
+      },
+      "target_location": {
+        "asset": "dsd_first_review_sla.lib"
+      }
+    }
+  ]
+}

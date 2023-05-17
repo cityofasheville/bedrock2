@@ -1,0 +1,13 @@
+{
+  "name": "coa_apd_public_incidents.wh",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "coa_apd_public_incidents.wh",
+    "tablename": "coa_apd_public_incidents",
+    "connection": "coa-gis-warehouse1/coagiswarehouse/coagis",
+    "schemaname": "coagis"
+  },
+  "depends": [],
+  "tags": []
+}

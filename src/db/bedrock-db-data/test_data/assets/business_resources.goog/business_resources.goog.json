@@ -1,0 +1,14 @@
+{
+  "name": "business_resources.goog",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "business_resources.goog",
+    "range": "Sheet1!A2:Q",
+    "filename": "Business Resources",
+    "connection": "bedrock-googlesheets",
+    "spreadsheetid": "1aTEJL7N3UI1CMObZmg9XicaCYL2USMnPIxh_esCZCos"
+  },
+  "depends": [],
+  "tags": []
+}

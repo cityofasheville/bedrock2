@@ -1,0 +1,15 @@
+{
+  "name": "base_employee_temp.lib",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "base_employee_temp.lib",
+    "tablename": "base_employee_temp",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "temp"
+  },
+  "depends": [
+    "base_employee.mun"
+  ],
+  "tags": []
+}

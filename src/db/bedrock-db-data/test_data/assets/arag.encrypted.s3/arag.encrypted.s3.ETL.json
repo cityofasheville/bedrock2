@@ -1,0 +1,15 @@
+{
+  "name": "arag.encrypted.s3",
+  "run_group": "arag",
+  "tasks": [
+    {
+      "type": "encrypt",
+      "active": true,
+      "s3_path": "arag/",
+      "filename": "arag_asheville_${YYYY}${MM}${DD}.csv",
+      "s3_connection": "s3_data_files",
+      "encrypt_connection": "arag_ftp",
+      "encrypted_filename": "arag_asheville_${YYYY}${MM}${DD}.csv.pgp"
+    }
+  ]
+}

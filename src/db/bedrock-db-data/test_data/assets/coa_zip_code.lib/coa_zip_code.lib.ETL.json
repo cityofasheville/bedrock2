@@ -1,0 +1,16 @@
+{
+  "name": "coa_zip_code.lib",
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "coa_zip_code.edit"
+      },
+      "target_location": {
+        "asset": "coa_zip_code.lib"
+      }
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "name": "permit_contacts.lib",
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "permit_contacts.acc"
+      },
+      "target_location": {
+        "asset": "permit_contacts.lib"
+      }
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "name": "bc_property_account_master.lib",
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "bc_property_account_master.wh"
+      },
+      "target_location": {
+        "asset": "bc_property_account_master.lib"
+      }
+    }
+  ]
+}

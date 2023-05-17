@@ -1,0 +1,16 @@
+{
+  "name": "coa_computer_assets.goog",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "coa_computer_assets.goog",
+    "range": "ComputerAssets!A2:AO",
+    "filename": "coa_computer_assets",
+    "connection": "bedrock-googlesheets",
+    "spreadsheetid": "1P9tdY7lawwoZXJmn09UgRMgH7JoauYG8h00MEkGzv8Q"
+  },
+  "depends": [
+    "coa_computer_assets.lib"
+  ],
+  "tags": []
+}

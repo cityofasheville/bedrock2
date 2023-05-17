@@ -1,8 +1,0 @@
-{
-    "name": "paymentus.ftp",
-    "location": "ftp_site",
-    "active": true,
-    "type": "ftp_site",
-    "description": "Uploaded three data files and three matching empty ctl files to Paymentus",
-    "depends": []
-  }

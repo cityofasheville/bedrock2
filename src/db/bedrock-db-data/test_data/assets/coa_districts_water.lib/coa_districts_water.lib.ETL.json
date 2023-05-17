@@ -1,0 +1,16 @@
+{
+  "name": "coa_districts_water.lib",
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "coa_districts_water.wh"
+      },
+      "target_location": {
+        "asset": "coa_districts_water.lib"
+      }
+    }
+  ]
+}

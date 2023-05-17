@@ -1,0 +1,13 @@
+{
+  "name": "pr_allstate_feed.mun",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "pr_allstate_feed.mun",
+    "tablename": "PR_ALLSTATE_Feed",
+    "connection": "munis/munprod/fme_jobs",
+    "schemaname": "avl"
+  },
+  "depends": [],
+  "tags": []
+}

@@ -1,0 +1,16 @@
+{
+  "name": "google_info.lib",
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "google_info.mun"
+      },
+      "target_location": {
+        "asset": "google_info.lib"
+      }
+    }
+  ]
+}

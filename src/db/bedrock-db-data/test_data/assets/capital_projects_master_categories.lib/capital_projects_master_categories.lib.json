@@ -1,0 +1,15 @@
+{
+  "name": "capital_projects_master_categories.lib",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "capital_projects_master_categories.lib",
+    "tablename": "capital_projects_master_categories",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "internal"
+  },
+  "depends": [
+    "capital_projects_master_categories.goog"
+  ],
+  "tags": []
+}

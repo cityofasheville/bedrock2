@@ -1,0 +1,13 @@
+{
+  "name": "coa_zip_code.edit",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "coa_zip_code.edit",
+    "tablename": "coa_zip_code",
+    "connection": "coa-gis-edit1/coagisedit/coagis",
+    "schemaname": "coagis"
+  },
+  "depends": [],
+  "tags": []
+}

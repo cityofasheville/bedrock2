@@ -1,0 +1,13 @@
+{
+  "name": "coa_active_jurisdictions.wh",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "coa_active_jurisdictions.wh",
+    "tablename": "coa_active_jurisdictions",
+    "connection": "coa-gis-warehouse1/coagiswarehouse/coagis",
+    "schemaname": "coagis"
+  },
+  "depends": [],
+  "tags": []
+}

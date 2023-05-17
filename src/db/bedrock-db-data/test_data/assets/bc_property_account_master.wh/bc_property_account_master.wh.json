@@ -1,0 +1,13 @@
+{
+  "name": "bc_property_account_master.wh",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "bc_property_account_master.wh",
+    "tablename": "bc_property_account_master",
+    "connection": "coa-gis-warehouse1/coagiswarehouse/coagis",
+    "schemaname": "coagis"
+  },
+  "depends": [],
+  "tags": []
+}

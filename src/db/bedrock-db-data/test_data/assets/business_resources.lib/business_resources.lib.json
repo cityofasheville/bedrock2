@@ -1,0 +1,15 @@
+{
+  "name": "business_resources.lib",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "business_resources.lib",
+    "tablename": "business_resources",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "internal"
+  },
+  "depends": [
+    "business_resources.goog"
+  ],
+  "tags": []
+}

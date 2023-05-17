@@ -1,0 +1,15 @@
+{
+  "name": "vendors.lib",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "vendors.lib",
+    "tablename": "vendors",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "internal"
+  },
+  "depends": [
+    "ap_vendor.mun"
+  ],
+  "tags": []
+}

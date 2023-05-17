@@ -1,0 +1,15 @@
+{
+  "name": "permit_contractors.lib",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "permit_contractors.lib",
+    "tablename": "permit_contractors",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "internal"
+  },
+  "depends": [
+    "permit_contractors.acc"
+  ],
+  "tags": []
+}

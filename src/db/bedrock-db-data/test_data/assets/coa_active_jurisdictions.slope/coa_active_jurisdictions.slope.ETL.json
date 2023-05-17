@@ -1,0 +1,16 @@
+{
+  "name": "coa_active_jurisdictions.slope",
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "coa_active_jurisdictions.wh"
+      },
+      "target_location": {
+        "asset": "coa_active_jurisdictions.slope"
+      }
+    }
+  ]
+}

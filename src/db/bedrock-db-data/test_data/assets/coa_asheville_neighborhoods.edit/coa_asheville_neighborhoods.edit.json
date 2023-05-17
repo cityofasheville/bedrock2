@@ -1,0 +1,13 @@
+{
+  "name": "coa_asheville_neighborhoods.edit",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "coa_asheville_neighborhoods.edit",
+    "tablename": "coa_asheville_neighborhoods",
+    "connection": "coa-gis-edit1/coagisedit/coagis",
+    "schemaname": "coagis"
+  },
+  "depends": [],
+  "tags": []
+}

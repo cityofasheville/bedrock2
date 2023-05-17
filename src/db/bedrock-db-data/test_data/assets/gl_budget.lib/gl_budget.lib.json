@@ -1,0 +1,15 @@
+{
+  "name": "gl_budget.lib",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "gl_budget.lib",
+    "tablename": "gl_budget",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "internal"
+  },
+  "depends": [
+    "gl_budget.mun"
+  ],
+  "tags": []
+}

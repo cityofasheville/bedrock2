@@ -1,0 +1,15 @@
+{
+  "name": "everbridge.emp.s3",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "everbridge.emp.s3",
+    "s3_path": "everbridge/",
+    "filename": "avl.PR_City_Employees_Everbridge.csv",
+    "connection": "s3_data_files"
+  },
+  "depends": [
+    "pr_city_employees_everbridge.mun"
+  ],
+  "tags": []
+}

@@ -1,20 +1,16 @@
-
 {
-    "run_group": "daily",
-    "tasks": [
-      {
-        "type": "table_copy",
-        "source_location": {
-          "connection": "pubrecdb1/mdastore1/dbadmin",
-          "schemaname": "internal",
-          "tablename": "business_resources"
-        },
-        "target_location": {
-          "connection": "coa-publicdb1/coa_share/dbadmin",
-          "schemaname": "open",
-          "tablename": "business_resources"
-        },
-        "active": true
+  "name": "business_resources.pub",
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "business_resources.lib"
+      },
+      "target_location": {
+        "asset": "business_resources.pub"
+      }
     }
-    ]
-  }
+  ]
+}

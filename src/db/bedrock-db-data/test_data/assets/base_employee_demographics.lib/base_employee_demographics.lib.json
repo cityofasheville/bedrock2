@@ -1,0 +1,15 @@
+{
+  "name": "base_employee_demographics.lib",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "base_employee_demographics.lib",
+    "tablename": "base_employee_demographics",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "standard"
+  },
+  "depends": [
+    "base_employee_demographics.mun"
+  ],
+  "tags": []
+}

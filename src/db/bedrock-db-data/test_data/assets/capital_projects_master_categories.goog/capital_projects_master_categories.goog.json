@@ -1,0 +1,14 @@
+{
+  "name": "capital_projects_master_categories.goog",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "capital_projects_master_categories.goog",
+    "range": "Categories!A2:B",
+    "filename": "Capital Projects Master",
+    "connection": "bedrock-googlesheets",
+    "spreadsheetid": "1IepJrSjqbGK7UcTmFHqknNUD6Iyx6-3_zpj6qHprBgY"
+  },
+  "depends": [],
+  "tags": []
+}

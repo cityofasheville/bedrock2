@@ -1,0 +1,15 @@
+{
+  "name": "iran_divestment_restricted_companies.lib",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "iran_divestment_restricted_companies.lib",
+    "tablename": "iran_divestment_restricted_companies",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "internal"
+  },
+  "depends": [
+    "iran_divestment_companies.goog"
+  ],
+  "tags": []
+}

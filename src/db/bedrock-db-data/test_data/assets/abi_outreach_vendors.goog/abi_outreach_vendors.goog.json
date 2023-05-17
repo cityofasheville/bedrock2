@@ -1,0 +1,17 @@
+{
+  "name": "abi_outreach_vendors.goog",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "abi_outreach_vendors.goog",
+    "range": "Vendors!A2:Z",
+    "filename": "abi_outreach_vendors",
+    "connection": "bedrock-googlesheets",
+    "spreadsheetid": "1lm_LdZS6yhniDEuVGyaj3vdD7ACU8Eo_pCkmNr81TvA"
+  },
+  "depends": [
+    "mwbe_vendors_by_commodity.mun",
+    "abi_potential_vendors.goog"
+  ],
+  "tags": []
+}

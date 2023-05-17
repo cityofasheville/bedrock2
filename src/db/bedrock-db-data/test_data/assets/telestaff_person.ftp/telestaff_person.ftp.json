@@ -1,0 +1,15 @@
+{
+  "name": "telestaff_person.ftp",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "telestaff_person.ftp",
+    "path": "/PROD/import/ongoing.unprocessed/",
+    "filename": "${YYYY}-${MM}-${DD}T${HH}-${mm}-${SS}.000ZPerson.xml",
+    "connection": "telestaff_ftp"
+  },
+  "depends": [
+    "telestaff_person.s3"
+  ],
+  "tags": []
+}

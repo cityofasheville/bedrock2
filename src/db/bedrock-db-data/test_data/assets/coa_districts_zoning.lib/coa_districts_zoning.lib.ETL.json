@@ -1,0 +1,16 @@
+{
+  "name": "coa_districts_zoning.lib",
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "coa_districts_zoning.edit"
+      },
+      "target_location": {
+        "asset": "coa_districts_zoning.lib"
+      }
+    }
+  ]
+}

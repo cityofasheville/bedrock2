@@ -1,0 +1,13 @@
+{
+  "name": "bc_incorporated_areas.wh",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "bc_incorporated_areas.wh",
+    "tablename": "bc_incorporated_areas",
+    "connection": "coa-gis-warehouse1/coagiswarehouse/coagis",
+    "schemaname": "coagis"
+  },
+  "depends": [],
+  "tags": []
+}

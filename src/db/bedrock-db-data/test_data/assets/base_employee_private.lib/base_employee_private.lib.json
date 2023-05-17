@@ -1,0 +1,15 @@
+{
+  "name": "base_employee_private.lib",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "base_employee_private.lib",
+    "tablename": "base_employee_private",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "standard"
+  },
+  "depends": [
+    "base_employee_private.mun"
+  ],
+  "tags": []
+}

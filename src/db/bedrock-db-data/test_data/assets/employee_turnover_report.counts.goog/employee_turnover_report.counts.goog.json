@@ -1,0 +1,16 @@
+{
+  "name": "employee_turnover_report.counts.goog",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "employee_turnover_report.counts.goog",
+    "range": "Counts!A2:P",
+    "filename": "Employee Turnover Report",
+    "connection": "bedrock-googlesheets",
+    "spreadsheetid": "1yE8pfp9nZ9nETDd2ypN4h6y8-m06giQ5O797ghBQHYc"
+  },
+  "depends": [
+    "turnover_employees.lib"
+  ],
+  "tags": []
+}

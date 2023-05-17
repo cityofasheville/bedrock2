@@ -1,0 +1,16 @@
+{
+  "name": "inspections.lib",
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "inspections.acc"
+      },
+      "target_location": {
+        "asset": "inspections.lib"
+      }
+    }
+  ]
+}

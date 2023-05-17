@@ -1,0 +1,15 @@
+{
+  "name": "bc_property_account_master.lib",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "bc_property_account_master.lib",
+    "tablename": "bc_property_account_master",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "internal"
+  },
+  "depends": [
+    "bc_property_account_master.wh"
+  ],
+  "tags": []
+}

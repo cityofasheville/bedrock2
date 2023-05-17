@@ -1,0 +1,15 @@
+{
+  "name": "coa_districts_zoning.lib",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "coa_districts_zoning.lib",
+    "tablename": "coa_districts_zoning",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "internal"
+  },
+  "depends": [
+    "coa_districts_zoning.edit"
+  ],
+  "tags": []
+}

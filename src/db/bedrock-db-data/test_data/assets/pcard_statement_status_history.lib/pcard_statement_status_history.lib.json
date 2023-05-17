@@ -1,0 +1,15 @@
+{
+  "name": "pcard_statement_status_history.lib",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "pcard_statement_status_history.lib",
+    "tablename": "pcard_statement_status_history",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "internal"
+  },
+  "depends": [
+    "pcard_statement_status_history.mun"
+  ],
+  "tags": []
+}

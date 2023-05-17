@@ -1,0 +1,15 @@
+{
+  "name": "buncombe_tax_inspections.lib",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "buncombe_tax_inspections.lib",
+    "tablename": "buncombe_tax_inspections",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "bc"
+  },
+  "depends": [
+    "buncombe_tax_inspections.acc"
+  ],
+  "tags": []
+}

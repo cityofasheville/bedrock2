@@ -1,0 +1,18 @@
+{
+  "name": "arag.s3",
+  "run_group": "arag",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "pr_arag_feed.mun",
+        "sortdesc": "DATA",
+        "fixedwidth_noquotes": true
+      },
+      "target_location": {
+        "asset": "arag.s3"
+      }
+    }
+  ]
+}

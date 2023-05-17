@@ -1,0 +1,14 @@
+{
+  "name": "abi_potential_vendors.goog",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "abi_potential_vendors.goog",
+    "range": "Vendors!A2:Z",
+    "filename": "abi_potential_vendors",
+    "connection": "bedrock-googlesheets",
+    "spreadsheetid": "1lQzl5-MM0SUblcyuOdxsm6duaERA5017c4eSgbnlDoI"
+  },
+  "depends": [],
+  "tags": []
+}

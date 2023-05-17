@@ -1,0 +1,15 @@
+{
+  "name": "bc_location.lib",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "bc_location.lib",
+    "tablename": "bc_location",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "internal"
+  },
+  "depends": [
+    "bc_location.wh"
+  ],
+  "tags": []
+}

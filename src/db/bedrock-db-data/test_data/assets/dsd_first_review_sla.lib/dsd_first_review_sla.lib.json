@@ -1,0 +1,15 @@
+{
+  "name": "dsd_first_review_sla.lib",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "dsd_first_review_sla.lib",
+    "tablename": "dsd_first_review_sla",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "internal"
+  },
+  "depends": [
+    "dsd_first_review_sla.acc"
+  ],
+  "tags": []
+}

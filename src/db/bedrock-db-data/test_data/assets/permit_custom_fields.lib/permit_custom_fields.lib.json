@@ -1,0 +1,15 @@
+{
+  "name": "permit_custom_fields.lib",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "permit_custom_fields.lib",
+    "tablename": "permit_custom_fields",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "internal"
+  },
+  "depends": [
+    "permit_custom_fields.acc"
+  ],
+  "tags": []
+}

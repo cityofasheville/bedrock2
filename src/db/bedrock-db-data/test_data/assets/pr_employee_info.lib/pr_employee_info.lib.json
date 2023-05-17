@@ -1,0 +1,15 @@
+{
+  "name": "pr_employee_info.lib",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "pr_employee_info.lib",
+    "tablename": "pr_employee_info",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "internal"
+  },
+  "depends": [
+    "pr_employee_info.mun"
+  ],
+  "tags": []
+}

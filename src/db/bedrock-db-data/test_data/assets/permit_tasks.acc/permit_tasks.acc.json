@@ -1,0 +1,13 @@
+{
+  "name": "permit_tasks.acc",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "permit_tasks.acc",
+    "tablename": "permit_tasks",
+    "connection": "coa-acceladb/accela/mssqlgisadmin",
+    "schemaname": "amd"
+  },
+  "depends": [],
+  "tags": []
+}

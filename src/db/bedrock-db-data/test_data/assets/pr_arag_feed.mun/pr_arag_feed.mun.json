@@ -1,0 +1,13 @@
+{
+  "name": "pr_arag_feed.mun",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "pr_arag_feed.mun",
+    "tablename": "PR_ARAG_Feed",
+    "connection": "munis/munprod/fme_jobs",
+    "schemaname": "avl"
+  },
+  "depends": [],
+  "tags": []
+}

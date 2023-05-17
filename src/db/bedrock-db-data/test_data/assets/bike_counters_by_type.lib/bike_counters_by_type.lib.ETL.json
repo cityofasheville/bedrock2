@@ -1,0 +1,12 @@
+{
+  "name": "bike_counters_by_type.lib",
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "run_lambda",
+      "description": "Pull yesterday's Eco-Visio data from API using ecovisio Lambda",
+      "lambda_arn": "arn:aws:lambda:us-east-1:518970837364:function:ecovisio",
+      "active": true
+    }
+  ]
+}

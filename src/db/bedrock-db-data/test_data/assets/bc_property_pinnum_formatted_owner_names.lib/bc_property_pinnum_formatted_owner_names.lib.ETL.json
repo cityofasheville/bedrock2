@@ -1,0 +1,12 @@
+{
+  "name": "bc_property_pinnum_formatted_owner_names.lib",
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "sql",
+      "active": true,
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "sql_string": "begin transaction;\ndelete from internal.bc_property_pinnum_formatted_owner_names;\nINSERT INTO internal.bc_property_pinnum_formatted_owner_names\n( pinnum, formatted_owner_name )\nSELECT left(property_owner_accounts.pinnum,200),\nleft(array_to_string(array_agg(property_owner_accounts.owner_name ORDER BY property_owner_accounts.accountnum ASC), ' & '::text),200) AS formatted_owner_name\nFROM (\n    SELECT unnestedaccounts.pinnum, unnestedaccounts.accountnum,\n           array_to_string(array_remove(ARRAY[\n           btrim(internal.bc_property_account_master.am_last_name::text, ' '::text), \n           btrim(internal.bc_property_account_master.am_name_suffix::text, ' '::text), \n           btrim(internal.bc_property_account_master.am_first_name::text, ' '::text), \n           btrim(internal.bc_property_account_master.am_middle_name::text, ' '::text)], ''::text), ' '::text) AS owner_name\n          FROM internal.bc_property_account_master, \n          (SELECT internal.bc_property.pinnum,\n          unnest(regexp_split_to_array(internal.bc_property.accountnumber::text, ';'::text)) AS accountnum\n          FROM internal.bc_property ) as unnestedaccounts\n         WHERE unnestedaccounts.accountnum = internal.bc_property_account_master.am_account_no::text order by accountnum ASC) AS property_owner_accounts\n         GROUP BY property_owner_accounts.pinnum; \ncommit transaction;\n"
+    }
+  ]
+}

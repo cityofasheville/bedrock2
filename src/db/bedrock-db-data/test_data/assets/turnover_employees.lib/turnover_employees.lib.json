@@ -1,0 +1,13 @@
+{
+  "name": "turnover_employees.lib",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "turnover_employees.lib",
+    "tablename": "turnover_employees",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "standard"
+  },
+  "depends": [],
+  "tags": []
+}

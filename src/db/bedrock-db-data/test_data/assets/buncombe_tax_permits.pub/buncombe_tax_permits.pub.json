@@ -1,0 +1,15 @@
+{
+  "name": "buncombe_tax_permits.pub",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "buncombe_tax_permits.pub",
+    "tablename": "buncombe_tax_permits",
+    "connection": "coa-publicdb1/coa_share/dbadmin",
+    "schemaname": "bc"
+  },
+  "depends": [
+    "buncombe_tax_permits.lib"
+  ],
+  "tags": []
+}

@@ -1,0 +1,15 @@
+{
+  "name": "coa_districts_public_works.lib",
+  "active": true,
+  "description": "",
+  "location": {
+    "asset": "coa_districts_public_works.lib",
+    "tablename": "coa_districts_public_works",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "internal"
+  },
+  "depends": [
+    "coa_districts_public_works.wh"
+  ],
+  "tags": []
+}

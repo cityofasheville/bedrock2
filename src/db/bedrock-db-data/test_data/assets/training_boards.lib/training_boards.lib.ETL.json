@@ -1,0 +1,17 @@
+{
+  "name": "training_boards.lib",
+  "run_group": "daily",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "boards+commission_member_training.goog"
+      },
+      "target_location": {
+        "asset": "training_boards.lib",
+        "append_serial": "objectid"
+      }
+    }
+  ]
+}
