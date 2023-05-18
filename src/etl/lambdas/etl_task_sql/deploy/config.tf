@@ -10,6 +10,7 @@ resource "aws_lambda_function" "etl_task_sql-$$INSTANCE$$" {
     runtime         = "nodejs16.x"
     source_code_hash = filebase64sha256("function.zip")
     timeout         = 900
+    memory_size     = 256
     tags = {
       "coa:application" = "bedrock"
       "coa:department"  = "information-technology"
