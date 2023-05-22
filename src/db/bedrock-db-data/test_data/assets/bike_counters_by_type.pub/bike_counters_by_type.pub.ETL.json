@@ -1,6 +1,7 @@
 {
-  "name": "bike_counters_by_type.pub",
+  "asset_name": "bike_counters_by_type.pub",
   "run_group": "daily",
+  "active": true,
   "tasks": [
     {
       "type": "table_copy",

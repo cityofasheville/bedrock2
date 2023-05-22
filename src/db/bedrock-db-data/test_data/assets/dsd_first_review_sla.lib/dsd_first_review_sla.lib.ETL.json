@@ -1,6 +1,7 @@
 {
-  "name": "dsd_first_review_sla.lib",
+  "asset_name": "dsd_first_review_sla.lib",
   "run_group": "daily",
+  "active": true,
   "tasks": [
     {
       "type": "table_copy",

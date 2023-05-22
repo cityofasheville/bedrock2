@@ -1,6 +1,7 @@
 {
-  "name": "iran_divestment_restricted_companies.lib",
+  "asset_name": "iran_divestment_restricted_companies.lib",
   "run_group": "daily",
+  "active": true,
   "tasks": [
     {
       "type": "table_copy",

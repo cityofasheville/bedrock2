@@ -1,6 +1,7 @@
 {
-  "name": "permit_custom_fields.pub",
+  "asset_name": "permit_custom_fields.pub",
   "run_group": "daily",
+  "active": true,
   "tasks": [
     {
       "type": "table_copy",

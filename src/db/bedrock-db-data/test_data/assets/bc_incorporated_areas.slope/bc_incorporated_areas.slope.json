@@ -1,6 +1,5 @@
 {
-  "name": "bc_incorporated_areas.slope",
-  "active": true,
+  "asset_name": "bc_incorporated_areas.slope",
   "description": "",
   "location": {
     "asset": "bc_incorporated_areas.slope",
@@ -8,6 +7,7 @@
     "connection": "pubrecdb1/steepslope/dbadmin",
     "schemaname": "public"
   },
+  "active": true,
   "depends": [
     "bc_incorporated_areas.wh"
   ],

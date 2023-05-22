@@ -1,13 +1,13 @@
 {
-  "name": "coa_local_historic_landmarks.wh",
-  "active": true,
-  "description": "",
+  "asset_name": "coa_local_historic_landmarks.wh",
+  "description": "coa_local_historic_landmarks",
   "location": {
     "asset": "coa_local_historic_landmarks.wh",
     "tablename": "coa_local_historic_landmarks",
     "connection": "coa-gis-warehouse1/coagiswarehouse/coagis",
     "schemaname": "coagis"
   },
+  "active": true,
   "depends": [],
   "tags": []
 }

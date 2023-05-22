@@ -1,13 +1,13 @@
 {
-  "name": "delta_dental.ftp",
-  "active": true,
-  "description": "",
+  "asset_name": "delta_dental.ftp",
+  "description": "Uploaded staff and customer data to Delta Dental",
   "location": {
     "asset": "delta_dental.ftp",
     "path": "/in/",
     "filename": "deltadental_asheville_${YYYY}${MM}${DD}.txt.asc",
     "connection": "delta_dental_ftp"
   },
+  "active": true,
   "depends": [
     "delta_dental.encrypted.s3"
   ],

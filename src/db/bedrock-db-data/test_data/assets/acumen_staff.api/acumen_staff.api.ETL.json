@@ -1,6 +1,7 @@
 {
-  "name": "acumen_staff.api",
+  "asset_name": "acumen_staff.api",
   "run_group": "daily",
+  "active": true,
   "tasks": [
     {
       "type": "run_lambda",

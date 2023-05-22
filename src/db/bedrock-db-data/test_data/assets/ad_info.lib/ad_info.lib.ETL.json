@@ -1,6 +1,7 @@
 {
-  "name": "ad_info.lib",
+  "asset_name": "ad_info.lib",
   "run_group": "daily",
+  "active": true,
   "tasks": [
     {
       "type": "table_copy",

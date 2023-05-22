@@ -1,13 +1,13 @@
 {
-  "name": "aip.s3",
-  "active": true,
+  "asset_name": "aip.s3",
   "description": "",
   "location": {
     "asset": "aip.s3",
-    "s3_path": "aip/",
+    "path": "aip/",
     "filename": "CityofAsheville5871_To_InfoArmor_FULL_${YYYY}${MM}${DD}.txt",
     "connection": "s3_data_files"
   },
+  "active": true,
   "depends": [
     "pr_allstate_feed.mun"
   ],

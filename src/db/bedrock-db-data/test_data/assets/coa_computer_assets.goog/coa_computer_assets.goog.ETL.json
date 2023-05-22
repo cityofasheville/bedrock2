@@ -1,6 +1,7 @@
 {
-  "name": "coa_computer_assets.goog",
+  "asset_name": "coa_computer_assets.goog",
   "run_group": "daily",
+  "active": true,
   "tasks": [
     {
       "type": "table_copy",

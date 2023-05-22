@@ -1,6 +1,5 @@
 {
-  "name": "business_resources.goog",
-  "active": true,
+  "asset_name": "business_resources.goog",
   "description": "",
   "location": {
     "asset": "business_resources.goog",
@@ -9,6 +8,7 @@
     "connection": "bedrock-googlesheets",
     "spreadsheetid": "1aTEJL7N3UI1CMObZmg9XicaCYL2USMnPIxh_esCZCos"
   },
+  "active": true,
   "depends": [],
   "tags": []
 }

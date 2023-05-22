@@ -1,6 +1,7 @@
 {
-  "name": "base_employee_position_temp.lib",
+  "asset_name": "base_employee_position_temp.lib",
   "run_group": "daily",
+  "active": true,
   "tasks": [
     {
       "type": "table_copy",

@@ -1,6 +1,7 @@
 {
-  "name": "inspections.pub",
+  "asset_name": "inspections.pub",
   "run_group": "daily",
+  "active": true,
   "tasks": [
     {
       "type": "table_copy",

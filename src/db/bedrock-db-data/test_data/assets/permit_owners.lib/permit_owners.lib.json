@@ -1,13 +1,13 @@
 {
-  "name": "permit_owners.lib",
-  "active": true,
-  "description": "",
+  "asset_name": "permit_owners.lib",
+  "description": "Owners associated with permits",
   "location": {
     "asset": "permit_owners.lib",
     "tablename": "permit_owners",
     "connection": "pubrecdb1/mdastore1/dbadmin",
     "schemaname": "internal"
   },
+  "active": true,
   "depends": [
     "permit_owners.acc"
   ],

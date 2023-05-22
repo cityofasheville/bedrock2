@@ -1,6 +1,7 @@
 {
-  "name": "telestaff_person.s3",
+  "asset_name": "telestaff_person.s3",
   "run_group": "daily",
+  "active": true,
   "tasks": [
     {
       "type": "table_copy",

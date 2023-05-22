@@ -1,12 +1,12 @@
 {
-  "name": "arag.encrypted.s3",
-  "active": true,
+  "asset_name": "arag.encrypted.s3",
   "description": "",
   "location": {
-    "s3_path": "arag/",
+    "path": "arag/",
     "filename": "arag_asheville_${YYYY}${MM}${DD}.csv.pgp",
     "connection": "s3_data_files"
   },
+  "active": true,
   "depends": [
     "arag.s3"
   ],

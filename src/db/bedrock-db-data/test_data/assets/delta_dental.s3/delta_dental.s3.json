@@ -1,13 +1,13 @@
 {
-  "name": "delta_dental.s3",
-  "active": true,
+  "asset_name": "delta_dental.s3",
   "description": "",
   "location": {
     "asset": "delta_dental.s3",
-    "s3_path": "delta_dental/",
+    "path": "delta_dental/",
     "filename": "deltadental_asheville_${YYYY}${MM}${DD}.txt",
     "connection": "s3_data_files"
   },
+  "active": true,
   "depends": [
     "pr_deltadental_feed.mun"
   ],

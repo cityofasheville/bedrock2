@@ -1,13 +1,13 @@
 {
-  "name": "safetyskills.ftp",
-  "active": true,
-  "description": "",
+  "asset_name": "safetyskills.ftp",
+  "description": "Uploaded staff data to Safety Skills",
   "location": {
     "asset": "safetyskills.ftp",
     "path": "/35408/",
     "filename": "users.csv",
     "connection": "safetyskills_ftp"
   },
+  "active": true,
   "depends": [
     "safetyskills.s3"
   ],

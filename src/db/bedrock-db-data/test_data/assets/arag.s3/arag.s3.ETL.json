@@ -1,6 +1,7 @@
 {
-  "name": "arag.s3",
+  "asset_name": "arag.s3",
   "run_group": "arag",
+  "active": true,
   "tasks": [
     {
       "type": "table_copy",

@@ -1,13 +1,13 @@
 {
-  "name": "general_ledger_parameters.lib",
-  "active": true,
-  "description": "",
+  "asset_name": "general_ledger_parameters.lib",
+  "description": "Various GL parameters, especially budget year",
   "location": {
     "asset": "general_ledger_parameters.lib",
     "tablename": "general_ledger_parameters",
     "connection": "pubrecdb1/mdastore1/dbadmin",
     "schemaname": "internal"
   },
+  "active": true,
   "depends": [
     "generalledgerparameters.mun"
   ],

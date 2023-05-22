@@ -1,6 +1,7 @@
 {
-  "name": "google_info.lib",
+  "asset_name": "google_info.lib",
   "run_group": "daily",
+  "active": true,
   "tasks": [
     {
       "type": "table_copy",

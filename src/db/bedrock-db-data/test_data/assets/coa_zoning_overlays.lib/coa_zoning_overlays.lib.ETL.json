@@ -1,6 +1,7 @@
 {
-  "name": "coa_zoning_overlays.lib",
+  "asset_name": "coa_zoning_overlays.lib",
   "run_group": "daily",
+  "active": true,
   "tasks": [
     {
       "type": "table_copy",

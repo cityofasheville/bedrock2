@@ -1,6 +1,7 @@
 {
-  "name": "gl_budget.lib",
+  "asset_name": "gl_budget.lib",
   "run_group": "daily",
+  "active": true,
   "tasks": [
     {
       "type": "table_copy",

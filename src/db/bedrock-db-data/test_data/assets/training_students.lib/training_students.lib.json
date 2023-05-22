@@ -1,13 +1,13 @@
 {
-  "name": "training_students.lib",
-  "active": true,
-  "description": "",
+  "asset_name": "training_students.lib",
+  "description": "Student registrations for training classes",
   "location": {
     "asset": "training_students.lib",
     "tablename": "training_students",
     "connection": "pubrecdb1/mdastore1/dbadmin",
     "schemaname": "internal"
   },
+  "active": true,
   "depends": [
     "training_students.mun"
   ],

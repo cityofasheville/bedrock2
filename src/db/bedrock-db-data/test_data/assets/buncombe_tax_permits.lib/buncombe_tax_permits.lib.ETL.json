@@ -1,6 +1,7 @@
 {
-  "name": "buncombe_tax_permits.lib",
+  "asset_name": "buncombe_tax_permits.lib",
   "run_group": "daily",
+  "active": true,
   "tasks": [
     {
       "type": "table_copy",

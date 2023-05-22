@@ -1,6 +1,7 @@
 {
-  "name": "pcard_statement_status_history.lib",
+  "asset_name": "pcard_statement_status_history.lib",
   "run_group": "daily",
+  "active": true,
   "tasks": [
     {
       "type": "table_copy",

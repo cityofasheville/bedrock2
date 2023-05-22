@@ -1,13 +1,13 @@
 {
-  "name": "bc_property.lib",
-  "active": true,
-  "description": "",
+  "asset_name": "bc_property.lib",
+  "description": "Property table from County",
   "location": {
     "asset": "bc_property.lib",
     "tablename": "bc_property",
     "connection": "pubrecdb1/mdastore1/dbadmin",
     "schemaname": "internal"
   },
+  "active": true,
   "depends": [
     "bc_property.edit"
   ],

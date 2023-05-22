@@ -1,13 +1,13 @@
 {
-  "name": "coa_districts_water.lib",
-  "active": true,
-  "description": "",
+  "asset_name": "coa_districts_water.lib",
+  "description": "Asheville water districts",
   "location": {
     "asset": "coa_districts_water.lib",
     "tablename": "coa_districts_water",
     "connection": "pubrecdb1/mdastore1/dbadmin",
     "schemaname": "internal"
   },
+  "active": true,
   "depends": [
     "coa_districts_water.wh"
   ],

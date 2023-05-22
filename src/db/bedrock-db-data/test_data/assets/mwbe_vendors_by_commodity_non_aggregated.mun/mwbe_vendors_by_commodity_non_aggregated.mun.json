@@ -1,6 +1,5 @@
 {
-  "name": "mwbe_vendors_by_commodity_non_aggregated.mun",
-  "active": true,
+  "asset_name": "mwbe_vendors_by_commodity_non_aggregated.mun",
   "description": "",
   "location": {
     "asset": "mwbe_vendors_by_commodity_non_aggregated.mun",
@@ -8,6 +7,7 @@
     "connection": "munis/munprod/mssqlgisadmin",
     "schemaname": "amd"
   },
+  "active": true,
   "depends": [],
   "tags": []
 }

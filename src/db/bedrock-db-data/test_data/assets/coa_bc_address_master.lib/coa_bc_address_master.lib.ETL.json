@@ -1,6 +1,7 @@
 {
-  "name": "coa_bc_address_master.lib",
+  "asset_name": "coa_bc_address_master.lib",
   "run_group": "daily",
+  "active": true,
   "tasks": [
     {
       "type": "sql",

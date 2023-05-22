@@ -1,12 +1,12 @@
 {
-  "name": "coa_bc_address_master.lib",
-  "active": true,
-  "description": "",
+  "asset_name": "coa_bc_address_master.lib",
+  "description": "Master address table",
   "location": {
     "connection": "pubrecdb1/mdastore1/dbadmin",
     "schemaname": "internal",
     "tablename": "coa_bc_address_master"
   },
+  "active": true,
   "depends": [
     "coa_districts_zoning.lib",
     "bc_property_account_master.lib",

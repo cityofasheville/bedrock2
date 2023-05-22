@@ -1,6 +1,7 @@
 {
-  "name": "capital_projects_master.lib",
+  "asset_name": "capital_projects_master.lib",
   "run_group": "daily",
+  "active": true,
   "tasks": [
     {
       "type": "table_copy",

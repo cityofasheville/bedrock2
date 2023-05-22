@@ -1,6 +1,7 @@
 {
-  "name": "permit_review_times.lib",
+  "asset_name": "permit_review_times.lib",
   "run_group": "daily",
+  "active": true,
   "tasks": [
     {
       "type": "sql",

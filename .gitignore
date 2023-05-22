@@ -7,6 +7,7 @@ package
 function.zip
 data/
 bedrock_connections.json
+*NOGITHUB*
 
 # Other additions
 .DS_Store

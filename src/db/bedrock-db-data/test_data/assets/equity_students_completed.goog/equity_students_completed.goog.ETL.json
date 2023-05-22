@@ -1,6 +1,7 @@
 {
-  "name": "equity_students_completed.goog",
+  "asset_name": "equity_students_completed.goog",
   "run_group": "daily",
+  "active": true,
   "tasks": [
     {
       "type": "table_copy",

@@ -1,6 +1,7 @@
 {
-  "name": "everbridge.cust.s3",
+  "asset_name": "everbridge.cust.s3",
   "run_group": "daily",
+  "active": true,
   "tasks": [
     {
       "type": "table_copy",

@@ -1,6 +1,7 @@
 {
-  "name": "coa_apd_public_incidents.lib",
+  "asset_name": "coa_apd_public_incidents.lib",
   "run_group": "daily",
+  "active": true,
   "tasks": [
     {
       "type": "table_copy",

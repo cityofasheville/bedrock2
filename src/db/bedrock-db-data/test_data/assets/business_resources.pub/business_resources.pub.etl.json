@@ -1,6 +1,7 @@
 {
-  "name": "business_resources.pub",
+  "asset_name": "business_resources.pub",
   "run_group": "daily",
+  "active": true,
   "tasks": [
     {
       "type": "table_copy",

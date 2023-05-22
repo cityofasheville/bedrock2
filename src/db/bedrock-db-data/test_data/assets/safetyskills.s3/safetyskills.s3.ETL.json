@@ -1,6 +1,7 @@
 {
-  "name": "safetyskills.s3",
+  "asset_name": "safetyskills.s3",
   "run_group": "safetyskills",
+  "active": true,
   "tasks": [
     {
       "type": "table_copy",

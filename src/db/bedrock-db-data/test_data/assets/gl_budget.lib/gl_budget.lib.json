@@ -1,13 +1,13 @@
 {
-  "name": "gl_budget.lib",
-  "active": true,
-  "description": "",
+  "asset_name": "gl_budget.lib",
+  "description": "Master budget table",
   "location": {
     "asset": "gl_budget.lib",
     "tablename": "gl_budget",
     "connection": "pubrecdb1/mdastore1/dbadmin",
     "schemaname": "internal"
   },
+  "active": true,
   "depends": [
     "gl_budget.mun"
   ],

@@ -1,6 +1,7 @@
 {
-  "name": "pr_employee_info.lib",
+  "asset_name": "pr_employee_info.lib",
   "run_group": "daily",
+  "active": true,
   "tasks": [
     {
       "type": "table_copy",

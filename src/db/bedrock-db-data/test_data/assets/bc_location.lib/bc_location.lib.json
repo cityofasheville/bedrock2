@@ -1,13 +1,13 @@
 {
-  "name": "bc_location.lib",
-  "active": true,
-  "description": "",
+  "asset_name": "bc_location.lib",
+  "description": "Locations table from County",
   "location": {
     "asset": "bc_location.lib",
     "tablename": "bc_location",
     "connection": "pubrecdb1/mdastore1/dbadmin",
     "schemaname": "internal"
   },
+  "active": true,
   "depends": [
     "bc_location.wh"
   ],

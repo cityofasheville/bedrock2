@@ -1,13 +1,13 @@
 {
-  "name": "coa_districts_public_works.lib",
-  "active": true,
-  "description": "",
+  "asset_name": "coa_districts_public_works.lib",
+  "description": "Public works districts",
   "location": {
     "asset": "coa_districts_public_works.lib",
     "tablename": "coa_districts_public_works",
     "connection": "pubrecdb1/mdastore1/dbadmin",
     "schemaname": "internal"
   },
+  "active": true,
   "depends": [
     "coa_districts_public_works.wh"
   ],

@@ -1,6 +1,7 @@
 {
-  "name": "bc_incorporated_areas.slope",
+  "asset_name": "bc_incorporated_areas.slope",
   "run_group": "daily",
+  "active": true,
   "tasks": [
     {
       "type": "table_copy",

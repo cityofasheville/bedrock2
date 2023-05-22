@@ -1,6 +1,5 @@
 {
-  "name": "fire_pr_accrual_hours_balances.pub",
-  "active": true,
+  "asset_name": "fire_pr_accrual_hours_balances.pub",
   "description": "",
   "location": {
     "asset": "fire_pr_accrual_hours_balances.pub",
@@ -8,6 +7,7 @@
     "connection": "coa-publicdb1/coa_share/dbadmin",
     "schemaname": "bc"
   },
+  "active": true,
   "depends": [
     "pr_accrual_hours_balances.lib",
     "pr_employee_info.lib"

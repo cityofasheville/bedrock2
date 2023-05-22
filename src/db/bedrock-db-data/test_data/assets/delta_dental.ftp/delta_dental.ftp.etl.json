@@ -1,6 +1,7 @@
 {
-  "name": "delta_dental.ftp",
+  "asset_name": "delta_dental.ftp",
   "run_group": "delta_dental",
+  "active": true,
   "tasks": [
     {
       "type": "file_copy",

@@ -1,6 +1,5 @@
 {
-  "name": "ub_water_customers_everbridge.mun",
-  "active": true,
+  "asset_name": "ub_water_customers_everbridge.mun",
   "description": "",
   "location": {
     "asset": "ub_water_customers_everbridge.mun",
@@ -8,6 +7,7 @@
     "connection": "munis/munprod/fme_jobs",
     "schemaname": "avl"
   },
+  "active": true,
   "depends": [],
   "tags": []
 }
