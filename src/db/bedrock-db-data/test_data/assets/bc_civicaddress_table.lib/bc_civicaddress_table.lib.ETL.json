@@ -1,6 +1,7 @@
 {
-  "name": "bc_civicaddress_table.lib",
+  "asset_name": "bc_civicaddress_table.lib",
   "run_group": "daily",
+  "active": true,
   "tasks": [
     {
       "type": "table_copy",

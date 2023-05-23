@@ -1,6 +1,7 @@
 {
-  "name": "bc_property.lib",
+  "asset_name": "bc_property.lib",
   "run_group": "daily",
+  "active": true,
   "tasks": [
     {
       "type": "table_copy",

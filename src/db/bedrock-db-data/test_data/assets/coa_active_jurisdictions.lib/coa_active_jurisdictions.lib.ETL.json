@@ -1,6 +1,7 @@
 {
-  "name": "coa_active_jurisdictions.lib",
+  "asset_name": "coa_active_jurisdictions.lib",
   "run_group": "daily",
+  "active": true,
   "tasks": [
     {
       "type": "table_copy",

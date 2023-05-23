@@ -1,6 +1,5 @@
 {
-  "name": "pr_aetna_feed.mun",
-  "active": true,
+  "asset_name": "pr_aetna_feed.mun",
   "description": "",
   "location": {
     "asset": "pr_aetna_feed.mun",
@@ -8,6 +7,7 @@
     "connection": "munis/munprod/fme_jobs",
     "schemaname": "avl"
   },
+  "active": true,
   "depends": [],
   "tags": []
 }

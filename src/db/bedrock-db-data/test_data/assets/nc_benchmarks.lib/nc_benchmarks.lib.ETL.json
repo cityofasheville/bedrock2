@@ -1,0 +1,11 @@
+{
+  "asset_name": "nc_benchmarks.lib",
+  "run_group": "nc_benchmarks",
+  "active": true,
+  "tasks": [
+    {
+      "type": "nc_benchmarks",
+      "active": false
+    }
+  ]
+}

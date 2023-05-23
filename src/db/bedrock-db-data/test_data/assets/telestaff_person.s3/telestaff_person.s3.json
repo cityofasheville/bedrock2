@@ -1,13 +1,13 @@
 {
-  "name": "telestaff_person.s3",
-  "active": true,
+  "asset_name": "telestaff_person.s3",
   "description": "",
   "location": {
     "asset": "telestaff_person.s3",
-    "s3_path": "telestaff-import-person/",
+    "path": "telestaff-import-person/",
     "filename": "${YYYY}-${MM}-${DD}-Person.xml",
     "connection": "s3_data_files"
   },
+  "active": true,
   "depends": [
     "telestaff_person01_xml.mun"
   ],

@@ -1,6 +1,7 @@
 {
-  "name": "telestaff_person.ftp",
+  "asset_name": "telestaff_person.ftp",
   "run_group": "daily",
+  "active": true,
   "tasks": [
     {
       "type": "file_copy",

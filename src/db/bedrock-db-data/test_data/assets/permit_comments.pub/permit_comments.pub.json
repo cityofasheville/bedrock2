@@ -1,13 +1,13 @@
 {
-  "name": "permit_comments.pub",
-  "active": true,
-  "description": "",
+  "asset_name": "permit_comments.pub",
+  "description": "Permit comments data",
   "location": {
     "asset": "permit_comments.pub",
     "tablename": "permit_comments",
     "connection": "coa-publicdb1/coa_share/dbadmin",
     "schemaname": "bc"
   },
+  "active": true,
   "depends": [
     "permit_comments.lib"
   ],

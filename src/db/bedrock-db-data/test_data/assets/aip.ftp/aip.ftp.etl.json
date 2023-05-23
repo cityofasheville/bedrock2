@@ -1,6 +1,7 @@
 {
-  "name": "aip.ftp",
+  "asset_name": "aip.ftp",
   "run_group": "aip",
+  "active": true,
   "tasks": [
     {
       "type": "file_copy",

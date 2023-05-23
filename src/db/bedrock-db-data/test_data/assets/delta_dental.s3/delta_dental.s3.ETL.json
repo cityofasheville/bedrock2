@@ -1,6 +1,7 @@
 {
-  "name": "delta_dental.s3",
+  "asset_name": "delta_dental.s3",
   "run_group": "delta_dental",
+  "active": true,
   "tasks": [
     {
       "type": "table_copy",

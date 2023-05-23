@@ -1,6 +1,7 @@
 {
-  "name": "coa_cip_project_points.lib",
+  "asset_name": "coa_cip_project_points.lib",
   "run_group": "daily",
+  "active": true,
   "tasks": [
     {
       "type": "table_copy",

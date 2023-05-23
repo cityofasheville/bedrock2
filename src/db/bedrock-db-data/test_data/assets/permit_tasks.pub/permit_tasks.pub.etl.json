@@ -1,6 +1,7 @@
 {
-  "name": "permit_tasks.pub",
+  "asset_name": "permit_tasks.pub",
   "run_group": "daily",
+  "active": true,
   "tasks": [
     {
       "type": "table_copy",

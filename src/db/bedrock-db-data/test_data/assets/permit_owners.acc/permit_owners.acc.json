@@ -1,13 +1,13 @@
 {
-  "name": "permit_owners.acc",
-  "active": true,
-  "description": "",
+  "asset_name": "permit_owners.acc",
+  "description": "Owners associated with permits",
   "location": {
     "asset": "permit_owners.acc",
     "tablename": "permit_owners",
     "connection": "coa-acceladb/accela/mssqlgisadmin",
     "schemaname": "amd"
   },
+  "active": true,
   "depends": [],
   "tags": []
 }

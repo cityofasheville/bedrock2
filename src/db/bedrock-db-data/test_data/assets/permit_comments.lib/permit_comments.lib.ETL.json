@@ -1,6 +1,7 @@
 {
-  "name": "permit_comments.lib",
+  "asset_name": "permit_comments.lib",
   "run_group": "daily",
+  "active": true,
   "tasks": [
     {
       "type": "table_copy",

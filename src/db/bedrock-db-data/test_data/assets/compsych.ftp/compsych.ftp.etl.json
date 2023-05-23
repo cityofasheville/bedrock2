@@ -1,6 +1,7 @@
 {
-  "name": "compsych.ftp",
+  "asset_name": "compsych.ftp",
   "run_group": "compsych",
+  "active": true,
   "tasks": [
     {
       "type": "file_copy",

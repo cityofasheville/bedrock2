@@ -1,13 +1,13 @@
 {
-  "name": "ad_info.lib",
-  "active": true,
-  "description": "",
+  "asset_name": "ad_info.lib",
+  "description": "Active Directory info",
   "location": {
     "asset": "ad_info.lib",
     "tablename": "ad_info",
     "connection": "pubrecdb1/mdastore1/dbadmin",
     "schemaname": "internal"
   },
+  "active": true,
   "depends": [
     "ad_info.mun"
   ],

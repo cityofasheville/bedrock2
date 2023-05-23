@@ -1,6 +1,7 @@
 {
-  "name": "base_employee_sensitive_snapshots.lib",
+  "asset_name": "base_employee_sensitive_snapshots.lib",
   "run_group": "monthly",
+  "active": true,
   "tasks": [
     {
       "type": "sql",

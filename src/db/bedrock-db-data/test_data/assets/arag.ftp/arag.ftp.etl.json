@@ -1,6 +1,7 @@
 {
-  "name": "arag.ftp",
+  "asset_name": "arag.ftp",
   "run_group": "arag",
+  "active": true,
   "tasks": [
     {
       "type": "file_copy",

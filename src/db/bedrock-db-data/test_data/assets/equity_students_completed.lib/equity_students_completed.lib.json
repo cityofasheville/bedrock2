@@ -1,13 +1,13 @@
 {
-  "name": "equity_students_completed.lib",
-  "active": true,
-  "description": "",
+  "asset_name": "equity_students_completed.lib",
+  "description": "List of MWBE vendors registered in Munis (not necessarily certified)",
   "location": {
     "asset": "equity_students_completed.lib",
     "tablename": "equity_students_completed",
     "connection": "pubrecdb1/mdastore1/dbadmin",
     "schemaname": "aux"
   },
+  "active": true,
   "depends": [],
   "tags": []
 }

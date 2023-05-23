@@ -1,6 +1,7 @@
 {
-  "name": "abi_outreach_vendors.goog",
+  "asset_name": "abi_outreach_vendors.goog",
   "run_group": "daily",
+  "active": true,
   "tasks": [
     {
       "type": "table_copy",

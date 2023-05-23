@@ -1,6 +1,5 @@
 {
-  "name": "everbridge.emp.ftp",
-  "active": true,
+  "asset_name": "everbridge.emp.ftp",
   "description": "",
   "location": {
     "asset": "everbridge.emp.ftp",
@@ -8,6 +7,7 @@
     "filename": "avl.PR_City_Employees_Everbridge.csv",
     "connection": "everbridge_emp_ftp"
   },
+  "active": true,
   "depends": [
     "everbridge.emp.s3"
   ],

@@ -1,13 +1,13 @@
 {
-  "name": "permit_contractors.pub",
-  "active": true,
-  "description": "",
+  "asset_name": "permit_contractors.pub",
+  "description": "Permit contractors data",
   "location": {
     "asset": "permit_contractors.pub",
     "tablename": "permit_contractors",
     "connection": "coa-publicdb1/coa_share/dbadmin",
     "schemaname": "bc"
   },
+  "active": true,
   "depends": [
     "permit_contractors.lib"
   ],

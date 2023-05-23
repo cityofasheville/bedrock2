@@ -1,6 +1,5 @@
 {
-  "name": "everbridge.cust.ftp",
-  "active": true,
+  "asset_name": "everbridge.cust.ftp",
   "description": "",
   "location": {
     "asset": "everbridge.cust.ftp",
@@ -8,6 +7,7 @@
     "filename": "avl.UB_Water_Customers_Everbridge.csv",
     "connection": "everbridge_cust_ftp"
   },
+  "active": true,
   "depends": [
     "everbridge.cust.s3"
   ],

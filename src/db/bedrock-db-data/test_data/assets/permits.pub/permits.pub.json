@@ -1,13 +1,13 @@
 {
-  "name": "permits.pub",
-  "active": true,
-  "description": "",
+  "asset_name": "permits.pub",
+  "description": "Permits data",
   "location": {
     "asset": "permits.pub",
     "tablename": "permits",
     "connection": "coa-publicdb1/coa_share/dbadmin",
     "schemaname": "bc"
   },
+  "active": true,
   "depends": [
     "permits.lib"
   ],

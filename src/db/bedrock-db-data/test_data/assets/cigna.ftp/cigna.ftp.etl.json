@@ -1,6 +1,7 @@
 {
-  "name": "cigna.ftp",
+  "asset_name": "cigna.ftp",
   "run_group": "cigna",
+  "active": true,
   "tasks": [
     {
       "type": "file_copy",

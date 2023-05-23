@@ -1,6 +1,7 @@
 {
-  "name": "coa_national_register_properties.lib",
+  "asset_name": "coa_national_register_properties.lib",
   "run_group": "daily",
+  "active": true,
   "tasks": [
     {
       "type": "table_copy",

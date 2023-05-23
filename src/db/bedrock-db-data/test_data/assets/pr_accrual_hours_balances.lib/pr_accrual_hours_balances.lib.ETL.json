@@ -1,6 +1,7 @@
 {
-  "name": "pr_accrual_hours_balances.lib",
+  "asset_name": "pr_accrual_hours_balances.lib",
   "run_group": "daily",
+  "active": true,
   "tasks": [
     {
       "type": "table_copy",

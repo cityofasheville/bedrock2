@@ -1,6 +1,7 @@
 {
-  "name": "safetyskills.ftp",
+  "asset_name": "safetyskills.ftp",
   "run_group": "safetyskills",
+  "active": true,
   "tasks": [
     {
       "type": "file_copy",

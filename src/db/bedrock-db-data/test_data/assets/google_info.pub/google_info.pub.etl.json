@@ -1,6 +1,7 @@
 {
-  "name": "google_info.pub",
+  "asset_name": "google_info.pub",
   "run_group": "daily",
+  "active": true,
   "tasks": [
     {
       "type": "table_copy",

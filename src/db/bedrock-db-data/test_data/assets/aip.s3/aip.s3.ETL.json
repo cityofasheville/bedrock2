@@ -1,6 +1,7 @@
 {
-  "name": "aip.s3",
+  "asset_name": "aip.s3",
   "run_group": "aip",
+  "active": true,
   "tasks": [
     {
       "type": "table_copy",

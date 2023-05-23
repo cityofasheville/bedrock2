@@ -1,11 +1,12 @@
 {
-  "name": "delta_dental.encrypted.s3",
+  "asset_name": "delta_dental.encrypted.s3",
   "run_group": "delta_dental",
+  "active": true,
   "tasks": [
     {
       "type": "encrypt",
       "active": true,
-      "s3_path": "delta_dental/",
+      "path": "delta_dental/",
       "filename": "deltadental_asheville_${YYYY}${MM}${DD}.txt",
       "s3_connection": "s3_data_files",
       "encrypt_connection": "delta_dental_ftp",

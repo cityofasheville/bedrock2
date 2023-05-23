@@ -1,6 +1,5 @@
 {
-  "name": "generalledgerparameters.mun",
-  "active": true,
+  "asset_name": "generalledgerparameters.mun",
   "description": "",
   "location": {
     "asset": "generalledgerparameters.mun",
@@ -8,6 +7,7 @@
     "connection": "munis/munprod/mssqlgisadmin",
     "schemaname": "dbo"
   },
+  "active": true,
   "depends": [],
   "tags": []
 }

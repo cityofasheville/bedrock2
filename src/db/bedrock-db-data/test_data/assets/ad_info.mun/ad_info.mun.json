@@ -1,13 +1,13 @@
 {
-  "name": "ad_info.mun",
-  "active": true,
-  "description": "",
+  "asset_name": "ad_info.mun",
+  "description": "Active Directory info",
   "location": {
     "asset": "ad_info.mun",
     "tablename": "ad_info",
     "connection": "munis/munprod/mssqlgisadmin",
     "schemaname": "amd"
   },
+  "active": true,
   "depends": [],
   "tags": []
 }

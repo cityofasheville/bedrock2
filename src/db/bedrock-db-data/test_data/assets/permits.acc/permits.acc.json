@@ -1,13 +1,13 @@
 {
-  "name": "permits.acc",
-  "active": true,
-  "description": "",
+  "asset_name": "permits.acc",
+  "description": "Permits data",
   "location": {
     "asset": "permits.acc",
     "tablename": "permits",
     "connection": "coa-acceladb/accela/mssqlgisadmin",
     "schemaname": "amd"
   },
+  "active": true,
   "depends": [],
   "tags": []
 }

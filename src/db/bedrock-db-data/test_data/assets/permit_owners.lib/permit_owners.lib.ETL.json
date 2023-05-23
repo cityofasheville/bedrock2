@@ -1,6 +1,7 @@
 {
-  "name": "permit_owners.lib",
+  "asset_name": "permit_owners.lib",
   "run_group": "daily",
+  "active": true,
   "tasks": [
     {
       "type": "table_copy",

@@ -1,13 +1,13 @@
 {
-  "name": "arag.s3",
-  "active": true,
+  "asset_name": "arag.s3",
   "description": "",
   "location": {
     "asset": "arag.s3",
-    "s3_path": "arag/",
+    "path": "arag/",
     "filename": "arag_asheville_${YYYY}${MM}${DD}.csv",
     "connection": "s3_data_files"
   },
+  "active": true,
   "depends": [
     "pr_arag_feed.mun"
   ],

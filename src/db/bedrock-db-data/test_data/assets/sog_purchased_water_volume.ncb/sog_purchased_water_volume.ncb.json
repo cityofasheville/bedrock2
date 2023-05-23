@@ -1,0 +1,10 @@
+{
+  "asset_name": "sog_purchased_water_volume.ncb",
+  "description": "Water SOG Benchmark: Purchased Water Volume",
+  "location": {
+    "asset": "sog_purchased_water_volume.ncb"
+  },
+  "active": true,
+  "depends": [],
+  "tags": []
+}

@@ -1,0 +1,10 @@
+{
+  "asset_name": "sog_finished_water_volume.ncb",
+  "description": "Water SOG Benchmark: Finished Water Volume",
+  "location": {
+    "asset": "sog_finished_water_volume.ncb"
+  },
+  "active": true,
+  "depends": [],
+  "tags": []
+}

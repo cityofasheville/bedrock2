@@ -1,6 +1,7 @@
 {
-  "name": "fire_pr_accrual_hours_balances.pub",
+  "asset_name": "fire_pr_accrual_hours_balances.pub",
   "run_group": "daily",
+  "active": true,
   "tasks": [
     {
       "type": "table_copy",

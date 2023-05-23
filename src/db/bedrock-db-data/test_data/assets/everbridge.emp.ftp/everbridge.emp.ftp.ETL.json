@@ -1,6 +1,7 @@
 {
-  "name": "everbridge.emp.ftp",
+  "asset_name": "everbridge.emp.ftp",
   "run_group": "daily",
+  "active": true,
   "tasks": [
     {
       "type": "file_copy",

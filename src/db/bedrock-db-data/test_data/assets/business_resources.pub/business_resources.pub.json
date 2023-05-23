@@ -1,13 +1,13 @@
 {
-  "name": "business_resources.pub",
-  "active": true,
-  "description": "",
+  "asset_name": "business_resources.pub",
+  "description": "Planning and Development Business Resources-Public DB to be accessed from website",
   "location": {
     "asset": "business_resources.pub",
     "tablename": "business_resources",
     "connection": "coa-publicdb1/coa_share/dbadmin",
     "schemaname": "open"
   },
+  "active": true,
   "depends": [
     "business_resources.lib"
   ],

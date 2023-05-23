@@ -1,6 +1,7 @@
 {
-  "name": "compsych.s3",
+  "asset_name": "compsych.s3",
   "run_group": "compsych",
+  "active": true,
   "tasks": [
     {
       "type": "table_copy",

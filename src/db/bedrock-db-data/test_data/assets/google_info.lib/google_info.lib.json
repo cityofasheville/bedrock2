@@ -1,6 +1,5 @@
 {
-  "name": "google_info.lib",
-  "active": true,
+  "asset_name": "google_info.lib",
   "description": "",
   "location": {
     "asset": "google_info.lib",
@@ -8,6 +7,7 @@
     "connection": "pubrecdb1/mdastore1/dbadmin",
     "schemaname": "internal"
   },
+  "active": true,
   "depends": [
     "google_info.mun"
   ],

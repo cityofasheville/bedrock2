@@ -1,6 +1,7 @@
 {
-  "name": "coa_districts_public_works.lib",
+  "asset_name": "coa_districts_public_works.lib",
   "run_group": "daily",
+  "active": true,
   "tasks": [
     {
       "type": "table_copy",

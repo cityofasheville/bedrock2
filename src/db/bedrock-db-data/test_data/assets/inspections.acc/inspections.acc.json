@@ -1,6 +1,5 @@
 {
-  "name": "inspections.acc",
-  "active": true,
+  "asset_name": "inspections.acc",
   "description": "",
   "location": {
     "asset": "inspections.acc",
@@ -8,6 +7,7 @@
     "connection": "coa-acceladb/accela/mssqlgisadmin",
     "schemaname": "amd"
   },
+  "active": true,
   "depends": [],
   "tags": []
 }

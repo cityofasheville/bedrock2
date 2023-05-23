@@ -1,13 +1,13 @@
 {
-  "name": "bc_property.wh",
-  "active": true,
-  "description": "",
+  "asset_name": "bc_property.wh",
+  "description": "Property table from County",
   "location": {
     "asset": "bc_property.wh",
     "tablename": "bc_property",
     "connection": "coa-gis-warehouse1/coagiswarehouse/coagis",
     "schemaname": "coagis"
   },
+  "active": true,
   "depends": [],
   "tags": []
 }

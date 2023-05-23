@@ -1,6 +1,5 @@
 {
-  "name": "employee_turnover_report.terms.goog",
-  "active": true,
+  "asset_name": "employee_turnover_report.terms.goog",
   "description": "",
   "location": {
     "asset": "employee_turnover_report.terms.goog",
@@ -9,6 +8,7 @@
     "connection": "bedrock-googlesheets",
     "spreadsheetid": "1yE8pfp9nZ9nETDd2ypN4h6y8-m06giQ5O797ghBQHYc"
   },
+  "active": true,
   "depends": [
     "turnover_counts.lib"
   ],

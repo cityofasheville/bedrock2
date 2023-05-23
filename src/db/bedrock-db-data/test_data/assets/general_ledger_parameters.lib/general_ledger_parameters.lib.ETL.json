@@ -1,6 +1,7 @@
 {
-  "name": "general_ledger_parameters.lib",
+  "asset_name": "general_ledger_parameters.lib",
   "run_group": "daily",
+  "active": true,
   "tasks": [
     {
       "type": "table_copy",

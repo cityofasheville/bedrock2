@@ -1,13 +1,13 @@
 {
-  "name": "bc_property_account_master.lib",
-  "active": true,
-  "description": "",
+  "asset_name": "bc_property_account_master.lib",
+  "description": "mdastore1 copy of amaccountmaster in Buncombe County",
   "location": {
     "asset": "bc_property_account_master.lib",
     "tablename": "bc_property_account_master",
     "connection": "pubrecdb1/mdastore1/dbadmin",
     "schemaname": "internal"
   },
+  "active": true,
   "depends": [
     "bc_property_account_master.wh"
   ],

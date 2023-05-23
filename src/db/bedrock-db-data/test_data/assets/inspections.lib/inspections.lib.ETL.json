@@ -1,6 +1,7 @@
 {
-  "name": "inspections.lib",
+  "asset_name": "inspections.lib",
   "run_group": "daily",
+  "active": true,
   "tasks": [
     {
       "type": "table_copy",

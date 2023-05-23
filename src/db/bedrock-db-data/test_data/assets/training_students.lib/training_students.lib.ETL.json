@@ -1,6 +1,7 @@
 {
-  "name": "training_students.lib",
+  "asset_name": "training_students.lib",
   "run_group": "daily",
+  "active": true,
   "tasks": [
     {
       "type": "table_copy",
