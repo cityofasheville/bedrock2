@@ -6,5 +6,7 @@
   },
   "active": true,
   "depends": [],
-  "tags": []
+  "tags": [
+    "nc_benchmarks"
+  ]
 }
