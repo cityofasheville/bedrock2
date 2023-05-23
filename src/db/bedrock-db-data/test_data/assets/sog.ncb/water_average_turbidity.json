@@ -1,0 +1,13 @@
+{
+  "asset_name": "sog_water_average_turbidity.ncb",
+  "description": "Water SOG Benchmark: water_average_turbidity",
+  "location": {
+    "spreadsheetid": "1m2xD4JyH4BEBey_ybsEgrvYopsl0PjWNmY_PEv3l6D4",
+    "tab": "water_average_turbidity"
+  },
+  "active": true,
+  "depends": [],
+  "tags": [
+    "nc_benchmarks"
+  ]
+}

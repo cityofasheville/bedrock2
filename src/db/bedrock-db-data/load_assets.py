@@ -81,48 +81,17 @@ print(f'Wrote {nrows} items to the tags table')
 # Load the assets
 print('Load all assets')
 assets_directory = data_directory + '/assets'
-for asset_name in os.listdir(assets_directory):
+for asset_subdir in os.listdir(assets_directory):
   # each asset
-  print('  Processing ', asset_name)
-  d = os.path.join(assets_directory, asset_name)
+  print('  Processing ', asset_subdir)
+  d = os.path.join(assets_directory, asset_subdir)
   if os.path.isdir(d):
     for file in os.listdir(d):
-      if file == asset_name + '.json':
-        # configFile
-        with open(os.path.join(d, file), 'r') as ff:
-          config = json.load(ff)
-          sql = f'''
-            insert into bedrock.assets
-            (asset_name, description, location, active)
-            values(%s, %s, %s, %s);
-          '''
-          cur.execute(sql,
-          (asset_name, config["description"], json.dumps(config["location"]), config["active"]
-          ))
-          
-          # dependencies
-          dependencies = config['depends']
-          if dependencies:
-            for depend in dependencies:
-              sql = f'''
-              insert into bedrock.dependencies(asset_name, dependency)
-              values(%s, %s);
-              '''
-              cur.execute(sql, (asset_name, depend))
-          
-          # asset tags
-          tags = config['tags']
-          if tags:
-            for tag in tags:
-              sql = f'''
-              insert into bedrock.asset_tags(asset_name, tag_name)
-              values(%s, %s);
-              '''
-              cur.execute(sql, (asset_name, tag))              
-      elif file == asset_name + '.ETL.json':
+      if file.endswith('.ETL.json'):
         # etlFile
         with open(os.path.join(d, file), 'r') as ff:
           etl = json.load(ff)
+          asset_name = etl['asset_name']
           sql = f'''
           insert into bedrock.etl(asset_name, run_group, active)
           values(%s, %s, %s);
@@ -163,6 +132,39 @@ for asset_name in os.listdir(assets_directory):
               '''
               cur.execute(sql, (asset_name, seq_number, description, type, task['active'], 
               None, json.dumps(task), None))
+      elif file.endswith('.json'):
+        # configFile
+        with open(os.path.join(d, file), 'r') as ff:
+          config = json.load(ff)
+          asset_name = config['asset_name']
+          sql = f'''
+            insert into bedrock.assets
+            (asset_name, description, location, active)
+            values(%s, %s, %s, %s);
+          '''
+          cur.execute(sql,
+          (asset_name, config["description"], json.dumps(config["location"]), config["active"]
+          ))
+          
+          # dependencies
+          dependencies = config['depends']         
+          if dependencies:
+            for depend in dependencies:
+              sql = f'''
+              insert into bedrock.dependencies(asset_name, dependency)
+              values(%s, %s);
+              '''
+              cur.execute(sql, (asset_name, depend))
+          
+          # asset tags
+          tags = config['tags']
+          if tags:
+            for tag in tags:
+              sql = f'''
+              insert into bedrock.asset_tags(asset_name, tag_name)
+              values(%s, %s);
+              '''
+              cur.execute(sql, (asset_name, tag))              
 
     # nm = cur.fetchone()[0] # probably can skip this, but maybe to double check
 
