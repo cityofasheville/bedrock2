@@ -4,7 +4,9 @@
 const { Client } = require('pg');
 const fs = require('fs');
 
-const { getDBConnection } = require('bedrock_common');
+// const { getDBConnection } = require('bedrock_common');
+const { getDBConnection } = require('./bedrock_NOGITHUB');
+
 
 async function readEtlList(client) {
   let etlList = [];
@@ -41,7 +43,7 @@ async function readTasks(client, etlList) {
         thisTask.connection = task.target.connection;
         thisTask.sql_string = task.configuration;
       } else if (task.type === 'run_lambda' || task.type === 'encrypt') {
-        thisTask = { ...thisTask, ...task.target};
+        thisTask = { ...thisTask, ...task.target };
       }
       etl.tasks.push(thisTask);
     }
@@ -62,7 +64,7 @@ async function readAssetList(client) {
 }
 
 async function readDependencies(client, assetList) {
-  for(asset of assetList) {
+  for (asset of assetList) {
     asset.depends = [];
     const sql = `SELECT * FROM bedrock.dependencies where asset_name = '${asset.asset_name}';`;
     // eslint-disable-next-line no-await-in-loop
@@ -80,7 +82,7 @@ async function readDependencies(client, assetList) {
 }
 
 async function readTags(client, assetList) {
-  for(asset of assetList) {
+  for (asset of assetList) {
     asset.tags = [];
     const sql = `select tag_name from bedrock.asset_tags inner join bedrock.tags using (tag_name) where asset_name = '${asset.asset_name}';`;
     // eslint-disable-next-line no-await-in-loop
@@ -98,8 +100,8 @@ async function readTags(client, assetList) {
 }
 
 ////////////////////////////////////////////
-function writeAsset(assetList,assets_directory) {
-  for(asset of assetList) {
+function writeAsset(assetList, assets_directory) {
+  for (asset of assetList) {
     let name = asset.asset_name;
     if (!fs.existsSync(assets_directory + name)) {
       fs.mkdirSync(assets_directory + name);
@@ -109,8 +111,8 @@ function writeAsset(assetList,assets_directory) {
 }
 
 ////////////////////////////////////////////
-function writeEtl(etlList,assets_directory) {
-  for(etl of etlList) {
+function writeEtl(etlList, assets_directory) {
+  for (etl of etlList) {
     let name = etl.asset_name;
     if (!fs.existsSync(assets_directory + name)) {
       fs.mkdirSync(assets_directory + name);
@@ -118,39 +120,55 @@ function writeEtl(etlList,assets_directory) {
     fs.writeFileSync(assets_directory + name + '/' + name + '.ETL.json', JSON.stringify(etl, null, 2));
   }
 }
+
+////////////////////////////////////////////
+// load stand-alone files: run_groups.csv and tags.csv
+async function writeOther(client, data_directory, tablename) {
+  const sql = `SELECT * FROM bedrock.${tablename}`;
+  // eslint-disable-next-line no-await-in-loop
+  const res = await client.query(sql)
+    .catch((err) => {
+      const errmsg = [err.code];
+      throw new Error([`Postgres error: ${errmsg}`, err]);
+    });
+  let fileContent = "";
+  for (row of res.rows) {
+    let vals = Object.values(row);
+    fileContent += vals.map(val => '"' + val + '"').join(",") + "\n";
+  }
+  fs.writeFileSync(data_directory + `/${tablename}.csv`, fileContent);
+}
+
 ////////////////////////////////////////////
 (async function loadfiles() {
-  try {
-    data_directory = '../test_data';
-    assets_directory = data_directory + '/assets/';
-    // create or clear assets dir
-    if (fs.existsSync(assets_directory)) {
-      fs.readdirSync(assets_directory).forEach(f => fs.rmSync(`${assets_directory}/${f}`, { recursive: true }));
-    }else{
-      fs.mkdirSync(assets_directory);
-    }
-    
-    const dbConnection = await getDBConnection();
-    const client = new Client(dbConnection);
-    await client.connect();
-
-    // load etl files
-    let etlList = await readEtlList(client);
-    etlList = await readTasks(client, etlList);
-    // console.log(JSON.stringify(etlList, null, 2));
-    writeEtl(etlList,assets_directory);
-
-    // load asset files
-    let assetList = await readAssetList(client);
-    assetList = await readDependencies(client, assetList);
-    assetList = await readTags(client, assetList);
-    // console.log(JSON.stringify(assetList, null, 2));
-    writeAsset(assetList,assets_directory);
-
-    await client.end();
+  data_directory = '../test_data';
+  assets_directory = data_directory + '/assets/';
+  // create or clear assets dir
+  if (fs.existsSync(assets_directory)) {
+    fs.readdirSync(assets_directory).forEach(f => fs.rmSync(`${assets_directory}/${f}`, { recursive: true }));
+  } else {
+    fs.mkdirSync(assets_directory);
   }
-  catch (err) {
-    const errmsg = [err.code];
-    throw new Error([`Postgres error: ${errmsg}`, err]);
-  };
+
+  const dbConnection = await getDBConnection();
+  const client = new Client(dbConnection);
+  await client.connect();
+
+  // load etl files
+  let etlList = await readEtlList(client);
+  etlList = await readTasks(client, etlList);
+  // console.log(JSON.stringify(etlList, null, 2));
+  writeEtl(etlList, assets_directory);
+
+  // load asset files
+  let assetList = await readAssetList(client);
+  assetList = await readDependencies(client, assetList);
+  assetList = await readTags(client, assetList);
+  // console.log(JSON.stringify(assetList, null, 2));
+  writeAsset(assetList, assets_directory);
+
+  await writeOther(client, data_directory, 'run_groups');
+  await writeOther(client, data_directory, 'tags');
+
+  await client.end();
 })();

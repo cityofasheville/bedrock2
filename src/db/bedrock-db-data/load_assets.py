@@ -37,6 +37,8 @@ sql = f'''
   truncate table bedrock.dependencies;
   truncate table bedrock.etl;
   truncate table bedrock.tasks;
+  truncate table bedrock.asset_tags;
+  truncate table bedrock.tags;
   truncate table bedrock.run_groups;
 '''
 cur.execute(sql)
@@ -59,6 +61,23 @@ with open(os.path.join(data_directory,'run_groups.csv')) as ff:
 cur.execute(sql)
 print(f'Wrote {nrows} items to the run_groups table')
 
+# Load the tags
+sql = 'INSERT INTO bedrock.tags (tag_name,	display_name) VALUES '
+tags = []
+with open(os.path.join(data_directory,'tags.csv')) as ff:
+  rdr = csv.reader(ff)
+  
+  i = 0;
+  rows = list(rdr)
+  nrows = len(rows)
+  for row in rows:
+    i = i+1
+    sql = f"{sql} ('{row[0]}', '{row[1]}')"
+    if (i<nrows):
+      sql = sql + ','
+cur.execute(sql)
+print(f'Wrote {nrows} items to the tags table')
+
 # Load the assets
 print('Load all assets')
 assets_directory = data_directory + '/assets'
@@ -80,8 +99,9 @@ for asset_name in os.listdir(assets_directory):
           cur.execute(sql,
           (asset_name, config["description"], json.dumps(config["location"]), config["active"]
           ))
-          dependencies = config['depends']
           
+          # dependencies
+          dependencies = config['depends']
           if dependencies:
             for depend in dependencies:
               sql = f'''
@@ -89,6 +109,16 @@ for asset_name in os.listdir(assets_directory):
               values(%s, %s);
               '''
               cur.execute(sql, (asset_name, depend))
+          
+          # asset tags
+          tags = config['tags']
+          if tags:
+            for tag in tags:
+              sql = f'''
+              insert into bedrock.asset_tags(asset_name, tag_name)
+              values(%s, %s);
+              '''
+              cur.execute(sql, (asset_name, tag))              
       elif file == asset_name + '.ETL.json':
         # etlFile
         with open(os.path.join(d, file), 'r') as ff:
