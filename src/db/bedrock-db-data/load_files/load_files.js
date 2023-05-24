@@ -4,9 +4,8 @@
 const { Client } = require('pg');
 const fs = require('fs');
 
-// const { getDBConnection } = require('bedrock_common');
-const { getDBConnection } = require('./bedrock_NOGITHUB');
-
+const { getDBConnection } = require('bedrock_common');
+// const { getDBConnection } = require('./bedrock_NOGITHUB');
 
 async function readEtlList(client) {
   let etlList = [];
@@ -36,7 +35,7 @@ async function readTasks(client, etlList) {
         type: task.type,
         active: task.active,
       };
-      if (task.type === 'table_copy' || task.type === 'file_copy') {
+      if (task.type === 'table_copy' || task.type === 'file_copy' || task.type === 'nc_benchmarks') {
         thisTask.source_location = task.source;
         thisTask.target_location = task.target;
       } else if (task.type === 'sql') {

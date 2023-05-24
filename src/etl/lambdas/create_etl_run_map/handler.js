@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-console */
 
@@ -11,7 +12,7 @@ const { getDBConnection } = require('bedrock_common');
 
 const TIME_INTERVAL = 15; // Frequency - must match Eventbridge scheduler
 
-let debug = false;
+let debug = true;
 
 function formatRes(code, result) {
   return {
@@ -22,15 +23,9 @@ function formatRes(code, result) {
 
 const pgErrorCodes = require('./pgErrorCodes');
 
-async function readEtlList(connection, rungroups) {
+async function readEtlList(client, rungroups) {
   let etlList = [];
   if (rungroups.length > 0) {
-    const client = new Client(connection);
-    await client.connect()
-      .catch((err) => {
-        const errmsg = pgErrorCodes[err.code];
-        throw new Error([`Postgres error: ${errmsg}`, err]);
-      });
     const rgString = rungroups.reduce((accumulator, currentValue) => {
       const sep = (accumulator !== '') ? ', ' : '';
       return `${accumulator + sep}'${currentValue}'`;
@@ -42,7 +37,6 @@ async function readEtlList(connection, rungroups) {
         throw new Error([`Postgres error: ${errmsg}`, err]);
       });
     etlList = res.rows;
-    await client.end();
   }
 
   const assetMap = {};
@@ -56,12 +50,10 @@ async function readEtlList(connection, rungroups) {
       etl_tasks: [],
     };
   }
-  return Promise.resolve(assetMap);
+  return assetMap;
 }
 
-async function readDependencies(connection, assetMap) {
-  const client = new Client(connection);
-  await client.connect();
+async function readDependencies(client, assetMap) {
   const arr = Object.entries(assetMap);
   for (let i = 0; i < arr.length; i += 1) {
     const asset = arr[i][1];
@@ -77,8 +69,7 @@ async function readDependencies(connection, assetMap) {
       asset.depends.push(d.dependency);
     }
   }
-  await client.end();
-  return Promise.resolve(assetMap);
+  return assetMap;
 }
 
 async function readLocationFromAsset(client, assetName) {
@@ -97,9 +88,56 @@ async function readLocationFromAsset(client, assetName) {
   return locData;
 }
 
-async function readTasks(connection, assetMap) {
-  const client = new Client(connection);
-  await client.connect();
+async function readNCBenchmarks(client, tempTarget, target) {
+  const sql = `
+  select a.asset_name, location->>'spreadsheetid' spreadsheetid, 
+  location->>'tab' tab from bedrock.asset_tags at2 
+  inner join bedrock.assets a using (asset_name)
+  where tag_name = 'nc_benchmarks' and active = true;
+  `;
+
+  return client.query(sql)
+    .then((res) => {
+      const NCTasks = [];
+      for (let i = 0; i < res.rowCount; i += 1) {
+        const { asset_name, spreadsheetid, tab } = res.rows[i];
+        const tempTargetLocal = { ...tempTarget };
+        if (i === 0) { // first row empty table
+          tempTargetLocal.append = false;
+        } else {
+          tempTargetLocal.append = true;
+        }
+
+        const task = {
+          type: 'table_copy',
+          active: true,
+          source_location: {
+            asset: asset_name,
+            spreadsheetid,
+            range: `${tab}!A2:E`,
+            connection: 'bedrock-googlesheets',
+          },
+          target_location: tempTargetLocal,
+        };
+        NCTasks.push(task);
+      }
+      // final copy temp to real
+      const task = {
+        type: 'table_copy',
+        active: true,
+        source_location: tempTarget,
+        target_location: target,
+      };
+      NCTasks.push(task);
+      return NCTasks;
+    })
+    .catch((err) => {
+      const errmsg = pgErrorCodes[err.code];
+      throw new Error([`Postgres error: ${errmsg}`, err]);
+    });
+}
+
+async function readTasks(client, assetMap) {
   const arr = Object.entries(assetMap);
 
   for (let i = 0; i < arr.length; i += 1) {
@@ -131,26 +169,31 @@ async function readTasks(connection, assetMap) {
         }
         thisTask.source_location = { ...task.source, ...sourceLoc };
         thisTask.target_location = { ...task.target, ...targetLoc };
+        asset.etl_tasks.push(thisTask);
+      } else if (task.type === 'nc_benchmarks') {
+        const tempTarget = await readLocationFromAsset(client, task.source.asset);
+        const target = await readLocationFromAsset(client, task.target.asset);
+        const NCTasks = await readNCBenchmarks(client, tempTarget, target);
+        asset.etl_tasks = NCTasks;
       } else if (task.type === 'run_lambda' || task.type === 'encrypt') {
         thisTask = task.target;
+        asset.etl_tasks.push(thisTask);
       } else if (task.type === 'sql') {
         thisTask.connection = task.target.connection;
         thisTask.sql_string = task.configuration;
+        asset.etl_tasks.push(thisTask);
       } else {
         thisTask.source_location = task.source;
         thisTask.target_location = task.target;
+        asset.etl_tasks.push(thisTask);
       }
-      asset.etl_tasks.push(thisTask);
     }
   }
-  await client.end();
-  return Promise.resolve(assetMap);
+  return assetMap;
 }
 
-async function getRungroups(connection) {
-  const client = new Client(connection);
+async function getRungroups(client) {
   const sql = 'SELECT run_group_name, cron_string FROM bedrock.run_groups;';
-  await client.connect();
   return client.query(sql)
     .then((res) => {
       const rungroups = [];
@@ -169,7 +212,7 @@ async function getRungroups(connection) {
         }
       }
       if (debug) console.log('Selected rungroups: ', rungroups);
-      return Promise.resolve(rungroups);
+      return rungroups;
     })
     .catch((err) => {
       const errmsg = pgErrorCodes[err.code];
@@ -181,13 +224,21 @@ async function getRungroups(connection) {
 const lambda_handler = async function x(event) {
   try {
     const dbConnection = await getDBConnection();
+    const client = new Client(dbConnection);
+    await client.connect()
+      .catch((err) => {
+        const errmsg = pgErrorCodes[err.code];
+        throw new Error([`Postgres error: ${errmsg}`, err]);
+      });
     let rungroups = [event.rungroup];
     if (event.rungroup === 'UseCronStrings') {
-      rungroups = await getRungroups(dbConnection);
+      rungroups = await getRungroups(client);
     }
-    let assetMap = await readEtlList(dbConnection, rungroups);
-    assetMap = await readDependencies(dbConnection, assetMap);
-    assetMap = await readTasks(dbConnection, assetMap);
+    let assetMap = await readEtlList(client, rungroups);
+    assetMap = await readDependencies(client, assetMap);
+    assetMap = await readTasks(client, assetMap);
+
+    await client.end();
 
     const graph = [];
     const level = {};
@@ -251,10 +302,10 @@ const lambda_handler = async function x(event) {
   }
 };
 /* Set debug to true to run locally */
-debug = false;
+debug = true;
 let event = {};
 if (debug) {
-  event = { rungroup: 'UseCronStrings' };
+  event = { rungroup: 'nc_benchmarks' };
   (async () => {
     await lambda_handler(event);
     process.exit();
