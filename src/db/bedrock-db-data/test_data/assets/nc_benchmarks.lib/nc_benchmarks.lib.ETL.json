@@ -5,7 +5,13 @@
   "tasks": [
     {
       "type": "nc_benchmarks",
-      "active": false
+      "active": false,
+      "source_location": {
+        "asset": "nc_benchmarks_temp.lib"
+      },
+      "target_location": {
+        "asset": "nc_benchmarks.lib"
+      }
     }
   ]
 }
