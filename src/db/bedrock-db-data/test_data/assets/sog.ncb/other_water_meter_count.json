@@ -1,6 +1,6 @@
 {
-  "asset_name": "sog_other_water_meter_count.ncb",
-  "description": "Water SOG Benchmark: other_water_meter_count",
+  "asset_name": "other_water_meter_count.ncb",
+  "description": "Water SOG Benchmark: Billed Water Volume",
   "location": {
     "spreadsheetid": "1m2xD4JyH4BEBey_ybsEgrvYopsl0PjWNmY_PEv3l6D4",
     "tab": "other_water_meter_count"

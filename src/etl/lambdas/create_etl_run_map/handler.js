@@ -12,7 +12,7 @@ const { getDBConnection } = require('bedrock_common');
 
 const TIME_INTERVAL = 15; // Frequency - must match Eventbridge scheduler
 
-let debug = true;
+let debug = false;
 
 function formatRes(code, result) {
   return {
@@ -116,6 +116,7 @@ async function readNCBenchmarks(client, tempTarget, target) {
             spreadsheetid,
             range: `${tab}!A2:E`,
             connection: 'bedrock-googlesheets',
+            append_tab: true,
           },
           target_location: tempTargetLocal,
         };
@@ -302,7 +303,7 @@ const lambda_handler = async function x(event) {
   }
 };
 /* Set debug to true to run locally */
-debug = true;
+debug = false;
 let event = {};
 if (debug) {
   event = { rungroup: 'nc_benchmarks' };
