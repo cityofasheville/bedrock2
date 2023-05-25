@@ -62,6 +62,8 @@ Also see [Managed Data Assets README](https://github.com/cityofasheville/managed
             "connection": "bedrock-googlesheets",
             "spreadsheetid": "9876234HIUFQER872345T",
             "range": 'Bad Actors!A5:B'
+            __SOURCE OPTIONS__
+            <OPTIONAL>: "append_tab": true (In the data an extra column is appended to each row with the name of the sheet the data comes from)
             __TARGET OPTIONS__
             <OPTIONAL> "append": true  (By default, data is overwritten in sheet. Set to true to append as new rows.)       
 #### CSV -winshare
