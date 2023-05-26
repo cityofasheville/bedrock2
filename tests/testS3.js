@@ -12,7 +12,7 @@ const pipeline = util.promisify(stream.pipeline);
     let location = {
         "connection": "s3_data_files",
         "filename": "test${YYYY}${MM}${DD}.txt",
-        "s3_path": "test/",
+        "path": "test/",
         "fromto": "target_location",
         "conn_info": {
             "type": "s3",

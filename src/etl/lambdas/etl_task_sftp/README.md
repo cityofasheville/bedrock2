@@ -29,14 +29,14 @@ Run ```runsambuild.sh``` to test locally.
 
 s3_connection and ftp_connection refer to named connections in AWS Secrets Manager.
 
-Special note: ftp_path requires a slash at start and end, while s3_path must have only a trailing slash.
+Special note: ftp_path requires a slash at start and end, while path must have only a trailing slash.
 
 #### Data Structures
 Call Lambda with one of these data structures passed in as the event:
 {
     "action": "put",
     "s3_connection": "",
-    "s3_path": "", 
+    "path": "", 
     "ftp_connection": "",
     "ftp_path": "/",
     "filename": ""
@@ -45,7 +45,7 @@ Call Lambda with one of these data structures passed in as the event:
 {
     "action": "get",
     "s3_connection": "",
-    "s3_path": "", 
+    "path": "", 
     "ftp_connection": "",
     "ftp_path": "/",
     "filename": "", 
@@ -67,7 +67,7 @@ Call Lambda with one of these data structures passed in as the event:
 {
     "action": "getall",
     "s3_connection": "",
-    "s3_path": "", 
+    "path": "", 
     "ftp_connection": "",
     "ftp_path": "/"
 }

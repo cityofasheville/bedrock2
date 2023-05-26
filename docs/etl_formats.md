@@ -56,7 +56,7 @@ Also see [Managed Data Assets README](https://github.com/cityofasheville/managed
 #### CSV -S3
             "connection": "s3_data_files",
             "filename": "users${YYYY}${MM}${DD}.csv",
-            "s3_path": "safetyskills/"
+            "path": "safetyskills/"
 
 #### google_sheets
             "connection": "bedrock-googlesheets",
@@ -106,7 +106,7 @@ Takes files from S3, encrypts them and writes them back to the same dir on S3.
       {
         "type": "encrypt",
         "s3_connection": "s3_data_files",
-        "s3_path": "vendor/",
+        "path": "vendor/",
         "encrypt_connection": "vendor_ftp",
         "filename": "vendor_asheville_${YYYY}${MM}${DD}.csv",
         "encrypted_filename": "vendor_asheville_${YYYY}${MM}${DD}.csv.pgp",
@@ -125,7 +125,7 @@ SFTP has mostly been superseded by file copy, which has more potential source an
         "description": "Copy vendor S3 to FTP site",
         "action": "put",
         "s3_connection": "s3_data_files",
-        "s3_path": "telestaff-import-person/",
+        "path": "telestaff-import-person/",
         "ftp_connection": "telestaff_ftp",
         "ftp_path": "/PROD/import/ongoing.unprocessed/",
         "filename": "vendor_asheville_${YYYY}${MM}${DD}.csv.pgp",
@@ -137,7 +137,7 @@ SFTP has mostly been superseded by file copy, which has more potential source an
         {
             "action": "put",
             "s3_connection": "s3_data_files",
-            "s3_path": "telestaff-payroll-export/", 
+            "path": "telestaff-payroll-export/", 
             "ftp_connection": "telestaff_ftp",
             "ftp_path": "/PROD/person.errors/",
             "filename": "PD-220218-thu.csv"
@@ -146,7 +146,7 @@ SFTP has mostly been superseded by file copy, which has more potential source an
         {
             "action": "get",
             "s3_connection": "s3_data_files",
-            "s3_path": "telestaff-payroll-export/", 
+            "path": "telestaff-payroll-export/", 
             "ftp_connection": "telestaff_ftp",
             "ftp_path": "/PROD/person.errors/",
             "filename": "payroll-report-export.csv"
@@ -168,7 +168,7 @@ SFTP has mostly been superseded by file copy, which has more potential source an
         {
             "action": "getall",
             "s3_connection": "",
-            "s3_path": "", 
+            "path": "", 
             "ftp_connection": "",
             "ftp_path": "/"
         }
