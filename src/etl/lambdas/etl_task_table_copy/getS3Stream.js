@@ -38,7 +38,7 @@ function fillDateTemplate(template) {
 async function getS3Stream(location) {
   try {
     const s3Client = new S3Client({ region: s3Region });
-    const s3Key = location.s3_path + fillDateTemplate(location.filename);
+    const s3Key = location.path + fillDateTemplate(location.filename);
     const bucket = location.conn_info.s3_bucket;
     let s3stream;
     let promise;

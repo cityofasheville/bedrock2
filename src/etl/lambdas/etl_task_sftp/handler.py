@@ -54,18 +54,18 @@ def del_ftp(sftp, ftp_path, filename):
     except BaseException as err:
         raise Exception("Del FTP Error: " + str(err))
 
-def download_s3(s3, s3_bucket, s3_path, filename):
+def download_s3(s3, s3_bucket, path, filename):
     try:
         downloaded_file = WORKINGDIR + filename
-        s3.download_file(s3_bucket, s3_path + filename, downloaded_file)
+        s3.download_file(s3_bucket, path + filename, downloaded_file)
         print("File retrieved from S3: " + filename)
     except BaseException as err:
         raise Exception("Download S3 Error: " + str(err))
 
-def upload_s3(s3, s3_bucket, s3_path, filename):
+def upload_s3(s3, s3_bucket, path, filename):
     try:
         uploaded_file = WORKINGDIR + filename
-        s3.upload_file(uploaded_file, s3_bucket, s3_path + filename)
+        s3.upload_file(uploaded_file, s3_bucket, path + filename)
         print ('File loaded to S3: ' + filename)
     except BaseException as err:
         raise Exception("Upload S3 Error: " + str(err))
@@ -133,16 +133,16 @@ def lambda_handler(event, context):
             filelist = list_ftp(sftp, etl['ftp_path'])
             for filenm in filelist:
                 get_ftp(sftp, etl['ftp_path'], filenm)
-                upload_s3(s3, s3_bucket, etl['s3_path'], filenm)
+                upload_s3(s3, s3_bucket, etl['path'], filenm)
                 del_ftp(sftp, etl['ftp_path'], filenm)
             retmsg = filelist
         if etl['action'] == "put":
-            download_s3(s3, s3_bucket, etl['s3_path'], filename)
+            download_s3(s3, s3_bucket, etl['path'], filename)
             put_ftp(sftp, etl['ftp_path'], filename)
             retmsg = ('Uploaded to FTP: ' + filename)
         if etl['action'] == "get":
             get_ftp(sftp, etl['ftp_path'], filename)
-            upload_s3(s3, s3_bucket, etl['s3_path'], filename)
+            upload_s3(s3, s3_bucket, etl['path'], filename)
             retmsg = ('Downloaded from FTP: ' + filename)
         if etl['action'] == "list":
             filelist = list_ftp(sftp, etl['ftp_path'])

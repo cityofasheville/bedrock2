@@ -13,7 +13,7 @@
         "ftp_connection": "arag_ftp",
         "filename": "2022-05-31T05-12-31.517ZPerson.xml",
         "encrypted_filename": "2022-05-31T05-12-31.517ZPerson.xml.pgp",
-        "s3_path": "telestaff-import-person/"
+        "path": "telestaff-import-person/"
       }
     ]
   },
