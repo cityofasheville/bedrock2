@@ -104,7 +104,7 @@ for asset_subdir in os.listdir(assets_directory):
               description = task['description']
             else:
               description = None
-            if type == "table_copy" or type == "file_copy":
+            if type == "table_copy" or type == "file_copy" or type == "aggregate":
               # table_copy / file_copy
               sql = f'''
               insert into bedrock.tasks(asset_name, seq_number, description, type, active, source, target, configuration)
@@ -114,9 +114,6 @@ for asset_subdir in os.listdir(assets_directory):
               json.dumps(task['source_location']), json.dumps(task['target_location']), None))
             elif type == "sql":
               # sql
-              # sql_filename = task['file']
-              # with open(os.path.join(d, sql_filename), 'r') as sqlfile:
-              #   sqlstring = sqlfile.read()
               sqlstring = task['sql_string']
               sql = f'''
               insert into bedrock.tasks(asset_name, seq_number, description, type, active, source, target, configuration)

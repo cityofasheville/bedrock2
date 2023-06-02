@@ -1,0 +1,13 @@
+{
+  "asset_name": "maint_Restrooms-Concession-Shelters.maint",
+  "description": "Maintenance Responsibilities: Restrooms-Concession-Shelters\t\t\t\t\t\t\t",
+  "location": {
+    "spreadsheetid": "1HQE20mqShD5iqiQGLLuQMbXsMazzu3ws-zUXHeuYr-M",
+    "tab": "Restrooms/Concession/Shelters"
+  },
+  "active": true,
+  "depends": [],
+  "tags": [
+    "maintenance_responsibilities"
+  ]
+}

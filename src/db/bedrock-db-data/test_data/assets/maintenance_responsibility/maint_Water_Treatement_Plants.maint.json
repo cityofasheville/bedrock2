@@ -1,0 +1,13 @@
+{
+  "asset_name": "maint_Water_Treatement_Plants.maint",
+  "description": "Maintenance Responsibilities: Water_Treatement_Plants",
+  "location": {
+    "spreadsheetid": "1HQE20mqShD5iqiQGLLuQMbXsMazzu3ws-zUXHeuYr-M",
+    "tab": "Water Treatement Plants"
+  },
+  "active": true,
+  "depends": [],
+  "tags": [
+    "maintenance_responsibilities"
+  ]
+}

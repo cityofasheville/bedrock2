@@ -1,0 +1,13 @@
+{
+  "asset_name": "maint_Parking_Garages.maint",
+  "description": "Maintenance Responsibilities: Parking_Garages",
+  "location": {
+    "spreadsheetid": "1HQE20mqShD5iqiQGLLuQMbXsMazzu3ws-zUXHeuYr-M",
+    "tab": "Parking Garages"
+  },
+  "active": true,
+  "depends": [],
+  "tags": [
+    "maintenance_responsibilities"
+  ]
+}

@@ -4,10 +4,13 @@
   "active": true,
   "tasks": [
     {
-      "type": "nc_benchmarks",
-      "active": false,
+      "type": "aggregate",
+      "active": true,
       "source_location": {
-        "asset": "nc_benchmarks_temp.lib"
+        "temp_table": "nc_benchmarks_temp.lib",
+        "aggregate": "nc_benchmarks",
+        "data_range": "A2:E",
+        "data_connection": "bedrock-googlesheets"
       },
       "target_location": {
         "asset": "nc_benchmarks.lib"

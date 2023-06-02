@@ -1,0 +1,13 @@
+{
+  "asset_name": "maint_Bingham_Road.maint",
+  "description": "Maintenance Responsibilities: Bingham_Road",
+  "location": {
+    "spreadsheetid": "1HQE20mqShD5iqiQGLLuQMbXsMazzu3ws-zUXHeuYr-M",
+    "tab": "Bingham Road"
+  },
+  "active": true,
+  "depends": [],
+  "tags": [
+    "maintenance_responsibilities"
+  ]
+}

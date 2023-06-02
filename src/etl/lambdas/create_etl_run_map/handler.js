@@ -88,20 +88,21 @@ async function readLocationFromAsset(client, assetName) {
   return locData;
 }
 
-async function readNCBenchmarks(client, tempTarget, target) {
+async function readAggregateData(client, tempLocation, location, taskSource) {
+  const { aggregate, data_range, data_connection } = taskSource;
   const sql = `
   select a.asset_name, location->>'spreadsheetid' spreadsheetid, 
-  location->>'tab' tab from bedrock.asset_tags at2 
-  inner join bedrock.assets a using (asset_name)
-  where tag_name = 'nc_benchmarks' and active = true;
+  location->>'tab' tab from bedrock.assets a
+  inner join bedrock.asset_tags using (asset_name)
+  where tag_name = '${aggregate}' and active = true;
   `;
-
+  // process.stdout.write(sql);
   return client.query(sql)
     .then((res) => {
-      const NCTasks = [];
+      const aggregateTasks = [];
       for (let i = 0; i < res.rowCount; i += 1) {
         const { asset_name, spreadsheetid, tab } = res.rows[i];
-        const tempTargetLocal = { ...tempTarget };
+        const tempTargetLocal = { ...tempLocation };
         if (i === 0) { // first row empty table
           tempTargetLocal.append = false;
         } else {
@@ -114,23 +115,23 @@ async function readNCBenchmarks(client, tempTarget, target) {
           source_location: {
             asset: asset_name,
             spreadsheetid,
-            range: `${tab}!A2:E`,
-            connection: 'bedrock-googlesheets',
+            range: `${tab}!${data_range}`,
+            connection: data_connection,
             append_tab: true,
           },
           target_location: tempTargetLocal,
         };
-        NCTasks.push(task);
+        aggregateTasks.push(task);
       }
       // final copy temp to real
       const task = {
         type: 'table_copy',
         active: true,
-        source_location: tempTarget,
-        target_location: target,
+        source_location: tempLocation,
+        target_location: location,
       };
-      NCTasks.push(task);
-      return NCTasks;
+      aggregateTasks.push(task);
+      return aggregateTasks;
     })
     .catch((err) => {
       const errmsg = pgErrorCodes[err.code];
@@ -171,11 +172,11 @@ async function readTasks(client, assetMap) {
         thisTask.source_location = { ...task.source, ...sourceLoc };
         thisTask.target_location = { ...task.target, ...targetLoc };
         asset.etl_tasks.push(thisTask);
-      } else if (task.type === 'nc_benchmarks') {
-        const tempTarget = await readLocationFromAsset(client, task.source.asset);
-        const target = await readLocationFromAsset(client, task.target.asset);
-        const NCTasks = await readNCBenchmarks(client, tempTarget, target);
-        asset.etl_tasks = NCTasks;
+      } else if (task.type === 'aggregate') {
+        const tempLocation = await readLocationFromAsset(client, task.source.temp_table);
+        const location = await readLocationFromAsset(client, task.target.asset);
+        const aggregateTasks = await readAggregateData(client, tempLocation, location, task.source);
+        asset.etl_tasks = aggregateTasks;
       } else if (task.type === 'run_lambda' || task.type === 'encrypt') {
         thisTask = task.target;
         asset.etl_tasks.push(thisTask);
@@ -306,7 +307,7 @@ const lambda_handler = async function x(event) {
 debug = false;
 let event = {};
 if (debug) {
-  event = { rungroup: 'nc_benchmarks' };
+  event = { rungroup: 'maintenance_responsibilities' };
   (async () => {
     await lambda_handler(event);
     process.exit();
