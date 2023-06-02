@@ -1,0 +1,14 @@
+{
+  "asset_name": "maintenance_buildings.goog",
+  "description": "City Property Maintenance Responsibility Building List",
+  "location": {
+    "asset": "maintenance_buildings.goog",
+    "filename": "Maintenance Database",
+    "spreadsheetid": "1HQE20mqShD5iqiQGLLuQMbXsMazzu3ws-zUXHeuYr-M",
+    "connection": "bedrock-googlesheets",
+    "range": "Building Classification!A2:J"
+  },
+  "active": true,
+  "depends": [],
+  "tags": []
+}
