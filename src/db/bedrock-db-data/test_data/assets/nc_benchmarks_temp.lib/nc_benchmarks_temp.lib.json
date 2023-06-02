@@ -7,7 +7,7 @@
     "connection": "pubrecdb1/mdastore1/dbadmin",
     "schemaname": "temp"
   },
-  "active": false,
+  "active": true,
   "depends": [],
   "tags": []
 }

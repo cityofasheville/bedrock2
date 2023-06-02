@@ -1,0 +1,13 @@
+{
+  "asset_name": "maintenance_responsibilities_temp.lib",
+  "description": "City Property Maintenance Responsibilities-Temp Table",
+  "location": {
+    "asset": "maintenance_responsibilities_temp.lib",
+    "tablename": "maintenance_responsibilities_temp",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "temp"
+  },
+  "active": true,
+  "depends": [],
+  "tags": []
+}

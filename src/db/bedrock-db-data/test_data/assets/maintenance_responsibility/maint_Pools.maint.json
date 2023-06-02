@@ -1,0 +1,13 @@
+{
+  "asset_name": "maint_Pools.maint",
+  "description": "Maintenance Responsibilities: Pools",
+  "location": {
+    "spreadsheetid": "1HQE20mqShD5iqiQGLLuQMbXsMazzu3ws-zUXHeuYr-M",
+    "tab": "Pools"
+  },
+  "active": true,
+  "depends": [],
+  "tags": [
+    "maintenance_responsibilities"
+  ]
+}

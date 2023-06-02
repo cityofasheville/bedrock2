@@ -35,7 +35,7 @@ async function readTasks(client, etlList) {
         type: task.type,
         active: task.active,
       };
-      if (task.type === 'table_copy' || task.type === 'file_copy' || task.type === 'nc_benchmarks') {
+      if (task.type === 'table_copy' || task.type === 'file_copy' || task.type === 'aggregate') {
         thisTask.source_location = task.source;
         thisTask.target_location = task.target;
       } else if (task.type === 'sql') {

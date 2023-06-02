@@ -5,9 +5,9 @@
     "asset": "nc_benchmarks.lib",
     "tablename": "nc_benchmarks",
     "connection": "pubrecdb1/mdastore1/dbadmin",
-    "schemaname": "nc_benchmarks"
+    "schemaname": "internal"
   },
-  "active": false,
+  "active": true,
   "depends": [],
   "tags": []
 }

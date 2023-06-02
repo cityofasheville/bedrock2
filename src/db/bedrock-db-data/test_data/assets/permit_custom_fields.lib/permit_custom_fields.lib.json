@@ -9,7 +9,8 @@
   },
   "active": true,
   "depends": [
-    "permit_custom_fields.acc"
+    "permit_custom_fields.acc",
+    "permits.lib"
   ],
   "tags": []
 }

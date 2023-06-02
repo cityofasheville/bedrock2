@@ -1,0 +1,20 @@
+{
+  "asset_name": "maintenance_responsibilities.lib",
+  "run_group": "maintenance_responsibilities",
+  "active": true,
+  "tasks": [
+    {
+      "type": "aggregate",
+      "active": true,
+      "source_location": {
+        "temp_table": "maintenance_responsibilities_temp.lib",
+        "aggregate": "maintenance_responsibilities",
+        "data_range": "A3:B",
+        "data_connection": "bedrock-googlesheets"
+      },
+      "target_location": {
+        "asset": "maintenance_responsibilities.lib"
+      }
+    }
+  ]
+}
