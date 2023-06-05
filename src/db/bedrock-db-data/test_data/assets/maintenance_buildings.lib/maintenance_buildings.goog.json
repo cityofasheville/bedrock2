@@ -4,9 +4,9 @@
   "location": {
     "asset": "maintenance_buildings.goog",
     "filename": "Maintenance Database",
-    "spreadsheetid": "1HQE20mqShD5iqiQGLLuQMbXsMazzu3ws-zUXHeuYr-M",
+    "spreadsheetid": "15tlYB_EzW9FqF1pJ7esCkD_a2C12PdXQ6gktwENYkf0",
     "connection": "bedrock-googlesheets",
-    "range": "Building Classification!A2:J"
+    "range": "Building Classification!A2:K"
   },
   "active": true,
   "depends": [],
