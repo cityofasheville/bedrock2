@@ -1,0 +1,15 @@
+{
+  "asset_name": "maintenance_tasktypes.pub",
+  "description": "City Facility Maintenance: Task Types",
+  "location": {
+    "asset": "maintenance_tasktypes.pub",
+    "tablename": "maintenance_tasktypes",
+    "connection": "coa-publicdb1/coa_share/dbadmin",
+    "schemaname": "open"
+  },
+  "active": true,
+  "depends": [
+    "maintenance_tasktypes.lib"
+  ],
+  "tags": []
+}

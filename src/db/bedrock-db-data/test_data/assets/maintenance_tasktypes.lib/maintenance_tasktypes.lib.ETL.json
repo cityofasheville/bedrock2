@@ -1,0 +1,23 @@
+{
+  "asset_name": "maintenance_tasktypes.lib",
+  "run_group": "maintenance_responsibilities",
+  "active": true,
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "maintenance_tasktypes.goog"
+      },
+      "target_location": {
+        "asset": "maintenance_tasktypes.lib"
+      }
+    },
+    {
+      "type": "sql",
+      "active": true,
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "sql_string": "delete from internal.maintenance_tasktypes where task_type is null;"
+    }
+  ]
+}

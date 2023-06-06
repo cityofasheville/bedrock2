@@ -8,6 +8,8 @@
     "schemaname": "internal"
   },
   "active": true,
-  "depends": [],
+  "depends": [
+    "maintenance_buildings.goog"
+  ],
   "tags": []
 }

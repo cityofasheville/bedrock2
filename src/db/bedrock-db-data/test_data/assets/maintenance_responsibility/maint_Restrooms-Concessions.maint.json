@@ -1,9 +1,9 @@
 {
-  "asset_name": "maint_Parking_Garages.maint",
-  "description": "Maintenance Responsibilities: Parking_Garages",
+  "asset_name": "maint_Restrooms-Concessions.maint.json",
+  "description": "Maintenance Responsibilities: Restrooms-Concessions",
   "location": {
     "spreadsheetid": "16rZUoAlISFIAmvcnSMHmhaE0qObj2OMpHQX3ddRoEwg",
-    "tab": "Parking Garages"
+    "tab": "Restrooms/Concessions"
   },
   "active": true,
   "depends": [],

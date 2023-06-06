@@ -15,6 +15,12 @@
       "target_location": {
         "asset": "maintenance_responsibilities.lib"
       }
+    },
+    {
+      "type": "sql",
+      "active": true,
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "sql_string": "delete from internal.maintenance_responsibilities where maintenance_need is null;"
     }
   ]
 }
