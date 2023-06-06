@@ -72,18 +72,19 @@ async function getAssetList(domainName, pathElements, queryParams, connection) {
 
   total = Number(res.rows[0].count);
 
-  sql = 'SELECT * FROM bedrock.assets a';
+  sql = 'SELECT a.*, e.run_group, e.active as etl_active FROM bedrock.assets a';
   sql += ' left join bedrock.etl e on a.asset_name = e.asset_name';
   sql += ` ${sql2}`;
   sql += ' order by a.asset_name asc';
   sql += ` offset ${offset} limit ${count} `;
-
+  console.log(sql);
   res = await client.query(sql, sqlParams)
     .catch((err) => {
       result.error = true;
       result.message = `PG error getting assets: ${pgErrorCodes[err.code]}`;
     });
-
+  console.log(JSON.stringify(res.rows));
+  console.log('That was right away');
   if (!result.error && res.rowCount === 0) {
     result.error = true;
     result.message = 'No assets found';
@@ -102,6 +103,7 @@ async function getAssetList(domainName, pathElements, queryParams, connection) {
   const assets = [];
   const rows = [];
   const currentCount = res.rowCount;
+  console.log(JSON.stringify(res.rows));
   for (let i = 0; i < res.rowCount; i += 1) {
     assets.push(`'${res.rows[i].asset_name}'`);
     rows.push(
@@ -111,7 +113,7 @@ async function getAssetList(domainName, pathElements, queryParams, connection) {
         location: res.rows[i].location,
         active: res.rows[i].active,
         etl_run_group: res.rows[i].run_group,
-        etl_active: res.rows[i].active,
+        etl_active: res.rows[i].etl_active,
         dependencies: [],
       },
     );

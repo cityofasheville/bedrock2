@@ -18,7 +18,7 @@ async function getAsset(pathElements, queryParams, connection) {
     });
 
   if (!result.error) {
-    const sql = `SELECT a.*, e.run_group, e.active, d.dependency
+    const sql = `SELECT a.*, e.run_group, e.active as etl_active, d.dependency
     FROM bedrock.assets a 
     left join bedrock.etl e on e.asset_name = a.asset_name
     left join bedrock.dependencies d on d.asset_name = a.asset_name
@@ -46,7 +46,7 @@ async function getAsset(pathElements, queryParams, connection) {
       location: res.rows[0].location,
       active: res.rows[0].active,
       etl_run_group: res.rows[0].run_group,
-      etl_active: res.rows[0].active,
+      etl_active: res.rows[0].etl_active,
       dependencies: [],
       tags: [],
     };
