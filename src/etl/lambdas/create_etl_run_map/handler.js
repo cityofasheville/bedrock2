@@ -117,7 +117,7 @@ async function readAggregateData(client, tempLocation, location, taskSource) {
             spreadsheetid,
             range: `${tab}!${data_range}`,
             connection: data_connection,
-            append_tab: true,
+            append_asset_name: !!taskSource.append_asset_name,
           },
           target_location: tempTargetLocal,
         };
