@@ -47,10 +47,9 @@ async function getGoogleStream(location) {
 
       console.log(`Copy from Google Sheet: https://docs.google.com/spreadsheets/d/${location.spreadsheetid}/edit#gid=${range.split('!')[0]}`);
       const data = fixUnevenRows(range, response.data.values);
-      if (location.append_tab) { // append sheet tabname to each row
-        const tabname = range.split('!')[0];
+      if (location.append_asset_name) { // append asset name to each row. Used in aggregate tasktype
         for (let i = 0; i < data.length; i += 1) {
-          data[i].push(tabname);
+          data[i].push(location.asset);
         }
       }
       // console.log(data);

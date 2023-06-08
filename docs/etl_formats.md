@@ -63,7 +63,7 @@ Also see [Managed Data Assets README](https://github.com/cityofasheville/managed
             "spreadsheetid": "9876234HIUFQER872345T",
             "range": 'Bad Actors!A5:B'
             __SOURCE OPTIONS__
-            <OPTIONAL>: "append_tab": true (In the data an extra column is appended to each row with the name of the sheet the data comes from)
+            <OPTIONAL>: "append_asset_name": true (In the data an extra column is appended to each row with the name of the asset)
             __TARGET OPTIONS__
             <OPTIONAL> "append": true  (By default, data is overwritten in sheet. Set to true to append as new rows.)       
 #### CSV -winshare
@@ -187,5 +187,45 @@ Note: Called Lambda must return standard format: ```{statusCode: 200,body: {lamb
             "active": true
         }
     ]
+}
+```
+## Aggregate
+Aggregate task type takes multiple Google Sheets with data in the same format on each sheet and writes it to a single table.
+It requires a staging table (called temp_table, but not a temp table in database terms) for the data to be collected in before writing to the final destination.
+Each source spreadsheet tab has its own asset, and they share the data_connection and data_range, and have their own spreadsheetid's and tab names.
+
+```
+{
+  "tasks": [
+    {
+      "type": "aggregate",
+      "active": true,
+      "source_location": {
+        "temp_table": "nc_benchmarks_temp.lib", (name of the staging table asset)
+        "aggregate": "nc_benchmarks",           (the aggregate name that matches a tag in each source sheet)
+        "data_range": "A2:E",                   (all the sheets have to have the data in the same columns)
+        "data_connection": "bedrock-googlesheets",
+        "append_asset_name": true               (if true, each row of data has an additional column holding the name of the source asset)
+      },
+      "target_location": {
+        "asset": "nc_benchmarks.lib"
+      }
+    }
+  ]
+}
+```
+Each aggregate source asset:
+```
+{
+  "asset_name": "sog_billed_water_volume.ncb",
+  "description": "Water SOG Benchmark: Billed Water Volume",
+  "location": {
+    "spreadsheetid": "1m2xD4JyH4BEBey_ybsEgrvYopsl0PjWNmY_PEv3l6D4",
+    "tab": "billed_water_volume"
+  },
+  "active": true,
+  "tags": [
+    "nc_benchmarks"   (matches "source_location.aggregate" field in task)
+  ]
 }
 ```
