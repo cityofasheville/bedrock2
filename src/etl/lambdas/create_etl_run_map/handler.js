@@ -118,6 +118,7 @@ async function readAggregateData(client, tempLocation, location, taskSource) {
             range: `${tab}!${data_range}`,
             connection: data_connection,
             append_asset_name: !!taskSource.append_asset_name,
+            append_tab_name: !!taskSource.append_tab_name,
           },
           target_location: tempTargetLocal,
         };

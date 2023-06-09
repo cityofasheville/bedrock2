@@ -52,6 +52,12 @@ async function getGoogleStream(location) {
           data[i].push(location.asset);
         }
       }
+      if (location.append_tab_name) { // append tab name to each row. Used in aggregate tasktype
+        const tabname = range.split('!')[0];
+        for (let i = 0; i < data.length; i += 1) {
+          data[i].push(tabname);
+        }
+      }
       // console.log(data);
       const csvstring = csv.stringify(data);
       return { stream: Readable.from(csvstring), promise: Promise.resolve() };
