@@ -6,7 +6,9 @@ You will need AdministratorAccess command line permissions to AWS.
 Create a file `make_variables` based on `make_variables.prod`. Change INSTANCE to a unique name for your instance, and set the region and account info.
 The variable build_mode can be set to "std" if deploying from Linux or "sam" to use a container. This is needed for two Python Lambdas that need Linux native compilation targets for encryption used by the paramiko package.
 
-Then cd into each directory and run ```make``` commands to create the infrastructure.
+To start, cd into ```src/bedrock_common`` and run ```make install```.
+
+Then cd into each other directory in ```src``` and run ```make``` commands to create the infrastructure.
 
 ```bash
 make init
@@ -17,7 +19,9 @@ make apply
 
 ### Build everything
 ```sh
-cd src/db
+cd src/bedrock_common
+make install
+cd ../db
 make init
 make apply-y #(Creates database server)
 make db      #(Creates bedrock database)

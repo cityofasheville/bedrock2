@@ -6,6 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "dependencies": {
+    "aws-sdk": "^2.1275.0"
+  },
   "author": "",
   "license": "ISC"
 }
