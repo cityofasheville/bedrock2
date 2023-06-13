@@ -2,10 +2,10 @@
   "asset_name": "inspections.pub",
   "description": "",
   "location": {
-    "asset": "inspections.pub",
-    "tablename": "inspections",
     "connection": "coa-publicdb1/coa_share/dbadmin",
-    "schemaname": "bc"
+    "loctype": "db",
+    "schemaname": "bc",
+    "tablename": "inspections"
   },
   "active": true,
   "depends": [

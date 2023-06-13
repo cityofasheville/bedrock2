@@ -2,10 +2,10 @@
   "asset_name": "arag.s3",
   "description": "",
   "location": {
-    "asset": "arag.s3",
-    "path": "arag/",
+    "connection": "s3_data_files",
     "filename": "arag_asheville_${YYYY}${MM}${DD}.csv",
-    "connection": "s3_data_files"
+    "loctype": "file",
+    "path": "arag/"
   },
   "active": true,
   "depends": [

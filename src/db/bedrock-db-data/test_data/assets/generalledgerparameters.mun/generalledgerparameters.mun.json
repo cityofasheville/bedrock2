@@ -2,10 +2,10 @@
   "asset_name": "generalledgerparameters.mun",
   "description": "",
   "location": {
-    "asset": "generalledgerparameters.mun",
-    "tablename": "GeneralLedgerParameters",
     "connection": "munis/munprod/mssqlgisadmin",
-    "schemaname": "dbo"
+    "loctype": "db",
+    "schemaname": "dbo",
+    "tablename": "GeneralLedgerParameters"
   },
   "active": true,
   "depends": [],

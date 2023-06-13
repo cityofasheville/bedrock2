@@ -2,10 +2,10 @@
   "asset_name": "coa_cip_project_points.lib",
   "description": "",
   "location": {
-    "asset": "coa_cip_project_points.lib",
-    "tablename": "coa_cip_project_points",
     "connection": "pubrecdb1/mdastore1/dbadmin",
-    "schemaname": "internal"
+    "loctype": "db",
+    "schemaname": "internal",
+    "tablename": "coa_cip_project_points"
   },
   "active": true,
   "depends": [

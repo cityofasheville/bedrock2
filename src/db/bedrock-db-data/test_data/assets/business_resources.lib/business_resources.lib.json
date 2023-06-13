@@ -2,10 +2,10 @@
   "asset_name": "business_resources.lib",
   "description": "",
   "location": {
-    "asset": "business_resources.lib",
-    "tablename": "business_resources",
     "connection": "pubrecdb1/mdastore1/dbadmin",
-    "schemaname": "internal"
+    "loctype": "db",
+    "schemaname": "internal",
+    "tablename": "business_resources"
   },
   "active": true,
   "depends": [

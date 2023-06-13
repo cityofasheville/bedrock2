@@ -2,10 +2,10 @@
   "asset_name": "dsd_first_review_sla.acc",
   "description": "DSD first-review SLA performance",
   "location": {
-    "asset": "dsd_first_review_sla.acc",
-    "tablename": "dsd_first_review_sla",
     "connection": "coa-acceladb/accela/mssqlgisadmin",
-    "schemaname": "amd"
+    "loctype": "db",
+    "schemaname": "amd",
+    "tablename": "dsd_first_review_sla"
   },
   "active": true,
   "depends": [],

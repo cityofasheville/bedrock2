@@ -2,10 +2,10 @@
   "asset_name": "bc_street.lib",
   "description": "",
   "location": {
-    "asset": "bc_street.lib",
-    "tablename": "bc_street",
     "connection": "pubrecdb1/mdastore1/dbadmin",
-    "schemaname": "internal"
+    "loctype": "db",
+    "schemaname": "internal",
+    "tablename": "bc_street"
   },
   "active": true,
   "depends": [

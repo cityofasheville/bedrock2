@@ -1,0 +1,14 @@
+{
+  "asset_name": "maint_Pools.maint",
+  "description": "Maintenance Responsibilities: Pools",
+  "location": {
+    "loctype": "aggr",
+    "spreadsheetid": "16rZUoAlISFIAmvcnSMHmhaE0qObj2OMpHQX3ddRoEwg",
+    "tab": "Pools"
+  },
+  "active": true,
+  "depends": [],
+  "tags": [
+    "maintenance_responsibilities"
+  ]
+}

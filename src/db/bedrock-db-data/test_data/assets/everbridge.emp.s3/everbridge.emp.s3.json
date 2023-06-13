@@ -2,10 +2,10 @@
   "asset_name": "everbridge.emp.s3",
   "description": "",
   "location": {
-    "asset": "everbridge.emp.s3",
-    "path": "everbridge/",
+    "connection": "s3_data_files",
     "filename": "avl.PR_City_Employees_Everbridge.csv",
-    "connection": "s3_data_files"
+    "loctype": "file",
+    "path": "everbridge/"
   },
   "active": true,
   "depends": [

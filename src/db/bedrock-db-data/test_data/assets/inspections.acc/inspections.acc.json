@@ -2,10 +2,10 @@
   "asset_name": "inspections.acc",
   "description": "",
   "location": {
-    "asset": "inspections.acc",
-    "tablename": "inspections",
     "connection": "coa-acceladb/accela/mssqlgisadmin",
-    "schemaname": "amd"
+    "loctype": "db",
+    "schemaname": "amd",
+    "tablename": "inspections"
   },
   "active": true,
   "depends": [],

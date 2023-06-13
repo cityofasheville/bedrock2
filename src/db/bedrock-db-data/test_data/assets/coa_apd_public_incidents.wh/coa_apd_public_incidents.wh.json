@@ -2,10 +2,10 @@
   "asset_name": "coa_apd_public_incidents.wh",
   "description": "",
   "location": {
-    "asset": "coa_apd_public_incidents.wh",
-    "tablename": "coa_apd_public_incidents",
     "connection": "coa-gis-warehouse1/coagiswarehouse/coagis",
-    "schemaname": "coagis"
+    "loctype": "db",
+    "schemaname": "coagis",
+    "tablename": "coa_apd_public_incidents"
   },
   "active": true,
   "depends": [],

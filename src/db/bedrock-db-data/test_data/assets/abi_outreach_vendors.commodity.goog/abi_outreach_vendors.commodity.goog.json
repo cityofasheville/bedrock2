@@ -2,10 +2,10 @@
   "asset_name": "abi_outreach_vendors.commodity.goog",
   "description": "List of MWBE vendors registered in Munis (not necessarily certified)",
   "location": {
-    "asset": "abi_outreach_vendors.commodity.goog",
-    "range": "Vendors By Commodity Code!A2:Z",
-    "filename": "abi_outreach_vendors",
     "connection": "bedrock-googlesheets",
+    "filename": "abi_outreach_vendors",
+    "loctype": "sheets",
+    "range": "Vendors By Commodity Code!A2:Z",
     "spreadsheetid": "1lm_LdZS6yhniDEuVGyaj3vdD7ACU8Eo_pCkmNr81TvA"
   },
   "active": true,

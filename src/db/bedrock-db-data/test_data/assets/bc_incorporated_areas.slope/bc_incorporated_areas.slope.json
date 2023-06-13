@@ -2,10 +2,10 @@
   "asset_name": "bc_incorporated_areas.slope",
   "description": "",
   "location": {
-    "asset": "bc_incorporated_areas.slope",
-    "tablename": "bc_incorporated_areas",
     "connection": "pubrecdb1/steepslope/dbadmin",
-    "schemaname": "public"
+    "loctype": "db",
+    "schemaname": "public",
+    "tablename": "bc_incorporated_areas"
   },
   "active": true,
   "depends": [

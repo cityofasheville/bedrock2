@@ -2,10 +2,10 @@
   "asset_name": "capital_projects_master_categories.goog",
   "description": "Capital Projects Category List",
   "location": {
-    "asset": "capital_projects_master_categories.goog",
-    "range": "Categories!A2:B",
-    "filename": "Capital Projects Master",
     "connection": "bedrock-googlesheets",
+    "filename": "Capital Projects Master",
+    "loctype": "sheets",
+    "range": "Categories!A2:B",
     "spreadsheetid": "1IepJrSjqbGK7UcTmFHqknNUD6Iyx6-3_zpj6qHprBgY"
   },
   "active": true,

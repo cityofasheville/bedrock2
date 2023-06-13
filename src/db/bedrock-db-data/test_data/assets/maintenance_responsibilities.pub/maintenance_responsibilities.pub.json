@@ -2,10 +2,10 @@
   "asset_name": "maintenance_responsibilities.pub",
   "description": "City Facility Maintenance Responsibilties",
   "location": {
-    "asset": "maintenance_responsibilities.pub",
-    "tablename": "maintenance_responsibilities",
     "connection": "coa-publicdb1/coa_share/dbadmin",
-    "schemaname": "open"
+    "loctype": "db",
+    "schemaname": "open",
+    "tablename": "maintenance_responsibilities"
   },
   "active": true,
   "depends": [

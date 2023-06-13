@@ -2,10 +2,10 @@
   "asset_name": "safetyskills.s3",
   "description": "",
   "location": {
-    "asset": "safetyskills.s3",
-    "path": "safetyskills/",
+    "connection": "s3_data_files",
     "filename": "users${YYYY}${MM}${DD}.csv",
-    "connection": "s3_data_files"
+    "loctype": "file",
+    "path": "safetyskills/"
   },
   "active": true,
   "depends": [

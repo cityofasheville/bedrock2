@@ -2,10 +2,10 @@
   "asset_name": "bc_civicaddress_table.lib",
   "description": "Civic address table from County",
   "location": {
-    "asset": "bc_civicaddress_table.lib",
-    "tablename": "bc_civicaddress_table",
     "connection": "pubrecdb1/mdastore1/dbadmin",
-    "schemaname": "internal"
+    "loctype": "db",
+    "schemaname": "internal",
+    "tablename": "bc_civicaddress_table"
   },
   "active": true,
   "depends": [

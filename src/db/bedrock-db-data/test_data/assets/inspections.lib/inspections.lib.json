@@ -2,10 +2,10 @@
   "asset_name": "inspections.lib",
   "description": "",
   "location": {
-    "asset": "inspections.lib",
-    "tablename": "inspections",
     "connection": "pubrecdb1/mdastore1/dbadmin",
-    "schemaname": "internal"
+    "loctype": "db",
+    "schemaname": "internal",
+    "tablename": "inspections"
   },
   "active": true,
   "depends": [

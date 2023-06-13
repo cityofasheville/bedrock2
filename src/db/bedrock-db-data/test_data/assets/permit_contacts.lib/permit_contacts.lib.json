@@ -2,10 +2,10 @@
   "asset_name": "permit_contacts.lib",
   "description": "Contacts associated with permits",
   "location": {
-    "asset": "permit_contacts.lib",
-    "tablename": "permit_contacts",
     "connection": "pubrecdb1/mdastore1/dbadmin",
-    "schemaname": "internal"
+    "loctype": "db",
+    "schemaname": "internal",
+    "tablename": "permit_contacts"
   },
   "active": true,
   "depends": [

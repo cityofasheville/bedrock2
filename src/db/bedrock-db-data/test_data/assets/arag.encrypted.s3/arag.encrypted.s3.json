@@ -2,9 +2,10 @@
   "asset_name": "arag.encrypted.s3",
   "description": "",
   "location": {
-    "path": "arag/",
+    "connection": "s3_data_files",
     "filename": "arag_asheville_${YYYY}${MM}${DD}.csv.pgp",
-    "connection": "s3_data_files"
+    "loctype": "file",
+    "path": "arag/"
   },
   "active": true,
   "depends": [

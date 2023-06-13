@@ -2,10 +2,10 @@
   "asset_name": "arag.ftp",
   "description": "Uploaded staff data to ARAG",
   "location": {
-    "asset": "arag.ftp",
-    "path": "/",
+    "connection": "arag_ftp",
     "filename": "arag_asheville_${YYYY}${MM}${DD}.csv.pgp",
-    "connection": "arag_ftp"
+    "loctype": "file",
+    "path": "/"
   },
   "active": true,
   "depends": [

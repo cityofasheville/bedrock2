@@ -3,6 +3,7 @@
   "description": "Preprocessed owner names",
   "location": {
     "connection": "pubrecdb1/mdastore1/dbadmin",
+    "loctype": "db",
     "schemaname": "internal",
     "tablename": "bc_property_pinnum_formatted_owner_names"
   },

@@ -2,10 +2,10 @@
   "asset_name": "google_info.pub",
   "description": "Google Group info",
   "location": {
-    "asset": "google_info.pub",
-    "tablename": "google_info",
     "connection": "coa-publicdb1/coa_share/dbadmin",
-    "schemaname": "open"
+    "loctype": "db",
+    "schemaname": "open",
+    "tablename": "google_info"
   },
   "active": true,
   "depends": [

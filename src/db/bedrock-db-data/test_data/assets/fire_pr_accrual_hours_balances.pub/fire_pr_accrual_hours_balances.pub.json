@@ -2,10 +2,10 @@
   "asset_name": "fire_pr_accrual_hours_balances.pub",
   "description": "",
   "location": {
-    "asset": "fire_pr_accrual_hours_balances.pub",
-    "tablename": "fire_pr_accrual_hours_balances",
     "connection": "coa-publicdb1/coa_share/dbadmin",
-    "schemaname": "bc"
+    "loctype": "db",
+    "schemaname": "bc",
+    "tablename": "fire_pr_accrual_hours_balances"
   },
   "active": true,
   "depends": [

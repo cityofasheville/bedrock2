@@ -2,9 +2,10 @@
   "asset_name": "bike_counters_by_type.lib",
   "description": "",
   "location": {
-    "tablename": "bike_counters_by_type",
     "connection": "pubrecdb1/mdastore1/dbadmin",
-    "schemaname": "bike_counter"
+    "loctype": "db",
+    "schemaname": "bike_counter",
+    "tablename": "bike_counters_by_type"
   },
   "active": true,
   "depends": [],

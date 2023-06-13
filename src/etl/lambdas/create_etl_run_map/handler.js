@@ -73,8 +73,9 @@ async function readDependencies(client, assetMap) {
 }
 
 async function readLocationFromAsset(client, assetName) {
-  // final target data is in asset location
-  const sql = `SELECT location FROM bedrock.assets where asset_name = '${assetName}';`;
+  // add asset_name into location json
+  const sql = `SELECT location::jsonb || ('{"asset":"' || asset_name || '"}')::jsonb location
+              FROM bedrock.assets where asset_name = '${assetName}';`;
   // eslint-disable-next-line no-await-in-loop
   const res = await client.query(sql)
     .catch((err) => {

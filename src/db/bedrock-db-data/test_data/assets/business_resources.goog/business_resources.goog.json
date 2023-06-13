@@ -2,10 +2,10 @@
   "asset_name": "business_resources.goog",
   "description": "",
   "location": {
-    "asset": "business_resources.goog",
-    "range": "Sheet1!A2:Q",
-    "filename": "Business Resources",
     "connection": "bedrock-googlesheets",
+    "filename": "Business Resources",
+    "loctype": "sheets",
+    "range": "Sheet1!A2:Q",
     "spreadsheetid": "1aTEJL7N3UI1CMObZmg9XicaCYL2USMnPIxh_esCZCos"
   },
   "active": true,

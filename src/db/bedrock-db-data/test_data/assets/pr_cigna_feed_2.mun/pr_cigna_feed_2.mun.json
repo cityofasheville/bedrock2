@@ -2,10 +2,10 @@
   "asset_name": "pr_cigna_feed_2.mun",
   "description": "",
   "location": {
-    "asset": "pr_cigna_feed_2.mun",
-    "tablename": "PR_CIGNA_Feed_2",
     "connection": "munis/munprod/fme_jobs",
-    "schemaname": "avl"
+    "loctype": "db",
+    "schemaname": "avl",
+    "tablename": "PR_CIGNA_Feed_2"
   },
   "active": true,
   "depends": [],

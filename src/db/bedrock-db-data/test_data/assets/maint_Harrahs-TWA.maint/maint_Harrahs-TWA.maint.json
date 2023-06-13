@@ -1,0 +1,14 @@
+{
+  "asset_name": "maint_Harrahs-TWA.maint",
+  "description": "Maintenance Responsibilities: Harrahs-TWA",
+  "location": {
+    "loctype": "aggr",
+    "spreadsheetid": "16rZUoAlISFIAmvcnSMHmhaE0qObj2OMpHQX3ddRoEwg",
+    "tab": "Harrah's/TWA"
+  },
+  "active": true,
+  "depends": [],
+  "tags": [
+    "maintenance_responsibilities"
+  ]
+}

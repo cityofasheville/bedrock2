@@ -1,0 +1,14 @@
+{
+  "asset_name": "maint_Pump_Houses.maint",
+  "description": "Maintenance Responsibilities: Pump_Houses",
+  "location": {
+    "loctype": "aggr",
+    "spreadsheetid": "16rZUoAlISFIAmvcnSMHmhaE0qObj2OMpHQX3ddRoEwg",
+    "tab": "Pump Houses"
+  },
+  "active": true,
+  "depends": [],
+  "tags": [
+    "maintenance_responsibilities"
+  ]
+}

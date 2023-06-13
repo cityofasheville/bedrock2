@@ -2,10 +2,10 @@
   "asset_name": "coa_asheville_neighborhoods.lib",
   "description": "",
   "location": {
-    "asset": "coa_asheville_neighborhoods.lib",
-    "tablename": "coa_asheville_neighborhoods",
     "connection": "pubrecdb1/mdastore1/dbadmin",
-    "schemaname": "internal"
+    "loctype": "db",
+    "schemaname": "internal",
+    "tablename": "coa_asheville_neighborhoods"
   },
   "active": true,
   "depends": [

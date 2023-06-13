@@ -2,10 +2,10 @@
   "asset_name": "training_boards.lib",
   "description": "Training records for board and commission members",
   "location": {
-    "asset": "training_boards.lib",
-    "tablename": "training_boards",
     "connection": "pubrecdb1/mdastore1/dbadmin",
-    "schemaname": "internal"
+    "loctype": "db",
+    "schemaname": "internal",
+    "tablename": "training_boards"
   },
   "active": true,
   "depends": [

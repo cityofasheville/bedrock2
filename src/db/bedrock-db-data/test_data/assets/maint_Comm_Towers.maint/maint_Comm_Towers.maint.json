@@ -1,0 +1,14 @@
+{
+  "asset_name": "maint_Comm_Towers.maint",
+  "description": "Maintenance Responsibilities: Comm_Towers",
+  "location": {
+    "loctype": "aggr",
+    "spreadsheetid": "16rZUoAlISFIAmvcnSMHmhaE0qObj2OMpHQX3ddRoEwg",
+    "tab": "Comm Towers"
+  },
+  "active": true,
+  "depends": [],
+  "tags": [
+    "maintenance_responsibilities"
+  ]
+}

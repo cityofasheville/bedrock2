@@ -2,10 +2,10 @@
   "asset_name": "coa_national_register_properties.wh",
   "description": "National register properties",
   "location": {
-    "asset": "coa_national_register_properties.wh",
-    "tablename": "coa_national_register_properties",
     "connection": "coa-gis-warehouse1/coagiswarehouse/coagis",
-    "schemaname": "coagis"
+    "loctype": "db",
+    "schemaname": "coagis",
+    "tablename": "coa_national_register_properties"
   },
   "active": true,
   "depends": [],

@@ -2,10 +2,10 @@
   "asset_name": "capital_projects_master_categories.lib",
   "description": "Capital Projects Category List",
   "location": {
-    "asset": "capital_projects_master_categories.lib",
-    "tablename": "capital_projects_master_categories",
     "connection": "pubrecdb1/mdastore1/dbadmin",
-    "schemaname": "internal"
+    "loctype": "db",
+    "schemaname": "internal",
+    "tablename": "capital_projects_master_categories"
   },
   "active": true,
   "depends": [

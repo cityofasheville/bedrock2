@@ -2,10 +2,10 @@
   "asset_name": "permits.pub",
   "description": "Permits data",
   "location": {
-    "asset": "permits.pub",
-    "tablename": "permits",
     "connection": "coa-publicdb1/coa_share/dbadmin",
-    "schemaname": "bc"
+    "loctype": "db",
+    "schemaname": "bc",
+    "tablename": "permits"
   },
   "active": true,
   "depends": [
