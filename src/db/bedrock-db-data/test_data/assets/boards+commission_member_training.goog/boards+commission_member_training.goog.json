@@ -2,10 +2,10 @@
   "asset_name": "boards+commission_member_training.goog",
   "description": "",
   "location": {
-    "asset": "boards+commission_member_training.goog",
-    "range": "Member Training!A2:F",
-    "filename": "Boards+Commission Member Training",
     "connection": "bedrock-googlesheets",
+    "filename": "Boards+Commission Member Training",
+    "loctype": "sheets",
+    "range": "Member Training!A2:F",
     "spreadsheetid": "1Efr6hn24-9e4eENkZy3Y_8uaYlYqFv4Iz2uqzrUwuRw"
   },
   "active": true,

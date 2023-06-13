@@ -2,10 +2,10 @@
   "asset_name": "cigna.ftp",
   "description": "Uploaded staff data to Cigna",
   "location": {
-    "asset": "cigna.ftp",
-    "path": "/Outbox/",
+    "connection": "cigna_ftp",
     "filename": "XO16000__xo10001i.77103.${YYYY}${MM}${DD}.txt",
-    "connection": "cigna_ftp"
+    "loctype": "file",
+    "path": "/Outbox/"
   },
   "active": true,
   "depends": [

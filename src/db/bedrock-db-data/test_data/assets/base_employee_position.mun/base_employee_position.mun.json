@@ -2,10 +2,10 @@
   "asset_name": "base_employee_position.mun",
   "description": "Standard Employee Work fields: dept/supv/etc.",
   "location": {
-    "asset": "base_employee_position.mun",
-    "tablename": "base_employee_position",
     "connection": "munis/munprod/mssqlgisadmin",
-    "schemaname": "avl_bdv"
+    "loctype": "db",
+    "schemaname": "avl_bdv",
+    "tablename": "base_employee_position"
   },
   "active": true,
   "depends": [],

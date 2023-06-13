@@ -3,6 +3,7 @@
   "description": "Master address table",
   "location": {
     "connection": "pubrecdb1/mdastore1/dbadmin",
+    "loctype": "db",
     "schemaname": "internal",
     "tablename": "coa_bc_address_master"
   },

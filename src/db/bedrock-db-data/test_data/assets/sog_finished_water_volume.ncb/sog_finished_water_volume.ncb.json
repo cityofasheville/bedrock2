@@ -1,0 +1,14 @@
+{
+  "asset_name": "sog_finished_water_volume.ncb",
+  "description": "Water SOG Benchmark: Finished Water Volume",
+  "location": {
+    "loctype": "aggr",
+    "spreadsheetid": "1m2xD4JyH4BEBey_ybsEgrvYopsl0PjWNmY_PEv3l6D4",
+    "tab": "finished_water_volume"
+  },
+  "active": true,
+  "depends": [],
+  "tags": [
+    "nc_benchmarks"
+  ]
+}

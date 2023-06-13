@@ -2,10 +2,10 @@
   "asset_name": "coa_active_jurisdictions.slope",
   "description": "Asheville corporate limits",
   "location": {
-    "asset": "coa_active_jurisdictions.slope",
-    "tablename": "coa_active_jurisdictions",
     "connection": "pubrecdb1/steepslope/dbadmin",
-    "schemaname": "public"
+    "loctype": "db",
+    "schemaname": "public",
+    "tablename": "coa_active_jurisdictions"
   },
   "active": true,
   "depends": [

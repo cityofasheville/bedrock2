@@ -2,10 +2,10 @@
   "asset_name": "base_employee_private.mun",
   "description": "Standard Employee-Non public fields",
   "location": {
-    "asset": "base_employee_private.mun",
-    "tablename": "base_employee_private",
     "connection": "munis/munprod/mssqlgisadmin",
-    "schemaname": "avl_bdv"
+    "loctype": "db",
+    "schemaname": "avl_bdv",
+    "tablename": "base_employee_private"
   },
   "active": true,
   "depends": [],

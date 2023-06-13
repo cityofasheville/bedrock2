@@ -2,10 +2,10 @@
   "asset_name": "coa_zip_code.edit",
   "description": "Asheville zip code areas",
   "location": {
-    "asset": "coa_zip_code.edit",
-    "tablename": "coa_zip_code",
     "connection": "coa-gis-edit1/coagisedit/coagis",
-    "schemaname": "coagis"
+    "loctype": "db",
+    "schemaname": "coagis",
+    "tablename": "coa_zip_code"
   },
   "active": true,
   "depends": [],

@@ -2,10 +2,10 @@
   "asset_name": "permit_owners.pub",
   "description": "Owners associated with permits",
   "location": {
-    "asset": "permit_owners.pub",
-    "tablename": "permit_owners",
     "connection": "coa-publicdb1/coa_share/dbadmin",
-    "schemaname": "bc"
+    "loctype": "db",
+    "schemaname": "bc",
+    "tablename": "permit_owners"
   },
   "active": true,
   "depends": [

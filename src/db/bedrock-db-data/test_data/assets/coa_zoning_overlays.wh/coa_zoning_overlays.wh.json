@@ -2,10 +2,10 @@
   "asset_name": "coa_zoning_overlays.wh",
   "description": "Asheville zoning overlays",
   "location": {
-    "asset": "coa_zoning_overlays.wh",
-    "tablename": "coa_zoning_overlays",
     "connection": "coa-gis-warehouse1/coagiswarehouse/coagis",
-    "schemaname": "coagis"
+    "loctype": "db",
+    "schemaname": "coagis",
+    "tablename": "coa_zoning_overlays"
   },
   "active": true,
   "depends": [],

@@ -2,10 +2,10 @@
   "asset_name": "coa_districts_water.wh",
   "description": "Asheville water districts",
   "location": {
-    "asset": "coa_districts_water.wh",
-    "tablename": "coa_districts_water",
     "connection": "coa-gis-warehouse1/coagiswarehouse/coagis",
-    "schemaname": "coagis"
+    "loctype": "db",
+    "schemaname": "coagis",
+    "tablename": "coa_districts_water"
   },
   "active": true,
   "depends": [],

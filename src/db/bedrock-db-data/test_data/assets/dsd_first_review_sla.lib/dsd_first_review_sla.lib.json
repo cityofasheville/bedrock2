@@ -2,10 +2,10 @@
   "asset_name": "dsd_first_review_sla.lib",
   "description": "DSD first-review SLA performance",
   "location": {
-    "asset": "dsd_first_review_sla.lib",
-    "tablename": "dsd_first_review_sla",
     "connection": "pubrecdb1/mdastore1/dbadmin",
-    "schemaname": "internal"
+    "loctype": "db",
+    "schemaname": "internal",
+    "tablename": "dsd_first_review_sla"
   },
   "active": true,
   "depends": [

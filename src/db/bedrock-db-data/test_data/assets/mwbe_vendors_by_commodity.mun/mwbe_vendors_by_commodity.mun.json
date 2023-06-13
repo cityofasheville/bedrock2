@@ -2,10 +2,10 @@
   "asset_name": "mwbe_vendors_by_commodity.mun",
   "description": "",
   "location": {
-    "asset": "mwbe_vendors_by_commodity.mun",
-    "tablename": "mwbe_vendors_by_commodity",
     "connection": "munis/munprod/mssqlgisadmin",
-    "schemaname": "amd"
+    "loctype": "db",
+    "schemaname": "amd",
+    "tablename": "mwbe_vendors_by_commodity"
   },
   "active": true,
   "depends": [],

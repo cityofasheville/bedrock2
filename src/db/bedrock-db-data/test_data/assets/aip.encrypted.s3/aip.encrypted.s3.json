@@ -2,9 +2,10 @@
   "asset_name": "aip.encrypted.s3",
   "description": "",
   "location": {
-    "path": "aip/",
+    "connection": "s3_data_files",
     "filename": "CityofAsheville5871_To_InfoArmor_FULL_${YYYY}${MM}${DD}",
-    "connection": "s3_data_files"
+    "loctype": "file",
+    "path": "aip/"
   },
   "active": true,
   "depends": [

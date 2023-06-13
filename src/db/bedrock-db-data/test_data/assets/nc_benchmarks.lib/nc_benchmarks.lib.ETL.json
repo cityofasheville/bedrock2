@@ -11,7 +11,7 @@
         "aggregate": "nc_benchmarks",
         "data_range": "A2:E",
         "data_connection": "bedrock-googlesheets",
-        "append_asset_name": true 
+        "append_asset_name": true
       },
       "target_location": {
         "asset": "nc_benchmarks.lib"

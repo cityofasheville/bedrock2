@@ -2,10 +2,10 @@
   "asset_name": "buncombe_tax_permits.lib",
   "description": "",
   "location": {
-    "asset": "buncombe_tax_permits.lib",
-    "tablename": "buncombe_tax_permits",
     "connection": "pubrecdb1/mdastore1/dbadmin",
-    "schemaname": "bc"
+    "loctype": "db",
+    "schemaname": "bc",
+    "tablename": "buncombe_tax_permits"
   },
   "active": true,
   "depends": [

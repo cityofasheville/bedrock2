@@ -2,10 +2,10 @@
   "asset_name": "compsych.ftp",
   "description": "Uploaded staff data to ComPsych(SunLife)",
   "location": {
-    "asset": "compsych.ftp",
-    "path": "/",
+    "connection": "compsych_ftp",
     "filename": "compsych_CityofAsheville_${YYYY}${MM}${DD}.csv",
-    "connection": "compsych_ftp"
+    "loctype": "file",
+    "path": "/"
   },
   "active": true,
   "depends": [

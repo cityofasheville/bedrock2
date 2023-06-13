@@ -2,10 +2,10 @@
   "asset_name": "pr_accrual_hours_balances.lib",
   "description": "",
   "location": {
-    "asset": "pr_accrual_hours_balances.lib",
-    "tablename": "pr_accrual_hours_balances",
     "connection": "pubrecdb1/mdastore1/dbadmin",
-    "schemaname": "internal"
+    "loctype": "db",
+    "schemaname": "internal",
+    "tablename": "pr_accrual_hours_balances"
   },
   "active": true,
   "depends": [

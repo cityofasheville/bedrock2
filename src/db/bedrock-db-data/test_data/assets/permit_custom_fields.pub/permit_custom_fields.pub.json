@@ -2,10 +2,10 @@
   "asset_name": "permit_custom_fields.pub",
   "description": "Permit custom fields data ADD THIS depends BACK!!!! \"permits\"",
   "location": {
-    "asset": "permit_custom_fields.pub",
-    "tablename": "permit_custom_fields",
     "connection": "coa-publicdb1/coa_share/dbadmin",
-    "schemaname": "bc"
+    "loctype": "db",
+    "schemaname": "bc",
+    "tablename": "permit_custom_fields"
   },
   "active": true,
   "depends": [

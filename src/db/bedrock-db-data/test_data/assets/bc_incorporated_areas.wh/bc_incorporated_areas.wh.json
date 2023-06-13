@@ -2,10 +2,10 @@
   "asset_name": "bc_incorporated_areas.wh",
   "description": "",
   "location": {
-    "asset": "bc_incorporated_areas.wh",
-    "tablename": "bc_incorporated_areas",
     "connection": "coa-gis-warehouse1/coagiswarehouse/coagis",
-    "schemaname": "coagis"
+    "loctype": "db",
+    "schemaname": "coagis",
+    "tablename": "bc_incorporated_areas"
   },
   "active": true,
   "depends": [],

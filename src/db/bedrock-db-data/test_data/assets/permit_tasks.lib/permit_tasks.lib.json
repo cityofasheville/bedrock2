@@ -2,10 +2,10 @@
   "asset_name": "permit_tasks.lib",
   "description": "Permit tasks data",
   "location": {
-    "asset": "permit_tasks.lib",
-    "tablename": "permit_tasks",
     "connection": "pubrecdb1/mdastore1/dbadmin",
-    "schemaname": "internal"
+    "loctype": "db",
+    "schemaname": "internal",
+    "tablename": "permit_tasks"
   },
   "active": true,
   "depends": [

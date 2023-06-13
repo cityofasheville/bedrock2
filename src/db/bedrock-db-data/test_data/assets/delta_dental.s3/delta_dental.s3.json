@@ -2,10 +2,10 @@
   "asset_name": "delta_dental.s3",
   "description": "",
   "location": {
-    "asset": "delta_dental.s3",
-    "path": "delta_dental/",
+    "connection": "s3_data_files",
     "filename": "deltadental_asheville_${YYYY}${MM}${DD}.txt",
-    "connection": "s3_data_files"
+    "loctype": "file",
+    "path": "delta_dental/"
   },
   "active": true,
   "depends": [

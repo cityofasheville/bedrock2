@@ -11,7 +11,7 @@
         "aggregate": "maintenance_responsibilities",
         "data_range": "A3:B",
         "data_connection": "bedrock-googlesheets",
-        "append_tab_name": true 
+        "append_tab_name": true
       },
       "target_location": {
         "asset": "maintenance_responsibilities.lib"

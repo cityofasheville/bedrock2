@@ -2,10 +2,10 @@
   "asset_name": "coa_asheville_neighborhoods.edit",
   "description": "",
   "location": {
-    "asset": "coa_asheville_neighborhoods.edit",
-    "tablename": "coa_asheville_neighborhoods",
     "connection": "coa-gis-edit1/coagisedit/coagis",
-    "schemaname": "coagis"
+    "loctype": "db",
+    "schemaname": "coagis",
+    "tablename": "coa_asheville_neighborhoods"
   },
   "active": true,
   "depends": [],

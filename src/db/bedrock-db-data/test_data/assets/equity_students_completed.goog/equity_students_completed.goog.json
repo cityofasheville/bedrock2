@@ -2,10 +2,10 @@
   "asset_name": "equity_students_completed.goog",
   "description": "List of MWBE vendors registered in Munis (not necessarily certified)",
   "location": {
-    "asset": "equity_students_completed.goog",
-    "range": "Sheet1!A2:Z",
-    "filename": "equity_students_completed",
     "connection": "bedrock-googlesheets",
+    "filename": "equity_students_completed",
+    "loctype": "sheets",
+    "range": "Sheet1!A2:Z",
     "spreadsheetid": "1xGD2jVSveuYjDLRc6Z8dlwGIA78LKJKxu0ck0Y7easg"
   },
   "active": true,

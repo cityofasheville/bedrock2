@@ -2,10 +2,10 @@
   "asset_name": "permit_custom_fields.acc",
   "description": "Permit custom fields data ADD THIS depends BACK!!!! \"permits\"",
   "location": {
-    "asset": "permit_custom_fields.acc",
-    "tablename": "permit_custom_fields",
     "connection": "coa-acceladb/accela/mssqlgisadmin",
-    "schemaname": "amd"
+    "loctype": "db",
+    "schemaname": "amd",
+    "tablename": "permit_custom_fields"
   },
   "active": true,
   "depends": [],

@@ -2,10 +2,10 @@
   "asset_name": "pcard_statement_status_history.mun",
   "description": "PCard transactions and status",
   "location": {
-    "asset": "pcard_statement_status_history.mun",
-    "tablename": "pcard_statement_status_history",
     "connection": "munis/munprod/mssqlgisadmin",
-    "schemaname": "amd"
+    "loctype": "db",
+    "schemaname": "amd",
+    "tablename": "pcard_statement_status_history"
   },
   "active": true,
   "depends": [],

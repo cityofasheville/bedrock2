@@ -2,9 +2,10 @@
   "asset_name": "buncombe_tax_inspections.acc",
   "description": "",
   "location": {
-    "tablename": "BUNCOMBE_TAX_INSPECTIONS",
     "connection": "coa-acceladb/accela/mssqlgisadmin",
-    "schemaname": "dbo"
+    "loctype": "db",
+    "schemaname": "dbo",
+    "tablename": "BUNCOMBE_TAX_INSPECTIONS"
   },
   "active": true,
   "depends": [],
