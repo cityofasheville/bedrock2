@@ -1,0 +1,15 @@
+{
+  "asset_name": "maintenance_buildings.lib",
+  "description": "City Property Maintenance Responsibility Building List",
+  "location": {
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "loctype": "db",
+    "schemaname": "internal",
+    "tablename": "maintenance_buildings"
+  },
+  "active": true,
+  "depends": [
+    "maintenance_buildings.goog"
+  ],
+  "tags": []
+}

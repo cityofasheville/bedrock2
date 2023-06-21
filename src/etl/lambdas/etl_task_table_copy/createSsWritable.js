@@ -5,9 +5,9 @@ const { getPool } = require('./ssPools');
 
 async function createSsWritable(location) {
   const tablename = `[${location.schemaname}].[${location.tablename}]`;
-  // const tempTablename = `[${location.schemaname}].[tempbedrock_${location.tablename}]`;
-  const tempTablename = `[#tempbedrock_${location.tablename}]`;
-  const dropTempQuery = `IF OBJECT_ID('${tempTablename}', 'U') IS NOT NULL DROP TABLE ${tempTablename}`;
+  const tempTablename = `[${location.schemaname}].[tempbedrock_${location.tablename}]`;
+  // const tempTablename = `[#tempbedrock_${location.tablename}]`;
+  const dropTempQuery = `IF OBJECT_ID('${tempTablename}', 'U') IS NOT NULL DROP TABLE ${tempTablename};`;
   const copySinceQuery = location.copy_since
     ? ` where [${location.copy_since.column_to_filter}] >= dateadd(WEEK,-${location.copy_since.num_weeks},GETDATE())`
     : '';
@@ -49,23 +49,25 @@ async function createSsWritable(location) {
       const serialToAppend = location.append_serial
         ? `alter table ${tempTablename} add [${location.append_serial}] int identity;`
         : '';
-      const deleteOld = location.copy_since
-        ? `DELETE FROM ${tablename} ${copySinceQuery};`
-        : `TRUNCATE TABLE ${tablename};`;
+      let deleteOld;
+      if (location.copy_since) {
+        deleteOld = `DELETE FROM ${tablename} ${copySinceQuery};`;
+      } else if (location.append) {
+        deleteOld = '';
+      } else {
+        deleteOld = `TRUNCATE TABLE ${tablename};`;
+      }
 
       const transString = `
             BEGIN TRANSACTION;
             ${serialToAppend}
             ${deleteOld}
             INSERT INTO ${tablename} SELECT * FROM ${tempTablename};
+            ${dropTempQuery}
             COMMIT;
           `;
 
-      pool.query(transString, (err) => {
-        if (err) return (err);
-        pool.query(dropTempQuery);
-        return 0;
-      });
+      await pool.query(transString);
     } catch (err) {
       console.log(err);
     }
@@ -133,17 +135,13 @@ async function createSsWritable(location) {
     console.error(err.message);
   });
 
-  SsStream.on('finish', () => { // 'end' is readable event, 'finish' is writable event
+  SsStream.on('finish', async () => { // 'end' is readable event, 'finish' is writable event
     if (tableArr.length > 0) {
       resPromiseArr.push(loadTempTable(tableArr, numCols));
     }
-    Promise.all(resPromiseArr)
-      .then(() => {
-        copyFromTemp();
-      })
-      .then(() => {
-        promiseResolve();
-      });
+    await Promise.all(resPromiseArr);
+    await copyFromTemp();
+    await promiseResolve();
   });
   console.log(`Copy to SQL Server ${location.connection} ${tablename}`);
 

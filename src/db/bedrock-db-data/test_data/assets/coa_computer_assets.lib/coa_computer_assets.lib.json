@@ -1,0 +1,13 @@
+{
+  "asset_name": "coa_computer_assets.lib",
+  "description": "Computers on our network",
+  "location": {
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "loctype": "db",
+    "schemaname": "internal",
+    "tablename": "coa_computer_assets"
+  },
+  "active": true,
+  "depends": [],
+  "tags": []
+}

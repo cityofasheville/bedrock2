@@ -1,0 +1,17 @@
+{
+  "asset_name": "coa_local_historic_landmarks.lib",
+  "run_group": "daily",
+  "active": true,
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "coa_local_historic_landmarks.wh"
+      },
+      "target_location": {
+        "asset": "coa_local_historic_landmarks.lib"
+      }
+    }
+  ]
+}

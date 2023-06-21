@@ -1,35 +1,17 @@
 {
-    "run_group": "aetna",
-    "tasks": [
-      {
-        "type": "table_copy",
-        "description": "Copy Aetna to S3",
-        "source_location": {
-          "connection": "munis/munprod/fme_jobs",
-          "schemaname": "avl",
-          "tablename": "PR_AETNA_Feed"
-        },
-        "target_location": {
-          "connection": "s3_data_files",
-          "filename": "aetna_asheville_${YYYY}${MM}${DD}.csv",
-          "s3_path": "aetna/"
-        },
-        "active": true
+  "asset_name": "aetna.ftp",
+  "run_group": "aetna",
+  "active": true,
+  "tasks": [
+    {
+      "type": "file_copy",
+      "active": true,
+      "source_location": {
+        "asset": "aetna.s3"
       },
-      {
-        "type": "file_copy",
-        "description": "Copy Aetna S3 to FTP site",
-        "source_location": {
-          "connection": "s3_data_files",
-          "filename": "aetna_asheville_${YYYY}${MM}${DD}.csv",
-          "path": "aetna/"
-        },
-        "target_location": {
-          "connection": "aetna_ftp",
-          "filename": "aetna_asheville_${YYYY}${MM}${DD}.csv",
-          "path": "/AetnaSRC_Reports/toAetna/"
-        },
-        "active": true
+      "target_location": {
+        "asset": "aetna.ftp"
       }
-    ]
+    }
+  ]
 }

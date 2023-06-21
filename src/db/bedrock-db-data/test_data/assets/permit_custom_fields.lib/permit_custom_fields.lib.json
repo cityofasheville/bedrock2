@@ -1,0 +1,16 @@
+{
+  "asset_name": "permit_custom_fields.lib",
+  "description": "Permit custom fields data ADD THIS depends BACK!!!! \"permits\"",
+  "location": {
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "loctype": "db",
+    "schemaname": "internal",
+    "tablename": "permit_custom_fields"
+  },
+  "active": true,
+  "depends": [
+    "permit_custom_fields.acc",
+    "permits.lib"
+  ],
+  "tags": []
+}

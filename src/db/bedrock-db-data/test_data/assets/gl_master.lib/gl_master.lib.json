@@ -1,0 +1,15 @@
+{
+  "asset_name": "gl_master.lib",
+  "description": "Master general ledger history",
+  "location": {
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "loctype": "db",
+    "schemaname": "internal",
+    "tablename": "gl_master"
+  },
+  "active": true,
+  "depends": [
+    "gl_master.mun"
+  ],
+  "tags": []
+}

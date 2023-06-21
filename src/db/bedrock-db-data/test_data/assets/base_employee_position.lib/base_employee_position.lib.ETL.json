@@ -1,0 +1,13 @@
+{
+  "asset_name": "base_employee_position.lib",
+  "run_group": "daily",
+  "active": true,
+  "tasks": [
+    {
+      "type": "sql",
+      "active": true,
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "sql_string": "START TRANSACTION;\n    INSERT INTO standard.events_base_employee_position\n    (changedfieldname, primkey, oldval, newval, changeddate)\n    select * from standard.find_events('standard.base_employee_position' , 'temp.base_employee_position_temp' , 'employee_id' );\n    truncate table standard.base_employee_position;\n    insert into standard.base_employee_position\n    select * from temp.base_employee_position_temp;\ncommit;"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "asset_name": "buncombe_tax_inspections.acc",
+  "run_group": "daily",
+  "active": true,
+  "tasks": [
+    {
+      "type": "sql",
+      "active": true,
+      "connection": "coa-acceladb/accela/mssqlgisadmin",
+      "sql_string": "TRUNCATE TABLE [dbo].[BUNCOMBE_TAX_INSPECTIONS]\nEXEC [dbo].[usp_BuncombeTaxInspections]\n"
+    }
+  ]
+}

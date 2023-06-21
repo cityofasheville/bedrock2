@@ -1,19 +1,17 @@
 {
+  "asset_name": "google_info.pub",
   "run_group": "daily",
+  "active": true,
   "tasks": [
     {
       "type": "table_copy",
+      "active": true,
       "source_location": {
-          "connection": "pubrecdb1/mdastore1/dbadmin",
-          "schemaname": "internal",
-          "tablename": "google_info"
+        "asset": "google_info.lib"
       },
       "target_location": {
-          "connection": "coa-publicdb1/coa_share/dbadmin",
-          "schemaname": "open",
-          "tablename": "google_info"
-      },
-      "active": true
+        "asset": "google_info.pub"
+      }
     }
   ]
 }

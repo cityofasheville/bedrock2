@@ -1,0 +1,15 @@
+{
+  "asset_name": "vendors.lib",
+  "description": "City Vendors",
+  "location": {
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "loctype": "db",
+    "schemaname": "internal",
+    "tablename": "vendors"
+  },
+  "active": true,
+  "depends": [
+    "ap_vendor.mun"
+  ],
+  "tags": []
+}

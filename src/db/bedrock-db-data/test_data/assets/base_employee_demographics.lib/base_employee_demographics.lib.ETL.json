@@ -1,0 +1,17 @@
+{
+  "asset_name": "base_employee_demographics.lib",
+  "run_group": "daily",
+  "active": true,
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "base_employee_demographics.mun"
+      },
+      "target_location": {
+        "asset": "base_employee_demographics.lib"
+      }
+    }
+  ]
+}

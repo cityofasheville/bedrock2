@@ -1,0 +1,15 @@
+{
+  "asset_name": "coa_zip_code.lib",
+  "description": "Asheville zip code areas",
+  "location": {
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "loctype": "db",
+    "schemaname": "internal",
+    "tablename": "coa_zip_code"
+  },
+  "active": true,
+  "depends": [
+    "coa_zip_code.edit"
+  ],
+  "tags": []
+}

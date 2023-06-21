@@ -1,8 +1,15 @@
 {
-    "name": "aip.ftp",
-    "location": "ftp_site",
-    "active": true,
-    "type": "ftp_site",
-    "description": "Uploaded staff data to AIP/Allstate/InfoArmor",
-    "depends": []
-  }
+  "asset_name": "aip.ftp",
+  "description": "Uploaded staff data to AIP/Allstate/InfoArmor",
+  "location": {
+    "connection": "aip_ftp",
+    "filename": "CityofAsheville5871_To_InfoArmor_FULL_${YYYY}${MM}${DD}",
+    "loctype": "file",
+    "path": "/home/asheville-5871-sftp/inbound/"
+  },
+  "active": true,
+  "depends": [
+    "aip.encrypted.s3"
+  ],
+  "tags": []
+}

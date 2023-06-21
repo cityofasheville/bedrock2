@@ -1,0 +1,15 @@
+{
+  "asset_name": "training_boards.lib",
+  "description": "Training records for board and commission members",
+  "location": {
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "loctype": "db",
+    "schemaname": "internal",
+    "tablename": "training_boards"
+  },
+  "active": true,
+  "depends": [
+    "boards+commission_member_training.goog"
+  ],
+  "tags": []
+}

@@ -37,9 +37,14 @@ function getPgStream(location) {
         const serialToAppend = location.append_serial
           ? `alter table ${tempTablename} add column ${location.append_serial} serial;`
           : '';
-        const deleteOld = location.copy_since
-          ? `DELETE FROM ${tablename} ${copySinceQuery};`
-          : `TRUNCATE TABLE ${tablename};`;
+        let deleteOld;
+        if (location.append === true) {
+          deleteOld = '';
+        } else if (location.copy_since) {
+          deleteOld = `DELETE FROM ${tablename} ${copySinceQuery};`;
+        } else {
+          deleteOld = `TRUNCATE TABLE ${tablename};`;
+        }
 
         const transString = `
           BEGIN TRANSACTION;

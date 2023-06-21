@@ -1,8 +1,15 @@
 {
-    "name": "aetna.ftp",
-    "location": "ftp_site",
-    "active": true,
-    "type": "ftp_site",
-    "description": "Uploaded staff data to Aetna",
-    "depends": []
-  }
+  "asset_name": "aetna.ftp",
+  "description": "Uploaded staff data to Aetna",
+  "location": {
+    "connection": "aetna_ftp",
+    "filename": "aetna_asheville_${YYYY}${MM}${DD}.csv",
+    "loctype": "file",
+    "path": "/AetnaSRC_Reports/toAetna/"
+  },
+  "active": true,
+  "depends": [
+    "aetna.s3"
+  ],
+  "tags": []
+}

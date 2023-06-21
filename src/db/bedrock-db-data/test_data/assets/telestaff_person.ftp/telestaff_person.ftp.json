@@ -1,0 +1,15 @@
+{
+  "asset_name": "telestaff_person.ftp",
+  "description": "Upload Staff data to Telestaff FTP",
+  "location": {
+    "connection": "telestaff_ftp",
+    "filename": "${YYYY}-${MM}-${DD}T${HH}-${mm}-${SS}.000ZPerson.xml",
+    "loctype": "file",
+    "path": "/PROD/import/ongoing.unprocessed/"
+  },
+  "active": true,
+  "depends": [
+    "telestaff_person.s3"
+  ],
+  "tags": []
+}

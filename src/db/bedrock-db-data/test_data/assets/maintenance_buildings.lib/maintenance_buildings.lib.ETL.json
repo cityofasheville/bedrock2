@@ -1,0 +1,17 @@
+{
+  "asset_name": "maintenance_buildings.lib",
+  "run_group": "maintenance_responsibilities",
+  "active": true,
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "maintenance_buildings.goog"
+      },
+      "target_location": {
+        "asset": "maintenance_buildings.lib"
+      }
+    }
+  ]
+}

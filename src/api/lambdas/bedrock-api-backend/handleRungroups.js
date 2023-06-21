@@ -227,7 +227,6 @@ async function handleRungroups(
           break;
 
         case 'POST':
-        case 'POST':
           result = await addRungroup(
             event.body,
             pathElements,

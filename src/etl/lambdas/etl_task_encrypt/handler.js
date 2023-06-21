@@ -29,7 +29,7 @@ exports.lambda_handler = async function x(event) {
     // get unencrypted file 'filename' from s3
     const downloadParams = {
       Bucket: s3Conn.s3_bucket,
-      Key: etl.s3_path + filename,
+      Key: etl.path + filename,
     };
     console.log(JSON.stringify(downloadParams));
 
@@ -51,7 +51,7 @@ exports.lambda_handler = async function x(event) {
       client: s3Client,
       params: {
         Bucket: s3Conn.s3_bucket,
-        Key: etl.s3_path + encryptedFilename,
+        Key: etl.path + encryptedFilename,
         Body: encryptedStream,
       },
     });

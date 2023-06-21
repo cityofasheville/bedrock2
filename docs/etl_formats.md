@@ -50,17 +50,20 @@ Also see [Managed Data Assets README](https://github.com/cityofasheville/managed
             <OPTIONAL> "sortdesc": "fieldname",
             <OPTIONAL> "fixedwidth_noquotes": true  (Tables converted to csv by default have strings with double quotes in the data quoted. For fixed width and XML files we don't want that)                               
             __TARGET OPTIONS__
+            <OPTIONAL> "append": true  (By default, data is overwritten in table. Set to true to append as new rows.)       
             <OPTIONAL> "append_serial": "fieldname"  (Adds an integer auto-numbering key field to target table. A serial field with this name must appear as the last field in the target table.)
 
 #### CSV -S3
             "connection": "s3_data_files",
             "filename": "users${YYYY}${MM}${DD}.csv",
-            "s3_path": "safetyskills/"
+            "path": "safetyskills/"
 
 #### google_sheets
             "connection": "bedrock-googlesheets",
             "spreadsheetid": "9876234HIUFQER872345T",
             "range": 'Bad Actors!A5:B'
+            __SOURCE OPTIONS__
+            <OPTIONAL>: "append_asset_name": true (In the data an extra column is appended to each row with the name of the asset)
             __TARGET OPTIONS__
             <OPTIONAL> "append": true  (By default, data is overwritten in sheet. Set to true to append as new rows.)       
 #### CSV -winshare
@@ -103,7 +106,7 @@ Takes files from S3, encrypts them and writes them back to the same dir on S3.
       {
         "type": "encrypt",
         "s3_connection": "s3_data_files",
-        "s3_path": "vendor/",
+        "path": "vendor/",
         "encrypt_connection": "vendor_ftp",
         "filename": "vendor_asheville_${YYYY}${MM}${DD}.csv",
         "encrypted_filename": "vendor_asheville_${YYYY}${MM}${DD}.csv.pgp",
@@ -122,7 +125,7 @@ SFTP has mostly been superseded by file copy, which has more potential source an
         "description": "Copy vendor S3 to FTP site",
         "action": "put",
         "s3_connection": "s3_data_files",
-        "s3_path": "telestaff-import-person/",
+        "path": "telestaff-import-person/",
         "ftp_connection": "telestaff_ftp",
         "ftp_path": "/PROD/import/ongoing.unprocessed/",
         "filename": "vendor_asheville_${YYYY}${MM}${DD}.csv.pgp",
@@ -134,7 +137,7 @@ SFTP has mostly been superseded by file copy, which has more potential source an
         {
             "action": "put",
             "s3_connection": "s3_data_files",
-            "s3_path": "telestaff-payroll-export/", 
+            "path": "telestaff-payroll-export/", 
             "ftp_connection": "telestaff_ftp",
             "ftp_path": "/PROD/person.errors/",
             "filename": "PD-220218-thu.csv"
@@ -143,7 +146,7 @@ SFTP has mostly been superseded by file copy, which has more potential source an
         {
             "action": "get",
             "s3_connection": "s3_data_files",
-            "s3_path": "telestaff-payroll-export/", 
+            "path": "telestaff-payroll-export/", 
             "ftp_connection": "telestaff_ftp",
             "ftp_path": "/PROD/person.errors/",
             "filename": "payroll-report-export.csv"
@@ -165,7 +168,7 @@ SFTP has mostly been superseded by file copy, which has more potential source an
         {
             "action": "getall",
             "s3_connection": "",
-            "s3_path": "", 
+            "path": "", 
             "ftp_connection": "",
             "ftp_path": "/"
         }
@@ -184,5 +187,45 @@ Note: Called Lambda must return standard format: ```{statusCode: 200,body: {lamb
             "active": true
         }
     ]
+}
+```
+## Aggregate
+Aggregate task type takes multiple Google Sheets with data in the same format on each sheet and writes it to a single table.
+It requires a staging table (called temp_table, but not a temp table in database terms) for the data to be collected in before writing to the final destination.
+Each source spreadsheet tab has its own asset, and they share the data_connection and data_range, and have their own spreadsheetid's and tab names.
+
+```
+{
+  "tasks": [
+    {
+      "type": "aggregate",
+      "active": true,
+      "source_location": {
+        "temp_table": "nc_benchmarks_temp.lib", (name of the staging table asset)
+        "aggregate": "nc_benchmarks",           (the aggregate name that matches a tag in each source sheet)
+        "data_range": "A2:E",                   (all the sheets have to have the data in the same columns)
+        "data_connection": "bedrock-googlesheets",
+        "append_asset_name": true               (if true, each row of data has an additional column holding the name of the source asset)
+      },
+      "target_location": {
+        "asset": "nc_benchmarks.lib"
+      }
+    }
+  ]
+}
+```
+Each aggregate source asset:
+```
+{
+  "asset_name": "sog_billed_water_volume.ncb",
+  "description": "Water SOG Benchmark: Billed Water Volume",
+  "location": {
+    "spreadsheetid": "1m2xD4JyH4BEBey_ybsEgrvYopsl0PjWNmY_PEv3l6D4",
+    "tab": "billed_water_volume"
+  },
+  "active": true,
+  "tags": [
+    "nc_benchmarks"   (matches "source_location.aggregate" field in task)
+  ]
 }
 ```

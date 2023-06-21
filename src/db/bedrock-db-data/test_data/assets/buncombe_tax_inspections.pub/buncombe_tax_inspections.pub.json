@@ -1,0 +1,15 @@
+{
+  "asset_name": "buncombe_tax_inspections.pub",
+  "description": "",
+  "location": {
+    "connection": "coa-publicdb1/coa_share/dbadmin",
+    "loctype": "db",
+    "schemaname": "bc",
+    "tablename": "buncombe_tax_inspections"
+  },
+  "active": true,
+  "depends": [
+    "buncombe_tax_inspections.lib"
+  ],
+  "tags": []
+}

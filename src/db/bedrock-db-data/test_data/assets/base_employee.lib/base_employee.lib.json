@@ -1,0 +1,15 @@
+{
+  "asset_name": "base_employee.lib",
+  "description": "Standard Employee",
+  "location": {
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "loctype": "db",
+    "schemaname": "standard",
+    "tablename": "base_employee"
+  },
+  "active": true,
+  "depends": [
+    "base_employee_temp.lib"
+  ],
+  "tags": []
+}

@@ -1,0 +1,15 @@
+{
+  "asset_name": "cigna.s3",
+  "description": "",
+  "location": {
+    "connection": "s3_data_files",
+    "filename": "XO16000__xo10001i.77103.${YYYY}${MM}${DD}.txt",
+    "loctype": "file",
+    "path": "cigna/"
+  },
+  "active": true,
+  "depends": [
+    "pr_cigna_feed_2.mun"
+  ],
+  "tags": []
+}

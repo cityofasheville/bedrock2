@@ -1,4 +1,7 @@
+/* eslint-disable camelcase */
+/* eslint-disable no-await-in-loop */
 /* eslint-disable no-console */
+
 const { Client } = require('pg');
 const awsCronParser = require('aws-cron-parser');
 const toposort = require('toposort');
@@ -20,15 +23,9 @@ function formatRes(code, result) {
 
 const pgErrorCodes = require('./pgErrorCodes');
 
-async function readEtlList(connection, rungroups) {
+async function readEtlList(client, rungroups) {
   let etlList = [];
   if (rungroups.length > 0) {
-    const client = new Client(connection);
-    await client.connect()
-      .catch((err) => {
-        const errmsg = pgErrorCodes[err.code];
-        throw new Error([`Postgres error: ${errmsg}`, err]);
-      });
     const rgString = rungroups.reduce((accumulator, currentValue) => {
       const sep = (accumulator !== '') ? ', ' : '';
       return `${accumulator + sep}'${currentValue}'`;
@@ -40,7 +37,6 @@ async function readEtlList(connection, rungroups) {
         throw new Error([`Postgres error: ${errmsg}`, err]);
       });
     etlList = res.rows;
-    await client.end();
   }
 
   const assetMap = {};
@@ -54,12 +50,10 @@ async function readEtlList(connection, rungroups) {
       etl_tasks: [],
     };
   }
-  return Promise.resolve(assetMap);
+  return assetMap;
 }
 
-async function readDependencies(connection, assetMap) {
-  const client = new Client(connection);
-  await client.connect();
+async function readDependencies(client, assetMap) {
   const arr = Object.entries(assetMap);
   for (let i = 0; i < arr.length; i += 1) {
     const asset = arr[i][1];
@@ -75,18 +69,85 @@ async function readDependencies(connection, assetMap) {
       asset.depends.push(d.dependency);
     }
   }
-  await client.end();
-  return Promise.resolve(assetMap);
+  return assetMap;
 }
 
-async function readTasks(connection, assetMap) {
-  const client = new Client(connection);
-  await client.connect();
+async function readLocationFromAsset(client, assetName) {
+  // add asset_name into location json
+  const sql = `SELECT location::jsonb || ('{"asset":"' || asset_name || '"}')::jsonb location
+              FROM bedrock.assets where asset_name = '${assetName}';`;
+  // eslint-disable-next-line no-await-in-loop
+  const res = await client.query(sql)
+    .catch((err) => {
+      const errmsg = pgErrorCodes[err.code];
+      throw new Error([`Postgres error: ${errmsg}`, err]);
+    });
+  if (res.rowCount === 0) {
+    throw new Error(`Asset ${assetName} not found`);
+  }
+  const locData = res.rows[0].location;
+  return locData;
+}
 
+async function readAggregateData(client, tempLocation, location, taskSource) {
+  const { aggregate, data_range, data_connection } = taskSource;
+  const sql = `
+  select a.asset_name, location->>'spreadsheetid' spreadsheetid, 
+  location->>'tab' tab from bedrock.assets a
+  inner join bedrock.asset_tags using (asset_name)
+  where tag_name = '${aggregate}' and active = true;
+  `;
+  // process.stdout.write(sql);
+  return client.query(sql)
+    .then((res) => {
+      const aggregateTasks = [];
+      for (let i = 0; i < res.rowCount; i += 1) {
+        const { asset_name, spreadsheetid, tab } = res.rows[i];
+        const tempTargetLocal = { ...tempLocation };
+        if (i === 0) { // first row empty table
+          tempTargetLocal.append = false;
+        } else {
+          tempTargetLocal.append = true;
+        }
+
+        const task = {
+          type: 'table_copy',
+          active: true,
+          source_location: {
+            asset: asset_name,
+            spreadsheetid,
+            range: `${tab}!${data_range}`,
+            connection: data_connection,
+            append_asset_name: !!taskSource.append_asset_name,
+            append_tab_name: !!taskSource.append_tab_name,
+          },
+          target_location: tempTargetLocal,
+        };
+        aggregateTasks.push(task);
+      }
+      // final copy temp to real
+      const task = {
+        type: 'table_copy',
+        active: true,
+        source_location: tempLocation,
+        target_location: location,
+      };
+      aggregateTasks.push(task);
+      return aggregateTasks;
+    })
+    .catch((err) => {
+      const errmsg = pgErrorCodes[err.code];
+      throw new Error([`Postgres error: ${errmsg}`, err]);
+    });
+}
+
+async function readTasks(client, assetMap) {
   const arr = Object.entries(assetMap);
+
   for (let i = 0; i < arr.length; i += 1) {
+    const assetName = arr[i][0];
     const asset = arr[i][1];
-    const sql = `SELECT * FROM bedrock.tasks where asset_name = '${arr[i][0]}' order by seq_number;`;
+    const sql = `SELECT * FROM bedrock.tasks where asset_name = '${assetName}' order by seq_number;`;
 
     // eslint-disable-next-line no-await-in-loop
     const res = await client.query(sql)
@@ -100,26 +161,43 @@ async function readTasks(connection, assetMap) {
         type: task.type,
         active: task.active,
       };
+
       if (task.type === 'table_copy' || task.type === 'file_copy') {
-        thisTask.source_location = task.source;
-        thisTask.target_location = task.target;
+        let sourceLoc;
+        let targetLoc;
+        if (task?.source?.asset) { // source data is in asset location
+          sourceLoc = await readLocationFromAsset(client, task.source.asset);
+        }
+        if (task?.target?.asset) { // target data is in asset location
+          targetLoc = await readLocationFromAsset(client, task.target.asset);
+        }
+        thisTask.source_location = { ...task.source, ...sourceLoc };
+        thisTask.target_location = { ...task.target, ...targetLoc };
+        asset.etl_tasks.push(thisTask);
+      } else if (task.type === 'aggregate') {
+        const tempLocation = await readLocationFromAsset(client, task.source.temp_table);
+        const location = await readLocationFromAsset(client, task.target.asset);
+        const aggregateTasks = await readAggregateData(client, tempLocation, location, task.source);
+        asset.etl_tasks = aggregateTasks;
+      } else if (task.type === 'run_lambda' || task.type === 'encrypt') {
+        thisTask = task.target;
+        asset.etl_tasks.push(thisTask);
       } else if (task.type === 'sql') {
         thisTask.connection = task.target.connection;
         thisTask.sql_string = task.configuration;
+        asset.etl_tasks.push(thisTask);
       } else {
-        thisTask = task.target;
+        thisTask.source_location = task.source;
+        thisTask.target_location = task.target;
+        asset.etl_tasks.push(thisTask);
       }
-      asset.etl_tasks.push(thisTask);
     }
   }
-  await client.end();
-  return Promise.resolve(assetMap);
+  return assetMap;
 }
 
-async function getRungroups(connection) {
-  const client = new Client(connection);
+async function getRungroups(client) {
   const sql = 'SELECT run_group_name, cron_string FROM bedrock.run_groups;';
-  await client.connect();
   return client.query(sql)
     .then((res) => {
       const rungroups = [];
@@ -138,7 +216,7 @@ async function getRungroups(connection) {
         }
       }
       if (debug) console.log('Selected rungroups: ', rungroups);
-      return Promise.resolve(rungroups);
+      return rungroups;
     })
     .catch((err) => {
       const errmsg = pgErrorCodes[err.code];
@@ -150,13 +228,21 @@ async function getRungroups(connection) {
 const lambda_handler = async function x(event) {
   try {
     const dbConnection = await getDBConnection();
+    const client = new Client(dbConnection);
+    await client.connect()
+      .catch((err) => {
+        const errmsg = pgErrorCodes[err.code];
+        throw new Error([`Postgres error: ${errmsg}`, err]);
+      });
     let rungroups = [event.rungroup];
     if (event.rungroup === 'UseCronStrings') {
-      rungroups = await getRungroups(dbConnection);
+      rungroups = await getRungroups(client);
     }
-    let assetMap = await readEtlList(dbConnection, rungroups);
-    assetMap = await readDependencies(dbConnection, assetMap);
-    assetMap = await readTasks(dbConnection, assetMap);
+    let assetMap = await readEtlList(client, rungroups);
+    assetMap = await readDependencies(client, assetMap);
+    assetMap = await readTasks(client, assetMap);
+
+    await client.end();
 
     const graph = [];
     const level = {};
@@ -211,7 +297,7 @@ const lambda_handler = async function x(event) {
     }
 
     const finalResult = (formatRes(200, result));
-    if (debug) console.log(JSON.stringify(finalResult));
+    if (debug) console.log(JSON.stringify(finalResult, null, 2));
     return finalResult;
   } catch (err) {
     const res = formatRes(500, JSON.stringify(err, Object.getOwnPropertyNames(err)));
@@ -223,7 +309,7 @@ const lambda_handler = async function x(event) {
 debug = false;
 let event = {};
 if (debug) {
-  event = { rungroup: 'UseCronStrings' };
+  event = { rungroup: 'maintenance_responsibilities' };
   (async () => {
     await lambda_handler(event);
     process.exit();

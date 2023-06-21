@@ -1,19 +1,17 @@
 {
+  "asset_name": "permit_tasks.pub",
   "run_group": "daily",
+  "active": true,
   "tasks": [
     {
       "type": "table_copy",
+      "active": true,
       "source_location": {
-        "connection": "pubrecdb1/mdastore1/dbadmin",
-        "schemaname": "internal",
-        "tablename": "permit_tasks"
+        "asset": "permit_tasks.lib"
       },
       "target_location": {
-        "connection": "coa-publicdb1/coa_share/dbadmin",
-        "schemaname": "bc",
-        "tablename": "permit_tasks"
-      },
-      "active": true
+        "asset": "permit_tasks.pub"
+      }
     }
   ]
 }

@@ -1,0 +1,18 @@
+{
+  "asset_name": "everbridge.cust.s3",
+  "run_group": "daily",
+  "active": true,
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "ub_water_customers_everbridge.mun",
+        "tableheaders": true
+      },
+      "target_location": {
+        "asset": "everbridge.cust.s3"
+      }
+    }
+  ]
+}

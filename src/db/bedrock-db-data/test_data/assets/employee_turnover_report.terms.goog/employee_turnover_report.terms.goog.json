@@ -1,0 +1,16 @@
+{
+  "asset_name": "employee_turnover_report.terms.goog",
+  "description": "",
+  "location": {
+    "connection": "bedrock-googlesheets",
+    "filename": "Employee Turnover Report",
+    "loctype": "sheets",
+    "range": "Terminations!A2:X",
+    "spreadsheetid": "1yE8pfp9nZ9nETDd2ypN4h6y8-m06giQ5O797ghBQHYc"
+  },
+  "active": true,
+  "depends": [
+    "turnover_counts.lib"
+  ],
+  "tags": []
+}

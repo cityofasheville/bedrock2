@@ -1,0 +1,13 @@
+{
+  "asset_name": "pr_employee_info_safety.mun",
+  "description": "",
+  "location": {
+    "connection": "munis/munprod/fme_jobs",
+    "loctype": "db",
+    "schemaname": "amd",
+    "tablename": "pr_employee_info_safety"
+  },
+  "active": true,
+  "depends": [],
+  "tags": []
+}

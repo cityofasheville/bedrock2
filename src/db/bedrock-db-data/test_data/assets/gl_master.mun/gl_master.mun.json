@@ -1,0 +1,13 @@
+{
+  "asset_name": "gl_master.mun",
+  "description": "Master general ledger history",
+  "location": {
+    "connection": "munis/munprod/mssqlgisadmin",
+    "loctype": "db",
+    "schemaname": "amd",
+    "tablename": "gl_master"
+  },
+  "active": true,
+  "depends": [],
+  "tags": []
+}

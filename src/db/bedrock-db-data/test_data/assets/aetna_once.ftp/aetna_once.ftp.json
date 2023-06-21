@@ -1,8 +1,0 @@
-{
-    "name": "aetna_once.ftp",
-    "location": "ftp_site",
-    "active": true,
-    "type": "ftp_site",
-    "description": "Uploaded one time data with history to Aetna",
-    "depends": []
-  }

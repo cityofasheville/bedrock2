@@ -1,0 +1,13 @@
+{
+  "asset_name": "permit_review_times.acc",
+  "description": "Count days to review permits",
+  "location": {
+    "connection": "coa-acceladb/accela/mssqlgisadmin",
+    "loctype": "db",
+    "schemaname": "dbo",
+    "tablename": "permit_review_times"
+  },
+  "active": true,
+  "depends": [],
+  "tags": []
+}

@@ -1,0 +1,13 @@
+{
+  "asset_name": "pr_city_employees_everbridge.mun",
+  "description": "",
+  "location": {
+    "connection": "munis/munprod/fme_jobs",
+    "loctype": "db",
+    "schemaname": "avl",
+    "tablename": "PR_City_Employees_Everbridge"
+  },
+  "active": true,
+  "depends": [],
+  "tags": []
+}

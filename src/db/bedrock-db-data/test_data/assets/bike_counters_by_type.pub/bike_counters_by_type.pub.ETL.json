@@ -1,0 +1,17 @@
+{
+  "asset_name": "bike_counters_by_type.pub",
+  "run_group": "daily",
+  "active": true,
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "bike_counters_by_type.lib"
+      },
+      "target_location": {
+        "asset": "bike_counters_by_type.pub"
+      }
+    }
+  ]
+}

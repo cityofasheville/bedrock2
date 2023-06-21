@@ -1,0 +1,17 @@
+{
+  "asset_name": "nc_benchmarks.pub",
+  "run_group": "nc_benchmarks",
+  "active": true,
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "nc_benchmarks.lib"
+      },
+      "target_location": {
+        "asset": "nc_benchmarks.pub"
+      }
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "asset_name": "coa_computer_assets.goog",
+  "description": "Computers on our network",
+  "location": {
+    "connection": "bedrock-googlesheets",
+    "filename": "coa_computer_assets",
+    "loctype": "sheets",
+    "range": "ComputerAssets!A2:AO",
+    "spreadsheetid": "1P9tdY7lawwoZXJmn09UgRMgH7JoauYG8h00MEkGzv8Q"
+  },
+  "active": true,
+  "depends": [
+    "coa_computer_assets.lib"
+  ],
+  "tags": []
+}

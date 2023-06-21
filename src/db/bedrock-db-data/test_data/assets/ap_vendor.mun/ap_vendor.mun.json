@@ -1,0 +1,13 @@
+{
+  "asset_name": "ap_vendor.mun",
+  "description": "",
+  "location": {
+    "connection": "munis/munprod/mssqlgisadmin",
+    "loctype": "db",
+    "schemaname": "dbo",
+    "tablename": "ap_vendor"
+  },
+  "active": true,
+  "depends": [],
+  "tags": []
+}

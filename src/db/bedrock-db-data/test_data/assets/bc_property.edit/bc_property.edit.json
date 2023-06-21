@@ -1,0 +1,13 @@
+{
+  "asset_name": "bc_property.edit",
+  "description": "Property table from County",
+  "location": {
+    "connection": "coa-gis-edit1/coagisedit/coagis",
+    "loctype": "db",
+    "schemaname": "coagis",
+    "tablename": "bc_property"
+  },
+  "active": true,
+  "depends": [],
+  "tags": []
+}

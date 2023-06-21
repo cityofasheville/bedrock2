@@ -1,0 +1,18 @@
+{
+  "asset_name": "cigna.s3",
+  "run_group": "cigna",
+  "active": true,
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "pr_cigna_feed_2.mun",
+        "fixedwidth_noquotes": true
+      },
+      "target_location": {
+        "asset": "cigna.s3"
+      }
+    }
+  ]
+}

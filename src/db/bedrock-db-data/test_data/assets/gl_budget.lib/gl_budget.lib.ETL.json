@@ -1,0 +1,17 @@
+{
+  "asset_name": "gl_budget.lib",
+  "run_group": "daily",
+  "active": true,
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "gl_budget.mun"
+      },
+      "target_location": {
+        "asset": "gl_budget.lib"
+      }
+    }
+  ]
+}

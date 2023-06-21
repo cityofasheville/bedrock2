@@ -1,0 +1,18 @@
+{
+  "asset_name": "safetyskills.s3",
+  "run_group": "safetyskills",
+  "active": true,
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "pr_employee_info_safety.mun",
+        "tableheaders": true
+      },
+      "target_location": {
+        "asset": "safetyskills.s3"
+      }
+    }
+  ]
+}

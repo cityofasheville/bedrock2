@@ -26,7 +26,7 @@ Run ```runsambuild.sh``` to test locally.
 
 s3_connection and ftp_connection refer to named connections in AWS Secrets Manager.
 
-Special note: ftp_path requires a slash at start and end, while s3_path must have only a trailing slash.
+Special note: ftp_path requires a slash at start and end, while path must have only a trailing slash.
 
 
 

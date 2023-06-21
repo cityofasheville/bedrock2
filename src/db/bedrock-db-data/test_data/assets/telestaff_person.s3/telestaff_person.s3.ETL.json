@@ -1,0 +1,18 @@
+{
+  "asset_name": "telestaff_person.s3",
+  "run_group": "daily",
+  "active": true,
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "telestaff_person01_xml.mun",
+        "fixedwidth_noquotes": true
+      },
+      "target_location": {
+        "asset": "telestaff_person.s3"
+      }
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "asset_name": "pcard_transaction.lib",
+  "run_group": "daily",
+  "active": true,
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "pcard_transaction.mun"
+      },
+      "target_location": {
+        "asset": "pcard_transaction.lib"
+      }
+    }
+  ]
+}

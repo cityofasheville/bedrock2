@@ -1,0 +1,17 @@
+{
+  "asset_name": "permit_comments.lib",
+  "run_group": "daily",
+  "active": true,
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "permit_comments.acc"
+      },
+      "target_location": {
+        "asset": "permit_comments.lib"
+      }
+    }
+  ]
+}

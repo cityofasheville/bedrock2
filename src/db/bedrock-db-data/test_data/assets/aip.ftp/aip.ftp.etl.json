@@ -1,45 +1,17 @@
 {
+  "asset_name": "aip.ftp",
   "run_group": "aip",
+  "active": true,
   "tasks": [
     {
-      "type": "table_copy",
-      "description": "Copy AIP to S3",
-      "source_location": {
-        "connection": "munis/munprod/fme_jobs",
-        "schemaname": "avl",
-        "tablename": "PR_ALLSTATE_Feed",
-        "tableheaders": true
-      },
-      "target_location": {
-        "connection": "s3_data_files",
-        "filename": "CityofAsheville5871_To_InfoArmor_FULL_${YYYY}${MM}${DD}.txt",
-        "s3_path": "aip/"
-      },
-      "active": true
-    },
-    {
-      "type": "encrypt",
-      "s3_connection": "s3_data_files",
-      "s3_path": "aip/",
-      "encrypt_connection": "aip_ftp",
-      "filename": "CityofAsheville5871_To_InfoArmor_FULL_${YYYY}${MM}${DD}.txt",
-      "encrypted_filename": "CityofAsheville5871_To_InfoArmor_FULL_${YYYY}${MM}${DD}",
-      "active": true
-    },
-    {
       "type": "file_copy",
-      "description": "Copy AIP S3 to FTP site",
+      "active": true,
       "source_location": {
-        "connection": "s3_data_files",
-        "filename": "CityofAsheville5871_To_InfoArmor_FULL_${YYYY}${MM}${DD}",
-        "path": "aip/"
+        "asset": "aip.encrypted.s3"
       },
       "target_location": {
-        "connection": "aip_ftp",
-        "filename": "CityofAsheville5871_To_InfoArmor_FULL_${YYYY}${MM}${DD}",
-        "path": "/home/asheville-5871-sftp/inbound/"
-      },
-      "active": true
+        "asset": "aip.ftp"
+      }
     }
   ]
 }

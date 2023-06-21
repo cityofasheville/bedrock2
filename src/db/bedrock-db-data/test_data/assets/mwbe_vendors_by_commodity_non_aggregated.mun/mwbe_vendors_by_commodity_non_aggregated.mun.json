@@ -1,0 +1,13 @@
+{
+  "asset_name": "mwbe_vendors_by_commodity_non_aggregated.mun",
+  "description": "",
+  "location": {
+    "connection": "munis/munprod/mssqlgisadmin",
+    "loctype": "db",
+    "schemaname": "amd",
+    "tablename": "mwbe_vendors_by_commodity_non_aggregated"
+  },
+  "active": true,
+  "depends": [],
+  "tags": []
+}

@@ -1,0 +1,15 @@
+{
+  "asset_name": "coa_districts_public_works.lib",
+  "description": "Public works districts",
+  "location": {
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "loctype": "db",
+    "schemaname": "internal",
+    "tablename": "coa_districts_public_works"
+  },
+  "active": true,
+  "depends": [
+    "coa_districts_public_works.wh"
+  ],
+  "tags": []
+}

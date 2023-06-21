@@ -1,0 +1,14 @@
+{
+  "asset_name": "maint_Public_Art-Urban_Trail.maint",
+  "description": "Maintenance Responsibilities: Public_Art-Urban_Trail",
+  "location": {
+    "loctype": "aggr",
+    "spreadsheetid": "16rZUoAlISFIAmvcnSMHmhaE0qObj2OMpHQX3ddRoEwg",
+    "tab": "Public Art/Urban Trail"
+  },
+  "active": true,
+  "depends": [],
+  "tags": [
+    "maintenance_responsibilities"
+  ]
+}
