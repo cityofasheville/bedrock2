@@ -5,7 +5,7 @@
     "connection": "munis/munprod/fme_jobs",
     "loctype": "db",
     "schemaname": "avl",
-    "tablename": "PR_CIGNA_Feed_2"
+    "tablename": "PR_CIGNA_Feed_2023"
   },
   "active": true,
   "depends": [],
