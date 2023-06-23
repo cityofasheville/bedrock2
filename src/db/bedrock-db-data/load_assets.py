@@ -87,7 +87,7 @@ for asset_subdir in os.listdir(assets_directory):
   d = os.path.join(assets_directory, asset_subdir)
   if os.path.isdir(d):
     for file in os.listdir(d):
-      if file.endswith('.ETL.json'):
+      if file.endswith('.ETL.json') or file.endswith('.etl.json'):
         # etlFile
         with open(os.path.join(d, file), 'r') as ff:
           etl = json.load(ff)
