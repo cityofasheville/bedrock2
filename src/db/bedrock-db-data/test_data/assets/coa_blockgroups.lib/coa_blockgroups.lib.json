@@ -1,0 +1,15 @@
+{
+  "asset_name": "coa_blockgroups.lib",
+  "description": "",
+  "location": {
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "loctype": "db",
+    "schemaname": "internal",
+    "tablename": "coa_blockgroups"
+  },
+  "active": true,
+  "depends": [
+    "coa_blockgroups.wh"
+  ],
+  "tags": []
+}

@@ -1,0 +1,13 @@
+{
+  "asset_name": "coa_climate_justice_by_address.lib",
+  "run_group": "coa_climate_justice_index",
+  "active": true,
+  "tasks": [
+    {
+      "type": "sql",
+      "active": true,
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "sql_string": "begin transaction;\ntruncate table internal.coa_climate_justice_by_address;\ninsert into internal.coa_climate_justice_by_address\nSELECT m.shape address_point,\n    m.objectid,\n    m.address_full::character varying(50) AS address,\n    m.civicaddress_id,\n    m.property_pinnum,\n    cj.resland AS landslide,\n    cj.resflood AS flood,\n    cj.wfirescore AS wildfire,\n    cj.resiliency AS resiliencyscore,\n    cj.cj_score,\n    cj.sum_scores,\n    cj.shape as block_group\n   FROM internal.coa_bc_address_master m,\n    internal.coa_climate_justice_index cj\n  WHERE st_within(m.shape, cj.shape);\ncommit;"
+    }
+  ]
+}
