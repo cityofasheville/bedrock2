@@ -7,7 +7,7 @@
       "type": "sql",
       "active": true,
       "connection": "pubrecdb1/mdastore1/dbadmin",
-      "sql_string": "begin transaction;\ntruncate table internal.coa_climate_justice_by_address;\ninsert into internal.coa_climate_justice_by_address\nSELECT m.shape address_point,\n    m.objectid,\n    m.address_full::character varying(50) AS address,\n    m.civicaddress_id,\n    m.property_pinnum,\n    cj.resland AS landslide,\n    cj.resflood AS flood,\n    cj.wfirescore AS wildfire,\n    cj.resiliency AS resiliencyscore,\n    cj.cj_score,\n    cj.sum_scores,\n    cj.shape as block_group\n   FROM internal.coa_bc_address_master m,\n    internal.coa_climate_justice_index cj\n  WHERE st_within(m.shape, cj.shape);\ncommit;"
+      "sql_string": "begin transaction;\ntruncate table internal.coa_climate_justice_by_address;\ninsert into internal.coa_climate_justice_by_address\nSELECT \nm.objectid,\nm.address_full::character varying(50) AS address,\nm.civicaddress_id,\nm.property_pinnum,\nm.shape address_point,\ncj.geoid geo_id,\ncj.resland AS landslide,\ncj.resflood AS flood,\ncj.wfirescore AS wildfire,\ncj.resiliency AS resiliencyscore,\ncj.cj_score,\ncj.sum_scores,\ncj.shape as block_group\nFROM internal.coa_bc_address_master m,\ninternal.coa_climate_justice_index cj\nWHERE st_within(m.shape, cj.shape);\ncommit;"
     }
   ]
 }

@@ -18,7 +18,8 @@
     "coa_active_jurisdictions.lib",
     "coa_districts_public_works.lib",
     "coa_districts_water.lib",
-    "bc_property_pinnum_formatted_owner_names.lib"
+    "bc_property_pinnum_formatted_owner_names.lib",
+    "coa_climate_justice_by_address.lib"
   ],
   "tags": []
 }

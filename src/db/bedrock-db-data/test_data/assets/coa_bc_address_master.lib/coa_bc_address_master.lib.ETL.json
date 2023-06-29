@@ -44,6 +44,16 @@
       "active": true,
       "connection": "pubrecdb1/mdastore1/dbadmin",
       "sql_string": "-- Update historic district and local landmark status\nUPDATE internal.coa_bc_address_master\nSET \n  historic_district = h.historic_district,\n  local_landmark = h.local_landmark\nFROM (\n    select distinct\n              a.civicaddress_id,\n              hist.historic_district_name as historic_district,\n              land.ll_name as local_landmark\n            from internal.coa_bc_address_master as a\n            LEFT OUTER JOIN internal.coa_local_historic_landmarks as land\n            on (a.property_pinnum = land.new_pin)\n            LEFT OUTER JOIN internal.coa_overlay_historic_districts_property_view as hist\n            on (a.property_pinnum = hist.pinnum)\n) as h\nwhere internal.coa_bc_address_master.civicaddress_id = h.civicaddress_id;\n"
+    },
+    {
+      "type": "sql",
+      "active": true,
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "sql_string": "-- Update block_groups\nUPDATE internal.coa_bc_address_master\nSET block_group = clim.geo_id\nFROM internal.coa_climate_justice_by_address clim\nwhere internal.coa_bc_address_master.civicaddress_id = clim.civicaddress_id;\n"
     }
   ]
 }
+
+
+
+
