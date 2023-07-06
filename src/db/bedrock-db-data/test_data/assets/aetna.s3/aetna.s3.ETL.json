@@ -4,7 +4,7 @@
   "tasks": [
     {
       "type": "table_copy",
-      "active": false,
+      "active": true,
       "source_location": {
         "asset": "pr_aetna_feed.mun"
       },

@@ -4,7 +4,7 @@
   "tasks": [
     {
       "type": "file_copy",
-      "active": false,
+      "active": true,
       "source_location": {
         "asset": "aetna.s3"
       },
