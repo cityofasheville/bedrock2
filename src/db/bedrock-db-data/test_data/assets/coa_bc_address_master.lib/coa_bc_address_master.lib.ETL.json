@@ -50,6 +50,12 @@
       "active": true,
       "connection": "pubrecdb1/mdastore1/dbadmin",
       "sql_string": "-- Update block_groups\nUPDATE internal.coa_bc_address_master\nSET block_group = clim.geo_id\nFROM internal.coa_climate_justice_by_address clim\nwhere internal.coa_bc_address_master.civicaddress_id = clim.civicaddress_id;\n"
+    },
+    {
+      "type": "sql",
+      "active": true,
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "sql_string": "-- Update climate_justice_score\nUPDATE internal.coa_bc_address_master\nSET climate_justice_score = clim.sum_scores\nFROM internal.coa_climate_justice_index clim\nwhere internal.coa_bc_address_master.block_group = clim.geoid;\n"
     }
   ]
 }
