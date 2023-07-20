@@ -5,7 +5,7 @@
     "connection": "munis/munprod/fme_jobs",
     "loctype": "db",
     "schemaname": "avl",
-    "tablename": "PR_DeltaDental_Feed"
+    "tablename": "PR_DeltaDental_Feed_2023"
   },
   "active": true,
   "depends": [],
