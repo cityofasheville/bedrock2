@@ -1,0 +1,15 @@
+{
+  "asset_name": "maintenance_buildings.goog",
+  "description": "City Property Maintenance Responsibility Building List",
+  "location": {
+    "filename": "Maintenance Database - Buildings",
+    "loctype": "aggr",
+    "tab": "Building Classification",
+    "spreadsheetid": "16rZUoAlISFIAmvcnSMHmhaE0qObj2OMpHQX3ddRoEwg"
+  },
+  "active": true,
+  "depends": [],
+  "tags": [
+    "maintenance_buildings"
+  ]
+}

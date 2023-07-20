@@ -1,0 +1,14 @@
+{
+  "asset_name": "maint_Vacant_Lots.maint",
+  "description": "Maintenance Responsibilities: Vacant Lots",
+  "location": {
+    "loctype": "aggr",
+    "spreadsheetid": "1bqKNE-VC23TZYNl2m89cIl1r4BYOASu34AZsRuljgWA",
+    "tab": "Vacant Lots"
+  },
+  "active": true,
+  "depends": [],
+  "tags": [
+    "maintenance_responsibilities"
+  ]
+}

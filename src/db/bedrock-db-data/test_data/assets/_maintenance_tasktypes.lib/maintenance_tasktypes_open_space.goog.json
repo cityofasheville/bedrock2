@@ -1,0 +1,15 @@
+{
+  "asset_name": "maintenance_tasktypes_open_space.goog",
+  "description": "City Facility Maintenance: Task Types-Open Space",
+  "location": {
+    "loctype": "aggr",
+    "filename": "Maintenance Database - Open Space",
+    "spreadsheetid": "1bqKNE-VC23TZYNl2m89cIl1r4BYOASu34AZsRuljgWA",
+    "tab": "SUMMARY"
+  },
+  "active": true,
+  "depends": [],
+  "tags": [
+    "maintenance_tasktypes"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "asset_name": "maint_Fuel_Stations.maint",
+  "description": "Maintenance Responsibilities: Administration",
+  "location": {
+    "loctype": "aggr",
+    "spreadsheetid": "16rZUoAlISFIAmvcnSMHmhaE0qObj2OMpHQX3ddRoEwg",
+    "tab": "Fuel Stations"
+  },
+  "active": true,
+  "depends": [],
+  "tags": [
+    "maintenance_responsibilities"
+  ]
+}

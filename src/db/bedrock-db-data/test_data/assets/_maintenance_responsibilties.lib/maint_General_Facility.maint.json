@@ -1,0 +1,14 @@
+{
+  "asset_name": "maint_General_Facility.maint",
+  "description": "Maintenance Responsibilities: Administration",
+  "location": {
+    "loctype": "aggr",
+    "spreadsheetid": "16rZUoAlISFIAmvcnSMHmhaE0qObj2OMpHQX3ddRoEwg",
+    "tab": "General Facility"
+  },
+  "active": true,
+  "depends": [],
+  "tags": [
+    "maintenance_responsibilities"
+  ]
+}
