@@ -10,7 +10,7 @@
   },
   "active": true,
   "depends": [
-    "turnover_employees.lib"
+    "base_employee_sensitive_snapshots.lib"
   ],
   "tags": []
 }

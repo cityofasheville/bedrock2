@@ -8,6 +8,8 @@
     "tablename": "turnover_counts"
   },
   "active": true,
-  "depends": [],
+  "depends": [
+    "base_employee_sensitive_snapshots.lib"
+  ],
   "tags": []
 }
