@@ -9,8 +9,7 @@
   },
   "active": true,
   "depends": [
-    "maintenance_tasktypes_buildings.goog",
-    "maintenance_tasktypes_open_space.goog"
+    "maintenance_tasktypes.goog"
   ],
   "tags": []
 }

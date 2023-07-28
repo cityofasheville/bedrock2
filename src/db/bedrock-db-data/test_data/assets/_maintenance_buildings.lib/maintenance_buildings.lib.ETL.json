@@ -1,17 +1,13 @@
 {
   "asset_name": "maintenance_buildings.lib",
-  "run_group": "daily",
+  "run_group": "maint",
   "active": true,
   "tasks": [
     {
-      "type": "aggregate",
+      "type": "table_copy",
       "active": true,
       "source_location": {
-        "temp_table": "maintenance_buildings_temp.lib",
-        "aggregate": "maintenance_buildings",
-        "data_range": "A2:M",
-        "data_connection": "bedrock-googlesheets",
-        "append_tab_name": false
+        "asset": "maintenance_buildings.goog"
       },
       "target_location": {
         "asset": "maintenance_buildings.lib"

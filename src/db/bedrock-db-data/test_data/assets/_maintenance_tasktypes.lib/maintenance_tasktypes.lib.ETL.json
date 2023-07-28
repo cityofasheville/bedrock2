@@ -1,17 +1,13 @@
 {
   "asset_name": "maintenance_tasktypes.lib",
-  "run_group": "daily",
+  "run_group": "maint",
   "active": true,
   "tasks": [
     {
-      "type": "aggregate",
+      "type": "table_copy",
       "active": true,
       "source_location": {
-        "temp_table": "maintenance_tasktypes_temp.lib",
-        "aggregate": "maintenance_tasktypes",
-        "data_range": "A3:B",
-        "data_connection": "bedrock-googlesheets",
-        "append_tab_name": false
+        "asset": "maintenance_tasktypes.goog"
       },
       "target_location": {
         "asset": "maintenance_tasktypes.lib"
@@ -21,7 +17,7 @@
       "type": "sql",
       "active": true,
       "connection": "pubrecdb1/mdastore1/dbadmin",
-      "sql_string": "DELETE from internal.maintenance_tasktypes a\nUSING (SELECT task_type, maintenance_need, \nROW_NUMBER() OVER(PARTITION BY task_type, maintenance_need) AS DuplicateCount\nFROM internal.maintenance_tasktypes) b\nwhere a.task_type is null or (a.task_type = b.task_type \nand a.maintenance_need  = b.maintenance_need \nand DuplicateCount > 1);"
+      "sql_string": "DELETE from internal.maintenance_tasktypes where task_type is null;"
     }
   ]
 }

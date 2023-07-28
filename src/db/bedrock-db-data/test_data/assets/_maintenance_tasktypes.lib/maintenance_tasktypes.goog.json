@@ -1,11 +1,11 @@
 {
-  "asset_name": "maintenance_buildings.goog",
-  "description": "City Property Maintenance Responsibility Building List",
+  "asset_name": "maintenance_tasktypes.goog",
+  "description": "City Facility Maintenance: Task Types-Buildings",
   "location": {
     "connection": "bedrock-googlesheets",
     "filename": "Maintenance Database - Buildings and Open Space",
     "loctype": "sheets",
-    "range": "Building Classification!A2:M",
+    "range": "SUMMARY!A3:B",
     "spreadsheetid": "16rZUoAlISFIAmvcnSMHmhaE0qObj2OMpHQX3ddRoEwg"
   },
   "active": true,
