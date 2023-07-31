@@ -1,10 +1,10 @@
 {
-  "asset_name": "maint_Road_Right_of_Way.maint",
-  "description": "Maintenance Responsibilities: Road Right of Way",
+  "asset_name": "maint_Right_of_Way.maint",
+  "description": "Maintenance Responsibilities: Right of Way",
   "location": {
     "loctype": "aggr",
     "spreadsheetid": "16rZUoAlISFIAmvcnSMHmhaE0qObj2OMpHQX3ddRoEwg",
-    "tab": "Road Right of Way"
+    "tab": "Right of Way"
   },
   "active": true,
   "depends": [],

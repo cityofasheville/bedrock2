@@ -1,6 +1,6 @@
 {
   "asset_name": "maintenance_responsibilities.pub",
-  "run_group": "daily",
+  "run_group": "maint",
   "active": true,
   "tasks": [
     {

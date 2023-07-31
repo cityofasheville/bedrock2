@@ -5,7 +5,7 @@
     "connection": "bedrock-googlesheets",
     "filename": "Maintenance Database - Buildings and Open Space",
     "loctype": "sheets",
-    "range": "Building Classification!A2:M",
+    "range": "Building Classification!A2:L",
     "spreadsheetid": "16rZUoAlISFIAmvcnSMHmhaE0qObj2OMpHQX3ddRoEwg"
   },
   "active": true,
