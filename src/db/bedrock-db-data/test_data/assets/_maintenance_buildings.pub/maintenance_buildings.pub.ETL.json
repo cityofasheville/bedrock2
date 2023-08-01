@@ -1,6 +1,6 @@
 {
   "asset_name": "maintenance_buildings.pub",
-  "run_group": "maint",
+  "run_group": "daily",
   "active": true,
   "tasks": [
     {
