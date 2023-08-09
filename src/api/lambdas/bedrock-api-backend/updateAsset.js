@@ -66,7 +66,12 @@ async function updateAsset(requestBody, pathElements, queryParams, connection) {
   for (let i = 0, comma = ''; i < members.length; i += 1, comma = ',', cnt += 1) {
     if (members[i] in body) {
       sql += `${comma} ${members[i]} = $${cnt}`;
-      args.push(body[members[i]]);
+      // Hacky. If we have more JSON types, maybe have a types array above
+      if (members[i] === 'location') {
+        args.push(JSON.stringify(body[members[i]]));
+      } else {
+        args.push(body[members[i]]);
+      }
       result.result[members[i]] = body[members[i]];
     }
   }

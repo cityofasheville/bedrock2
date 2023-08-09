@@ -70,7 +70,7 @@ async function addAsset(requestBody, pathElements, queryParams, connection) {
   await client.query('BEGIN');
   res = await client.query(
     'INSERT INTO assets (asset_name, description, location, active) VALUES($1, $2, $3, $4)',
-    [body.asset_name, body.description, body.location, body.active],
+    [body.asset_name, body.description, JSON.stringify(body.location), body.active],
   )
     .catch((err) => {
       result.error = true;
