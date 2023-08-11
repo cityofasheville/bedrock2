@@ -17,16 +17,41 @@ CREATE TABLE bedrock.asset_tags (
 );
 
 -- Permissions
-ALTER TABLE bedrock.asset_tags OWNER TO dbadmin;
-GRANT ALL ON TABLE bedrock.asset_tags TO dbadmin;
+ALTER TABLE bedrock.asset_tags OWNER TO bedrock_user;
 GRANT ALL ON TABLE bedrock.asset_tags TO bedrock_user;
 
+CREATE TABLE bedrock.owners (
+  owner_id SERIAL PRIMARY KEY,
+  owner_name text NOT NULL,
+  contact_name text NOT NULL,
+  contact_email text NOT NULL,
+  contact_phone text,
+  organization text,
+  department text,
+  division text,
+  notes text NULL
+);
+ALTER TABLE bedrock.owners OWNER TO bedrock_user;
+GRANT ALL ON TABLE bedrock.owners TO bedrock_user;
+
+CREATE TYPE bedrock.connection_types AS ENUM ('db', 'aggr', 'file', 'sheets');
+
+CREATE TABLE bedrock.connections (
+  connection_name text NOT NULL,
+  description text NULL,
+  connection_type bedrock.connection_types NULL,
+  CONSTRAINT connections_pkey PRIMARY KEY (connection_name)
+);
+ALTER TABLE bedrock.connections OWNER TO bedrock_user;
+GRANT ALL ON TABLE bedrock.connections TO bedrock_user;
 
 -- DROP TABLE bedrock.assets;
 CREATE TABLE bedrock.assets (
 	asset_name text NOT NULL,
 	description text NULL,
+  owner_id integer NULL,
 	"location" json NULL,
+  notes text NULL,
 	active bool NOT NULL,
 	CONSTRAINT assets_pkey PRIMARY KEY (asset_name)
 );
@@ -81,8 +106,7 @@ CREATE TABLE bedrock.tags (
 );
 
 -- Permissions
-ALTER TABLE bedrock.tags OWNER TO dbadmin;
-GRANT ALL ON TABLE bedrock.tags TO dbadmin;
+ALTER TABLE bedrock.tags OWNER TO bedrock_user;
 GRANT ALL ON TABLE bedrock.tags TO bedrock_user;
 
 
@@ -100,6 +124,5 @@ CREATE TABLE bedrock.tasks (
 );
 
 -- Permissions
-ALTER TABLE bedrock.tasks OWNER TO dbadmin;
-GRANT ALL ON TABLE bedrock.tasks TO dbadmin;
+ALTER TABLE bedrock.tasks OWNER TO bedrock_user;
 GRANT ALL ON TABLE bedrock.tasks TO bedrock_user;
