@@ -7,6 +7,8 @@
     "schemaname": "internal",
     "tablename": "vendors"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [
     "ap_vendor.mun"

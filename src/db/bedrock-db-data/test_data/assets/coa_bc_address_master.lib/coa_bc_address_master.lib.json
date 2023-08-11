@@ -7,6 +7,8 @@
     "schemaname": "internal",
     "tablename": "coa_bc_address_master"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [
     "coa_districts_zoning.lib",

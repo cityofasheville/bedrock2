@@ -7,6 +7,8 @@
     "loctype": "file",
     "path": "/in/"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [
     "delta_dental.encrypted.s3"

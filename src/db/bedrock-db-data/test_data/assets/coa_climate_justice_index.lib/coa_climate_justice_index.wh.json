@@ -7,6 +7,8 @@
     "schemaname": "coagis",
     "tablename": "coa_climate_justice_index"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [],
   "tags": []

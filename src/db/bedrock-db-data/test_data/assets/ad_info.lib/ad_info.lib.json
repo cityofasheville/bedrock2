@@ -7,6 +7,8 @@
     "schemaname": "internal",
     "tablename": "ad_info"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [
     "ad_info.mun"

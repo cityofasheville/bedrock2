@@ -7,6 +7,8 @@
     "schemaname": "coagis",
     "tablename": "coa_apd_public_incidents"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [],
   "tags": []

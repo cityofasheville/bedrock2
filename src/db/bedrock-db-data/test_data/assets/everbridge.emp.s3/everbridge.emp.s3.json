@@ -7,6 +7,8 @@
     "loctype": "file",
     "path": "everbridge/"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [
     "pr_city_employees_everbridge.mun"

@@ -7,6 +7,8 @@
     "schemaname": "amd",
     "tablename": "pr_accrual_hours_balances"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [],
   "tags": []

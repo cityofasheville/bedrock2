@@ -7,6 +7,8 @@
     "schemaname": "open",
     "tablename": "google_info"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [
     "google_info.lib"

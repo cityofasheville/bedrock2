@@ -7,6 +7,8 @@
     "schemaname": "avl_bdv",
     "tablename": "base_employee_position"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [],
   "tags": []

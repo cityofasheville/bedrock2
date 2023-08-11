@@ -7,6 +7,8 @@
     "schemaname": "open",
     "tablename": "maintenance_tasktypes"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [
     "maintenance_tasktypes.lib"

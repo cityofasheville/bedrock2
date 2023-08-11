@@ -7,6 +7,8 @@
     "schemaname": "internal",
     "tablename": "permits"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [
     "permits.acc"

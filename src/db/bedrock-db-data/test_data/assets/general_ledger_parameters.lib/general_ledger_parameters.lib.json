@@ -7,6 +7,8 @@
     "schemaname": "internal",
     "tablename": "general_ledger_parameters"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [
     "generalledgerparameters.mun"

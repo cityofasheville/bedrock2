@@ -7,6 +7,8 @@
     "loctype": "file",
     "path": "/35408/"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [
     "safetyskills.s3"

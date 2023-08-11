@@ -7,6 +7,8 @@
     "schemaname": "dbo",
     "tablename": "ap_vendor"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [],
   "tags": []

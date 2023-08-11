@@ -7,6 +7,8 @@
     "schemaname": "amd",
     "tablename": "gl_budget"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [],
   "tags": []

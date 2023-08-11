@@ -7,6 +7,8 @@
     "schemaname": "public",
     "tablename": "bc_incorporated_areas"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [
     "bc_incorporated_areas.wh"

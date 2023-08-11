@@ -7,6 +7,8 @@
     "schemaname": "internal",
     "tablename": "bc_civicaddress_table"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [
     "bc_civicaddress_table.wh"

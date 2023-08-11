@@ -7,6 +7,8 @@
     "schemaname": "internal",
     "tablename": "capital_projects_master_categories"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [
     "capital_projects_master_categories.goog"

@@ -8,6 +8,8 @@
     "range": "Counts!A2:P",
     "spreadsheetid": "1yE8pfp9nZ9nETDd2ypN4h6y8-m06giQ5O797ghBQHYc"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [
     "base_employee_sensitive_snapshots.lib"

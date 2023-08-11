@@ -7,6 +7,8 @@
     "loctype": "file",
     "path": "telestaff-import-person/"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [
     "telestaff_person01_xml.mun"

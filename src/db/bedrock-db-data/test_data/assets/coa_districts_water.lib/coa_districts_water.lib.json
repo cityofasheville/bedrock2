@@ -7,6 +7,8 @@
     "schemaname": "internal",
     "tablename": "coa_districts_water"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [
     "coa_districts_water.wh"

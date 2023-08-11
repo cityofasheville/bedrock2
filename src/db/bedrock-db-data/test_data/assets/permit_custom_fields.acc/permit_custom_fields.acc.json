@@ -7,6 +7,8 @@
     "schemaname": "amd",
     "tablename": "permit_custom_fields"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [],
   "tags": []
