@@ -1,5 +1,5 @@
 {
-  "asset_name": "bike_counters_by_type.lib",
+  "asset_name": "bike_counters.lib",
   "run_group": "daily",
   "active": true,
   "tasks": [

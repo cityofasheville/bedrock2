@@ -34,7 +34,7 @@ CREATE TABLE bedrock.owners (
 ALTER TABLE bedrock.owners OWNER TO bedrock_user;
 GRANT ALL ON TABLE bedrock.owners TO bedrock_user;
 
-CREATE TYPE bedrock.connection_types AS ENUM ('db', 'aggr', 'file', 'sheets');
+CREATE TYPE bedrock.connection_types AS ENUM ('db', 'aggr', 'api', 'file', 'sheets');
 
 CREATE TABLE bedrock.connections (
   connection_name text NOT NULL,
