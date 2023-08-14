@@ -65,8 +65,23 @@ async function readDependencies(client, assetMap) {
         throw new Error([`Postgres error: ${errmsg}`, err]);
       });
     for (let j = 0; j < res.rowCount; j += 1) {
-      const d = res.rows[j];
-      asset.depends.push(d.dependency);
+      const d = res.rows[j].dependency;
+      if (d[0] === '#') { // Aggregate Dependancy. Look up list of dependencies in tags
+        const aggrDependency = d.slice(1);
+        const aggrSql = `SELECT asset_name FROM bedrock.asset_tags where tag_name = '${aggrDependency}';`;
+        // eslint-disable-next-line no-await-in-loop
+        const aggrRes = await client.query(aggrSql)
+          .catch((err) => {
+            const errmsg = pgErrorCodes[err.code];
+            throw new Error([`Postgres error: ${errmsg} 2`, err]);
+          });
+        for (let k = 0; k < aggrRes.rowCount; k += 1) {
+          const aggrD = aggrRes.rows[k].asset_name;
+          asset.depends.push(aggrD);
+        }
+      } else {
+        asset.depends.push(d);
+      }
     }
   }
   return assetMap;
