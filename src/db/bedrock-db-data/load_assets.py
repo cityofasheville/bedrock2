@@ -136,11 +136,11 @@ for asset_subdir in os.listdir(assets_directory):
           asset_name = config['asset_name']
           sql = f'''
             insert into bedrock.assets
-            (asset_name, description, location, active)
-            values(%s, %s, %s, %s);
+            (asset_name, description, location, owner_id, notes, active)
+            values(%s, %s, %s, %s, %s, %s);
           '''
           cur.execute(sql,
-          (asset_name, config["description"], json.dumps(config["location"]), config["active"]
+          (asset_name, config["description"], json.dumps(config["location"]), config["owner_id"], config["notes"], config["active"]
           ))
           
           # dependencies

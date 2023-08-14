@@ -7,6 +7,8 @@
     "schemaname": "public",
     "tablename": "bc_property"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [
     "bc_property.wh"

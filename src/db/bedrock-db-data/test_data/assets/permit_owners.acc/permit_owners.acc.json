@@ -7,6 +7,8 @@
     "schemaname": "amd",
     "tablename": "permit_owners"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [],
   "tags": []

@@ -7,6 +7,8 @@
     "schemaname": "aux",
     "tablename": "equity_students_completed"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [],
   "tags": []

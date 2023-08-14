@@ -7,6 +7,8 @@
     "schemaname": "avl",
     "tablename": "PR_AETNA_Feed_2023"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [],
   "tags": []

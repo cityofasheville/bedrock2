@@ -7,6 +7,8 @@
     "schemaname": "standard",
     "tablename": "turnover_counts"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [
     "base_employee_sensitive_snapshots.lib"

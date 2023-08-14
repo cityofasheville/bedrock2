@@ -8,6 +8,8 @@
     "range": "ComputerAssets!A2:AO",
     "spreadsheetid": "1P9tdY7lawwoZXJmn09UgRMgH7JoauYG8h00MEkGzv8Q"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [
     "coa_computer_assets.lib"

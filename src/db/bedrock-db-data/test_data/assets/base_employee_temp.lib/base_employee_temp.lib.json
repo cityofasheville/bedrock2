@@ -7,6 +7,8 @@
     "schemaname": "temp",
     "tablename": "base_employee_temp"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [
     "base_employee.mun"

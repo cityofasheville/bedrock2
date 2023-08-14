@@ -7,6 +7,8 @@
     "schemaname": "avl",
     "tablename": "sunlife_eligibility"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [],
   "tags": []

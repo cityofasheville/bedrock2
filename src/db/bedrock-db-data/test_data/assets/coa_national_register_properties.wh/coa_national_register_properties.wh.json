@@ -7,6 +7,8 @@
     "schemaname": "coagis",
     "tablename": "coa_national_register_properties"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [],
   "tags": []

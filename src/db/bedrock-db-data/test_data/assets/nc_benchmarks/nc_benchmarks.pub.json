@@ -7,6 +7,8 @@
     "schemaname": "open",
     "tablename": "nc_benchmarks"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [
     "nc_benchmarks.lib"

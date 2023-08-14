@@ -7,6 +7,8 @@
     "loctype": "file",
     "path": "/PROD/import/ongoing.unprocessed/"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [
     "telestaff_person.s3"

@@ -7,6 +7,8 @@
     "loctype": "file",
     "path": "arag/"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [
     "pr_arag_feed.mun"

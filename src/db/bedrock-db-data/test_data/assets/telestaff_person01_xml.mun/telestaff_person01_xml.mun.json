@@ -7,6 +7,8 @@
     "schemaname": "avl",
     "tablename": "telestaff_person01_xml"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [],
   "tags": []

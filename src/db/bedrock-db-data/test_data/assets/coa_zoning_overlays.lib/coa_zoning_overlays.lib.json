@@ -7,6 +7,8 @@
     "schemaname": "internal",
     "tablename": "coa_zoning_overlays"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [
     "coa_zoning_overlays.wh"

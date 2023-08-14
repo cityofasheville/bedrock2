@@ -8,6 +8,8 @@
     "range": "Sheet1!A2:Z",
     "spreadsheetid": "1xGD2jVSveuYjDLRc6Z8dlwGIA78LKJKxu0ck0Y7easg"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [
     "training_students.lib"

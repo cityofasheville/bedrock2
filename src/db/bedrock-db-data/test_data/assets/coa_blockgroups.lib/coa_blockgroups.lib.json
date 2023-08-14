@@ -7,6 +7,8 @@
     "schemaname": "internal",
     "tablename": "coa_blockgroups"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [
     "coa_blockgroups.wh"

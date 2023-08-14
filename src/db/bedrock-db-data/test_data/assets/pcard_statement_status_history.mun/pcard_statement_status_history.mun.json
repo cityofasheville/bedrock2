@@ -7,6 +7,8 @@
     "schemaname": "amd",
     "tablename": "pcard_statement_status_history"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [],
   "tags": []

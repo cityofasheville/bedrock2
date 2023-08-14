@@ -8,6 +8,8 @@
     "range": "Vendors By Commodity Code!A2:Z",
     "spreadsheetid": "1lm_LdZS6yhniDEuVGyaj3vdD7ACU8Eo_pCkmNr81TvA"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [
     "mwbe_vendors_by_commodity_non_aggregated.mun"
