@@ -10,6 +10,8 @@
   "owner_id": null,
   "notes": null,
   "active": true,
-  "depends": [],
+  "depends": [
+    "#maintenance_responsibilities"
+  ],
   "tags": []
 }

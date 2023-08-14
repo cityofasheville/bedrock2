@@ -10,6 +10,8 @@
   "owner_id": null,
   "notes": null,
   "active": true,
-  "depends": [],
+  "depends": [
+    "#nc_benchmarks"
+  ],
   "tags": []
 }
