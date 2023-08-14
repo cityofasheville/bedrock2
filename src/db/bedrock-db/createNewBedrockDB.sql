@@ -49,8 +49,8 @@ GRANT ALL ON TABLE bedrock.connections TO bedrock_user;
 CREATE TABLE bedrock.assets (
 	asset_name text NOT NULL,
 	description text NULL,
-  owner_id integer NULL,
 	"location" json NULL,
+  owner_id integer NULL,
   notes text NULL,
 	active bool NOT NULL,
 	CONSTRAINT assets_pkey PRIMARY KEY (asset_name)
