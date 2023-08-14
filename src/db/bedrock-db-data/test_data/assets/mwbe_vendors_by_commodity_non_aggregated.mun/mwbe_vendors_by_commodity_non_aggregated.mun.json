@@ -8,7 +8,7 @@
     "tablename": "mwbe_vendors_by_commodity_non_aggregated"
   },
   "owner_id": null,
-  "notes": "Change Log:\\n-2023-08-13 Added a filter to eliminate dummy subcontractors (names starting with 'SUB NON VERIFIED')",
+  "notes": "Change Log:\n-2023-08-13 Added a filter to eliminate dummy subcontractors (names starting with 'SUB NON VERIFIED')",
   "active": true,
   "depends": [],
   "tags": []
