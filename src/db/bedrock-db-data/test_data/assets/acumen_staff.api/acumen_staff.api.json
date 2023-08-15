@@ -1,0 +1,15 @@
+{
+  "asset_name": "acumen_staff.api",
+  "description": "Acumen Staff API",
+  "location": {
+    "connection": "acumen_api",
+    "loctype": "api"
+  },
+  "owner_id": null,
+  "notes": null,
+  "active": true,
+  "depends": [
+    "acumen_staff.mun"
+  ],
+  "tags": []
+}
