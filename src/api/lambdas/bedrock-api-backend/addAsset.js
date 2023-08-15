@@ -68,10 +68,25 @@ async function addAsset(requestBody, pathElements, queryParams, connection) {
   // All is well - let's go ahead and add. Start by beginning the transaction
   //
   await client.query('BEGIN');
-  res = await client.query(
-    'INSERT INTO assets (asset_name, description, location, active) VALUES($1, $2, $3, $4)',
-    [body.asset_name, body.description, JSON.stringify(body.location), body.active],
-  )
+  let argnum = 5;
+  const args = [body.asset_name, body.description, JSON.stringify(body.location), body.active];
+  sql = 'INSERT INTO assets (asset_name, description, location, active'
+  let vals = ') VALUES($1, $2, $3, $4';
+  if ('owner_id' in body) {
+    sql += ', owner_id';
+    vals += `, $${argnum}`;
+    args.push(body.owner_id);
+    argnum += 1;
+  }
+  if ('notes' in body) {
+    sql += ', notes';
+    vals += `, $${argnum}`;
+    args.push(body.notes);
+    argnum += 1;
+  }
+  sql += `${vals})`;
+  console.log(sql);
+  res = await client.query(sql, args)
     .catch((err) => {
       result.error = true;
       result.message = `PG error adding new base asset: ${pgErrorCodes[err.code]}`;
@@ -88,6 +103,12 @@ async function addAsset(requestBody, pathElements, queryParams, connection) {
         location: body.location,
         active: body.active,
       };
+      if ('owner_id' in body) {
+        result.result.owner_id = body.owner_id;
+      }
+      if ('notes' in body) {
+        result.result.notes = body.notes;
+      }
     }
   }
 
