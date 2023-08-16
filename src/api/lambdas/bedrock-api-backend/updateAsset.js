@@ -58,12 +58,12 @@ async function updateAsset(requestBody, pathElements, queryParams, connection) {
   await client.query('BEGIN');
 
   // Start with the base asset
-  let members = ['description', 'location', 'active'];
+  let members = ['description', 'location', 'active', 'owner_id', 'notes'];
   let cnt = 1;
   let args = [];
   sql = 'UPDATE assets SET ';
 
-  for (let i = 0, comma = ''; i < members.length; i += 1, comma = ',', cnt += 1) {
+  for (let i = 0, comma = ''; i < members.length; i += 1) {
     if (members[i] in body) {
       sql += `${comma} ${members[i]} = $${cnt}`;
       // Hacky. If we have more JSON types, maybe have a types array above
@@ -73,10 +73,14 @@ async function updateAsset(requestBody, pathElements, queryParams, connection) {
         args.push(body[members[i]]);
       }
       result.result[members[i]] = body[members[i]];
+      cnt += 1;
+      comma = ',';
     }
   }
   sql += ` where asset_name = $${cnt}`;
   args.push(assetName);
+  console.log(sql);
+  console.log(JSON.stringify(args));
   res = await client.query(sql, args)
     .catch((err) => {
       result.error = true;
