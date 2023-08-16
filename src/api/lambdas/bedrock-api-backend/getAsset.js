@@ -44,6 +44,8 @@ async function getAsset(pathElements, queryParams, connection) {
       asset_name: res.rows[0].asset_name,
       description: res.rows[0].description,
       location: res.rows[0].location,
+      owner_id: res.rows[0].owner_id,
+      notes: res.rows[0].notes,
       active: res.rows[0].active,
       etl_run_group: res.rows[0].run_group,
       etl_active: res.rows[0].etl_active,
