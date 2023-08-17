@@ -175,7 +175,7 @@ SFTP has mostly been superseded by file copy, which has more potential source an
 
 ```
 ## Run Lambda
-Note: Called Lambda must return standard format: ```{statusCode: 200,body: {lambda_output: ""}}```
+Called Lambda must return standard format: ```{statusCode: 200,body: {lambda_output: ""}}```
 ```
 {
     "run_group": "daily",
@@ -189,6 +189,10 @@ Note: Called Lambda must return standard format: ```{statusCode: 200,body: {lamb
     ]
 }
 ```
+Note: Running arbitrary code does mean that some Bedrock conventions can be bypassed. For example, normally an ETL job only creates one asset.
+If your Lambda creates more than one asset, the work around we have used is to create the ETL job on one of the assets, and have the other ones depend on it.
+
+
 ## Aggregate
 Aggregate task type takes multiple Google Sheets with data in the same format on each sheet and writes it to a single table.
 It requires a staging table (called temp_table, but not a temp table in database terms) for the data to be collected in before writing to the final destination.
