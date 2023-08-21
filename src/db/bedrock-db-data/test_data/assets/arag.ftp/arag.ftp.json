@@ -11,7 +11,7 @@
   "notes": null,
   "active": true,
   "depends": [
-    "arag.encrypt.s3"
+    "arag.encrypted.s3"
   ],
   "tags": []
 }
