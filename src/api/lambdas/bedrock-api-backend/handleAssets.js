@@ -6,6 +6,7 @@ const getAsset = require('./getAsset');
 const addAsset = require('./addAsset');
 const updateAsset = require('./updateAsset');
 const deleteAsset = require('./deleteAsset');
+const getTasks = require('./getTasks');
 
 // eslint-disable-next-line no-unused-vars
 async function handleAssets(event, pathElements, queryParams, verb, connection) {
@@ -59,8 +60,14 @@ async function handleAssets(event, pathElements, queryParams, verb, connection) 
     case 3:
       if (pathElements[2] === 'tasks') {
         if (verb === 'GET') {
-          result.message = 'Get asset tasks not implemented';
-          result.error = true;
+          console.log('Calling getTasks');
+          result = await getTasks(
+            event.requestContext.domainName,
+            pathElements,
+            queryParams,
+            connection,
+          );
+          console.log('Back from getTasks');
         } else if (verb === 'DELETE') {
           result.message = 'Delete all asset tasks not implemented';
           result.error = true;
