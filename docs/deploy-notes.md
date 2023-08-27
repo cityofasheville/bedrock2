@@ -22,16 +22,19 @@ make apply
 ```sh
 cd src/bedrock_common
 make install
+```
+If you are using an existing database, set the value of ```BEDROCK_DB_HOST``` in src/make_variables to the host name of that database and skip the next set of commands.
+```sh
 cd ../db
 make init
 make apply-y #(Creates database server - takes a while)
-# The next two commands create and initialize the database. Skip
-# if you are using a database that already exists.
 make db      #(Creates bedrock database and captures DB endpoint in src/db/make_variables.generated)
 make seed    #(Fill database with assets from Github)
 # Copy the database host from src/db/make_variables.generated into the value of BEDROCK_DB_HOST
-# in src/make_variables (without the port number) or enter an existing database in the form
-#     BEDROCK_DB_HOST_ENDPOINT = "db-hostname:5432"
+# in src/make_variables (without the port number)
+```
+Next, create the ETL and API infrastructure.
+```sh
 cd ../etl
 make init
 make apply-y
