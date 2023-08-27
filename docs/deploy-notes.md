@@ -29,9 +29,8 @@ make apply-y #(Creates database server - takes a while)
 # if you are using a database that already exists.
 make db      #(Creates bedrock database and captures DB endpoint in src/db/make_variables.generated)
 make seed    #(Fill database with assets from Github)
-# Copy the database host from src/db/make_variables.generated into 
-# the value of BEDROCK_DB_HOST in src/make_variables (without the
-# port number :5432) or enter an existing database in the form
+# Copy the database host from src/db/make_variables.generated into the value of BEDROCK_DB_HOST
+# in src/make_variables (without the port number) or enter an existing database in the form
 #     BEDROCK_DB_HOST_ENDPOINT = "db-hostname:5432"
 cd ../etl
 make init
