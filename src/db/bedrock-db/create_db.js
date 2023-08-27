@@ -3,7 +3,7 @@ const fs = require('fs');
 
 lambda_handler = async function (event, context) {
   let sql = fs.readFileSync('./createNewBedrockDB.sql').toString();
-  const host = process.env.DB_ENDPOINT.split(':')[0];
+  const host = process.env.BEDROCK_DB_HOST_ENDPOINT.split(':')[0];
   console.log('The host is ', host);
   const client = new Client({
     host: host,
