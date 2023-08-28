@@ -1,9 +1,13 @@
-INSTANCE = <YOU MUST PICK A UNIQUE INSTANCE STRING LIKE ejtest: lowercase alphanumeric characters and hyphens only>
+INSTANCE = <UNIQUE INSTANCE STRING LIKE ej-test-0: lowercase alphanumeric characters and hyphens only>
 region = "us-east-1"
 statebucket = "avl-tfstate-store"
 account = 518970837364
 email_recipients = "['dummy@ashevillenc.gov']"
 build_mode = std # Set to sam to build using SAM
+# The next variable is the database host name built in the db directory,
+# e.g., bedrock-db-ej-test-0.cd9h9tveyb58.us-east-1.rds.amazonaws.com.
+# If using the database built as part of this instance, you can copy from
+# ./db/make_variables (but do not include the :5432).
 BEDROCK_DB_HOST = ""
 
 # Do not edit or delete the next line

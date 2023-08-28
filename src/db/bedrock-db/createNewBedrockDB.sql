@@ -9,6 +9,9 @@ CREATE ROLE bedrock_user WITH
 	NOBYPASSRLS
 	CONNECTION LIMIT -1;
 
+-- DROP SCHEMA bedrock;
+CREATE SCHEMA bedrock;
+
 -- DROP TABLE bedrock.asset_tags;
 CREATE TABLE bedrock.asset_tags (
 	asset_name text NOT NULL,

@@ -30,8 +30,8 @@ destroy: $(dirs)
 
 db:	create_db.js package.json package-lock.json
 	npm install
-	echo $(DB_ENDPOINT)
-	DB_ENDPOINT=$(DB_ENDPOINT) node create_db.js
+	echo $(BEDROCK_DB_HOST_ENDPOINT)
+	BEDROCK_DB_HOST_ENDPOINT=$(BEDROCK_DB_HOST_ENDPOINT) node create_db.js
 
 clean:
 	rm -f *.instance
