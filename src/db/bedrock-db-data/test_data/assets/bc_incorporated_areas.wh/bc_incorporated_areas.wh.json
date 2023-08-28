@@ -2,7 +2,7 @@
   "asset_name": "bc_incorporated_areas.wh",
   "description": "",
   "location": {
-    "connection": "coa-gis-warehouse1/coagiswarehouse/coagis",
+    "connection": "gis-warehouse/coagiswarehouse/coagis",
     "loctype": "db",
     "schemaname": "coagis",
     "tablename": "bc_incorporated_areas"
