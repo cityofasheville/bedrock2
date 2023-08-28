@@ -1,6 +1,6 @@
 {
   "asset_name": "abi_outreach_vendors.commodity.goog",
-  "run_group": "daily",
+  "run_group": "abi_vendors",
   "active": true,
   "tasks": [
     {

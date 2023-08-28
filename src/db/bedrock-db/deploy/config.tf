@@ -45,6 +45,6 @@ resource "aws_security_group" "bedrock-pg-sg-$$INSTANCE$$" {
   }
 }
 
-output "DB_ENDPOINT" {
+output "BEDROCK_DB_HOST_ENDPOINT" {
   value = "${aws_db_instance.bedrock-db-$$INSTANCE$$.endpoint}"
 }
