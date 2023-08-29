@@ -59,11 +59,7 @@ async function handleAssets(event, pathElements, queryParams, verb, connection) 
     case 3:
       if (pathElements[2] === 'tasks') {
         if (verb === 'GET') {
-          result = await getTasks(
-            pathElements,
-            queryParams,
-            connection,
-          );
+          result = await getTasks(pathElements, queryParams, connection);
         } else if (verb === 'DELETE') {
           result.message = 'Delete all asset tasks not implemented';
           result.error = true;
