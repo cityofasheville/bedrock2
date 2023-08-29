@@ -2,7 +2,7 @@
   "asset_name": "coa_blockgroups.wh",
   "description": "",
   "location": {
-    "connection": "coa-gis-warehouse1/coagiswarehouse/coagis",
+    "connection": "gis-warehouse/coagiswarehouse/coagis",
     "loctype": "db",
     "schemaname": "coagis",
     "tablename": "census_2015_blockgroups"

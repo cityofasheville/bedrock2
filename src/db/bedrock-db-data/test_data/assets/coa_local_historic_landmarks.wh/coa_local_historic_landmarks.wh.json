@@ -2,7 +2,7 @@
   "asset_name": "coa_local_historic_landmarks.wh",
   "description": "coa_local_historic_landmarks",
   "location": {
-    "connection": "coa-gis-warehouse1/coagiswarehouse/coagis",
+    "connection": "gis-warehouse/coagiswarehouse/coagis",
     "loctype": "db",
     "schemaname": "coagis",
     "tablename": "coa_local_historic_landmarks"

@@ -2,7 +2,7 @@
   "asset_name": "coa_active_jurisdictions.wh",
   "description": "Asheville corporate limits",
   "location": {
-    "connection": "coa-gis-warehouse1/coagiswarehouse/coagis",
+    "connection": "gis-warehouse/coagiswarehouse/coagis",
     "loctype": "db",
     "schemaname": "coagis",
     "tablename": "coa_active_jurisdictions"
