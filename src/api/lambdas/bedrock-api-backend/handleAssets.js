@@ -1,9 +1,7 @@
 /* eslint-disable no-console */
-const { Client } = require('pg');
-const pgErrorCodes = require('./pgErrorCodes');
 const getAssetList = require('./getAssetList');
 const getAsset = require('./getAsset');
-const getAllAssetDepends = require('./getAllAssetDepends');
+const getAllAssetRelations = require('./getAllAssetRelations');
 const addAsset = require('./addAsset');
 const updateAsset = require('./updateAsset');
 const deleteAsset = require('./deleteAsset');
@@ -55,7 +53,7 @@ async function handleAssets(event, pathElements, queryParams, verb, connection) 
       break;
 
     // GET/DELETE assets/{assetname}/tasks OR
-    // GET assets/{assetname}/depends
+    // GET assets/{assetname}/relations
     case 3:
       if (pathElements[2] === 'tasks') {
         if (verb === 'GET') {
@@ -64,8 +62,8 @@ async function handleAssets(event, pathElements, queryParams, verb, connection) 
           result.message = 'Delete all asset tasks not implemented';
           result.error = true;
         }
-      } else if (pathElements[2] === 'depends') {
-        result = await getAllAssetDepends(pathElements, queryParams, connection);
+      } else if (pathElements[2] === 'relations') {
+        result = await getAllAssetRelations(pathElements, queryParams, connection);
       } else {
         result.message = `Unknown assets endpoint: [${pathElements.join()}]`;
         result.error = true;
