@@ -62,6 +62,8 @@ async function getAllAssetDepends(pathElements, queryParams, connection) {
         subdependencies;
     `;
     const depends = [];
+    const check = {};
+    const unique = [];
     res = await client.query(sql, [pathElements[1]]);
     for (let i = 0; i < res.rowCount; i += 1) {
       depends.push(
@@ -70,9 +72,14 @@ async function getAllAssetDepends(pathElements, queryParams, connection) {
           dependency: res.rows[i].dependency,
         },
       );
+      if (!(res.rows[i].dependency in check)) {
+        unique.push(res.rows[i].dependency);
+        check[res.rows[i].dependency] = true;
+      }
     }
     result.result = {
       items: depends,
+      unique_items: unique,
     };
   }
   return result;
