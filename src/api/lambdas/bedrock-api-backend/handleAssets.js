@@ -60,7 +60,6 @@ async function handleAssets(event, pathElements, queryParams, verb, connection) 
       if (pathElements[2] === 'tasks') {
         if (verb === 'GET') {
           result = await getTasks(
-            event.requestContext.domainName,
             pathElements,
             queryParams,
             connection,

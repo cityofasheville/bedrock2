@@ -2,7 +2,7 @@
 const { Client } = require('pg');
 const pgErrorCodes = require('./pgErrorCodes');
 
-async function getTasks(domainName, pathElements, queryParams, connection) {
+async function getTasks(pathElements, queryParams, connection) {
   const result = {
     error: false,
     message: '',
