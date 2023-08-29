@@ -3,6 +3,7 @@ const { Client } = require('pg');
 const pgErrorCodes = require('./pgErrorCodes');
 const getAssetList = require('./getAssetList');
 const getAsset = require('./getAsset');
+const getAllAssetDepends = require('./getAllAssetDepends');
 const addAsset = require('./addAsset');
 const updateAsset = require('./updateAsset');
 const deleteAsset = require('./deleteAsset');
@@ -19,14 +20,12 @@ async function handleAssets(event, pathElements, queryParams, verb, connection) 
   switch (pathElements.length) {
     // GET assets
     case 1:
-      console.log('Calling getAssetList');
       result = await getAssetList(
         event.requestContext.domainName,
         pathElements,
         queryParams,
         connection,
       );
-      console.log('Back from getAssetList');
       break;
 
     // VERB assets/{assetname}
@@ -60,21 +59,18 @@ async function handleAssets(event, pathElements, queryParams, verb, connection) 
     case 3:
       if (pathElements[2] === 'tasks') {
         if (verb === 'GET') {
-          console.log('Calling getTasks');
           result = await getTasks(
             event.requestContext.domainName,
             pathElements,
             queryParams,
             connection,
           );
-          console.log('Back from getTasks');
         } else if (verb === 'DELETE') {
           result.message = 'Delete all asset tasks not implemented';
           result.error = true;
         }
       } else if (pathElements[2] === 'depends') {
-        result.message = 'Get asset depends not implemented';
-        result.error = true;
+        result = await getAllAssetDepends(pathElements, queryParams, connection);
       } else {
         result.message = `Unknown assets endpoint: [${pathElements.join()}]`;
         result.error = true;
