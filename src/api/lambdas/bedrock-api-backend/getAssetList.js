@@ -48,6 +48,9 @@ async function getAssetList(domainName, pathElements, queryParams, connection) {
     qPrefix = '&';
     result.message += 'Query parameter rungroups not yet implemented. ';
   }
+  if ('tags' in queryParams) {
+    result.message += 'Query parameter tags not yet implemented. ';
+  }
   if ('period' in queryParams) {
     qParams += `${qPrefix}period=${queryParams.period}`;
     qPrefix = '&';
