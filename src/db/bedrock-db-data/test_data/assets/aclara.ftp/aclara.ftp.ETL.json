@@ -1,0 +1,16 @@
+{
+  "asset_name": "aclara.ftp",
+  "run_group": "aclara",
+  "tasks": [
+    {
+      "type": "file_copy",
+      "active": true,
+      "source_location": {
+        "asset": "aclara.s3"
+      },
+      "target_location": {
+        "asset": "aclara.ftp"
+      }
+    }
+  ]
+}

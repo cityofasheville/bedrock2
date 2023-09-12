@@ -1,0 +1,16 @@
+{
+  "asset_name": "aclara.s3",
+  "run_group": "aclara",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "aclara.mun"
+      },
+      "target_location": {
+        "asset": "aclara.s3"
+      }
+    }
+  ]
+}

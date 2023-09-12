@@ -1,0 +1,17 @@
+{
+  "asset_name": "aetna.s3",
+  "description": "",
+  "location": {
+    "connection": "s3_data_files",
+    "filename": "aclara_asheville_${YYYY}${MM}${DD}.csv",
+    "loctype": "file",
+    "path": "aclara/"
+  },
+  "owner_id": null,
+  "notes": null,
+  "active": true,
+  "depends": [
+    "aclara.mun"
+  ],
+  "tags": []
+}

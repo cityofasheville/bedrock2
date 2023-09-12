@@ -1,0 +1,17 @@
+{
+  "asset_name": "aclara.ftp",
+  "description": "Uploaded Accounting data to Aclara",
+  "location": {
+    "connection": "aclara_ftp",
+    "filename": "aclara_asheville_${YYYY}${MM}${DD}.csv",
+    "loctype": "file",
+    "path": "/AclaraAccountImportFiles/"
+  },
+  "owner_id": null,
+  "notes": null,
+  "active": true,
+  "depends": [
+    "aclara.s3"
+  ],
+  "tags": []
+}
