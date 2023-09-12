@@ -2,7 +2,7 @@
   "asset_name": "coa_climate_justice_index.wh",
   "description": "",
   "location": {
-    "connection": "gis-warehouse/coagiswarehouse/coagis",
+    "connection": "coa-gis-warehouse1/coagiswarehouse/coagis",
     "loctype": "db",
     "schemaname": "coagis",
     "tablename": "coa_climate_justice_index"

@@ -2,7 +2,7 @@
   "asset_name": "bc_street.wh",
   "description": "",
   "location": {
-    "connection": "gis-warehouse/coagiswarehouse/coagis",
+    "connection": "coa-gis-warehouse1/coagiswarehouse/coagis",
     "loctype": "db",
     "schemaname": "coagis",
     "tablename": "bc_street"
