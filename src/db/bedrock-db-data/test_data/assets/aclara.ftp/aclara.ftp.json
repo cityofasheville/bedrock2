@@ -3,7 +3,7 @@
   "description": "Uploaded Accounting data to Aclara",
   "location": {
     "connection": "aclara_ftp",
-    "filename": "aclara_asheville_${YYYY}${MM}${DD}.csv",
+    "filename": "AccountImport.imp",
     "loctype": "file",
     "path": "/AclaraAccountImportFiles/"
   },
