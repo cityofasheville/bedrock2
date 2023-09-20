@@ -6,7 +6,8 @@
       "type": "table_copy",
       "active": true,
       "source_location": {
-        "asset": "aclara.mun"
+        "asset": "aclara.mun",
+        "crlf": true
       },
       "target_location": {
         "asset": "aclara.s3"

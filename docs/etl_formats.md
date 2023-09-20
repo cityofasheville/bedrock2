@@ -48,7 +48,8 @@ Also see [Managed Data Assets README](https://github.com/cityofasheville/managed
             <OPTIONAL>: "tableheaders": true (this is mainly used for creating csv files)
             <OPTIONAL> "sortasc": "fieldname",
             <OPTIONAL> "sortdesc": "fieldname",
-            <OPTIONAL> "fixedwidth_noquotes": true  (Tables converted to csv by default have strings with double quotes in the data quoted. For fixed width and XML files we don't want that)                               
+            <OPTIONAL> "fixedwidth_noquotes": true,  (Tables converted to csv by default have strings with double quotes in the data quoted. For fixed width and XML files we don't want that)
+            <OPTIONAL> "crlf": true,                 (Tables converted to csv by default use record delimiters of LF. Set this true to use CRLF.)    
             __TARGET OPTIONS__
             <OPTIONAL> "append": true  (By default, data is overwritten in table. Set to true to append as new rows.)       
             <OPTIONAL> "append_serial": "fieldname"  (Adds an integer auto-numbering key field to target table. A serial field with this name must appear as the last field in the target table.)
