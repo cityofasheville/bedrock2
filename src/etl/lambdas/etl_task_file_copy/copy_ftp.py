@@ -29,16 +29,25 @@ def connectToFTP(connection_data):
         ftp_host = connection_data['host']
         ftp_port = connection_data['port']
         ftp_user = connection_data['username']
-        transport = paramiko.Transport((ftp_host, int(ftp_port)))
+        if 'disabled_algorithms' in connection_data:
+            disabled_algorithms = connection_data['disabled_algorithms']
+        else:
+            disabled_algorithms = None
+        transport = paramiko.Transport(ftp_host +
+                                       ':' + str(ftp_port),
+                                       disabled_algorithms=disabled_algorithms
+                                       )
         transport.start_client(timeout=60)
 
         if 'password' in connection_data.keys():
-            transport.auth_password(username = ftp_user, password = connection_data['password'])
-        elif 'privateKey' in connection_data.keys():
-            pk = paramiko.RSAKey.from_private_key(io.StringIO(connection_data['privateKey']))
-            transport.auth_publickey(username = ftp_user, key = pk)
-        sftp = paramiko.SFTPClient.from_transport(transport)
-        return sftp
+            transport.auth_password(
+                    username=ftp_user, password=connection_data['password'])
+        elif 'private_key' in connection_data.keys():
+            pk = paramiko.RSAKey.from_private_key(
+                    io.StringIO(connection_data['private_key']))
+            transport.auth_publickey(username=ftp_user, key=pk)
+            sftp = paramiko.SFTPClient.from_transport(transport)
+            return sftp
     except BaseException as err:
         raise Exception("Connect to FTP Error: " + str(err))
  

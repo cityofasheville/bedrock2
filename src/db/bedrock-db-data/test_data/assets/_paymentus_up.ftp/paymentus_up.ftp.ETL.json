@@ -1,0 +1,186 @@
+{
+  "asset_name": "paymentus_up.ftp",
+  "run_group": "paymentus_up",
+  "tasks": [
+    {
+      "type": "table_copy",
+      "description": "Create empty control file",
+      "source_location": {
+        "connection": "pubrecdb1/mdastore1/dbadmin",
+        "schemaname": "internal",
+        "tablename": "emptydata"
+      },
+      "target_location": {
+        "connection": "s3_data_files",
+        "filename": "CIF${YYYY}${MM}${DD}.ctl",
+        "path": "paymentus/"
+      },
+  "active": true
+    },
+    {
+      "type": "table_copy",
+      "description": "Create empty control file",
+      "source_location": {
+        "connection": "pubrecdb1/mdastore1/dbadmin",
+        "schemaname": "internal",
+        "tablename": "emptydata"
+      },
+      "target_location": {
+        "connection": "s3_data_files",
+        "filename": "Payment${YYYY}${MM}${DD}.ctl",
+        "path": "paymentus/"
+      },
+  "active": true
+    },
+    {
+      "type": "table_copy",
+      "description": "Create empty control file",
+      "source_location": {
+        "connection": "pubrecdb1/mdastore1/dbadmin",
+        "schemaname": "internal",
+        "tablename": "emptydata"
+      },
+      "target_location": {
+        "connection": "s3_data_files",
+        "filename": "Susp${YYYY}${MM}${DD}.ctl",
+        "path": "paymentus/"
+      },
+  "active": true
+    },
+    {
+      "type": "table_copy",
+      "description": "Copy Paymentus CIF to S3",
+      "source_location": {
+        "connection": "munis/munprod/mssqlgisadmin",
+        "schemaname": "amd",
+        "tablename": "ub_pm_cif_file"
+      },
+      "target_location": {
+        "connection": "s3_data_files",
+        "filename": "CIF${YYYY}${MM}${DD}.csv",
+        "path": "paymentus/"
+      },
+  "active": true
+    },
+    {
+      "type": "file_copy",
+      "description": "Copy Paymentus CIF to FTP site",
+      "source_location": {
+        "connection": "s3_data_files",
+        "filename": "CIF${YYYY}${MM}${DD}.csv",
+        "path": "paymentus/"
+      },
+      "target_location": {
+        "connection": "paymentus_ftp",
+        "filename": "CIF${YYYY}${MM}${DD}.csv",
+        "path": "/processed/"
+      },
+  "active": true
+    },
+    {
+      "type": "file_copy",
+      "description": "Copy 'ctl' file to FTP site",
+      "source_location": {
+        "connection": "s3_data_files",
+        "filename": "CIF${YYYY}${MM}${DD}.ctl",
+        "path": "paymentus/"
+      },
+      "target_location": {
+        "connection": "paymentus_ftp",
+        "filename": "CIF${YYYY}${MM}${DD}.ctl",
+        "path": "/processed/"
+      },
+  "active": true
+    },
+    {
+      "type": "table_copy",
+      "description": "Copy Paymentus Payment History to S3",
+      "source_location": {
+        "connection": "munis/munprod/mssqlgisadmin",
+        "schemaname": "amd",
+        "tablename": "ub_pm_payment_history_loader_today_no_ivr"
+      },
+      "target_location": {
+        "connection": "s3_data_files",
+        "filename": "Payment${YYYY}${MM}${DD}.csv",
+        "path": "paymentus/"
+      },
+  "active": true
+    },
+    {
+      "type": "file_copy",
+      "description": "Copy Paymentus Payment History to FTP site",
+      "source_location": {
+        "connection": "s3_data_files",
+        "filename": "Payment${YYYY}${MM}${DD}.csv",
+        "path": "paymentus/"
+      },
+      "target_location": {
+        "connection": "paymentus_ftp",
+        "filename": "Payment${YYYY}${MM}${DD}.csv",
+        "path": "/processed/"
+      },
+  "active": true
+    },
+    {
+      "type": "file_copy",
+      "description": "Copy 'ctl' file to FTP site",
+      "source_location": {
+        "connection": "s3_data_files",
+        "filename": "Payment${YYYY}${MM}${DD}.ctl",
+        "path": "paymentus/"
+      },
+      "target_location": {
+        "connection": "paymentus_ftp",
+        "filename": "Payment${YYYY}${MM}${DD}.ctl",
+        "path": "/processed/"
+      },
+  "active": true
+    },
+    {
+      "type": "table_copy",
+      "description": "Copy Paymentus Suspended Accounts to S3",
+      "source_location": {
+        "connection": "munis/munprod/mssqlgisadmin",
+        "schemaname": "amd",
+        "tablename": "ub_pm_suspended_accounts"
+      },
+      "target_location": {
+        "connection": "s3_data_files",
+        "filename": "Susp${YYYY}${MM}${DD}.csv",
+        "path": "paymentus/"
+      },
+  "active": true
+    },
+    {
+      "type": "file_copy",
+      "description": "Copy Paymentus Suspended Accounts to FTP site",
+      "source_location": {
+        "connection": "s3_data_files",
+        "filename": "Susp${YYYY}${MM}${DD}.csv",
+        "path": "paymentus/"
+      },
+      "target_location": {
+        "connection": "paymentus_ftp",
+        "filename": "Susp${YYYY}${MM}${DD}.csv",
+        "path": "/processed/"
+      },
+  "active": true
+    },
+    {
+      "type": "file_copy",
+      "description": "Copy 'ctl' file to FTP site",
+      "source_location": {
+        "connection": "s3_data_files",
+        "filename": "Susp${YYYY}${MM}${DD}.ctl",
+        "path": "paymentus/"
+      },
+      "target_location": {
+        "connection": "paymentus_ftp",
+        "filename": "Susp${YYYY}${MM}${DD}.ctl",
+        "path": "/processed/"
+      },
+  "active": true
+    }
+  ]
+}
