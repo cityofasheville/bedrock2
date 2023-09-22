@@ -9,3 +9,4 @@
 "monthly","00 09 1 * ? *"
 "abi_vendors","00 05 * * ? *"
 "aclara","30 05 ? * MON-FRI *"
+"paymentus_up","00 23 ? * MON-FRI *"

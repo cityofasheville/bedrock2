@@ -46,8 +46,8 @@ def connectToFTP(connection_data):
             pk = paramiko.RSAKey.from_private_key(
                     io.StringIO(connection_data['private_key']))
             transport.auth_publickey(username=ftp_user, key=pk)
-            sftp = paramiko.SFTPClient.from_transport(transport)
-            return sftp
+        sftp = paramiko.SFTPClient.from_transport(transport)
+        return sftp
     except BaseException as err:
         raise Exception("Connect to FTP Error: " + str(err))
  
