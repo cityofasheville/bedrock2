@@ -122,8 +122,8 @@ def lambda_handler(event, context):
         if 'password' in ftp_conn.keys():
             ftp_pw   = ftp_conn['password']
             sftp = connectToFTP(ftp_host, ftp_port, ftp_user, ftp_pw=ftp_pw, ftp_keyfile=None)
-        if 'privateKey' in ftp_conn.keys():
-            ftp_keyfile = ftp_conn['privateKey']
+        if 'private_key' in ftp_conn.keys():
+            ftp_keyfile = ftp_conn['private_key']
             filelikeobj = io.StringIO(ftp_keyfile)
             pk = paramiko.RSAKey.from_private_key(filelikeobj)
             sftp = connectToFTP(ftp_host, ftp_port, ftp_user, ftp_pw=None, ftp_keyfile=pk)

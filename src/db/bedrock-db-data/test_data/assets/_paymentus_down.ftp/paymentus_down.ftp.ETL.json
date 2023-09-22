@@ -1,0 +1,41 @@
+{
+  "asset_name": "paymentus_down.ftp",
+  "run_group": "paymentus_down",
+  "tasks": [
+    {
+      "type": "file_copy",
+      "source_location": {
+        "connection": "paymentus_ftp",
+        "filename": "ashv-paper-suppression-${YYYY}${MM}${DD}.csv",
+        "path": "/suspended/"
+      },
+      "target_location": {
+        "connection": "s3_data_files",
+        "filename": "ashv-paper-suppression-${YYYY}${MM}${DD}.csv",
+        "path": "paymentus/"
+      },
+      "active": false
+    },
+    {
+      "type": "table_copy",
+      "source_location": {
+        "connection": "s3_data_files",
+        "filename": "ashv-paper-suppression-${YYYY}${MM}${DD}.csv",
+        "path": "paymentus/"
+      },
+      "target_location": {
+        "connection": "munis/munprod/fme_jobs",
+        "loctype": "db",
+        "schemaname": "avl",
+        "tablename": "Paymentus_Paper_Suppression_Table"
+      },
+      "active": false
+    },
+    {
+      "type": "sql",
+      "active": true,
+      "connection": "munis/munprod/fme_jobs",
+      "sql_string": "execute avl.Paymentus_Paper_Suppression_Update;"
+    }
+  ]
+}
