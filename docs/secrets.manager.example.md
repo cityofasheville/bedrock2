@@ -77,6 +77,18 @@ In Secrets Manager we create them as "Other type of secret" and then "Plaintext"
         },
     }
 ```
+## Windows File Shares
+### (file_copy)
+```
+    {
+        "type": "win",
+        "domain":"ASHEVILLE",
+        "system_name":"10.0.0.1",
+        "share_name":"FileShareName",
+        "username": "bedrock",
+        "password": "xxxxx",
+    }
+```
 
 ## Encryption
 ### (encrypt)
