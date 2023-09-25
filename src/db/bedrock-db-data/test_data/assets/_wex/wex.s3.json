@@ -1,0 +1,17 @@
+{
+  "asset_name": "wex.s3",
+  "description": "Wex File on s3",
+  "location": {
+    "loctype": "file",
+    "filename": "AshevilleExport_PostedDate_${YYYY}${MM}${DD}.csv",
+    "path": "wex/",
+    "connection": "s3_data_files"
+  },
+  "owner_id": null,
+  "notes": null,
+  "active": true,
+  "depends": [
+    "wex.ftp"
+  ],
+  "tags": []
+}
