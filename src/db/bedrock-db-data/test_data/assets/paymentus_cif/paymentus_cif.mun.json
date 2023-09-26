@@ -1,0 +1,15 @@
+{
+  "asset_name": "paymentus_cif.mun",
+  "description": "Paymentus CIF",
+  "location": {
+    "loctype": "db",
+    "connection": "munis/munprod/mssqlgisadmin",
+    "schemaname": "amd",
+    "tablename": "ub_pm_cif_file"
+  },
+  "owner_id": null,
+  "notes": null,
+  "active": true,
+  "depends": [],
+  "tags": []
+}

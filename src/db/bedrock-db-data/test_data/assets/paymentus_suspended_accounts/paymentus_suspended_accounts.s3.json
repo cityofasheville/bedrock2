@@ -1,0 +1,17 @@
+{
+  "asset_name": "paymentus_suspended_accounts.s3",
+  "description": "Paymentus Suspended Accounts",
+  "location": {
+    "connection": "s3_data_files",
+    "filename": "Susp${YYYY}${MM}${DD}.csv",
+    "path": "paymentus/",
+    "loctype": "file"
+  },
+  "owner_id": null,
+  "notes": null,
+  "active": true,
+  "depends": [
+    "paymentus_suspended_accounts.mun"
+  ],
+  "tags": []
+}

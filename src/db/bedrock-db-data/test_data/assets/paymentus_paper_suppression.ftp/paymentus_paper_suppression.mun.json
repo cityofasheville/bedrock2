@@ -1,0 +1,17 @@
+{
+  "asset_name": "paymentus_paper_suppression.mun",
+  "description": "",
+  "location": {
+    "connection": "munis/munprod/fme_jobs",
+    "loctype": "db",
+    "schemaname": "avl",
+    "tablename": "Paymentus_Paper_Suppression_Table"
+  },
+  "owner_id": null,
+  "notes": null,
+  "active": true,
+  "depends": [
+    "paymentus_paper_suppression.s3"
+  ],
+  "tags": []
+}

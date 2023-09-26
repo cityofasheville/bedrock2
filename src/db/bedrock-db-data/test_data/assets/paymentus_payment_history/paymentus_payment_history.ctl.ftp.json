@@ -1,0 +1,17 @@
+{
+  "asset_name": "paymentus_payment_history.ctl.ftp",
+  "description": "paymentus_payment_history control file",
+  "location": {
+    "connection": "paymentus_ftp",
+    "filename": "Payment${YYYY}${MM}${DD}.ctl",
+    "path": "/input/",
+    "loctype": "file"
+  },
+  "owner_id": null,
+  "notes": null,
+  "active": true,
+  "depends": [
+    "paymentus_payment_history.ctl.s3"
+  ],
+  "tags": []
+}

@@ -1,0 +1,17 @@
+{
+  "asset_name": "paymentus_suspended_accounts.ctl.s3",
+  "description": "paymentus_suspended_accounts control file",
+  "location": {
+    "connection": "s3_data_files",
+    "filename": "Susp${YYYY}${MM}${DD}.ctl",
+    "path": "paymentus/",
+    "loctype": "file"
+  },
+  "owner_id": null,
+  "notes": null,
+  "active": true,
+  "depends": [
+    "paymentus.empty_control_file.lib"
+  ],
+  "tags": []
+}

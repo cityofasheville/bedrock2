@@ -1,0 +1,17 @@
+{
+  "asset_name": "paymentus_cif.ctl.s3",
+  "description": "",
+  "location": {
+    "connection": "s3_data_files",
+    "filename": "CIF${YYYY}${MM}${DD}.ctl",
+    "path": "paymentus/",
+    "loctype": "file"
+  },
+  "owner_id": null,
+  "notes": null,
+  "active": true,
+  "depends": [
+    "paymentus.empty_control_file.lib"
+  ],
+  "tags": []
+}
