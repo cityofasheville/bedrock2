@@ -1,0 +1,16 @@
+{
+  "asset_name": "maint_Restrooms-Concessions.maint.json",
+  "description": "Maintenance Responsibilities: Restrooms-Concessions",
+  "location": {
+    "tab": "Restrooms/Concessions",
+    "connection": "bedrock-googlesheets",
+    "spreadsheetid": "16rZUoAlISFIAmvcnSMHmhaE0qObj2OMpHQX3ddRoEwg"
+  },
+  "owner_id": null,
+  "notes": null,
+  "active": true,
+  "depends": [],
+  "tags": [
+    "maintenance_responsibilities"
+  ]
+}

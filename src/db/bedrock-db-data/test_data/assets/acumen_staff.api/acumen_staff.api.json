@@ -2,8 +2,7 @@
   "asset_name": "acumen_staff.api",
   "description": "Acumen Staff API",
   "location": {
-    "connection": "acumen_api",
-    "loctype": "api"
+    "connection": "acumen_api"
   },
   "owner_id": null,
   "notes": null,

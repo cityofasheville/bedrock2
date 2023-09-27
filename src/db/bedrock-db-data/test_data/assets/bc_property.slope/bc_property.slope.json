@@ -2,10 +2,9 @@
   "asset_name": "bc_property.slope",
   "description": "Property table from County",
   "location": {
+    "tablename": "bc_property",
     "connection": "pubrecdb1/steepslope/dbadmin",
-    "loctype": "db",
-    "schemaname": "public",
-    "tablename": "bc_property"
+    "schemaname": "public"
   },
   "owner_id": null,
   "notes": null,

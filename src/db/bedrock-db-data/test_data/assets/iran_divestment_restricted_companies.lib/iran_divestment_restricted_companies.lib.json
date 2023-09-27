@@ -2,10 +2,9 @@
   "asset_name": "iran_divestment_restricted_companies.lib",
   "description": "Iranian Companies we are forbidden to work with",
   "location": {
+    "tablename": "iran_divestment_restricted_companies",
     "connection": "pubrecdb1/mdastore1/dbadmin",
-    "loctype": "db",
-    "schemaname": "internal",
-    "tablename": "iran_divestment_restricted_companies"
+    "schemaname": "internal"
   },
   "owner_id": null,
   "notes": null,

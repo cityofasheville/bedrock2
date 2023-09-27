@@ -1,6 +1,7 @@
 {
   "asset_name": "aetna.ftp",
   "run_group": "aetna",
+  "active": true,
   "tasks": [
     {
       "type": "file_copy",

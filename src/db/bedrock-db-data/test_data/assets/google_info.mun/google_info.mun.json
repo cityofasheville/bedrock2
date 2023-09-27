@@ -2,10 +2,9 @@
   "asset_name": "google_info.mun",
   "description": "",
   "location": {
+    "tablename": "Google_Info",
     "connection": "munis/munprod/mssqlgisadmin",
-    "loctype": "db",
-    "schemaname": "avl",
-    "tablename": "Google_Info"
+    "schemaname": "avl"
   },
   "owner_id": null,
   "notes": null,

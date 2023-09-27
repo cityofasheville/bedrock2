@@ -1,0 +1,16 @@
+{
+  "asset_name": "sog_finished_water_volume.ncb",
+  "description": "Water SOG Benchmark: Finished Water Volume",
+  "location": {
+    "tab": "finished_water_volume",
+    "connection": "bedrock-googlesheets",
+    "spreadsheetid": "1m2xD4JyH4BEBey_ybsEgrvYopsl0PjWNmY_PEv3l6D4"
+  },
+  "owner_id": null,
+  "notes": null,
+  "active": true,
+  "depends": [],
+  "tags": [
+    "nc_benchmarks"
+  ]
+}

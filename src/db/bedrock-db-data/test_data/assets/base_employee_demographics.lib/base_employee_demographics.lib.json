@@ -2,10 +2,9 @@
   "asset_name": "base_employee_demographics.lib",
   "description": "Standard Employee - demographic data",
   "location": {
+    "tablename": "base_employee_demographics",
     "connection": "pubrecdb1/mdastore1/dbadmin",
-    "loctype": "db",
-    "schemaname": "standard",
-    "tablename": "base_employee_demographics"
+    "schemaname": "standard"
   },
   "owner_id": null,
   "notes": null,

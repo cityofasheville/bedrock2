@@ -2,10 +2,9 @@
   "asset_name": "pr_accrual_hours_balances.mun",
   "description": "",
   "location": {
+    "tablename": "pr_accrual_hours_balances",
     "connection": "munis/munprod/mssqlgisadmin",
-    "loctype": "db",
-    "schemaname": "amd",
-    "tablename": "pr_accrual_hours_balances"
+    "schemaname": "amd"
   },
   "owner_id": null,
   "notes": null,

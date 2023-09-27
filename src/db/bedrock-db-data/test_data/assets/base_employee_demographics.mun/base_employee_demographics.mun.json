@@ -2,10 +2,9 @@
   "asset_name": "base_employee_demographics.mun",
   "description": "Standard Employee - demographic data",
   "location": {
+    "tablename": "base_employee_demographics",
     "connection": "munis/munprod/mssqlgisadmin",
-    "loctype": "db",
-    "schemaname": "avl_bdv",
-    "tablename": "base_employee_demographics"
+    "schemaname": "avl_bdv"
   },
   "owner_id": null,
   "notes": null,

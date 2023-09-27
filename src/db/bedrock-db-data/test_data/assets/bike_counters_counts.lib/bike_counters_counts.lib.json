@@ -1,0 +1,17 @@
+{
+  "asset_name": "bike_counters_counts.lib",
+  "description": "",
+  "location": {
+    "tablename": "counter_counts",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "bike_counter"
+  },
+  "owner_id": null,
+  "notes": null,
+  "active": true,
+  "depends": [
+    "eco_visio.api",
+    "bike_counters.lib"
+  ],
+  "tags": []
+}

@@ -1,6 +1,7 @@
 {
   "asset_name": "aclara.ftp",
   "run_group": "aclara",
+  "active": true,
   "tasks": [
     {
       "type": "file_copy",

@@ -2,10 +2,9 @@
   "asset_name": "coa_computer_assets.lib",
   "description": "Computers on our network",
   "location": {
+    "tablename": "coa_computer_assets",
     "connection": "pubrecdb1/mdastore1/dbadmin",
-    "loctype": "db",
-    "schemaname": "internal",
-    "tablename": "coa_computer_assets"
+    "schemaname": "internal"
   },
   "owner_id": null,
   "notes": null,

@@ -2,10 +2,9 @@
   "asset_name": "cigna.s3",
   "description": "",
   "location": {
-    "connection": "s3_data_files",
+    "path": "cigna/",
     "filename": "XO16000__xo10001i.77103.${YYYY}${MM}${DD}.txt",
-    "loctype": "file",
-    "path": "cigna/"
+    "connection": "s3_data_files"
   },
   "owner_id": null,
   "notes": null,

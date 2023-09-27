@@ -2,10 +2,9 @@
   "asset_name": "coa_climate_justice_index.lib",
   "description": "",
   "location": {
+    "tablename": "coa_climate_justice_index",
     "connection": "pubrecdb1/mdastore1/dbadmin",
-    "loctype": "db",
-    "schemaname": "internal",
-    "tablename": "coa_climate_justice_index"
+    "schemaname": "internal"
   },
   "owner_id": null,
   "notes": null,

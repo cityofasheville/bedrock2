@@ -2,10 +2,9 @@
   "asset_name": "permit_owners.acc",
   "description": "Owners associated with permits",
   "location": {
+    "tablename": "permit_owners",
     "connection": "coa-acceladb/accela/mssqlgisadmin",
-    "loctype": "db",
-    "schemaname": "amd",
-    "tablename": "permit_owners"
+    "schemaname": "amd"
   },
   "owner_id": null,
   "notes": null,

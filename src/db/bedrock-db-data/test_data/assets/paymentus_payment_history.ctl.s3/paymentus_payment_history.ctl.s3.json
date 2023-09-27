@@ -1,0 +1,16 @@
+{
+  "asset_name": "paymentus_payment_history.ctl.s3",
+  "description": "paymentus_payment_history control file",
+  "location": {
+    "path": "paymentus/",
+    "filename": "Payment${YYYY}${MM}${DD}.ctl",
+    "connection": "s3_data_files"
+  },
+  "owner_id": null,
+  "notes": null,
+  "active": true,
+  "depends": [
+    "paymentus.empty_control_file.lib"
+  ],
+  "tags": []
+}

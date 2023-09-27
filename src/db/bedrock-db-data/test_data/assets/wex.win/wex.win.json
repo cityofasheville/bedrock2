@@ -1,0 +1,16 @@
+{
+  "asset_name": "wex.win",
+  "description": "Wex File on CityWorks Fleet file share",
+  "location": {
+    "path": "/wex/",
+    "filename": "AshevilleExport_PostedDate_${YYYY}${MM}${DD}.csv",
+    "connection": "cityworks_fleet"
+  },
+  "owner_id": null,
+  "notes": null,
+  "active": true,
+  "depends": [
+    "wex.ftp"
+  ],
+  "tags": []
+}

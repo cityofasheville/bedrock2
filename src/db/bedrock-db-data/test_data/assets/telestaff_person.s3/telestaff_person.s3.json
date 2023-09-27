@@ -2,10 +2,9 @@
   "asset_name": "telestaff_person.s3",
   "description": "",
   "location": {
-    "connection": "s3_data_files",
+    "path": "telestaff-import-person/",
     "filename": "${YYYY}-${MM}-${DD}-Person.xml",
-    "loctype": "file",
-    "path": "telestaff-import-person/"
+    "connection": "s3_data_files"
   },
   "owner_id": null,
   "notes": null,

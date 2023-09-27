@@ -2,10 +2,9 @@
   "asset_name": "permit_comments.acc",
   "description": "Permit comments data",
   "location": {
+    "tablename": "permit_comments",
     "connection": "coa-acceladb/accela/mssqlgisadmin",
-    "loctype": "db",
-    "schemaname": "amd",
-    "tablename": "permit_comments"
+    "schemaname": "amd"
   },
   "owner_id": null,
   "notes": null,

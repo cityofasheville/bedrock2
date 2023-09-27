@@ -2,10 +2,9 @@
   "asset_name": "aclara.ftp",
   "description": "Uploaded Accounting data to Aclara",
   "location": {
-    "connection": "aclara_ftp",
+    "path": "/AclaraAccountImportFiles/",
     "filename": "AccountImport.imp",
-    "loctype": "file",
-    "path": "/AclaraAccountImportFiles/"
+    "connection": "aclara_ftp"
   },
   "owner_id": null,
   "notes": null,

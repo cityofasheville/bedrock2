@@ -2,10 +2,9 @@
   "asset_name": "coa_cip_project_polygons.edit",
   "description": "",
   "location": {
+    "tablename": "coa_cip_project_polygons",
     "connection": "coa-gis-warehouse1/coagiswarehouse/coagis",
-    "loctype": "db",
-    "schemaname": "coagis",
-    "tablename": "coa_cip_project_polygons"
+    "schemaname": "coagis"
   },
   "owner_id": null,
   "notes": null,

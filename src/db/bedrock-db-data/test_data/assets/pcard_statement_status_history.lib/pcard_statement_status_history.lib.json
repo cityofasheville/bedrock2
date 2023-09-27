@@ -2,10 +2,9 @@
   "asset_name": "pcard_statement_status_history.lib",
   "description": "PCard transactions and status",
   "location": {
+    "tablename": "pcard_statement_status_history",
     "connection": "pubrecdb1/mdastore1/dbadmin",
-    "loctype": "db",
-    "schemaname": "internal",
-    "tablename": "pcard_statement_status_history"
+    "schemaname": "internal"
   },
   "owner_id": null,
   "notes": null,

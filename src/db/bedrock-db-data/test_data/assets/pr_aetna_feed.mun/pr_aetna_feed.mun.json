@@ -2,10 +2,9 @@
   "asset_name": "pr_aetna_feed.mun",
   "description": "",
   "location": {
+    "tablename": "PR_AETNA_Feed_2023",
     "connection": "munis/munprod/fme_jobs",
-    "loctype": "db",
-    "schemaname": "avl",
-    "tablename": "PR_AETNA_Feed_2023"
+    "schemaname": "avl"
   },
   "owner_id": null,
   "notes": null,

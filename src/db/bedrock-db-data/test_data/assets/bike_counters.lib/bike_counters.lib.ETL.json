@@ -1,0 +1,13 @@
+{
+  "asset_name": "bike_counters.lib",
+  "run_group": "daily",
+  "active": true,
+  "tasks": [
+    {
+      "type": "run_lambda",
+      "active": true,
+      "lambda_arn": "arn:aws:lambda:us-east-1:518970837364:function:ecovisio",
+      "description": "Pull yesterday's Eco-Visio data from API using ecovisio Lambda"
+    }
+  ]
+}

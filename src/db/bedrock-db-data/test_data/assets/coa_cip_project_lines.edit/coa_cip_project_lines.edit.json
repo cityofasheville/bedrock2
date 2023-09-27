@@ -2,10 +2,9 @@
   "asset_name": "coa_cip_project_lines.edit",
   "description": "",
   "location": {
+    "tablename": "coa_cip_project_lines",
     "connection": "coa-gis-warehouse1/coagiswarehouse/coagis",
-    "loctype": "db",
-    "schemaname": "coagis",
-    "tablename": "coa_cip_project_lines"
+    "schemaname": "coagis"
   },
   "owner_id": null,
   "notes": null,

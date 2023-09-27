@@ -2,10 +2,9 @@
   "asset_name": "coa_bc_address_master.lib",
   "description": "Master address table",
   "location": {
+    "tablename": "coa_bc_address_master",
     "connection": "pubrecdb1/mdastore1/dbadmin",
-    "loctype": "db",
-    "schemaname": "internal",
-    "tablename": "coa_bc_address_master"
+    "schemaname": "internal"
   },
   "owner_id": null,
   "notes": null,

@@ -2,10 +2,9 @@
   "asset_name": "coa_districts_zoning.edit",
   "description": "Asheville zoning districts",
   "location": {
+    "tablename": "coa_districts_zoning",
     "connection": "coa-gis-warehouse1/coagiswarehouse/coagis",
-    "loctype": "db",
-    "schemaname": "coagis",
-    "tablename": "coa_districts_zoning"
+    "schemaname": "coagis"
   },
   "owner_id": null,
   "notes": null,

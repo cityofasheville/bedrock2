@@ -1,0 +1,27 @@
+{
+  "asset_name": "paymentus_cif.s3",
+  "run_group": "paymentus_up",
+  "active": true,
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "paymentus_cif.mun"
+      },
+      "target_location": {
+        "asset": "paymentus_cif.s3"
+      }
+    },
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "paymentus.empty_control_file.lib"
+      },
+      "target_location": {
+        "asset": "paymentus_cif.ctl.s3"
+      }
+    }
+  ]
+}

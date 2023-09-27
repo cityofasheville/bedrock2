@@ -2,10 +2,9 @@
   "asset_name": "telestaff_person01_xml.mun",
   "description": "",
   "location": {
+    "tablename": "telestaff_person01_xml",
     "connection": "munis/munprod/mssqlgisadmin",
-    "loctype": "db",
-    "schemaname": "avl",
-    "tablename": "telestaff_person01_xml"
+    "schemaname": "avl"
   },
   "owner_id": null,
   "notes": null,

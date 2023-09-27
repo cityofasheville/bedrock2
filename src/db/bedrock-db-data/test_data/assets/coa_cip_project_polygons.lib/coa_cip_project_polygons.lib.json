@@ -2,10 +2,9 @@
   "asset_name": "coa_cip_project_polygons.lib",
   "description": "",
   "location": {
+    "tablename": "coa_cip_project_polygons",
     "connection": "pubrecdb1/mdastore1/dbadmin",
-    "loctype": "db",
-    "schemaname": "internal",
-    "tablename": "coa_cip_project_polygons"
+    "schemaname": "internal"
   },
   "owner_id": null,
   "notes": null,
