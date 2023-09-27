@@ -52,7 +52,7 @@ GRANT ALL ON TABLE bedrock.connections TO bedrock_user;
 CREATE TABLE bedrock.assets (
 	asset_name text NOT NULL,
 	description text NULL,
-	"location" json NULL,
+	"location" jsonb NULL,
   owner_id integer NULL,
   notes text NULL,
 	active bool NOT NULL,
@@ -120,8 +120,8 @@ CREATE TABLE bedrock.tasks (
 	description text NULL,
 	"type" text NOT NULL,
 	active bool NOT NULL,
-	"source" json NULL,
-	target json NULL,
+	"source" jsonb NULL,
+	target jsonb NULL,
 	"configuration" text NULL,
 	CONSTRAINT tasks_pk PRIMARY KEY (asset_name, seq_number)
 );

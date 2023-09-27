@@ -1,0 +1,14 @@
+{
+  "asset_name": "coa_climate_justice_index.wh",
+  "description": "",
+  "location": {
+    "tablename": "coa_climate_justice_index",
+    "connection": "coa-gis-warehouse1/coagiswarehouse/coagis",
+    "schemaname": "coagis"
+  },
+  "owner_id": null,
+  "notes": null,
+  "active": true,
+  "depends": [],
+  "tags": []
+}

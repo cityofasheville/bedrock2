@@ -2,10 +2,9 @@
   "asset_name": "fire_pr_accrual_hours_balances.lib",
   "description": "",
   "location": {
+    "tablename": "fire_pr_accrual_hours_balances",
     "connection": "pubrecdb1/mdastore1/dbadmin",
-    "loctype": "db",
-    "schemaname": "bc",
-    "tablename": "fire_pr_accrual_hours_balances"
+    "schemaname": "bc"
   },
   "owner_id": null,
   "notes": null,

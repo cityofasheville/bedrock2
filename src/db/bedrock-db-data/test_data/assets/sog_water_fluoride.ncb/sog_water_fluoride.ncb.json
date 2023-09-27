@@ -1,0 +1,16 @@
+{
+  "asset_name": "sog_water_fluoride.ncb",
+  "description": "Water SOG Benchmark: water_fluoride",
+  "location": {
+    "tab": "water_fluoride",
+    "connection": "bedrock-googlesheets",
+    "spreadsheetid": "1m2xD4JyH4BEBey_ybsEgrvYopsl0PjWNmY_PEv3l6D4"
+  },
+  "owner_id": null,
+  "notes": null,
+  "active": true,
+  "depends": [],
+  "tags": [
+    "nc_benchmarks"
+  ]
+}

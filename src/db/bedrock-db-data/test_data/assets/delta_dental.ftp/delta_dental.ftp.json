@@ -2,10 +2,9 @@
   "asset_name": "delta_dental.ftp",
   "description": "Uploaded staff and customer data to Delta Dental",
   "location": {
-    "connection": "delta_dental_ftp",
+    "path": "/in/",
     "filename": "deltadental_asheville_${YYYY}${MM}${DD}.txt.asc",
-    "loctype": "file",
-    "path": "/in/"
+    "connection": "delta_dental_ftp"
   },
   "owner_id": null,
   "notes": null,

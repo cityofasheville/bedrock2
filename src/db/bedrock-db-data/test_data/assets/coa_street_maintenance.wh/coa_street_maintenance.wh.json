@@ -2,10 +2,9 @@
   "asset_name": "coa_street_maintenance.wh",
   "description": "Street Maintenance",
   "location": {
-    "connection": "gis-warehouse/coagiswarehouse/coagis",
-    "loctype": "db",
-    "schemaname": "coagis",
-    "tablename": "coa_street_maintenance"
+    "tablename": "coa_street_maintenance",
+    "connection": "coa-gis-warehouse1/coagiswarehouse/coagis",
+    "schemaname": "coagis"
   },
   "owner_id": null,
   "notes": null,

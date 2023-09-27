@@ -2,10 +2,9 @@
   "asset_name": "bc_property.lib",
   "description": "Property table from County",
   "location": {
+    "tablename": "bc_property",
     "connection": "pubrecdb1/mdastore1/dbadmin",
-    "loctype": "db",
-    "schemaname": "internal",
-    "tablename": "bc_property"
+    "schemaname": "internal"
   },
   "owner_id": null,
   "notes": null,

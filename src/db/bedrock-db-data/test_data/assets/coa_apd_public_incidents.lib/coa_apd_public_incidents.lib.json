@@ -2,10 +2,9 @@
   "asset_name": "coa_apd_public_incidents.lib",
   "description": "",
   "location": {
+    "tablename": "coa_apd_public_incidents",
     "connection": "pubrecdb1/mdastore1/dbadmin",
-    "loctype": "db",
-    "schemaname": "internal",
-    "tablename": "coa_apd_public_incidents"
+    "schemaname": "internal"
   },
   "owner_id": null,
   "notes": null,

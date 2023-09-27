@@ -2,10 +2,9 @@
   "asset_name": "coa_districts_public_works.lib",
   "description": "Public works districts",
   "location": {
+    "tablename": "coa_districts_public_works",
     "connection": "pubrecdb1/mdastore1/dbadmin",
-    "loctype": "db",
-    "schemaname": "internal",
-    "tablename": "coa_districts_public_works"
+    "schemaname": "internal"
   },
   "owner_id": null,
   "notes": null,

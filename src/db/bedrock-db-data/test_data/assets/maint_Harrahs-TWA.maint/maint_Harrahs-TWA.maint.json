@@ -1,0 +1,16 @@
+{
+  "asset_name": "maint_Harrahs-TWA.maint",
+  "description": "Maintenance Responsibilities: Harrahs-TWA",
+  "location": {
+    "tab": "Harrah's/TWA",
+    "connection": "bedrock-googlesheets",
+    "spreadsheetid": "16rZUoAlISFIAmvcnSMHmhaE0qObj2OMpHQX3ddRoEwg"
+  },
+  "owner_id": null,
+  "notes": null,
+  "active": true,
+  "depends": [],
+  "tags": [
+    "maintenance_responsibilities"
+  ]
+}

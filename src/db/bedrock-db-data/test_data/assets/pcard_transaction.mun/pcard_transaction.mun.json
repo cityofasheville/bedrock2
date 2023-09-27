@@ -2,10 +2,9 @@
   "asset_name": "pcard_transaction.mun",
   "description": "PCard transaction",
   "location": {
+    "tablename": "pcard_transaction",
     "connection": "munis/munprod/mssqlgisadmin",
-    "loctype": "db",
-    "schemaname": "amd",
-    "tablename": "pcard_transaction"
+    "schemaname": "amd"
   },
   "owner_id": null,
   "notes": null,

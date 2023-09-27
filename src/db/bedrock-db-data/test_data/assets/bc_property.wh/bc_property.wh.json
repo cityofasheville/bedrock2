@@ -2,10 +2,9 @@
   "asset_name": "bc_property.wh",
   "description": "Property table from County",
   "location": {
-    "connection": "gis-warehouse/coagiswarehouse/coagis",
-    "loctype": "db",
-    "schemaname": "coagis",
-    "tablename": "bc_property"
+    "tablename": "bc_property",
+    "connection": "coa-gis-warehouse1/coagiswarehouse/coagis",
+    "schemaname": "coagis"
   },
   "owner_id": null,
   "notes": null,

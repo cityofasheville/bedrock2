@@ -2,10 +2,9 @@
   "asset_name": "permit_contractors.acc",
   "description": "Permit contractors data",
   "location": {
+    "tablename": "permit_contractors",
     "connection": "coa-acceladb/accela/mssqlgisadmin",
-    "loctype": "db",
-    "schemaname": "amd",
-    "tablename": "permit_contractors"
+    "schemaname": "amd"
   },
   "owner_id": null,
   "notes": null,

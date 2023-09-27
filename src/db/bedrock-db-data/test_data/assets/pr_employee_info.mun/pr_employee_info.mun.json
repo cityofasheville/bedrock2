@@ -2,10 +2,9 @@
   "asset_name": "pr_employee_info.mun",
   "description": "Basic information for employees",
   "location": {
+    "tablename": "pr_employee_info",
     "connection": "munis/munprod/mssqlgisadmin",
-    "loctype": "db",
-    "schemaname": "amd",
-    "tablename": "pr_employee_info"
+    "schemaname": "amd"
   },
   "owner_id": null,
   "notes": null,

@@ -2,10 +2,9 @@
   "asset_name": "vendors.lib",
   "description": "City Vendors",
   "location": {
+    "tablename": "vendors",
     "connection": "pubrecdb1/mdastore1/dbadmin",
-    "loctype": "db",
-    "schemaname": "internal",
-    "tablename": "vendors"
+    "schemaname": "internal"
   },
   "owner_id": null,
   "notes": null,

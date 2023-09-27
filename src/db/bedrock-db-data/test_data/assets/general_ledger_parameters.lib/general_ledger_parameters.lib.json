@@ -2,10 +2,9 @@
   "asset_name": "general_ledger_parameters.lib",
   "description": "Various GL parameters, especially budget year",
   "location": {
+    "tablename": "general_ledger_parameters",
     "connection": "pubrecdb1/mdastore1/dbadmin",
-    "loctype": "db",
-    "schemaname": "internal",
-    "tablename": "general_ledger_parameters"
+    "schemaname": "internal"
   },
   "owner_id": null,
   "notes": null,

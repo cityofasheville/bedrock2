@@ -2,10 +2,9 @@
   "asset_name": "aetna.ftp",
   "description": "Uploaded staff data to Aetna",
   "location": {
-    "connection": "aetna_ftp",
+    "path": "/AetnaSRC_Reports/toAetna/",
     "filename": "aetna_asheville_${YYYY}${MM}${DD}.csv",
-    "loctype": "file",
-    "path": "/AetnaSRC_Reports/toAetna/"
+    "connection": "aetna_ftp"
   },
   "owner_id": null,
   "notes": null,

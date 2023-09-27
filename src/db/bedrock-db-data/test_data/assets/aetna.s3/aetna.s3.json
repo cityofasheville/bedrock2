@@ -2,10 +2,9 @@
   "asset_name": "aetna.s3",
   "description": "",
   "location": {
-    "connection": "s3_data_files",
+    "path": "aetna/",
     "filename": "aetna_asheville_${YYYY}${MM}${DD}.csv",
-    "loctype": "file",
-    "path": "aetna/"
+    "connection": "s3_data_files"
   },
   "owner_id": null,
   "notes": null,

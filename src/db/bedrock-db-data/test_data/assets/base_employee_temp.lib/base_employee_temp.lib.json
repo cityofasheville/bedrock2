@@ -2,10 +2,9 @@
   "asset_name": "base_employee_temp.lib",
   "description": "",
   "location": {
+    "tablename": "base_employee_temp",
     "connection": "pubrecdb1/mdastore1/dbadmin",
-    "loctype": "db",
-    "schemaname": "temp",
-    "tablename": "base_employee_temp"
+    "schemaname": "temp"
   },
   "owner_id": null,
   "notes": null,

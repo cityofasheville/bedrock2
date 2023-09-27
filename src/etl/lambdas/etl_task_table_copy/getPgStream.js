@@ -66,7 +66,9 @@ function getPgStream(location) {
             if (location.fixedwidth_noquotes) {
               reject(new Error("Postgres 'fixedwidth_noquotes' not implemented"));
             }
-
+            if (location.crlf) {
+              reject(new Error("Postgres 'crlf' not implemented"));
+            }
             const queryString = `COPY (SELECT * FROM ${tablename} 
               ${copySinceQuery}
               ${orderby}) TO STDOUT WITH (FORMAT csv ${tableheaders})`;

@@ -1,0 +1,14 @@
+{
+  "asset_name": "paymentus_paper_suppression.ftp",
+  "description": "Downloaded Paymentus list of people not to send paper bills to",
+  "location": {
+    "path": "/output/",
+    "filename": "ashv-paper-suppression-${YYYY}${MM}${DD}.csv",
+    "connection": "paymentus_ftp"
+  },
+  "owner_id": null,
+  "notes": null,
+  "active": true,
+  "depends": [],
+  "tags": []
+}

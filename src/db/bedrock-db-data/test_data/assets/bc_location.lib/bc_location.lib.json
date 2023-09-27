@@ -2,10 +2,9 @@
   "asset_name": "bc_location.lib",
   "description": "Locations table from County",
   "location": {
+    "tablename": "bc_location",
     "connection": "pubrecdb1/mdastore1/dbadmin",
-    "loctype": "db",
-    "schemaname": "internal",
-    "tablename": "bc_location"
+    "schemaname": "internal"
   },
   "owner_id": null,
   "notes": null,

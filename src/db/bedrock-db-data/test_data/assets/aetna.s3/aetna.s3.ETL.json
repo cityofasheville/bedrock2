@@ -1,6 +1,7 @@
 {
   "asset_name": "aetna.s3",
   "run_group": "aetna",
+  "active": true,
   "tasks": [
     {
       "type": "table_copy",

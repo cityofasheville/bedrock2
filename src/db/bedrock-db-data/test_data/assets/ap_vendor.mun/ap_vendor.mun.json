@@ -2,10 +2,9 @@
   "asset_name": "ap_vendor.mun",
   "description": "",
   "location": {
+    "tablename": "ap_vendor",
     "connection": "munis/munprod/mssqlgisadmin",
-    "loctype": "db",
-    "schemaname": "dbo",
-    "tablename": "ap_vendor"
+    "schemaname": "dbo"
   },
   "owner_id": null,
   "notes": null,

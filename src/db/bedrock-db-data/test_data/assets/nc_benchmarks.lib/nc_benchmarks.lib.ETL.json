@@ -1,0 +1,21 @@
+{
+  "asset_name": "nc_benchmarks.lib",
+  "run_group": "nc_benchmarks",
+  "active": true,
+  "tasks": [
+    {
+      "type": "aggregate",
+      "active": true,
+      "source_location": {
+        "aggregate": "nc_benchmarks",
+        "data_range": "A2:E",
+        "temp_table": "nc_benchmarks_temp.lib",
+        "data_connection": "bedrock-googlesheets",
+        "append_asset_name": true
+      },
+      "target_location": {
+        "asset": "nc_benchmarks.lib"
+      }
+    }
+  ]
+}

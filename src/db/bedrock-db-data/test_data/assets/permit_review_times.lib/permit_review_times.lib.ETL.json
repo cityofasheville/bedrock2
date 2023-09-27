@@ -1,7 +1,7 @@
 {
   "asset_name": "permit_review_times.lib",
   "run_group": "notactive",
-  "active": false,
+  "active": true,
   "tasks": [
     {
       "type": "sql",

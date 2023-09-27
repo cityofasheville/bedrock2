@@ -13,7 +13,8 @@ Secrets Manager holds data in these formats:
 We name database connections with names like "servername/database/username".
 In Secrets Manager we create them as "Other type of secret" and then "Plaintext", which allows you to add key/values as JSON.
 
-## For table_copy and sql
+## Databases
+### (table_copy and sql)
 ```
     {
         "type": "postgresql",
@@ -36,7 +37,8 @@ In Secrets Manager we create them as "Other type of secret" and then "Plaintext"
         "description": "Servername:  AD Authentication"
     }
 ```
-## For table_copy    
+## Google Sheets
+### (table_copy)
 ```
     {
         "type": "google_sheets",
@@ -44,14 +46,20 @@ In Secrets Manager we create them as "Other type of secret" and then "Plaintext"
         "private_key": "-----BEGIN PRIVATE KEY-----ihflieurbvliasubfv....."
     }
 ```
-## For table_copy and file_copy (S3 table_copy files are csv by default or fixed width, created in SQL and optionally given the "fixedwidth_noquotes".)
+## S3
+## (table_copy and file_copy) 
+## S3 table_copy files are csv by default or fixed width, created in SQL and optionally given the "fixedwidth_noquotes".
 ```
     {
         "type": "s3",
         "s3_bucket": "bedrock-data-files"
     }
 ```
-## For file_copy and sftp and encrypt    
+## SFTP
+### (file_copy and sftp and encrypt)
+### Use either password or private_key to connect
+### pgp_key is used for encrypting file before sending
+### Optional: disabled_algorithms might be needed in unusual circumstances (see paramiko docs)
 ```
     {
         "type": "sftp",
@@ -59,11 +67,31 @@ In Secrets Manager we create them as "Other type of secret" and then "Plaintext"
         "port": 22,
         "username": "bedrock",
         "password": "xxxxx",
-        "pgp_key": "-----BEGIN PGP PUBLIC KEY BLOCK-iuygqwerfibhu...."
+        "private_key": "-----BEGIN RSA PRIVATE KEY-----\nasdfgy",
+        "pgp_key": "-----BEGIN PGP PUBLIC KEY BLOCK-iuygqwerfibhu....",
+        "disabled_algorithms": {
+            "pubkeys": [
+                "rsa-sha2-512",
+                "rsa-sha2-256"
+            ]
+        },
+    }
+```
+## Windows File Shares
+### (file_copy)
+```
+    {
+        "type": "win",
+        "domain":"ASHEVILLE",
+        "system_name":"10.0.0.1",
+        "share_name":"FileShareName",
+        "username": "bedrock",
+        "password": "xxxxx",
     }
 ```
 
-## For encrypt
+## Encryption
+### (encrypt)
 ```
     {
         "type": "encrypt",

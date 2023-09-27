@@ -1,0 +1,17 @@
+{
+  "asset_name": "paymentus_paper_suppression.s3",
+  "run_group": "paymentus_down",
+  "active": true,
+  "tasks": [
+    {
+      "type": "file_copy",
+      "active": false,
+      "source_location": {
+        "asset": "paymentus_paper_suppression.ftp"
+      },
+      "target_location": {
+        "asset": "paymentus_paper_suppression.s3"
+      }
+    }
+  ]
+}

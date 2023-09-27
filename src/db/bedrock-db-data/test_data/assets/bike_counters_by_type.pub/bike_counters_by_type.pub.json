@@ -2,10 +2,9 @@
   "asset_name": "bike_counters_by_type.pub",
   "description": "Eco_Visio greenway pedestrian and bike counts-PublicDB",
   "location": {
+    "tablename": "bike_counters_by_type",
     "connection": "coa-publicdb1/coa_share/dbadmin",
-    "loctype": "db",
-    "schemaname": "open",
-    "tablename": "bike_counters_by_type"
+    "schemaname": "open"
   },
   "owner_id": null,
   "notes": null,

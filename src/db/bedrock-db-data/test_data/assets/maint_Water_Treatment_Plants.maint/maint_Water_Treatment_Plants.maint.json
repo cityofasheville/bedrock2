@@ -1,0 +1,16 @@
+{
+  "asset_name": "maint_Water_Treatment_Plants.maint",
+  "description": "Maintenance Responsibilities: Water_Treatment_Plants",
+  "location": {
+    "tab": "Water Treatment Plants",
+    "connection": "bedrock-googlesheets",
+    "spreadsheetid": "16rZUoAlISFIAmvcnSMHmhaE0qObj2OMpHQX3ddRoEwg"
+  },
+  "owner_id": null,
+  "notes": null,
+  "active": true,
+  "depends": [],
+  "tags": [
+    "maintenance_responsibilities"
+  ]
+}

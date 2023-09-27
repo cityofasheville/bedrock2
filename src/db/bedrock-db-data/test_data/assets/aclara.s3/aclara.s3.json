@@ -1,0 +1,16 @@
+{
+  "asset_name": "aclara.s3",
+  "description": "",
+  "location": {
+    "path": "aclara/",
+    "filename": "AccountImport_${YYYY}${MM}${DD}.imp",
+    "connection": "s3_data_files"
+  },
+  "owner_id": null,
+  "notes": null,
+  "active": true,
+  "depends": [
+    "aclara.mun"
+  ],
+  "tags": []
+}

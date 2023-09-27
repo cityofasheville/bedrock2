@@ -99,6 +99,9 @@ async function getSsStream(location) {
                   stringifyOptions.quote = '';
                   stringifyOptions.escape = '';
                 }
+                if (location.crlf) {
+                  stringifyOptions.record_delimiter = 'windows'
+                }
                 nonObjStream = request
                   .pipe(csv.stringify(stringifyOptions));
               }
