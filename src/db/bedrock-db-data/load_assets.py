@@ -40,6 +40,7 @@ sql = f'''
   truncate table bedrock.asset_tags;
   truncate table bedrock.tags;
   truncate table bedrock.run_groups;
+  truncate table bedrock.connections;
 '''
 cur.execute(sql)
 print('Truncated all tables')
@@ -77,6 +78,23 @@ with open(os.path.join(data_directory,'tags.csv')) as ff:
       sql = sql + ','
 cur.execute(sql)
 print(f'Wrote {nrows} items to the tags table')
+
+# Load the connections
+sql = 'INSERT INTO bedrock.connections (connection_name, description, connection_type) VALUES '
+tags = []
+with open(os.path.join(data_directory,'connections.csv')) as ff:
+  rdr = csv.reader(ff)
+  
+  i = 0;
+  rows = list(rdr)
+  nrows = len(rows)
+  for row in rows:
+    i = i+1
+    sql = f"{sql} ('{row[0]}', '{row[1]}', '{row[2]}')"
+    if (i<nrows):
+      sql = sql + ','
+cur.execute(sql)
+print(f'Wrote {nrows} items to the connections table')
 
 # Load the assets
 print('Load all assets')

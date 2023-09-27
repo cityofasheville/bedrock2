@@ -2,7 +2,8 @@
   "asset_name": "coa_computer_assets.goog",
   "description": "Computers on our network",
   "location": {
-    "range": "ComputerAssets!A2:AO",
+    "tab": "ComputerAssets",
+    "range": "A2:AO",
     "filename": "coa_computer_assets",
     "connection": "bedrock-googlesheets",
     "spreadsheetid": "1P9tdY7lawwoZXJmn09UgRMgH7JoauYG8h00MEkGzv8Q"
