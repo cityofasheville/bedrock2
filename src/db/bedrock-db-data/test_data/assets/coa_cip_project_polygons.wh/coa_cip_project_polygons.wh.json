@@ -1,9 +1,9 @@
 {
-  "asset_name": "coa_cip_project_lines.edit",
+  "asset_name": "coa_cip_project_polygons.wh",
   "description": "",
   "location": {
-    "tablename": "coa_cip_project_lines",
-    "connection": "coa-gis-warehouse1/coagiswarehouse/coagis",
+    "tablename": "coa_cip_project_polygons",
+    "connection": "gis-warehouse/coagiswarehouse/coagis",
     "schemaname": "coagis"
   },
   "owner_id": null,

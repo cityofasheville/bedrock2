@@ -10,7 +10,7 @@
   "notes": null,
   "active": true,
   "depends": [
-    "coa_zip_code.edit"
+    "coa_zip_code.wh"
   ],
   "tags": []
 }

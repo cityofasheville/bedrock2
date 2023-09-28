@@ -3,7 +3,7 @@
   "description": "",
   "location": {
     "tablename": "census_2015_blockgroups",
-    "connection": "coa-gis-warehouse1/coagiswarehouse/coagis",
+    "connection": "gis-warehouse/coagiswarehouse/coagis",
     "schemaname": "coagis"
   },
   "owner_id": null,

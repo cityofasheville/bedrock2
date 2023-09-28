@@ -3,7 +3,7 @@
   "description": "Locations table from County",
   "location": {
     "tablename": "bc_location",
-    "connection": "coa-gis-warehouse1/coagiswarehouse/coagis",
+    "connection": "gis-warehouse/coagiswarehouse/coagis",
     "schemaname": "coagis"
   },
   "owner_id": null,

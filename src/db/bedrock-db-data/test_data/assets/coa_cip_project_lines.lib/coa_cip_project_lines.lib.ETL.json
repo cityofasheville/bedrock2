@@ -7,7 +7,7 @@
       "type": "table_copy",
       "active": true,
       "source_location": {
-        "asset": "coa_cip_project_lines.edit"
+        "asset": "coa_cip_project_lines.wh"
       },
       "target_location": {
         "asset": "coa_cip_project_lines.lib"

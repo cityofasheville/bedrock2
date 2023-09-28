@@ -3,7 +3,7 @@
   "description": "Street Maintenance",
   "location": {
     "tablename": "coa_street_maintenance",
-    "connection": "coa-gis-warehouse1/coagiswarehouse/coagis",
+    "connection": "gis-warehouse/coagiswarehouse/coagis",
     "schemaname": "coagis"
   },
   "owner_id": null,

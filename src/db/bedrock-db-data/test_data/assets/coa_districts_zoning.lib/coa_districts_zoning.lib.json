@@ -10,7 +10,7 @@
   "notes": null,
   "active": true,
   "depends": [
-    "coa_districts_zoning.edit"
+    "coa_districts_zoning.wh"
   ],
   "tags": []
 }

@@ -10,7 +10,7 @@
   "notes": null,
   "active": true,
   "depends": [
-    "bc_property.edit"
+    "bc_property.wh"
   ],
   "tags": []
 }

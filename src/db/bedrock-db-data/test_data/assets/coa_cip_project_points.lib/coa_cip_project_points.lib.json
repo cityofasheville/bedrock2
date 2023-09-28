@@ -10,7 +10,7 @@
   "notes": null,
   "active": true,
   "depends": [
-    "coa_cip_project_points.edit"
+    "coa_cip_project_points.wh"
   ],
   "tags": []
 }

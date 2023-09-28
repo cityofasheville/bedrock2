@@ -3,7 +3,7 @@
   "description": "National register properties",
   "location": {
     "tablename": "coa_national_register_properties",
-    "connection": "coa-gis-warehouse1/coagiswarehouse/coagis",
+    "connection": "gis-warehouse/coagiswarehouse/coagis",
     "schemaname": "coagis"
   },
   "owner_id": null,

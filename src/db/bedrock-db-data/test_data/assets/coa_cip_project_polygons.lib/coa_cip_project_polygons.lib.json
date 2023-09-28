@@ -10,7 +10,7 @@
   "notes": null,
   "active": true,
   "depends": [
-    "coa_cip_project_polygons.edit"
+    "coa_cip_project_polygons.wh"
   ],
   "tags": []
 }

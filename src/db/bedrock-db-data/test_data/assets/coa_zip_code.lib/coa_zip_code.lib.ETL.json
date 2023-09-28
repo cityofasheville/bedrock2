@@ -7,7 +7,7 @@
       "type": "table_copy",
       "active": true,
       "source_location": {
-        "asset": "coa_zip_code.edit"
+        "asset": "coa_zip_code.wh"
       },
       "target_location": {
         "asset": "coa_zip_code.lib"

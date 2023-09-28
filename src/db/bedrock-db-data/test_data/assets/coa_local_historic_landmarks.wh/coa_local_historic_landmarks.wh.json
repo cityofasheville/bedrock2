@@ -3,7 +3,7 @@
   "description": "coa_local_historic_landmarks",
   "location": {
     "tablename": "coa_local_historic_landmarks",
-    "connection": "coa-gis-warehouse1/coagiswarehouse/coagis",
+    "connection": "gis-warehouse/coagiswarehouse/coagis",
     "schemaname": "coagis"
   },
   "owner_id": null,

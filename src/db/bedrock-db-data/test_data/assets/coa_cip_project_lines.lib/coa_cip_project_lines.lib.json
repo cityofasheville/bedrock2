@@ -10,7 +10,7 @@
   "notes": null,
   "active": true,
   "depends": [
-    "coa_cip_project_lines.edit"
+    "coa_cip_project_lines.wh"
   ],
   "tags": []
 }

@@ -3,7 +3,7 @@
   "description": "Asheville zoning overlays",
   "location": {
     "tablename": "coa_zoning_overlays",
-    "connection": "coa-gis-warehouse1/coagiswarehouse/coagis",
+    "connection": "gis-warehouse/coagiswarehouse/coagis",
     "schemaname": "coagis"
   },
   "owner_id": null,

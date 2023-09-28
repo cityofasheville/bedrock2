@@ -10,7 +10,7 @@
   "notes": null,
   "active": true,
   "depends": [
-    "coa_asheville_neighborhoods.edit"
+    "coa_asheville_neighborhoods.wh"
   ],
   "tags": []
 }
