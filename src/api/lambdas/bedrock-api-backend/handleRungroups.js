@@ -260,7 +260,6 @@ async function updateRungroup(
   for (let i = 0, comma = ''; i < members.length; i += 1) {
     if (members[i] in body) {
       sql += `${comma} ${members[i]} = $${cnt}`;
-      // Hacky. If we have more JSON types, maybe have a types array above
       args.push(body[members[i]]);
       result.result[members[i]] = body[members[i]];
       cnt += 1;
