@@ -192,6 +192,157 @@ async function addRungroup(requestBody, pathElements, queryParams, connection) {
   return result;
 }
 
+async function updateRungroup(
+  requestBody,
+  pathElements,
+  queryParams,
+  connection,
+) {
+  const rungroupName = pathElements[1];
+  const result = {
+    error: false,
+    message: `Successfully updated rungroup ${rungroupName}`,
+    result: {},
+  };
+
+  const body = JSON.parse(requestBody);
+
+  // Make sure that the rungroup name in the body, if there, matches the path
+  if ('run_group_name' in body && body.run_group_name !== rungroupName) {
+    result.error = true;
+    result.message = `Rungroup name ${rungroupName} in path does not match rungroup name ${body.run_group_name} in body`;
+    return result;
+  }
+
+  const client = new Client(connection);
+  await client.connect().catch((err) => {
+    const errmsg = pgErrorCodes[err.code];
+    console.log(JSON.stringify(err));
+    result.error = true;
+    result.message = `PG error connecting: ${errmsg}`;
+    result.result = null;
+  });
+
+  if (result.error) return result;
+
+  // Verify that the rungroup exists
+  let sql = 'SELECT * FROM bedrock.run_groups where run_group_name like $1';
+
+  let res = await client.query(sql, [rungroupName]).catch((err) => {
+    result.error = true;
+    result.message = `PG error verifying that rungroup exists: ${
+      pgErrorCodes[err.code]
+    }`;
+    result.result = null;
+  });
+
+  if (res.rowCount === 0 && !result.error) {
+    result.error = true;
+    result.message = `Rungroup like ${rungroupName} does not exist`;
+  }
+
+  if (result.error) {
+    await client.end();
+    return result;
+  }
+
+  //
+  // Now begin the transaction
+  //
+  await client.query('BEGIN');
+
+  // Start with the base rungroup
+  let members = ['cron_string'];
+  let cnt = 1;
+  let args = [];
+  sql = 'UPDATE run_groups SET ';
+
+  for (let i = 0, comma = ''; i < members.length; i += 1) {
+    if (members[i] in body) {
+      sql += `${comma} ${members[i]} = $${cnt}`;
+      args.push(body[members[i]]);
+      result.result[members[i]] = body[members[i]];
+      cnt += 1;
+      comma = ',';
+    }
+  }
+  sql += ` where run_group_name = $${cnt}`;
+  console.log(` where run_group_name = $${cnt}`);
+  args.push(rungroupName);
+  console.log(sql);
+  console.log(JSON.stringify(args));
+  res = await client.query(sql, args).catch((err) => {
+    result.error = true;
+    result.message = `PG error updating rungroup: ${pgErrorCodes[err.code]}`;
+    result.result = null;
+  });
+
+  if (result.error) {
+    await client.query('ROLLBACK');
+    result.result = null;
+  } else {
+    await client.query('COMMIT');
+  }
+  await client.end();
+
+  return result;
+}
+
+async function deleteRungroup(pathElements, queryParams, connection) {
+  const rungroupName = pathElements[1];
+  const result = {
+    error: false,
+    message: `Successfully deleted rungroup ${rungroupName}`,
+    result: null,
+  };
+
+  const client = new Client(connection);
+  await client.connect().catch((err) => {
+    result.error = true;
+    result.message = `PG error connecting: ${pgErrorCodes[err.code]}`;
+  });
+
+  // Check that rungroup exists
+  const sql = 'SELECT * FROM bedrock.run_groups where run_group_name like $1';
+  const res = await client.query(sql, [rungroupName]).catch((err) => {
+    result.error = true;
+    result.message = `PG error getting rungroup for delete: ${
+      pgErrorCodes[err.code]
+    }`;
+  });
+
+  if (!result.error && res.rowCount === 0) {
+    result.error = true;
+    result.message = 'Rungroup not found';
+    await client.end();
+  }
+  if (result.error) return result;
+
+  //
+  // Now delete all the things within a single transaction
+  //
+  await client.query('BEGIN');
+
+  await client
+    .query('delete from run_groups where run_group_name = $1', [
+      pathElements[1],
+    ])
+    .catch((err) => {
+      const errmsg = pgErrorCodes[err.code];
+      result.error = true;
+      result.message = `PG error deleting rungroup cron_string: ${errmsg}`;
+    });
+
+  if (result.error) {
+    await client.query('ROLLBACK');
+  } else {
+    await client.query('COMMIT');
+  }
+  await client.end();
+
+  return result;
+}
+
 // eslint-disable-next-line no-unused-vars
 async function handleRungroups(
   event,
@@ -236,13 +387,16 @@ async function handleRungroups(
           break;
 
         case 'PUT':
-          result.message = 'Update rungroup not implemented';
-          result.error = true;
+          result = await updateRungroup(
+            event.body,
+            pathElements,
+            queryParams,
+            connection,
+          );
           break;
 
         case 'DELETE':
-          result.message = 'Delete rungroup not implemented';
-          result.error = true;
+          result = deleteRungroup(pathElements, queryParams, connection);
           break;
 
         default:
