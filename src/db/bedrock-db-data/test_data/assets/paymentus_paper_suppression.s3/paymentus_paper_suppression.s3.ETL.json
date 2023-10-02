@@ -1,7 +1,7 @@
 {
   "asset_name": "paymentus_paper_suppression.s3",
   "run_group": "paymentus_down",
-  "active": true,
+  "active": false,
   "tasks": [
     {
       "type": "file_copy",

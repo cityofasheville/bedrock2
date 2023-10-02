@@ -8,7 +8,7 @@
   },
   "owner_id": null,
   "notes": null,
-  "active": true,
+  "active": false,
   "depends": [
     "wex.ftp"
   ],
