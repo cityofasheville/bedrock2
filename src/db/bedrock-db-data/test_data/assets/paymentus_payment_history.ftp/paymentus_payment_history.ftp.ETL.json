@@ -1,6 +1,6 @@
 {
   "asset_name": "paymentus_payment_history.ftp",
-  "run_group": "paymentus_up",
+  "run_group": "paymentus_up_hist",
   "active": true,
   "tasks": [
     {

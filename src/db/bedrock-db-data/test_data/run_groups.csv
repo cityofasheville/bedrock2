@@ -12,3 +12,4 @@
 "paymentus_up","00 23 ? * MON-FRI *"
 "paymentus_down","00 12 ? * * *"
 "wex","30 03 * * ? *"
+"paymentus_up_hist","15 23 ? * MON-FRI *"
