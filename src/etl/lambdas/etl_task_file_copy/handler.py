@@ -56,7 +56,7 @@ def lambda_handler(event, context):
             location = etl[loc["name"]]
             loc["connection_data"] = getConnection(location["connection"])
             loc["filename"] = fillDateTemplate(location["filename"])
-            loc["path"] = location["path"]
+            loc["path"] = fillDateTemplate(location["path"])
             loc["connection"] = location["connection"]
 
         source_location = locations[0]

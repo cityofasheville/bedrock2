@@ -1,13 +1,14 @@
 {
   "asset_name": "paymentus_paper_suppression.mun",
   "run_group": "paymentus_down",
-  "active": false,
+  "active": true,
   "tasks": [
     {
       "type": "table_copy",
-      "active": false,
+      "active": true,
       "source_location": {
-        "asset": "paymentus_paper_suppression.s3"
+        "asset": "paymentus_paper_suppression.s3",
+        "tableheaders": true
       },
       "target_location": {
         "asset": "paymentus_paper_suppression.mun"
@@ -15,9 +16,9 @@
     },
     {
       "type": "sql",
-      "active": false,
+      "active": true,
       "connection": "munis/munprod/fme_jobs",
-      "sql_string": "execute avl.Paymentus_Paper_Suppression_Update;"
+      "sql_string": "execute avl.Paymentus_Paper_Suppression;"
     }
   ]
 }
