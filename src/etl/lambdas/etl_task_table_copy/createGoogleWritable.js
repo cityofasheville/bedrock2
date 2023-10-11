@@ -31,7 +31,7 @@ async function writeToSheet(location, theData, append = false) {
     range: location.range,
     insertDataOption: 'OVERWRITE',
     valueInputOption: 'USER_ENTERED',
-    resource: {
+    requestBody: {
       majorDimension: 'ROWS',
       values: csvParse.parse(theData),
     },
@@ -39,25 +39,27 @@ async function writeToSheet(location, theData, append = false) {
 }
 
 module.exports = async function createGoogleWritable(location) {
-  let result = '';
+  let buff = '';
+  const result = new Promise();
   const saveLocation = location;
   const { append } = location;
   const googleStream = new stream.Writable({
     write(chunk, encoding, done) {
-      result += chunk;
+      buff += chunk;
       done();
     },
 
     async final(done) {
       try {
-        await writeToSheet(saveLocation, result, append);
+        await writeToSheet(saveLocation, buff, append);
         console.log(`Copy to Google Sheet: https://docs.google.com/spreadsheets/d/${location.spreadsheetid}/edit#gid=${location.range.split('!')[0]}`);
+        result.resolve();
       } catch (err) {
         console.error('Google Sheet error: ', err);
-        throw new Error(`Google Sheet error: ${err}`);
+        result.reject(`Google Sheet error: ${err}`);
       }
       done();
     },
   });
-  return { stream: googleStream, promise: Promise.resolve() };
+  return { stream: googleStream, promise: result };
 };

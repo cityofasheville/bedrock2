@@ -45,7 +45,7 @@ Also see [Managed Data Assets README](https://github.com/cityofasheville/managed
             "schemaname": "dbo",
             "tablename": "testtable",
             __SOURCE OPTIONS__
-            <OPTIONAL>: "tableheaders": true (this is mainly used for creating csv files)
+            <OPTIONAL>: "tableheaders": true (include headers in data: this is mainly used for creating csv files)
             <OPTIONAL> "sortasc": "fieldname",
             <OPTIONAL> "sortdesc": "fieldname",
             <OPTIONAL> "fixedwidth_noquotes": true,  (Tables converted to csv by default have strings with double quotes in the data quoted. For fixed width and XML files we don't want that)
@@ -58,6 +58,8 @@ Also see [Managed Data Assets README](https://github.com/cityofasheville/managed
             "connection": "s3_data_files",
             "filename": "users${YYYY}${MM}${DD}.csv",
             "path": "safetyskills/"
+            __SOURCE OPTIONS__
+            <OPTIONAL>: "removeheaders": true (skip first row of csv file)
 
 #### google_sheets
             "connection": "bedrock-googlesheets",

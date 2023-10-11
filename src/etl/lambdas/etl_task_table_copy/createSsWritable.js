@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable no-console */
 const sql = require('mssql');
 const csv = require('csv');
@@ -5,8 +6,8 @@ const { getPool } = require('./ssPools');
 
 async function createSsWritable(location) {
   const tablename = `[${location.schemaname}].[${location.tablename}]`;
-  const tempTablename = `[${location.schemaname}].[tempbedrock_${location.tablename}]`;
-  // const tempTablename = `[#tempbedrock_${location.tablename}]`;
+  // const tempTablename = `[${location.schemaname}].[tempbedrock_${location.tablename}]`;
+  const tempTablename = `[#tempbedrock_${location.tablename}]`;
   const dropTempQuery = `IF OBJECT_ID('${tempTablename}', 'U') IS NOT NULL DROP TABLE ${tempTablename};`;
   const copySinceQuery = location.copy_since
     ? ` where [${location.copy_since.column_to_filter}] >= dateadd(WEEK,-${location.copy_since.num_weeks},GETDATE())`
@@ -55,7 +56,7 @@ async function createSsWritable(location) {
       } else if (location.append) {
         deleteOld = '';
       } else {
-        deleteOld = `TRUNCATE TABLE ${tablename};`;
+        deleteOld = `DELETE FROM ${tablename};`;
       }
 
       const transString = `
@@ -103,7 +104,7 @@ async function createSsWritable(location) {
     });
   }
 
-  await pool.query(dropTempQuery);
+  // await pool.query(dropTempQuery);
 
   const queryStr = `
   select count(*) as colcount from INFORMATION_SCHEMA.COLUMNS 
