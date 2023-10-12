@@ -1,6 +1,6 @@
 {
   "asset_name": "paymentus_payment_history.s3",
-  "run_group": "paymentus_up_hist",
+  "run_group": "paymentus_payment_history",
   "active": true,
   "tasks": [
     {
