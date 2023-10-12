@@ -2,15 +2,16 @@
   "asset_name": "employee_turnover_report.terms.goog",
   "description": "",
   "location": {
-    "connection": "bedrock-googlesheets",
-    "filename": "Employee Turnover Report",
-    "loctype": "sheets",
     "range": "Terminations!A2:X",
+    "filename": "Employee Turnover Report",
+    "connection": "bedrock-googlesheets",
     "spreadsheetid": "1yE8pfp9nZ9nETDd2ypN4h6y8-m06giQ5O797ghBQHYc"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [
-    "turnover_counts.lib"
+    "base_employee_sensitive_snapshots.lib"
   ],
   "tags": []
 }

@@ -36,7 +36,7 @@ async function getDBConnection() {
   if (!('BEDROCK_DB_HOST' in process.env)
       || process.env.BEDROCK_DB_HOST === null
       || process.env.BEDROCK_DB_HOST.trim().length === 0) {
-    return getConnection('nopubrecdb1/bedrock/bedrock_user')
+    return getConnection('pubrecdb1/bedrock/bedrock_user')
       .then(
         (cpValue) => {
           connection = {

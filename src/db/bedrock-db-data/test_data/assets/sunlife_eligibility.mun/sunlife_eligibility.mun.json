@@ -2,11 +2,12 @@
   "asset_name": "sunlife_eligibility.mun",
   "description": "",
   "location": {
+    "tablename": "sunlife_eligibility",
     "connection": "munis/munprod/fme_jobs",
-    "loctype": "db",
-    "schemaname": "avl",
-    "tablename": "sunlife_eligibility"
+    "schemaname": "avl"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [],
   "tags": []

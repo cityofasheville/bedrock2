@@ -1,6 +1,6 @@
 {
   "asset_name": "maintenance_tasktypes.lib",
-  "run_group": "maintenance_responsibilities",
+  "run_group": "daily",
   "active": true,
   "tasks": [
     {
@@ -17,7 +17,7 @@
       "type": "sql",
       "active": true,
       "connection": "pubrecdb1/mdastore1/dbadmin",
-      "sql_string": "delete from internal.maintenance_tasktypes where task_type is null;"
+      "sql_string": "DELETE from internal.maintenance_tasktypes where task_type is null;"
     }
   ]
 }

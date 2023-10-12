@@ -1,0 +1,27 @@
+{
+  "asset_name": "paymentus_cif.ftp",
+  "run_group": "paymentus_cif",
+  "active": true,
+  "tasks": [
+    {
+      "type": "file_copy",
+      "active": true,
+      "source_location": {
+        "asset": "paymentus_cif.s3"
+      },
+      "target_location": {
+        "asset": "paymentus_cif.ftp"
+      }
+    },
+    {
+      "type": "file_copy",
+      "active": true,
+      "source_location": {
+        "asset": "paymentus_cif.ctl.s3"
+      },
+      "target_location": {
+        "asset": "paymentus_cif.ctl.ftp"
+      }
+    }
+  ]
+}

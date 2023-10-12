@@ -2,12 +2,13 @@
   "asset_name": "iran_divestment_companies.goog",
   "description": "",
   "location": {
-    "connection": "bedrock-googlesheets",
-    "filename": "Iran Divestment Companies",
-    "loctype": "sheets",
     "range": "Bad Actors!A5:B",
+    "filename": "Iran Divestment Companies",
+    "connection": "bedrock-googlesheets",
     "spreadsheetid": "1FOmrFm5afRc_XqTeF2T-ilWtZDIYzdqKiZlPX129IQA"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [],
   "tags": []

@@ -2,11 +2,12 @@
   "asset_name": "permit_review_times.lib",
   "description": "Count days to review permits",
   "location": {
+    "tablename": "permit_review_times",
     "connection": "pubrecdb1/mdastore1/dbadmin",
-    "loctype": "db",
-    "schemaname": "internal",
-    "tablename": "permit_review_times"
+    "schemaname": "internal"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [
     "permit_review_times.acc"

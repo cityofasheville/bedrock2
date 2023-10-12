@@ -2,12 +2,13 @@
   "asset_name": "capital_projects_master.goog",
   "description": "Capital Projects General Project Information",
   "location": {
-    "connection": "bedrock-googlesheets",
-    "filename": "Capital Projects Master",
-    "loctype": "sheets",
     "range": "General Project Information!A2:Z",
+    "filename": "Capital Projects Master",
+    "connection": "bedrock-googlesheets",
     "spreadsheetid": "1IepJrSjqbGK7UcTmFHqknNUD6Iyx6-3_zpj6qHprBgY"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [],
   "tags": []

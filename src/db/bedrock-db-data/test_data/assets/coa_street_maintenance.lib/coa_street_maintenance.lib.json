@@ -2,11 +2,12 @@
   "asset_name": "coa_street_maintenance.lib",
   "description": "Street Maintenance",
   "location": {
+    "tablename": "coa_street_maintenance",
     "connection": "pubrecdb1/mdastore1/dbadmin",
-    "loctype": "db",
-    "schemaname": "internal",
-    "tablename": "coa_street_maintenance"
+    "schemaname": "internal"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [
     "coa_street_maintenance.wh"

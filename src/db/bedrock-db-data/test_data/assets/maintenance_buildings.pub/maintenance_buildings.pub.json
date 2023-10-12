@@ -2,11 +2,12 @@
   "asset_name": "maintenance_buildings.pub",
   "description": "City Facility Maintenance Responsibilties Buildings",
   "location": {
+    "tablename": "maintenance_buildings",
     "connection": "coa-publicdb1/coa_share/dbadmin",
-    "loctype": "db",
-    "schemaname": "open",
-    "tablename": "maintenance_buildings"
+    "schemaname": "open"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [
     "maintenance_buildings.lib"

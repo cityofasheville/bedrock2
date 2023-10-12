@@ -2,11 +2,12 @@
   "asset_name": "iran_divestment_approved_companies.lib",
   "description": "Non-Iranian Companies with names similar to Iranian Companies",
   "location": {
+    "tablename": "iran_divestment_approved_companies",
     "connection": "pubrecdb1/mdastore1/dbadmin",
-    "loctype": "db",
-    "schemaname": "internal",
-    "tablename": "iran_divestment_approved_companies"
+    "schemaname": "internal"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [
     "iran_divestment_companies.approved.goog"

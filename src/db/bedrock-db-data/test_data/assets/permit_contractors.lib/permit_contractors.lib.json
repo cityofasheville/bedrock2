@@ -2,11 +2,12 @@
   "asset_name": "permit_contractors.lib",
   "description": "Permit contractors data",
   "location": {
+    "tablename": "permit_contractors",
     "connection": "pubrecdb1/mdastore1/dbadmin",
-    "loctype": "db",
-    "schemaname": "internal",
-    "tablename": "permit_contractors"
+    "schemaname": "internal"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [
     "permit_contractors.acc"

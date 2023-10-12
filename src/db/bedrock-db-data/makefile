@@ -5,7 +5,7 @@ include ../../make_variables
 
 seed:	load_assets.py
 	pip install -r ./requirements.txt
-	python3 load_assets.py $(DB_ENDPOINT)
+	python3 load_assets.py $(BEDROCK_DB_HOST_ENDPOINT)
 
 clean:
 	echo 'Nothing to clean'

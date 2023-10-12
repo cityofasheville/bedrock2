@@ -2,11 +2,12 @@
   "asset_name": "coa_national_register_properties.lib",
   "description": "National register properties",
   "location": {
+    "tablename": "coa_national_register_properties",
     "connection": "pubrecdb1/mdastore1/dbadmin",
-    "loctype": "db",
-    "schemaname": "internal",
-    "tablename": "coa_national_register_properties"
+    "schemaname": "internal"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [
     "coa_national_register_properties.wh"

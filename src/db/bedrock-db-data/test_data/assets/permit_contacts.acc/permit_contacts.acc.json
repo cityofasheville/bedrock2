@@ -2,11 +2,12 @@
   "asset_name": "permit_contacts.acc",
   "description": "Contacts associated with permits",
   "location": {
+    "tablename": "permit_contacts",
     "connection": "coa-acceladb/accela/mssqlgisadmin",
-    "loctype": "db",
-    "schemaname": "amd",
-    "tablename": "permit_contacts"
+    "schemaname": "amd"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [],
   "tags": []

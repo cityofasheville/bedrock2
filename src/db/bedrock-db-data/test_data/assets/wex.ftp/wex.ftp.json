@@ -1,0 +1,14 @@
+{
+  "asset_name": "wex.ftp",
+  "description": "Uploaded Accounting data to Aclara",
+  "location": {
+    "path": "/data/",
+    "filename": "AshevilleExport_PostedDate_${YYYY}${MM}${DD}.csv",
+    "connection": "wex_ftp"
+  },
+  "owner_id": null,
+  "notes": null,
+  "active": false,
+  "depends": [],
+  "tags": []
+}

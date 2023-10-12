@@ -1,0 +1,17 @@
+{
+  "asset_name": "coa_climate_justice_index.lib",
+  "run_group": "coa_climate_justice_index",
+  "active": true,
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "coa_climate_justice_index.wh"
+      },
+      "target_location": {
+        "asset": "coa_climate_justice_index.lib"
+      }
+    }
+  ]
+}

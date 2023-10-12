@@ -2,11 +2,12 @@
   "asset_name": "coa_local_historic_landmarks.lib",
   "description": "coa_local_historic_landmarks",
   "location": {
+    "tablename": "coa_local_historic_landmarks",
     "connection": "pubrecdb1/mdastore1/dbadmin",
-    "loctype": "db",
-    "schemaname": "internal",
-    "tablename": "coa_local_historic_landmarks"
+    "schemaname": "internal"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [
     "coa_local_historic_landmarks.wh"

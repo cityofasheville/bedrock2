@@ -1,6 +1,6 @@
 {
   "asset_name": "permit_review_times.lib",
-  "run_group": "daily",
+  "run_group": "notactive",
   "active": true,
   "tasks": [
     {

@@ -45,10 +45,11 @@ Also see [Managed Data Assets README](https://github.com/cityofasheville/managed
             "schemaname": "dbo",
             "tablename": "testtable",
             __SOURCE OPTIONS__
-            <OPTIONAL>: "tableheaders": true (this is mainly used for creating csv files)
+            <OPTIONAL>: "tableheaders": true (include headers in data: this is mainly used for creating csv files)
             <OPTIONAL> "sortasc": "fieldname",
             <OPTIONAL> "sortdesc": "fieldname",
-            <OPTIONAL> "fixedwidth_noquotes": true  (Tables converted to csv by default have strings with double quotes in the data quoted. For fixed width and XML files we don't want that)                               
+            <OPTIONAL> "fixedwidth_noquotes": true,  (Tables converted to csv by default have strings with double quotes in the data quoted. For fixed width and XML files we don't want that)
+            <OPTIONAL> "crlf": true,                 (Tables converted to csv by default use record delimiters of LF. Set this true to use CRLF.)    
             __TARGET OPTIONS__
             <OPTIONAL> "append": true  (By default, data is overwritten in table. Set to true to append as new rows.)       
             <OPTIONAL> "append_serial": "fieldname"  (Adds an integer auto-numbering key field to target table. A serial field with this name must appear as the last field in the target table.)
@@ -57,6 +58,8 @@ Also see [Managed Data Assets README](https://github.com/cityofasheville/managed
             "connection": "s3_data_files",
             "filename": "users${YYYY}${MM}${DD}.csv",
             "path": "safetyskills/"
+            __SOURCE OPTIONS__
+            <OPTIONAL>: "removeheaders": true (skip first row of csv file)
 
 #### google_sheets
             "connection": "bedrock-googlesheets",
@@ -66,15 +69,10 @@ Also see [Managed Data Assets README](https://github.com/cityofasheville/managed
             <OPTIONAL>: "append_asset_name": true (In the data an extra column is appended to each row with the name of the asset)
             __TARGET OPTIONS__
             <OPTIONAL> "append": true  (By default, data is overwritten in sheet. Set to true to append as new rows.)       
-#### CSV -winshare
-            "connection": "fileshare_g",
-            "filepath": "/winshares/dont/work/on/lambda/(yet?)/data.csv",
-            "headerrow": "2"
-
 
 
 ## File Copy
-File copy can read and write from S3 and SFTP sites. Google Drive and maybe Windows fileshares to be added.
+File copy can read and write from S3, Windows file share, and SFTP sites. Google Drive to be added.
 All locations have the same three fields: connection, filename, and path. Connections include a type field to distinguish S3 from SFTP, etc.
 ```
 {
@@ -112,6 +110,7 @@ Takes files from S3, encrypts them and writes them back to the same dir on S3.
         "encrypted_filename": "vendor_asheville_${YYYY}${MM}${DD}.csv.pgp",
         "active": true
       },
+    ]
 ```
 
 ## SFTP
@@ -175,7 +174,7 @@ SFTP has mostly been superseded by file copy, which has more potential source an
 
 ```
 ## Run Lambda
-Note: Called Lambda must return standard format: ```{statusCode: 200,body: {lambda_output: ""}}```
+Called Lambda must return standard format: ```{statusCode: 200,body: {lambda_output: ""}}```
 ```
 {
     "run_group": "daily",
@@ -189,6 +188,10 @@ Note: Called Lambda must return standard format: ```{statusCode: 200,body: {lamb
     ]
 }
 ```
+Note: Running arbitrary code does mean that some Bedrock conventions can be bypassed. For example, normally an ETL job only creates one asset.
+If your Lambda creates more than one asset, the work around we have used is to create the ETL job on one of the assets, and have the other ones depend on it.
+
+
 ## Aggregate
 Aggregate task type takes multiple Google Sheets with data in the same format on each sheet and writes it to a single table.
 It requires a staging table (called temp_table, but not a temp table in database terms) for the data to be collected in before writing to the final destination.

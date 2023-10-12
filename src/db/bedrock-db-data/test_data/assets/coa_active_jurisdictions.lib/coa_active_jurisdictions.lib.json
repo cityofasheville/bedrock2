@@ -2,11 +2,12 @@
   "asset_name": "coa_active_jurisdictions.lib",
   "description": "Asheville corporate limits",
   "location": {
+    "tablename": "coa_active_jurisdictions",
     "connection": "pubrecdb1/mdastore1/dbadmin",
-    "loctype": "db",
-    "schemaname": "internal",
-    "tablename": "coa_active_jurisdictions"
+    "schemaname": "internal"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [
     "coa_active_jurisdictions.wh"

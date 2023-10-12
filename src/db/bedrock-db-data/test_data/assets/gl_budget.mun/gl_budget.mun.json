@@ -2,11 +2,12 @@
   "asset_name": "gl_budget.mun",
   "description": "Master budget table",
   "location": {
+    "tablename": "gl_budget",
     "connection": "munis/munprod/mssqlgisadmin",
-    "loctype": "db",
-    "schemaname": "amd",
-    "tablename": "gl_budget"
+    "schemaname": "amd"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [],
   "tags": []

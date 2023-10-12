@@ -2,11 +2,12 @@
   "asset_name": "pr_employee_info_safety.mun",
   "description": "",
   "location": {
+    "tablename": "pr_employee_info_safety",
     "connection": "munis/munprod/fme_jobs",
-    "loctype": "db",
-    "schemaname": "amd",
-    "tablename": "pr_employee_info_safety"
+    "schemaname": "amd"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [],
   "tags": []

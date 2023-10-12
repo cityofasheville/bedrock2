@@ -2,11 +2,12 @@
   "asset_name": "mwbe_vendors_by_commodity.mun",
   "description": "",
   "location": {
+    "tablename": "mwbe_vendors_by_commodity",
     "connection": "munis/munprod/mssqlgisadmin",
-    "loctype": "db",
-    "schemaname": "amd",
-    "tablename": "mwbe_vendors_by_commodity"
+    "schemaname": "amd"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [],
   "tags": []

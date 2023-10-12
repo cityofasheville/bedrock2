@@ -1,0 +1,17 @@
+{
+  "asset_name": "workplans.lib",
+  "run_group": "daily",
+  "active": true,
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "workplans.goog"
+      },
+      "target_location": {
+        "asset": "workplans.lib"
+      }
+    }
+  ]
+}

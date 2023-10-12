@@ -1,0 +1,27 @@
+{
+  "asset_name": "paymentus_payment_history.s3",
+  "run_group": "paymentus_payment_history",
+  "active": true,
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "paymentus_payment_history.mun"
+      },
+      "target_location": {
+        "asset": "paymentus_payment_history.s3"
+      }
+    },
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "paymentus.empty_control_file.lib"
+      },
+      "target_location": {
+        "asset": "paymentus_payment_history.ctl.s3"
+      }
+    }
+  ]
+}

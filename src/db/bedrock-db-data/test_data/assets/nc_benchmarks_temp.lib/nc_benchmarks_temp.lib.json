@@ -2,11 +2,12 @@
   "asset_name": "nc_benchmarks_temp.lib",
   "description": "North Carolina Benchmarks-Temp Table",
   "location": {
+    "tablename": "nc_benchmarks_temp",
     "connection": "pubrecdb1/mdastore1/dbadmin",
-    "loctype": "db",
-    "schemaname": "temp",
-    "tablename": "nc_benchmarks_temp"
+    "schemaname": "temp"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [],
   "tags": []

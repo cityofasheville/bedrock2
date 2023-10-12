@@ -2,11 +2,12 @@
   "asset_name": "base_employee_private.lib",
   "description": "Standard Employee-Non public fields",
   "location": {
+    "tablename": "base_employee_private",
     "connection": "pubrecdb1/mdastore1/dbadmin",
-    "loctype": "db",
-    "schemaname": "standard",
-    "tablename": "base_employee_private"
+    "schemaname": "standard"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [
     "base_employee_private.mun"

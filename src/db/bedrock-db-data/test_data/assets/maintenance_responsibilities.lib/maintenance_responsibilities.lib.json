@@ -2,12 +2,15 @@
   "asset_name": "maintenance_responsibilities.lib",
   "description": "City Property Maintenance Responsibilities",
   "location": {
+    "tablename": "maintenance_responsibilities",
     "connection": "pubrecdb1/mdastore1/dbadmin",
-    "loctype": "db",
-    "schemaname": "internal",
-    "tablename": "maintenance_responsibilities"
+    "schemaname": "internal"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
-  "depends": [],
+  "depends": [
+    "#maintenance_responsibilities"
+  ],
   "tags": []
 }

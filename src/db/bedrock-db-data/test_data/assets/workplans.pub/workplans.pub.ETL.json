@@ -1,0 +1,17 @@
+{
+  "asset_name": "workplans.pub",
+  "run_group": "daily",
+  "active": true,
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "workplans.lib"
+      },
+      "target_location": {
+        "asset": "workplans.pub"
+      }
+    }
+  ]
+}

@@ -2,11 +2,12 @@
   "asset_name": "permits.lib",
   "description": "Permits data",
   "location": {
+    "tablename": "permits",
     "connection": "pubrecdb1/mdastore1/dbadmin",
-    "loctype": "db",
-    "schemaname": "internal",
-    "tablename": "permits"
+    "schemaname": "internal"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [
     "permits.acc"

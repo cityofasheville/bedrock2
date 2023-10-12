@@ -2,11 +2,12 @@
   "asset_name": "ad_info.mun",
   "description": "Active Directory info",
   "location": {
+    "tablename": "ad_info",
     "connection": "munis/munprod/mssqlgisadmin",
-    "loctype": "db",
-    "schemaname": "amd",
-    "tablename": "ad_info"
+    "schemaname": "amd"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [],
   "tags": []

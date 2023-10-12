@@ -48,6 +48,9 @@ async function getAssetList(domainName, pathElements, queryParams, connection) {
     qPrefix = '&';
     result.message += 'Query parameter rungroups not yet implemented. ';
   }
+  if ('tags' in queryParams) {
+    result.message += 'Query parameter tags not yet implemented. ';
+  }
   if ('period' in queryParams) {
     qParams += `${qPrefix}period=${queryParams.period}`;
     qPrefix = '&';
@@ -111,6 +114,8 @@ async function getAssetList(domainName, pathElements, queryParams, connection) {
         asset_name: res.rows[i].asset_name,
         description: res.rows[i].description,
         location: res.rows[i].location,
+        owner_id: res.rows[i].owner_id,
+        notes: res.rows[i].notes,
         active: res.rows[i].active,
         etl_run_group: res.rows[i].run_group,
         etl_active: res.rows[i].etl_active,

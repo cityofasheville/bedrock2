@@ -2,11 +2,12 @@
   "asset_name": "permit_tasks.acc",
   "description": "Permit tasks data",
   "location": {
+    "tablename": "permit_tasks",
     "connection": "coa-acceladb/accela/mssqlgisadmin",
-    "loctype": "db",
-    "schemaname": "amd",
-    "tablename": "permit_tasks"
+    "schemaname": "amd"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [],
   "tags": []

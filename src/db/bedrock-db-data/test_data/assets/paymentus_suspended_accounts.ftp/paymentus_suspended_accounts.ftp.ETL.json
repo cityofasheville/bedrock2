@@ -1,0 +1,27 @@
+{
+  "asset_name": "paymentus_suspended_accounts.ftp",
+  "run_group": "paymentus_suspended_accounts",
+  "active": true,
+  "tasks": [
+    {
+      "type": "file_copy",
+      "active": true,
+      "source_location": {
+        "asset": "paymentus_suspended_accounts.s3"
+      },
+      "target_location": {
+        "asset": "paymentus_suspended_accounts.ftp"
+      }
+    },
+    {
+      "type": "file_copy",
+      "active": true,
+      "source_location": {
+        "asset": "paymentus_suspended_accounts.ctl.s3"
+      },
+      "target_location": {
+        "asset": "paymentus_suspended_accounts.ctl.ftp"
+      }
+    }
+  ]
+}

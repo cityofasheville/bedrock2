@@ -7,9 +7,9 @@
       "type": "aggregate",
       "active": true,
       "source_location": {
-        "temp_table": "nc_benchmarks_temp.lib",
         "aggregate": "nc_benchmarks",
         "data_range": "A2:E",
+        "temp_table": "nc_benchmarks_temp.lib",
         "data_connection": "bedrock-googlesheets",
         "append_asset_name": true
       },

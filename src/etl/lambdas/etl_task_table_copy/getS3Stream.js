@@ -2,6 +2,7 @@
 const { S3Client, GetObjectCommand } = require('@aws-sdk/client-s3');
 const { Upload } = require('@aws-sdk/lib-storage');
 const stream = require('stream');
+const removeHeader = require('./removeHeader');
 
 const s3Region = 'us-east-1';
 
@@ -46,6 +47,9 @@ async function getS3Stream(location) {
       promise = Promise.resolve();
       const response = await s3Client.send(new GetObjectCommand({ Bucket: bucket, Key: s3Key }));
       s3stream = response.Body;
+      if (location.removeheaders) {
+        s3stream = s3stream.pipe(removeHeader());
+      }
       console.log('Copy from S3 Bucket: ', bucket, s3Key);
     } else if (location.fromto === 'target_location') {
       s3stream = new stream.PassThrough();

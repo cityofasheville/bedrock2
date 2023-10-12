@@ -58,20 +58,29 @@ async function updateAsset(requestBody, pathElements, queryParams, connection) {
   await client.query('BEGIN');
 
   // Start with the base asset
-  let members = ['description', 'location', 'active'];
+  let members = ['description', 'location', 'active', 'owner_id', 'notes'];
   let cnt = 1;
   let args = [];
   sql = 'UPDATE assets SET ';
 
-  for (let i = 0, comma = ''; i < members.length; i += 1, comma = ',', cnt += 1) {
+  for (let i = 0, comma = ''; i < members.length; i += 1) {
     if (members[i] in body) {
       sql += `${comma} ${members[i]} = $${cnt}`;
-      args.push(body[members[i]]);
+      // Hacky. If we have more JSON types, maybe have a types array above
+      if (members[i] === 'location') {
+        args.push(JSON.stringify(body[members[i]]));
+      } else {
+        args.push(body[members[i]]);
+      }
       result.result[members[i]] = body[members[i]];
+      cnt += 1;
+      comma = ',';
     }
   }
   sql += ` where asset_name = $${cnt}`;
   args.push(assetName);
+  console.log(sql);
+  console.log(JSON.stringify(args));
   res = await client.query(sql, args)
     .catch((err) => {
       result.error = true;
@@ -166,35 +175,37 @@ async function updateAsset(requestBody, pathElements, queryParams, connection) {
       }
     }
     // For now, just add any tags that aren't in the tags table
-    sql = 'SELECT tag_name from bedrock.tags where tag_name in (';
-    cnt = 1;
-    for (let i = 0, comma = ''; i < tags.length; i += 1, comma = ', ', cnt += 1) {
-      sql += `${comma}$${cnt}`;
-    }
-    sql += ');';
-    res = await client.query(sql, tags)
-      .catch((err) => {
-        result.error = true;
-        result.message = `PG error reading tags for update: ${pgErrorCodes[err.code]}`;
-        result.result = null;
-      });
-
-    if (!result.error && res.rowCount !== tags.length) {
-      const dbTags = [];
-      for (let i = 0; i < res.rowCount; i += 1) {
-        dbTags.push(res.rows[i].tag_name);
+    if (tags.length > 0) {
+      sql = 'SELECT tag_name from bedrock.tags where tag_name in (';
+      cnt = 1;
+      for (let i = 0, comma = ''; i < tags.length; i += 1, comma = ', ', cnt += 1) {
+        sql += `${comma}$${cnt}`;
       }
-      for (let i = 0; i < tags.length && !result.error; i += 1) {
-        if (!dbTags.includes(tags[i])) {
-          await client.query(
-            'INSERT INTO tags (tag_name) VALUES ($1)',
-            [tags[i]],
-          )
-            .catch((err) => {
-              result.error = true;
-              result.message = `PG error adding tags to tag table for update: ${pgErrorCodes[err.code]}`;
-              result.result = null;
-            });
+      sql += ');';
+      res = await client.query(sql, tags)
+        .catch((err) => {
+          result.error = true;
+          result.message = `PG error reading tags for update: ${pgErrorCodes[err.code]}`;
+          result.result = null;
+        });
+
+      if (!result.error && res.rowCount !== tags.length) {
+        const dbTags = [];
+        for (let i = 0; i < res.rowCount; i += 1) {
+          dbTags.push(res.rows[i].tag_name);
+        }
+        for (let i = 0; i < tags.length && !result.error; i += 1) {
+          if (!dbTags.includes(tags[i])) {
+            await client.query(
+              'INSERT INTO tags (tag_name) VALUES ($1)',
+              [tags[i]],
+            )
+              .catch((err) => {
+                result.error = true;
+                result.message = `PG error adding tags to tag table for update: ${pgErrorCodes[err.code]}`;
+                result.result = null;
+              });
+          }
         }
       }
     }
@@ -211,18 +222,20 @@ async function updateAsset(requestBody, pathElements, queryParams, connection) {
     }
 
     // And add the new ones back in
-    for (let i = 0; i < tags.length && !result.error; i += 1) {
-      res = await client.query(
-        'INSERT INTO bedrock.asset_tags (asset_name, tag_name) VALUES ($1, $2)',
-        [body.asset_name, tags[i]],
-      )
-        .catch((err) => {
-          result.error = true;
-          result.message = `PG error inserting tags for update: ${pgErrorCodes[err.code]}`;
-          result.result = null;
-        });
+    if (!result.error) {
+      for (let i = 0; i < tags.length && !result.error; i += 1) {
+        res = await client.query(
+          'INSERT INTO bedrock.asset_tags (asset_name, tag_name) VALUES ($1, $2)',
+          [body.asset_name, tags[i]],
+        )
+          .catch((err) => {
+            result.error = true;
+            result.message = `PG error inserting tags for update: ${pgErrorCodes[err.code]}`;
+            result.result = null;
+          });
+      }
+      result.result.tags = body.tags;
     }
-    result.result.tags = body.tags;
   }
 
   if (result.error) {

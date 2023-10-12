@@ -2,10 +2,12 @@
   "asset_name": "maint_Pools.maint",
   "description": "Maintenance Responsibilities: Pools",
   "location": {
-    "loctype": "aggr",
-    "spreadsheetid": "16rZUoAlISFIAmvcnSMHmhaE0qObj2OMpHQX3ddRoEwg",
-    "tab": "Pools"
+    "tab": "Pools",
+    "connection": "bedrock-googlesheets",
+    "spreadsheetid": "16rZUoAlISFIAmvcnSMHmhaE0qObj2OMpHQX3ddRoEwg"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [],
   "tags": [

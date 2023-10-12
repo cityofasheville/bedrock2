@@ -1,0 +1,24 @@
+{
+  "asset_name": "paymentus_paper_suppression.mun",
+  "run_group": "paymentus_paper_suppression",
+  "active": true,
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "paymentus_paper_suppression.s3",
+        "removeheaders": true
+      },
+      "target_location": {
+        "asset": "paymentus_paper_suppression.mun"
+      }
+    },
+    {
+      "type": "sql",
+      "active": true,
+      "connection": "munis/munprod/fme_jobs",
+      "sql_string": "execute avl.Paymentus_Paper_Suppression;"
+    }
+  ]
+}

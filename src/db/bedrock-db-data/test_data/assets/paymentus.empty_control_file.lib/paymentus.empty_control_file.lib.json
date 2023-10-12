@@ -1,0 +1,14 @@
+{
+  "asset_name": "paymentus.empty_control_file.lib",
+  "description": "Paymentus Uploads require an empty file to be uploaded after data is sent to let them know upload is ready",
+  "location": {
+    "tablename": "emptydata",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "internal"
+  },
+  "owner_id": null,
+  "notes": null,
+  "active": true,
+  "depends": [],
+  "tags": []
+}

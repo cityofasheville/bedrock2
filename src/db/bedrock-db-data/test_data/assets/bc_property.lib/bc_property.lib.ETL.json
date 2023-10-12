@@ -7,7 +7,7 @@
       "type": "table_copy",
       "active": true,
       "source_location": {
-        "asset": "bc_property.edit"
+        "asset": "bc_property.wh"
       },
       "target_location": {
         "asset": "bc_property.lib"

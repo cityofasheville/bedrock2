@@ -2,10 +2,12 @@
   "asset_name": "maint_Parking_Garages.maint",
   "description": "Maintenance Responsibilities: Parking_Garages",
   "location": {
-    "loctype": "aggr",
-    "spreadsheetid": "16rZUoAlISFIAmvcnSMHmhaE0qObj2OMpHQX3ddRoEwg",
-    "tab": "Parking Garages"
+    "tab": "Parking Garages",
+    "connection": "bedrock-googlesheets",
+    "spreadsheetid": "16rZUoAlISFIAmvcnSMHmhaE0qObj2OMpHQX3ddRoEwg"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [],
   "tags": [

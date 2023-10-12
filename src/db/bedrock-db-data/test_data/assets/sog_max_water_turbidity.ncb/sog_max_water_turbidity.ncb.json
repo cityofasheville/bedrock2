@@ -2,10 +2,12 @@
   "asset_name": "sog_max_water_turbidity.ncb",
   "description": "Water SOG Benchmark: max_water_turbidity",
   "location": {
-    "loctype": "aggr",
-    "spreadsheetid": "1m2xD4JyH4BEBey_ybsEgrvYopsl0PjWNmY_PEv3l6D4",
-    "tab": "max_water_turbidity"
+    "tab": "max_water_turbidity",
+    "connection": "bedrock-googlesheets",
+    "spreadsheetid": "1m2xD4JyH4BEBey_ybsEgrvYopsl0PjWNmY_PEv3l6D4"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [],
   "tags": [

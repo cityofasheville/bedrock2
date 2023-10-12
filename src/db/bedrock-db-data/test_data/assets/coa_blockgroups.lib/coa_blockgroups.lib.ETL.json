@@ -1,0 +1,17 @@
+{
+  "asset_name": "coa_blockgroups.lib",
+  "run_group": "coa_blockgroups",
+  "active": true,
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "coa_blockgroups.wh"
+      },
+      "target_location": {
+        "asset": "coa_blockgroups.lib"
+      }
+    }
+  ]
+}

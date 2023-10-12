@@ -1,6 +1,6 @@
 {
   "asset_name": "maintenance_buildings.lib",
-  "run_group": "maintenance_responsibilities",
+  "run_group": "daily",
   "active": true,
   "tasks": [
     {

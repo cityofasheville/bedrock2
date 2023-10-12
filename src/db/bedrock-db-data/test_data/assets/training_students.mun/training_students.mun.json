@@ -2,11 +2,12 @@
   "asset_name": "training_students.mun",
   "description": "Student registrations for training classes",
   "location": {
+    "tablename": "training_students",
     "connection": "munis/munprod/mssqlgisadmin",
-    "loctype": "db",
-    "schemaname": "amd",
-    "tablename": "training_students"
+    "schemaname": "amd"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [],
   "tags": []

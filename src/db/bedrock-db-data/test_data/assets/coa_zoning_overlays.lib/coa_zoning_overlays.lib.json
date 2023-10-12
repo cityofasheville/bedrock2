@@ -2,11 +2,12 @@
   "asset_name": "coa_zoning_overlays.lib",
   "description": "Asheville zoning overlays",
   "location": {
+    "tablename": "coa_zoning_overlays",
     "connection": "pubrecdb1/mdastore1/dbadmin",
-    "loctype": "db",
-    "schemaname": "internal",
-    "tablename": "coa_zoning_overlays"
+    "schemaname": "internal"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [
     "coa_zoning_overlays.wh"

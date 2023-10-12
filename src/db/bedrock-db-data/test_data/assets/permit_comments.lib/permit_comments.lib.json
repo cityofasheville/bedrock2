@@ -2,11 +2,12 @@
   "asset_name": "permit_comments.lib",
   "description": "Permit comments data",
   "location": {
+    "tablename": "permit_comments",
     "connection": "pubrecdb1/mdastore1/dbadmin",
-    "loctype": "db",
-    "schemaname": "internal",
-    "tablename": "permit_comments"
+    "schemaname": "internal"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [
     "permit_comments.acc"

@@ -5,7 +5,7 @@ import os
 import datetime
 from copy_s3 import download_s3, upload_s3
 from copy_ftp import put_ftp, get_ftp
-
+from copy_win import put_win, get_win
 
 region_name = "us-east-1"  # for secrets manager
 
@@ -56,7 +56,7 @@ def lambda_handler(event, context):
             location = etl[loc["name"]]
             loc["connection_data"] = getConnection(location["connection"])
             loc["filename"] = fillDateTemplate(location["filename"])
-            loc["path"] = location["path"]
+            loc["path"] = fillDateTemplate(location["path"])
             loc["connection"] = location["connection"]
 
         source_location = locations[0]
@@ -64,6 +64,8 @@ def lambda_handler(event, context):
             download_s3(source_location)
         elif source_location["connection_data"]["type"] == "sftp":
             get_ftp(source_location)
+        elif source_location["connection_data"]["type"] == "win":
+            get_win(source_location)
         else:
             raise Exception("Invalid file copy connection type " + source_location["connection_data"]["type"])
         
@@ -72,6 +74,8 @@ def lambda_handler(event, context):
             upload_s3(target_location)
         elif target_location["connection_data"]["type"] == "sftp":
             put_ftp(target_location)
+        elif target_location["connection_data"]["type"] == "win":
+            put_win(target_location)
         else:
             raise Exception("Invalid file copy connection type " + target_location["connection_data"]["type"])
             

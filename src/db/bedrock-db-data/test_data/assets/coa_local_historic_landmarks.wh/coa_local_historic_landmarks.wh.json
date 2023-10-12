@@ -2,11 +2,12 @@
   "asset_name": "coa_local_historic_landmarks.wh",
   "description": "coa_local_historic_landmarks",
   "location": {
-    "connection": "coa-gis-warehouse1/coagiswarehouse/coagis",
-    "loctype": "db",
-    "schemaname": "coagis",
-    "tablename": "coa_local_historic_landmarks"
+    "tablename": "coa_local_historic_landmarks",
+    "connection": "gis-warehouse/coagiswarehouse/coagis",
+    "schemaname": "coagis"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [],
   "tags": []

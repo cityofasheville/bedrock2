@@ -2,10 +2,12 @@
   "asset_name": "sog_water_breaks_leaks_count.ncb",
   "description": "Water SOG Benchmark: water_breaks_leaks_count",
   "location": {
-    "loctype": "aggr",
-    "spreadsheetid": "1m2xD4JyH4BEBey_ybsEgrvYopsl0PjWNmY_PEv3l6D4",
-    "tab": "water_breaks_leaks_count"
+    "tab": "water_breaks_leaks_count",
+    "connection": "bedrock-googlesheets",
+    "spreadsheetid": "1m2xD4JyH4BEBey_ybsEgrvYopsl0PjWNmY_PEv3l6D4"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [],
   "tags": [

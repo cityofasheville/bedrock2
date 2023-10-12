@@ -1,0 +1,14 @@
+{
+  "asset_name": "coa_asheville_neighborhoods.wh",
+  "description": "",
+  "location": {
+    "tablename": "coa_asheville_neighborhoods",
+    "connection": "gis-warehouse/coagiswarehouse/coagis",
+    "schemaname": "coagis"
+  },
+  "owner_id": null,
+  "notes": null,
+  "active": true,
+  "depends": [],
+  "tags": []
+}

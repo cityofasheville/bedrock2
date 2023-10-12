@@ -2,11 +2,12 @@
   "asset_name": "pr_employee_info.lib",
   "description": "Basic information for employees",
   "location": {
+    "tablename": "pr_employee_info",
     "connection": "pubrecdb1/mdastore1/dbadmin",
-    "loctype": "db",
-    "schemaname": "internal",
-    "tablename": "pr_employee_info"
+    "schemaname": "internal"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [
     "pr_employee_info.mun"

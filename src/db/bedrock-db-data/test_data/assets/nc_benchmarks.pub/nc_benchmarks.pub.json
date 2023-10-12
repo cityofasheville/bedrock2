@@ -2,11 +2,12 @@
   "asset_name": "nc_benchmarks.pub",
   "description": "",
   "location": {
+    "tablename": "nc_benchmarks",
     "connection": "coa-publicdb1/coa_share/dbadmin",
-    "loctype": "db",
-    "schemaname": "open",
-    "tablename": "nc_benchmarks"
+    "schemaname": "open"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [
     "nc_benchmarks.lib"

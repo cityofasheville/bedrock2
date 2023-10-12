@@ -2,10 +2,12 @@
   "asset_name": "maint_Pump_Houses.maint",
   "description": "Maintenance Responsibilities: Pump_Houses",
   "location": {
-    "loctype": "aggr",
-    "spreadsheetid": "16rZUoAlISFIAmvcnSMHmhaE0qObj2OMpHQX3ddRoEwg",
-    "tab": "Pump Houses"
+    "tab": "Pump Houses",
+    "connection": "bedrock-googlesheets",
+    "spreadsheetid": "16rZUoAlISFIAmvcnSMHmhaE0qObj2OMpHQX3ddRoEwg"
   },
+  "owner_id": null,
+  "notes": null,
   "active": true,
   "depends": [],
   "tags": [

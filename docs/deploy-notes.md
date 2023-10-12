@@ -3,7 +3,8 @@ Included scripts will build a complete copy of Bedrock on AWS, including the ass
 
 You will need AdministratorAccess command line permissions to AWS.
 
-Create a file `make_variables` based on `make_variables.prod`. Change INSTANCE to a unique name for your instance, and set the region and account info.
+Create a file `make_variables` based on `make_variables.sample`. Change INSTANCE to a unique name for your instance, and set the region and account info.
+
 The variable build_mode can be set to "std" if deploying from Linux or "sam" to use a container. This is needed for two Python Lambdas that need Linux native compilation targets for encryption used by the paramiko package.
 
 To start, cd into ```src/bedrock_common`` and run ```make install```.
@@ -21,12 +22,23 @@ make apply
 ```sh
 cd src/bedrock_common
 make install
+```
+If you are using an existing database, set the value of ```BEDROCK_DB_HOST``` in src/make_variables to the host name of that database and skip the next set of commands.
+```sh
 cd ../db
 make init
-make apply-y #(Creates database server)
-make db      #(Creates bedrock database)
+make apply-y #(Creates database server - takes a while)
+make db      #(Creates bedrock database and captures DB endpoint in src/db/make_variables.generated)
 make seed    #(Fill database with assets from Github)
+# Copy the database host from src/db/make_variables.generated into the value of BEDROCK_DB_HOST
+# in src/make_variables (without the port number)
+```
+Next, create the ETL and API infrastructure.
+```sh
 cd ../etl
+make init
+make apply-y
+cd ../api
 make init
 make apply-y
 ```
