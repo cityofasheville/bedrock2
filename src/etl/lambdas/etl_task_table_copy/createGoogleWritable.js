@@ -16,45 +16,41 @@ async function writeToSheet(location, theData, append = false) {
   const spreadsheetId = location.spreadsheetid;
   const sheets = google.sheets('v4');
 
+  google.options({ auth: jwtClient });
+
   // First clear the spreadsheet
   if (!append) {
     await sheets.spreadsheets.values.clear({
-      auth: jwtClient,
       spreadsheetId,
       range: location.range,
     });
   }
   // Now append the new values
-  sheets.spreadsheets.values.append({
-    auth: jwtClient,
+  await sheets.spreadsheets.values.append({
     spreadsheetId,
     range: location.range,
-    insertDataOption: 'OVERWRITE',
     valueInputOption: 'USER_ENTERED',
-    resource: {
-      majorDimension: 'ROWS',
+    requestBody: {
       values: csvParse.parse(theData),
     },
   });
 }
 
 module.exports = async function createGoogleWritable(location) {
-  let result = '';
-  const saveLocation = location;
+  let buff = '';
   const { append } = location;
   const googleStream = new stream.Writable({
     write(chunk, encoding, done) {
-      result += chunk;
+      buff += chunk;
       done();
     },
 
     async final(done) {
       try {
-        await writeToSheet(saveLocation, result, append);
+        await writeToSheet(location, buff, append);
         console.log(`Copy to Google Sheet: https://docs.google.com/spreadsheets/d/${location.spreadsheetid}/edit#gid=${location.range.split('!')[0]}`);
       } catch (err) {
         console.error('Google Sheet error: ', err);
-        throw new Error(`Google Sheet error: ${err}`);
       }
       done();
     },
