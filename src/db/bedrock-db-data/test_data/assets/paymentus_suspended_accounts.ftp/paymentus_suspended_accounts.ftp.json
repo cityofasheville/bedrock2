@@ -10,7 +10,8 @@
   "notes": null,
   "active": true,
   "depends": [
-    "paymentus_suspended_accounts.s3"
+    "paymentus_suspended_accounts.s3",
+    "paymentus_payment_history.ftp"
   ],
   "tags": []
 }
