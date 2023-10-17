@@ -9,7 +9,7 @@ function fixUnevenRows(range, values) {
   function sscolToNumber(letters) {
     return letters.split('').reduce((r, a) => r * 26 + parseInt(a, 36) - 9, 0);
   }
-  const sscols = range.replace(/[0-9]/g, '').split('!')[1].split(':'); // eg ['A','AB']
+  const sscols = range.replace(/[0-9]/g, '').split(':'); // eg ['A','AB']
   const colnums = sscols.map(sscolToNumber); // eg [1,28]
   const numcols = colnums[1] - colnums[0] + 1;
   const fixedData = [];
@@ -36,13 +36,14 @@ async function getGoogleStream(location) {
       await jwtClient.authorize();
 
       const spreadsheetId = location.spreadsheetid;
-      const { range } = location;
+      const { tab, range } = location;
+      const tabrange = `${tab}!${range}`;
       const sheets = google.sheets('v4');
 
       const response = await sheets.spreadsheets.values.get({
         auth: jwtClient,
         spreadsheetId,
-        range,
+        range: tabrange,
       });
 
       console.log(`Copy from Google Sheet: https://docs.google.com/spreadsheets/d/${location.spreadsheetid}/edit#gid=${range.split('!')[0]}`);
@@ -53,9 +54,8 @@ async function getGoogleStream(location) {
         }
       }
       if (location.append_tab_name) { // append tab name to each row. Used in aggregate tasktype
-        const tabname = range.split('!')[0];
         for (let i = 0; i < data.length; i += 1) {
-          data[i].push(tabname);
+          data[i].push(tab);
         }
       }
       // console.log(data);

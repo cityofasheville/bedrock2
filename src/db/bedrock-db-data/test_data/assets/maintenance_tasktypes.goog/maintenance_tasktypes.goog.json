@@ -2,7 +2,8 @@
   "asset_name": "maintenance_tasktypes.goog",
   "description": "City Facility Maintenance: Task Types-Buildings",
   "location": {
-    "range": "SUMMARY!A3:B",
+    "tab": "SUMMARY",
+    "range": "A3:B",
     "filename": "Maintenance Database - Buildings and Open Space",
     "connection": "bedrock-googlesheets",
     "spreadsheetid": "16rZUoAlISFIAmvcnSMHmhaE0qObj2OMpHQX3ddRoEwg"

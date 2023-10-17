@@ -64,7 +64,8 @@ Also see [Managed Data Assets README](https://github.com/cityofasheville/managed
 #### google_sheets
             "connection": "bedrock-googlesheets",
             "spreadsheetid": "9876234HIUFQER872345T",
-            "range": 'Bad Actors!A5:B'
+            "tab": "Sheet1",
+            "range": 'A5:B',
             __SOURCE OPTIONS__
             <OPTIONAL>: "append_asset_name": true (In the data an extra column is appended to each row with the name of the asset)
             __TARGET OPTIONS__

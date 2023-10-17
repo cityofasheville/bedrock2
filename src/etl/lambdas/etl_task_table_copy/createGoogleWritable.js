@@ -18,17 +18,20 @@ async function writeToSheet(location, theData, append = false) {
 
   google.options({ auth: jwtClient });
 
+  const { tab, range } = location;
+  const tabrange = `${tab}!${range}`;
   // First clear the spreadsheet
   if (!append) {
     await sheets.spreadsheets.values.clear({
       spreadsheetId,
-      range: location.range,
+      range: tabrange,
     });
   }
   // Now append the new values
   await sheets.spreadsheets.values.append({
     spreadsheetId,
-    range: location.range,
+    range: tabrange,
+    // insertDataOption: 'OVERWRITE',
     valueInputOption: 'USER_ENTERED',
     requestBody: {
       values: csvParse.parse(theData),

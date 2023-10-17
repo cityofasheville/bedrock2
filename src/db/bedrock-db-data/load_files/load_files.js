@@ -168,6 +168,7 @@ async function writeOther(client, data_directory, tablename) {
 
   await writeOther(client, data_directory, 'run_groups');
   await writeOther(client, data_directory, 'tags');
+  await writeOther(client, data_directory, 'connections');
 
   await client.end();
 })();

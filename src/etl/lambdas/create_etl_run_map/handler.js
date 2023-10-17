@@ -131,7 +131,8 @@ async function readAggregateData(client, tempLocation, location, taskSource) {
           source_location: {
             asset: asset_name,
             spreadsheetid,
-            range: `${tab}!${data_range}`,
+            tab,
+            range: data_range,
             connection: data_connection,
             append_asset_name: !!taskSource.append_asset_name,
             append_tab_name: !!taskSource.append_tab_name,
@@ -324,7 +325,7 @@ const lambda_handler = async function x(event) {
 debug = false;
 let event = {};
 if (debug) {
-  event = { rungroup: 'maintenance_responsibilities' };
+  event = { rungroup: 'daily' };
   (async () => {
     await lambda_handler(event);
     process.exit();

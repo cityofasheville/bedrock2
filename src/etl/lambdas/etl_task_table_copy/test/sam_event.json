@@ -9,20 +9,16 @@
       {
         "type": "table_copy",
         "source_location": {
-          "path": "paymentus/",
-          "filename": "ashv-paper-suppression-20231010.csv",
-          "connection": "s3_data_files",
-          "tableheaders": true
-        },
-        "target_location3": {
-          "path": "paymentus/",
-          "filename": "test.csv",
-          "connection": "s3_data_files"
+          "tablename": "depttodivmapping",
+          "connection": "pubrecdb1/mdastore1/dbadmin",
+          "schemaname": "internal"
         },
         "target_location": {
-          "tablename": "Paymentus_Paper_Suppression_Table",
-          "connection": "munis/munprod/fme_jobs",
-          "schemaname": "avl"
+          "connection": "bedrock-googlesheets",
+          "spreadsheetid": "17jqwWbnFsYMT1rFKLHS72j4n4CAMltSjYkFfd7FVL5w",
+          "tab": "Sheet1",
+          "range": "Sheet1!A2:D",
+          "append": true
         },
         "active": true
       }

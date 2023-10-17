@@ -2,7 +2,8 @@
   "asset_name": "iran_divestment_companies.goog",
   "description": "",
   "location": {
-    "range": "Bad Actors!A5:B",
+    "tab": "Bad Actors",
+    "range": "A5:B",
     "filename": "Iran Divestment Companies",
     "connection": "bedrock-googlesheets",
     "spreadsheetid": "1FOmrFm5afRc_XqTeF2T-ilWtZDIYzdqKiZlPX129IQA"

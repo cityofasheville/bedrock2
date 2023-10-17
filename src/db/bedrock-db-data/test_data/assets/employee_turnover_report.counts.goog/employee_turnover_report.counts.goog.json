@@ -2,7 +2,8 @@
   "asset_name": "employee_turnover_report.counts.goog",
   "description": "",
   "location": {
-    "range": "Counts!A2:P",
+    "tab": "Counts",
+    "range": "A2:P",
     "filename": "Employee Turnover Report",
     "connection": "bedrock-googlesheets",
     "spreadsheetid": "1yE8pfp9nZ9nETDd2ypN4h6y8-m06giQ5O797ghBQHYc"
