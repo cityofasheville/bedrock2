@@ -6,6 +6,7 @@ hold.json
 package
 function.zip
 bedrock_connections.json
+.bedrock_common/
 *NOGITHUB*
 
 # Other additions

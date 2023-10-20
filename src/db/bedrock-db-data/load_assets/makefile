@@ -1,5 +1,5 @@
-include ../../make_variables
--include ../make_variables.generated
+include ../../../make_variables
+-include ../../make_variables.generated
 
 .PHONY: seed init plan apply apply-y destroy db seed
 

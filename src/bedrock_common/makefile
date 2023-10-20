@@ -1,7 +1,16 @@
-code_files = *.js *.json
+include ../make_variables
 
-install: $(code_files)
-	npm install
+dirs = bedrock_common packages table_copy
 
-clean:
-	rm -Rf  node_modules
+.PHONY: $(dirs) init plan apply destroy clean
+
+init: $(dirs)
+plan: $(dirs)
+apply: $(dirs)
+apply-y: $(dirs)
+destroy: $(call reverse,$(dirs))
+
+clean: $(dirs)
+
+$(dirs):
+	$(MAKE) -C $@ $(MAKECMDGOALS)

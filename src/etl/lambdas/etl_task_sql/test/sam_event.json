@@ -1,21 +1,13 @@
 {
-  "JobIsGo": true,
   "ETLJob": {
-    "name": "bc_property_pinnum_formatted_owner_names",
-    "depends": [
-      "bc_property_account_master",
-      "bc_property"
-    ],
-    "run_group": "tues_night",
     "etl_tasks": [
       {
         "type": "sql",
-        "sql_string": "update dbo.toot set field1 = 'thistoot';",
-        "connection": "localss",
+        "sql_string": "select * from internal.ad_info limit 1;",
+        "connection": "pubrecdb1/mdastore1/dbadmin",
         "active": true
       }
     ]
   },
-  "TaskIndex": 0,
-  "JobType": "sql"
+  "TaskIndex": 0
 }
