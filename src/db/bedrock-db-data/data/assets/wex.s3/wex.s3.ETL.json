@@ -1,7 +1,7 @@
 {
   "asset_name": "wex.s3",
   "run_group": "wex",
-  "active": false,
+  "active": true,
   "tasks": [
     {
       "type": "file_copy",

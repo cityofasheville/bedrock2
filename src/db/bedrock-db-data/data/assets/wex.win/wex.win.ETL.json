@@ -1,7 +1,7 @@
 {
   "asset_name": "wex.win",
   "run_group": "wex",
-  "active": false,
+  "active": true,
   "tasks": [
     {
       "type": "file_copy",

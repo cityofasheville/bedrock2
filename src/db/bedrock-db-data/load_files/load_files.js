@@ -140,7 +140,7 @@ async function writeOther(client, data_directory, tablename) {
 
 ////////////////////////////////////////////
 (async function loadfiles() {
-  data_directory = '../test_data';
+  data_directory = '../data';
   assets_directory = data_directory + '/assets/';
   // create or clear assets dir
   if (fs.existsSync(assets_directory)) {

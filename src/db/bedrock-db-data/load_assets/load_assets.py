@@ -16,7 +16,7 @@ db_name = 'bedrock'
 db_user = 'bedrock'
 db_password = 'test-bedrock'
 
-data_directory = './test_data'
+data_directory = '../data'
 if (len(sys.argv) > 2):
   data_directory = sys.argv[2]
 
