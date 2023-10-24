@@ -1,6 +1,6 @@
 {
   "asset_name": "wex.ftp",
-  "description": "Uploaded Accounting data to Aclara",
+  "description": "Wex fleet data",
   "location": {
     "path": "/data/",
     "filename": "AshevilleExport_PostedDate_${YYYY}${MM}${DD}.csv",
