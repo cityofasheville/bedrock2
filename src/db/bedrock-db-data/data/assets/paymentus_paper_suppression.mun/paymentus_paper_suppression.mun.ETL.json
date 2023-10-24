@@ -19,6 +19,23 @@
       "active": true,
       "connection": "munis/munprod/fme_jobs",
       "sql_string": "execute avl.Paymentus_Paper_Suppression;"
+    },
+    {
+      "type": "table_copy",
+      "active": false,
+      "source_location": {
+        "asset": "paymentus_paper_suppression.s3",
+        "removeheaders": true
+      },
+      "target_location": {
+        "asset": "paymentus_paper_suppression21.mun"
+      }
+    },
+    {
+      "type": "sql",
+      "active": false,
+      "connection": "munistest21",
+      "sql_string": "execute avl.Paymentus_Paper_Suppression;"
     }
   ]
 }

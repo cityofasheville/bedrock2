@@ -1,0 +1,16 @@
+{
+  "asset_name": "paymentus_paper_suppression21.mun",
+  "description": "Same paymentus_paper_suppression table on new server",
+  "location": {
+    "tablename": "Paymentus_Paper_Suppression_Table",
+    "connection": "munistest21",
+    "schemaname": "avl"
+  },
+  "owner_id": null,
+  "notes": null,
+  "active": true,
+  "depends": [
+    "paymentus_paper_suppression.s3"
+  ],
+  "tags": []
+}
