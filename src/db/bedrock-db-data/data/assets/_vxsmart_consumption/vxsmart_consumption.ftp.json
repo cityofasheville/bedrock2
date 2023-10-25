@@ -3,7 +3,7 @@
   "description": "Uploaded Consumption data to vxsmart_consumption",
   "location": {
     "path": "/uploads/",
-    "filename": "UB_AMI_VXSmart_Consumption_5Day_Feed.csv",
+    "filename": "ch_${YYYY}${MM}${DD}.csv",
     "connection": "vxsmart_ftp"
   },
   "owner_id": null,

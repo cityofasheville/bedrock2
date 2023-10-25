@@ -3,7 +3,7 @@
   "description": "Uploaded Account data to vxsmart_account",
   "location": {
     "path": "/uploads/",
-    "filename": "UB_AMI_VXSmart_Account_Feed.csv",
+    "filename": "acctinfo_${YYYY}${MM}${DD}.csv",
     "connection": "vxsmart_ftp"
   },
   "owner_id": null,

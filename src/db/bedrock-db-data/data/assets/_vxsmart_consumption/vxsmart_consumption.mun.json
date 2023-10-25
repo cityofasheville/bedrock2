@@ -2,7 +2,7 @@
   "asset_name": "vxsmart_consumption.mun",
   "description": "",
   "location": {
-    "tablename": "UB_AMI_VXSmart_Consumption_5Day_Feed",
+    "tablename": "UB_AMI_VXSmart_Consumption_Nightly",
     "connection": "munistest19",
     "schemaname": "avl"
   },

@@ -3,7 +3,7 @@
   "description": "",
   "location": {
     "path": "vxsmart/",
-    "filename": "vxsmart_consumption${YYYY}${MM}${DD}.csv",
+    "filename": "ch_${YYYY}${MM}${DD}.csv",
     "connection": "s3_data_files"
   },
   "owner_id": null,

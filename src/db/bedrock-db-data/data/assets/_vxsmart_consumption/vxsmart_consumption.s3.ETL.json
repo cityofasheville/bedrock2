@@ -1,6 +1,6 @@
 {
   "asset_name": "vxsmart_consumption.s3",
-  "run_group": "daily",
+  "run_group": "vxsmart",
   "active": true,
   "tasks": [
     {

@@ -3,7 +3,7 @@
   "description": "Uploaded Billing data to vxsmart_billing",
   "location": {
     "path": "/uploads/",
-    "filename": "UB_AMI_VXSmart_Billing_5Day_Feed.csv",
+    "filename": "billinginfo_${YYYY}${MM}${DD}.csv",
     "connection": "vxsmart_ftp"
   },
   "owner_id": null,

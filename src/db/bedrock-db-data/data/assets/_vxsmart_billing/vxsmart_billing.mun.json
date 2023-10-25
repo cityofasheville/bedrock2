@@ -2,7 +2,7 @@
   "asset_name": "vxsmart_billing.mun",
   "description": "",
   "location": {
-    "tablename": "UB_AMI_VXSmart_Billing_5Day_Feed",
+    "tablename": "UB_AMI_VXSmart_Billing_Nightly",
     "connection": "munistest19",
     "schemaname": "avl"
   },

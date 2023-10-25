@@ -1,6 +1,6 @@
 {
   "asset_name": "vxsmart_account.ftp",
-  "run_group": "daily",
+  "run_group": "vxsmart",
   "active": true,
   "tasks": [
     {

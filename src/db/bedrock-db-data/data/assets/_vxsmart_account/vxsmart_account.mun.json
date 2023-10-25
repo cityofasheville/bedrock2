@@ -2,7 +2,7 @@
   "asset_name": "vxsmart_account.mun",
   "description": "",
   "location": {
-    "tablename": "UB_AMI_VXSmart_Account_Feed",
+    "tablename": "UB_AMI_VXSmart_Accounts_Nightly",
     "connection": "munistest19",
     "schemaname": "avl"
   },
