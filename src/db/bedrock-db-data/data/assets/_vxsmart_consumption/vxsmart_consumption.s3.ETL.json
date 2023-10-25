@@ -1,0 +1,17 @@
+{
+  "asset_name": "vxsmart_consumption.s3",
+  "run_group": "daily",
+  "active": true,
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "vxsmart_consumption.mun"
+      },
+      "target_location": {
+        "asset": "vxsmart_consumption.s3"
+      }
+    }
+  ]
+}

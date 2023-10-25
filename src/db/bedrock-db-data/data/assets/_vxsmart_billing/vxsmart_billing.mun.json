@@ -1,0 +1,14 @@
+{
+  "asset_name": "vxsmart_billing.mun",
+  "description": "",
+  "location": {
+    "tablename": "UB_AMI_VXSmart_Billing_5Day_Feed",
+    "connection": "munistest19",
+    "schemaname": "avl"
+  },
+  "owner_id": null,
+  "notes": null,
+  "active": true,
+  "depends": [],
+  "tags": []
+}

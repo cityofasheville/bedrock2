@@ -1,0 +1,16 @@
+{
+  "asset_name": "vxsmart_account.s3",
+  "description": "",
+  "location": {
+    "path": "vxsmart/",
+    "filename": "vxsmart_account${YYYY}${MM}${DD}.csv",
+    "connection": "s3_data_files"
+  },
+  "owner_id": null,
+  "notes": null,
+  "active": true,
+  "depends": [
+    "vxsmart_account.mun"
+  ],
+  "tags": []
+}

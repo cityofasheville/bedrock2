@@ -1,0 +1,16 @@
+{
+  "asset_name": "vxsmart_consumption.ftp",
+  "description": "Uploaded Consumption data to vxsmart_consumption",
+  "location": {
+    "path": "/uploads/",
+    "filename": "UB_AMI_VXSmart_Consumption_5Day_Feed.csv",
+    "connection": "vxsmart_ftp"
+  },
+  "owner_id": null,
+  "notes": null,
+  "active": true,
+  "depends": [
+    "vxsmart_consumption.s3"
+  ],
+  "tags": []
+}

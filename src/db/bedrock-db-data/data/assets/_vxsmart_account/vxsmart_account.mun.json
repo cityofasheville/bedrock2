@@ -1,0 +1,14 @@
+{
+  "asset_name": "vxsmart_account.mun",
+  "description": "",
+  "location": {
+    "tablename": "UB_AMI_VXSmart_Account_Feed",
+    "connection": "munistest19",
+    "schemaname": "avl"
+  },
+  "owner_id": null,
+  "notes": null,
+  "active": true,
+  "depends": [],
+  "tags": []
+}
