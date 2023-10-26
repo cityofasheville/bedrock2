@@ -42,6 +42,11 @@ async function createSsWritable(location) {
     },
     trustServerCertificate: true, // Accela has self-signed certs?
   };
+  if (connInfo.domain) config.domain = connInfo.domain;
+  if (connInfo.parameters) {
+    // for <= SQL 2008
+    if (connInfo.parameters.encrypt === false) config.options.encrypt = false;
+  }
   const pool = await getPool(poolName, config);
 
   // copyFromTemp: After temp table is full, load real table
