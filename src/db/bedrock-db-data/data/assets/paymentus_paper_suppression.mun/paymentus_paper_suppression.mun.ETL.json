@@ -22,7 +22,7 @@
     },
     {
       "type": "table_copy",
-      "active": false,
+      "active": true,
       "source_location": {
         "asset": "paymentus_paper_suppression.s3",
         "removeheaders": true
@@ -33,7 +33,7 @@
     },
     {
       "type": "sql",
-      "active": false,
+      "active": true,
       "connection": "munistest21",
       "sql_string": "execute avl.Paymentus_Paper_Suppression;"
     }
