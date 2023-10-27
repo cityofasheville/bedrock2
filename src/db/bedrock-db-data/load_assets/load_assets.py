@@ -80,7 +80,7 @@ cur.execute(sql)
 print(f'Wrote {nrows} items to the tags table')
 
 # Load the connections
-sql = 'INSERT INTO bedrock.connections (connection_name, description, connection_type) VALUES '
+sql = 'INSERT INTO bedrock.connections (connection_name, description, connection_class) VALUES '
 tags = []
 with open(os.path.join(data_directory,'connections.csv')) as ff:
   rdr = csv.reader(ff)
