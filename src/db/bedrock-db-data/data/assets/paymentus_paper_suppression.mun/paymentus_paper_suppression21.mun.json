@@ -10,7 +10,8 @@
   "notes": null,
   "active": true,
   "depends": [
-    "paymentus_paper_suppression.s3"
+    "paymentus_paper_suppression.s3",
+    "paymentus_paper_suppression.mun"
   ],
   "tags": []
 }

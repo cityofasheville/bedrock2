@@ -1,5 +1,5 @@
 {
-  "asset_name": "paymentus_paper_suppression.mun",
+  "asset_name": "paymentus_paper_suppression21.mun",
   "run_group": "paymentus_paper_suppression",
   "active": true,
   "tasks": [
@@ -11,13 +11,13 @@
         "removeheaders": true
       },
       "target_location": {
-        "asset": "paymentus_paper_suppression.mun"
+        "asset": "paymentus_paper_suppression21.mun"
       }
     },
     {
       "type": "sql",
       "active": true,
-      "connection": "munis/munprod/fme_jobs",
+      "connection": "munistest21",
       "sql_string": "execute avl.Paymentus_Paper_Suppression;"
     }
   ]
