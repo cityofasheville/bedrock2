@@ -26,7 +26,6 @@ async function readAsset(client, pathElements) {
       `PG error getting asset information: ${pgErrorCodes[error.code]}`,
     );
   }
-  console.log(`logging res ${res}`);
   if (res.rowCount === 0) {
     throw new Error('Asset not found');
   }
@@ -34,37 +33,33 @@ async function readAsset(client, pathElements) {
 }
 
 async function addInfo(res, fields, available) {
-  const info = {
-    error: false,
-    message: '',
-    result: {},
-  };
-  info.result = {
+  const result = {
     asset_name: res[0].asset_name,
   };
-  for (let j = 0; j < fields.length; ++j) {
+  for (let j = 0; j < fields.length; j += 1) {
     const itm = fields[j];
     if (available.includes(itm)) {
       if (itm === 'dependencies') {
-        info.result.dependencies = [];
+        result.dependencies = [];
         for (let i = 0; i < res.length; i += 1) {
           if (res[i].dependency !== null) {
-            info.result.dependencies.push(res[i].dependency);
+            result.dependencies.push(res[i].dependency);
           }
         }
       } else if (itm === 'etl_run_group') {
-        info.result[itm] = res[0].run_group;
+        result[itm] = res[0].run_group;
       } else if (itm === 'tags') {
-        info.result[itm] = [];
+        result[itm] = [];
       } else {
-        info.result[itm] = res[0][itm];
+        result[itm] = res[0][itm];
       }
     }
   }
-  return info;
+  return result;
 }
 
 async function getTags(client, pathElements) {
+  const tags = [];
   const res = await client
     .query('SELECT * from bedrock.asset_tags where asset_name like $1', [
       pathElements[1],
@@ -75,14 +70,21 @@ async function getTags(client, pathElements) {
       );
     });
   await client.end();
-  return res;
+  if (res.rowCount > 0) {
+    for (let i = 0; i < res.rowCount; i += 1) {
+      if (res.rows[i].tag_name !== null) {
+        tags.push(res.rows[i].tag_name);
+      }
+    }
+  }
+  return tags;
 }
 
 async function getAsset(pathElements, queryParams, connection) {
-  let result = {
+  const result = {
     error: false,
     message: '',
-    result: {},
+    result: null,
   };
 
   let client;
@@ -91,7 +93,6 @@ async function getAsset(pathElements, queryParams, connection) {
   } catch (error) {
     result.error = true;
     result.message = error.message;
-    result.result = null;
     return result;
   }
 
@@ -101,7 +102,6 @@ async function getAsset(pathElements, queryParams, connection) {
   } catch (error) {
     result.error = true;
     result.message = error.message;
-    result.result = null;
     return result;
   }
 
@@ -124,29 +124,18 @@ async function getAsset(pathElements, queryParams, connection) {
     fields = [...available];
   }
 
-  result = await addInfo(res, fields, available);
+  result.result = await addInfo(res, fields, available);
+  // result = await addInfo(res, fields, available);
   if (fields === null || fields.includes('tags')) {
     try {
       res = await getTags(client, pathElements);
+      result.result.tags = res;
     } catch (error) {
       result.error = true;
       result.message = error.message;
       result.result = null;
       return result;
     }
-  }
-
-  if (res.rowCount > 0) {
-    for (let i = 0; i < res.rowCount; i += 1) {
-      if (res.rows[i].tag_name !== null) {
-        result.result.tags.push(res.rows[i].tag_name);
-      }
-    }
-  }
-
-  if (result.error) {
-    result.result = null;
-    return result;
   }
 
   return result;
