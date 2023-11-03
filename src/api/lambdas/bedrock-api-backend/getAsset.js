@@ -125,7 +125,6 @@ async function getAsset(pathElements, queryParams, connection) {
   }
 
   result.result = await addInfo(res, fields, available);
-  // result = await addInfo(res, fields, available);
   if (fields === null || fields.includes('tags')) {
     try {
       res = await getTags(client, pathElements);
