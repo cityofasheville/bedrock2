@@ -7,10 +7,10 @@ async function checkInfo(body, pathElements) {
   // Make sure that we have required information
 
   if (
-    !('asset_name' in body) ||
-    !('description' in body) ||
-    !('location' in body) ||
-    !('active' in body)
+    !('asset_name' in body)
+    || !('description' in body)
+    || !('location' in body)
+    || !('active' in body)
   ) {
     throw new Error(
       'Asset lacks required property (asset_name, description, location, active)',
@@ -34,6 +34,7 @@ async function checkInfo(body, pathElements) {
 
 async function newClient(connection) {
   const client = new Client(connection);
+
   try {
     await client.connect();
     return client;
@@ -45,11 +46,11 @@ async function newClient(connection) {
 async function checkExistence(client, pathElements) {
   let sql;
   let res;
+
   try {
     sql = 'SELECT * FROM bedrock.assets where asset_name like $1';
     res = await client.query(sql, [pathElements[1]]);
   } catch (error) {
-    client.end();
     throw new Error(
       `PG error checking if asset already exists: ${pgErrorCodes[error.code]}`,
     );
@@ -60,15 +61,11 @@ async function checkExistence(client, pathElements) {
   }
 }
 
-async function beginTransaction(body, client) {
-  //
+async function baseInsert(body, client) {
   // All is well - let's go ahead and add. Start by beginning the transaction
-  //
   let info = null;
   let sql;
   let res;
-  await client.query('BEGIN');
-
   let argnum = 5;
   const args = [
     body.asset_name,
@@ -78,12 +75,14 @@ async function beginTransaction(body, client) {
   ];
   sql = 'INSERT INTO assets (asset_name, description, location, active';
   let vals = ') VALUES($1, $2, $3, $4';
+
   if ('owner_id' in body) {
     sql += ', owner_id';
     vals += `, $${argnum}`;
     args.push(body.owner_id);
     argnum += 1;
   }
+
   if ('notes' in body) {
     sql += ', notes';
     vals += `, $${argnum}`;
@@ -91,6 +90,7 @@ async function beginTransaction(body, client) {
     argnum += 1;
   }
   sql += `${vals})`;
+
   try {
     res = await client.query(sql, args);
   } catch (error) {
@@ -120,6 +120,7 @@ async function beginTransaction(body, client) {
 
 async function addDependencies(body, client) {
   let dependencies;
+
   if ('dependencies' in body && body.dependencies.length > 0) {
     for (let i = 0; i < body.dependencies.length; i += 1) {
       const dependency = body.dependencies[i];
@@ -168,6 +169,7 @@ async function addTags(body, client) {
   let res;
   let tags = [];
   let tmpTags = [];
+
   // Now add any tags
   if ('tags' in body) {
     if (Array.isArray(body.tags)) {
@@ -182,6 +184,7 @@ async function addTags(body, client) {
         tags.push(tag); // Make sure they're cleaned up
       }
     }
+
     // For now, just add any tags that aren't in the tags table
     if (tags.length > 0) {
       sql = 'SELECT tag_name from bedrock.tags where tag_name in (';
@@ -191,19 +194,21 @@ async function addTags(body, client) {
         comma = ', ';
       }
       sql += ');';
+
       try {
         res = await client.query(sql, tags);
       } catch (error) {
-        await client.query('ROLLBACK');
         throw new Error(
           `PG error reading tags table: ${pgErrorCodes[error.code]}`,
         );
       }
+
       if (res.rowCount !== tags.length) {
         const dbTags = [];
         for (let i = 0; i < res.rowCount; i += 1) {
           dbTags.push(res.rows[i].tag_name);
         }
+
         try {
           for (let i = 0; i < tags.length; i += 1) {
             if (!dbTags.includes(tags[i])) {
@@ -213,7 +218,6 @@ async function addTags(body, client) {
             }
           }
         } catch (error) {
-          await client.query('ROLLBACK');
           throw new Error(
             `PG error adding to tags table: ${pgErrorCodes[error.code]}`,
           );
@@ -236,9 +240,6 @@ async function addTags(body, client) {
   }
 
   tags = body.tags;
-
-  await client.query('COMMIT');
-  await client.end();
   return tags;
 }
 
@@ -264,55 +265,32 @@ async function addAsset(requestBody, pathElements, queryParams, connection) {
 
   try {
     client = await newClient(connection);
-  } catch (error) {
-    result.error = true;
-    result.message = error.message;
-    return result;
-  }
-
-  try {
     await checkExistence(client, pathElements);
   } catch (error) {
+    await client.end();
     result.error = true;
     result.message = error.message;
     return result;
   }
 
   try {
-    result.result = await beginTransaction(body, client);
-  } catch (error) {
-    result.error = true;
-    result.message = error.message;
-    return result;
-  }
-
-  try {
+    await client.query('BEGIN');
+    result.result = await baseInsert(body, client);
     result.dependencies = await addDependencies(body, client);
-  } catch (error) {
-    result.error = true;
-    result.message = error.message;
-    return result;
-  }
-
-  try {
     ETLInfo = await addETL(body, client);
     result.result.etl_run_group = ETLInfo.etl_run_group;
     result.result.etl_active = ETLInfo.etl_active;
-  } catch (error) {
-    result.error = true;
-    result.message = error.message;
-    return result;
-  }
-
-  try {
     result.result.tags = await addTags(body, client);
+    await client.query('COMMIT');
+    await client.end();
+    return result;
   } catch (error) {
+    await client.query('ROLLBACK');
+    await client.end();
     result.error = true;
     result.message = error.message;
     return result;
   }
-
-  return result;
 }
 
 module.exports = addAsset;
