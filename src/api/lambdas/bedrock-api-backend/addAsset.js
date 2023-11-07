@@ -3,81 +3,86 @@
 const { Client } = require('pg');
 const pgErrorCodes = require('./pgErrorCodes');
 
-async function addAsset(requestBody, pathElements, queryParams, connection) {
-  const result = {
-    error: false,
-    message: '',
-    result: null,
-  };
-  const body = JSON.parse(requestBody);
+async function checkInfo(body, pathElements) {
+  // Make sure that we have required information
+
+  if (
+    !('asset_name' in body)
+    || !('description' in body)
+    || !('location' in body)
+    || !('active' in body)
+  ) {
+    throw new Error(
+      'Asset lacks required property (asset_name, description, location, active)',
+    );
+  }
+
+  if (pathElements[1] !== body.asset_name) {
+    throw new Error(
+      `Asset name ${pathElements[1]} in path does not match asset name ${body.asset_name} in body`,
+    );
+  }
+
+  if ('etl_run_group' in body || 'etl_active' in body) {
+    if (!('etl_run_group' in body && 'etl_active' in body)) {
+      throw new Error(
+        'Addition of ETL information requires both etl_run_group and etl_active elements',
+      );
+    }
+  }
+}
+
+async function newClient(connection) {
+  const client = new Client(connection);
+
+  try {
+    await client.connect();
+    return client;
+  } catch (error) {
+    throw new Error(`PG error connecting: ${pgErrorCodes[error.code]}`);
+  }
+}
+
+async function checkExistence(client, pathElements) {
   let sql;
   let res;
 
-  // Make sure that we have required information
-  if (!('asset_name' in body)
-   || !('description' in body)
-   || !('location' in body)
-   || !('active' in body)) {
-    result.error = true;
-    result.message = 'Asset lacks required property (asset_name, description, location, active)';
-    result.result = body;
-  }
-
-  if (!result.error && pathElements[1] !== body.asset_name) {
-    result.error = true;
-    result.message = `Asset name ${pathElements[1]} in path does not match asset name ${body.asset_name} in body`;
-  }
-
-  if (!result.error && ('etl_run_group' in body || 'etl_active' in body)) {
-    if (!('etl_run_group' in body && 'etl_active' in body)) {
-      result.error = true;
-      result.message = 'Addition of ETL information requires both etl_run_group and etl_active elements';
-    }
-  }
-  if (result.error) {
-    result.result = null;
-    return result;
-  }
-
-  const client = new Client(connection);
-  await client.connect()
-    .catch((err) => {
-      result.error = true;
-      result.message = `PG error connecting: ${pgErrorCodes[err.code]}`;
-    });
-
-  if (!result.error) {
+  try {
     sql = 'SELECT * FROM bedrock.assets where asset_name like $1';
-    res = await client.query(sql, [pathElements[1]])
-      .catch((err) => {
-        result.error = true;
-        result.message = `PG error checking if asset already exists: ${pgErrorCodes[err.code]}`;
-      });
-    if (!result.error && res.rowCount > 0) {
-      result.error = true;
-      result.message = 'Asset already exists';
-    }
-  }
-  if (result.error) {
-    result.result = null;
-    client.end();
-    return result;
+    res = await client.query(sql, [pathElements[1]]);
+  } catch (error) {
+    throw new Error(
+      `PG error checking if asset already exists: ${pgErrorCodes[error.code]}`,
+    );
   }
 
-  //
+  if (res.rowCount > 0) {
+    throw new Error('Asset already exists');
+  }
+}
+
+async function baseInsert(body, client) {
   // All is well - let's go ahead and add. Start by beginning the transaction
-  //
-  await client.query('BEGIN');
+  let info = null;
+  let sql;
+  let res;
   let argnum = 5;
-  const args = [body.asset_name, body.description, JSON.stringify(body.location), body.active];
-  sql = 'INSERT INTO assets (asset_name, description, location, active'
+  const args = [
+    body.asset_name,
+    body.description,
+    JSON.stringify(body.location),
+    body.active,
+  ];
+  sql = 'INSERT INTO assets (asset_name, description, location, active';
   let vals = ') VALUES($1, $2, $3, $4';
+
   if ('owner_id' in body) {
     sql += ', owner_id';
     vals += `, $${argnum}`;
     args.push(body.owner_id);
     argnum += 1;
   }
+
   if ('notes' in body) {
     sql += ', notes';
     vals += `, $${argnum}`;
@@ -85,66 +90,88 @@ async function addAsset(requestBody, pathElements, queryParams, connection) {
     argnum += 1;
   }
   sql += `${vals})`;
-  console.log(sql);
-  res = await client.query(sql, args)
-    .catch((err) => {
-      result.error = true;
-      result.message = `PG error adding new base asset: ${pgErrorCodes[err.code]}`;
-    });
 
-  if (!result.error) {
-    if (res.rowCount !== 1) {
-      result.error = true;
-      result.message = 'Unknown error inserting new asset';
-    } else {
-      result.result = {
-        asset_name: body.asset_name,
-        description: body.description,
-        location: body.location,
-        active: body.active,
-      };
-      if ('owner_id' in body) {
-        result.result.owner_id = body.owner_id;
-      }
-      if ('notes' in body) {
-        result.result.notes = body.notes;
-      }
-    }
+  try {
+    res = await client.query(sql, args);
+  } catch (error) {
+    throw new Error(
+      `PG error adding new base asset: ${pgErrorCodes[error.code]}`,
+    );
   }
 
-  // Now add any dependencies
-  if (!result.error && ('dependencies' in body) && body.dependencies.length > 0) {
-    for (let i = 0; i < body.dependencies.length && !result.error; i += 1) {
+  if (res.rowCount !== 1) {
+    throw new Error('Unknown error inserting new asset');
+  } else {
+    info = {
+      asset_name: body.asset_name,
+      description: body.description,
+      location: body.location,
+      active: body.active,
+    };
+    if ('owner_id' in body) {
+      info.owner_id = body.owner_id;
+    }
+    if ('notes' in body) {
+      info.notes = body.notes;
+    }
+  }
+  return info;
+}
+
+async function addDependencies(body, client) {
+  let dependencies;
+
+  if ('dependencies' in body && body.dependencies.length > 0) {
+    for (let i = 0; i < body.dependencies.length; i += 1) {
       const dependency = body.dependencies[i];
-      res = await client.query(
-        'INSERT INTO dependencies (asset_name, dependency) VALUES ($1, $2)',
-        [body.asset_name, dependency],
-      )
-        .catch((err) => {
-          result.error = true;
-          result.message = `PG error adding dependencies: ${pgErrorCodes[err.code]}`;
-        });
+      try {
+        await client.query(
+          'INSERT INTO dependencies (asset_name, dependency) VALUES ($1, $2)',
+          [body.asset_name, dependency],
+        );
+      } catch (error) {
+        throw new Error(
+          `PG error adding dependencies: ${pgErrorCodes[error.code]}`,
+        );
+      }
     }
-    result.result.dependencies = body.dependencies;
+    dependencies = body.dependencies;
   }
+  return dependencies;
+}
+
+async function addETL(body, client) {
+  const info = {
+    etl_run_group: null,
+    etl_active: null,
+  };
 
   // Now add any ETL information
-  if (!result.error && ('etl_run_group' in body && 'etl_active' in body)) {
-    res = await client.query(
-      'INSERT INTO etl (asset_name, run_group, active) VALUES ($1, $2, $3)',
-      [body.asset_name, body.etl_run_group, body.etl_active],
-    )
-      .catch((err) => {
-        result.error = true;
-        result.message = `PG error adding etl information: ${pgErrorCodes[err.code]}`;
-      });
-    result.result.etl_run_group = body.etl_run_group;
-    result.result.etl_active = body.etl_active;
+  if ('etl_run_group' in body && 'etl_active' in body) {
+    try {
+      await client.query(
+        'INSERT INTO etl (asset_name, run_group, active) VALUES ($1, $2, $3)',
+        [body.asset_name, body.etl_run_group, body.etl_active],
+      );
+    } catch (error) {
+      throw new Error(
+        `PG error adding etl information: ${pgErrorCodes[error.code]}`,
+      );
+    }
+    info.etl_run_group = body.etl_run_group;
+    info.etl_active = body.etl_active;
   }
+  return info;
+}
+
+async function addTags(body, client) {
+  let sql;
+  let res;
+  let tags = [];
+  let tmpTags = [];
 
   // Now add any tags
-  if (!result.error && 'tags' in body) {
-    const tags = []; let tmpTags = [];
+  if ('tags' in body) {
     if (Array.isArray(body.tags)) {
       tmpTags = body.tags;
     } else {
@@ -157,6 +184,7 @@ async function addAsset(requestBody, pathElements, queryParams, connection) {
         tags.push(tag); // Make sure they're cleaned up
       }
     }
+
     // For now, just add any tags that aren't in the tags table
     if (tags.length > 0) {
       sql = 'SELECT tag_name from bedrock.tags where tag_name in (';
@@ -166,55 +194,103 @@ async function addAsset(requestBody, pathElements, queryParams, connection) {
         comma = ', ';
       }
       sql += ');';
-      res = await client.query(sql, tags)
-        .catch((err) => {
-          result.error = true;
-          result.message = `PG error reading tags table: ${pgErrorCodes[err.code]}`;
-        });
-      if (!result.error && res.rowCount !== tags.length) {
+
+      try {
+        res = await client.query(sql, tags);
+      } catch (error) {
+        throw new Error(
+          `PG error reading tags table: ${pgErrorCodes[error.code]}`,
+        );
+      }
+
+      if (res.rowCount !== tags.length) {
         const dbTags = [];
         for (let i = 0; i < res.rowCount; i += 1) {
           dbTags.push(res.rows[i].tag_name);
         }
-        for (let i = 0; i < tags.length && !result.error; i += 1) {
-          if (!dbTags.includes(tags[i])) {
-            await client.query(
-              'INSERT INTO tags (tag_name) VALUES ($1)',
-              [tags[i]],
-            )
-              .catch((err) => {
-                result.error = true;
-                result.message = `PG error adding to tags table: ${pgErrorCodes[err.code]}`;
-              });
+
+        try {
+          for (let i = 0; i < tags.length; i += 1) {
+            if (!dbTags.includes(tags[i])) {
+              await client.query('INSERT INTO tags (tag_name) VALUES ($1)', [
+                tags[i],
+              ]);
+            }
           }
+        } catch (error) {
+          throw new Error(
+            `PG error adding to tags table: ${pgErrorCodes[error.code]}`,
+          );
         }
       }
     }
-    // End of just adding any tags that aren't in the tags table for now
+  }
+  // End of just adding any tags that aren't in the tags table for now
 
-    if (!result.error) {
-      for (let i = 0; i < tags.length && !result.error; i += 1) {
-        res = await client.query(
-          'INSERT INTO bedrock.asset_tags (asset_name, tag_name) VALUES ($1, $2)',
-          [body.asset_name, tags[i]],
-        )
-          .catch((err) => {
-            result.error = true;
-            result.message = `PG error adding asset_tags: ${pgErrorCodes[err.code]}`;
-          });
-      }
-      result.result.tags = body.tags;
+  try {
+    for (let i = 0; i < tags.length; i += 1) {
+      res = await client.query(
+        'INSERT INTO bedrock.asset_tags (asset_name, tag_name) VALUES ($1, $2)',
+        [body.asset_name, tags[i]],
+      );
     }
-  }
-  if (result.error) {
+  } catch (error) {
     await client.query('ROLLBACK');
-    result.result = null;
-  } else {
-    await client.query('COMMIT');
+    throw new Error(`PG error adding asset_tags: ${pgErrorCodes[error.code]}`);
   }
-  await client.end();
 
-  return result;
+  tags = body.tags;
+  return tags;
+}
+
+async function addAsset(requestBody, pathElements, queryParams, connection) {
+  const body = JSON.parse(requestBody);
+
+  let client;
+  let ETLInfo;
+
+  const result = {
+    error: false,
+    message: '',
+    result: null,
+  };
+
+  try {
+    await checkInfo(body, pathElements);
+  } catch (error) {
+    result.error = true;
+    result.message = error.message;
+    return result;
+  }
+
+  try {
+    client = await newClient(connection);
+    await checkExistence(client, pathElements);
+  } catch (error) {
+    await client.end();
+    result.error = true;
+    result.message = error.message;
+    return result;
+  }
+
+  try {
+    await client.query('BEGIN');
+    result.result = await baseInsert(body, client);
+    result.dependencies = await addDependencies(body, client);
+    ETLInfo = await addETL(body, client);
+    result.result.etl_run_group = ETLInfo.etl_run_group;
+    result.result.etl_active = ETLInfo.etl_active;
+    result.result.tags = await addTags(body, client);
+    await client.query('COMMIT');
+    await client.end();
+    return result;
+  } catch (error) {
+    await client.query('ROLLBACK');
+    await client.end();
+    result.error = true;
+    result.message = error.message;
+    return result;
+  }
 }
 
 module.exports = addAsset;
