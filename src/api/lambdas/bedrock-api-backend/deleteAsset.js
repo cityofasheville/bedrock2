@@ -43,7 +43,7 @@ async function dependenciesDelete(client, assetName) {
   }
 }
 
-async function ETLDelete(client, assetName) {
+async function etlDelete(client, assetName) {
   try {
     await client.query('delete from etl where asset_name = $1', [assetName]);
   } catch (error) {
@@ -98,7 +98,7 @@ async function deleteAsset(pathElements, queryParams, connection) {
   try {
     await taskDelete(client, assetName);
     await dependenciesDelete(client, assetName);
-    await ETLDelete(client, assetName);
+    await etlDelete(client, assetName);
     await tagsDelete(client, assetName);
     await baseDelete(client, assetName);
     await client.query('COMMIT');
@@ -108,7 +108,6 @@ async function deleteAsset(pathElements, queryParams, connection) {
     await client.end();
     result.error = true;
     result.message = error.message;
-    return result;
   }
 
   return result;
