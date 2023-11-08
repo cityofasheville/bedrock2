@@ -9,7 +9,7 @@ Also see [Managed Data Assets README](https://github.com/cityofasheville/managed
     "tasks": [
         {
             "type": "sql",
-            "file": "1-coa_bc_address_master_base.sql",
+            "sql_string": "select * from foo",
             "db": "datastore1",
             "active": true
         }

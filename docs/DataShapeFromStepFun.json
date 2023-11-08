@@ -10,7 +10,7 @@ The Step Function calls the ETL Lambda with data in this format
         "etl_tasks": [
             {
                 "type": "sql",
-                "file": "update_test.sql",
+                "sql_string": "select * from foo",
                 "connection": "library",
                 "active": true
             }
