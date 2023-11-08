@@ -2,90 +2,114 @@
 const { Client } = require('pg');
 const pgErrorCodes = require('./pgErrorCodes');
 
+async function newClient(connection) {
+  const client = new Client(connection);
+  try {
+    await client.connect();
+    return client;
+  } catch (error) {
+    throw new Error(`PG error connecting: ${pgErrorCodes[error.code]}`);
+  }
+}
+
+async function checkExistence(client, assetName) {
+  // Check that asset exists
+  let res;
+  const sql = 'SELECT * FROM bedrock.assets where asset_name like $1';
+  try {
+    res = await client.query(sql, [assetName]);
+  } catch (error) {
+    throw new Error(`PG error getting asset for delete: ${pgErrorCodes[error.code]}`);
+  }
+
+  if (res.rowCount < 1) {
+    throw new Error('Asset does not exist');
+  }
+}
+
+async function taskDelete(client, assetName) {
+  try {
+    await client.query('delete from tasks where asset_name = $1', [assetName]);
+  } catch (error) {
+    throw new Error(`PG error deleting asset tasks: ${pgErrorCodes[error.code]}`);
+  }
+}
+
+async function dependenciesDelete(client, assetName) {
+  try {
+    await client.query('delete from dependencies where asset_name = $1', [assetName]);
+  } catch (error) {
+    throw new Error(`PG error deleting asset dependencies: ${pgErrorCodes[error.code]}`);
+  }
+}
+
+async function ETLDelete(client, assetName) {
+  try {
+    await client.query('delete from etl where asset_name = $1', [assetName]);
+  } catch (error) {
+    throw new Error(`PG error deleting asset ETL: ${pgErrorCodes[error.code]}`);
+  }
+}
+
+async function tagsDelete(client, assetName) {
+  try {
+    await client.query('delete from bedrock.asset_tags where asset_name = $1', [assetName]);
+  } catch (error) {
+    throw new Error(`PG error deleting asset tags: ${pgErrorCodes[error.code]}`);
+  }
+}
+
+async function baseDelete(client, assetName) {
+  try {
+    await client.query('delete from assets where asset_name = $1;', [assetName]);
+  } catch (error) {
+    throw new Error(`PG error deleting asset: ${pgErrorCodes[error.code]}`);
+  }
+}
+
 async function deleteAsset(pathElements, queryParams, connection) {
   const assetName = pathElements[1];
+  let client;
   const result = {
     error: false,
     message: `Successfully deleted asset ${assetName}`,
     result: null,
   };
 
-  const client = new Client(connection);
-  await client.connect()
-    .catch((err) => {
-      result.error = true;
-      result.message = `PG error connecting: ${pgErrorCodes[err.code]}`;
-    });
-
-  // Check that asset exists
-  const sql = 'SELECT * FROM bedrock.assets where asset_name like $1';
-  const res = await client.query(sql, [assetName])
-    .catch((err) => {
-      result.error = true;
-      result.message = `PG error getting asset for delete: ${pgErrorCodes[err.code]}`;
-    });
-
-  if (!result.error && res.rowCount === 0) {
+  try {
+    client = await newClient(connection);
+  } catch (error) {
     result.error = true;
-    result.message = 'Asset not found';
-    await client.end();
+    result.message = error.message;
+    return result;
   }
-  if (result.error) return result;
 
-  //
-  // Now delete all the things within a single transaction
-  //
+  try {
+    await checkExistence(client, assetName);
+  } catch (error) {
+    await client.end();
+    result.error = true;
+    result.message = error.message;
+    return result;
+  }
+
   await client.query('BEGIN');
 
-  await client.query('delete from tasks where asset_name = $1', [pathElements[1]])
-    .catch((err) => {
-      const errmsg = pgErrorCodes[err.code];
-      result.error = true;
-      result.message = `PG error deleting asset tasks: ${errmsg}`;
-    });
-
-  if (!result.error) {
-    await client.query('delete from etl where asset_name = $1', [assetName])
-      .catch((err) => {
-        const errmsg = pgErrorCodes[err.code];
-        result.error = true;
-        result.message = `PG error deleting asset etl: ${errmsg}`;
-      });
-  }
-
-  if (!result.error) {
-    await client.query('delete from dependencies where asset_name = $1', [assetName])
-      .catch((err) => {
-        const errmsg = pgErrorCodes[err.code];
-        result.error = true;
-        result.message = `PG error deleting asset dependencies: ${errmsg}`;
-      });
-  }
-
-  if (!result.error) {
-    await client.query('delete from bedrock.asset_tags where asset_name = $1', [assetName])
-      .catch((err) => {
-        const errmsg = pgErrorCodes[err.code];
-        result.error = true;
-        result.message = `PG error deleting asset tags: ${errmsg}`;
-      });
-  }
-
-  if (!result.error) {
-    await client.query('delete from assets where asset_name = $1;', [assetName])
-      .catch((err) => {
-        const errmsg = pgErrorCodes[err.code];
-        result.error = true;
-        result.message = `PG error deleting asset: ${errmsg}`;
-      });
-  }
-
-  if (result.error) {
-    await client.query('ROLLBACK');
-  } else {
+  try {
+    await taskDelete(client, assetName);
+    await dependenciesDelete(client, assetName);
+    await ETLDelete(client, assetName);
+    await tagsDelete(client, assetName);
+    await baseDelete(client, assetName);
     await client.query('COMMIT');
+    await client.end();
+  } catch (error) {
+    await client.query('ROLLBACK');
+    await client.end();
+    result.error = true;
+    result.message = error.message;
+    return result;
   }
-  await client.end();
 
   return result;
 }
