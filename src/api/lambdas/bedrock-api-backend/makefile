@@ -6,6 +6,7 @@ dirs = build
 SRC_DIR := ./deploy
 DEST_DIR := ./build
 TFFILES := config.tf datablocks.tf backend.tf local.tfvars variables.tf makefile
+code_files = ./*.js ./*.json
 
 TF_TARGS := $(patsubst %,$(DEST_DIR)/%,$(TFFILES))
 
@@ -20,9 +21,13 @@ init: prebuild $(TF_TARGS)
 	@rm -f *.instance
 	@touch $(INSTANCE).instance		# Marker file to display the instance name
 
-plan: $(TF_TARGS) $(dirs)
-apply: $(TF_TARGS) $(dirs)
-apply-y: $(TF_TARGS) $(dirs)
+function.zip: $(code_files)
+	rm -f ./function.zip
+	zip -r9q function.zip ./*.js
+	
+plan: function.zip $(TF_TARGS) $(dirs)
+apply: function.zip $(TF_TARGS) $(dirs)
+apply-y: function.zip $(TF_TARGS) $(dirs)
 destroy: $(TF_TARGS) $(dirs)
 
 clean:
