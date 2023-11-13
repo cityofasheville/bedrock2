@@ -11,7 +11,6 @@
   "license": "ISC",
   "dependencies": {
     "aws-cron-parser": "^1.1.12",
-    "aws-sdk": "^2.1275.0",
     "bedrock_common": "file:../../../bedrock_common/bedrock_common",
     "mssql": "^6.2.1",
     "pg": "^8.3.0",

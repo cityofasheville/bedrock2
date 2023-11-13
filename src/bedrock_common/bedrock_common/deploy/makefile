@@ -15,7 +15,8 @@ layer.zip: $(code_files)
 	rm -f layer.zip
 	rm -rf nodejs
 	mkdir nodejs
-	mkdir nodejs/node_modules
+	cp $(code_files) nodejs
+	cd nodejs; npm install
 	mkdir nodejs/node_modules/bedrock_common 	# include bedrock_common as package
 	cp $(code_files) nodejs/node_modules/bedrock_common
 	zip -rq layer.zip nodejs/

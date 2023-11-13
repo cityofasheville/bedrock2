@@ -1,8 +1,8 @@
-/* eslint-disable no-underscore-dangle */
+/* eslint-disable import/no-unresolved */
 /* eslint-disable no-console */
 const stream = require('stream');
 const { google } = require('googleapis');
-const csvParse = require('csv/lib/sync');
+const { parse } = require('csv-parse/sync');
 
 async function writeToSheet(location, theData, append = false) {
   const jwtClient = new google.auth.JWT(
@@ -34,7 +34,7 @@ async function writeToSheet(location, theData, append = false) {
     // insertDataOption: 'OVERWRITE',
     valueInputOption: 'USER_ENTERED',
     requestBody: {
-      values: csvParse.parse(theData),
+      values: parse(theData),
     },
   });
 }

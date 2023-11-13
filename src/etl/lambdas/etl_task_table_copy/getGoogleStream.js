@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 const { google } = require('googleapis');
 const { Readable } = require('stream');
-const csv = require('csv');
+const { stringify } = require('csv-stringify');
 const createGoogleWritable = require('./createGoogleWritable');
 
 function fixUnevenRows(range, values) {
@@ -59,7 +59,7 @@ async function getGoogleStream(location) {
         }
       }
       // console.log(data);
-      const csvstring = csv.stringify(data);
+      const csvstring = stringify(data);
       return { stream: Readable.from(csvstring), promise: Promise.resolve() };
     } catch (err) {
       console.error('Google Sheet error: ', err);

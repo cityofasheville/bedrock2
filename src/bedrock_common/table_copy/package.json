@@ -7,8 +7,13 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "csv": "^6.3.5",
     "googleapis": "^127.0.0",
+    "mssql": "^10.0.1",
+    "pg": "^8.11.3",
+    "csv-parse": "^5.5.2",
+    "csv-stringify": "^6.4.4",
+    "@aws-sdk/client-s3": "^3.431.0",
+    "@aws-sdk/lib-storage": "^3.431.0",
     "multistream": "^4.1.0",
     "pg-copy-streams": "^6.0.6"
   },

@@ -14,9 +14,7 @@ terraform.tfvars: $(variable_files) ../../../../make_variables
 function.zip: $(code_files)
 	cp -R $(code_files) .
 	rm -f ./function.zip
-	npm install
-	cd node_modules; zip -r9q ../function.zip .; cd ..
-	zip -gq function.zip ./*.js ./*.pug
+	zip -r9q function.zip ./*.js ./*.pug
 
 .PHONY: init
 init: terraform.tfvars

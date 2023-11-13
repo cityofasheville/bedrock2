@@ -7,8 +7,9 @@ resource "aws_lambda_layer_version" "bedrock_packages_$$INSTANCE$$_layer" {
   source_code_hash = filebase64sha256("layer.zip")
   layer_name = "bedrock_packages_$$INSTANCE$$_layer"
   description = <<EOF
-aws-sdk,aws-cron-parser,mssql,pg,toposort,pug,openpgp,
-@aws-sdk/client-s3,@aws-sdk/lib-storage,@aws-sdk/client-lambda
+aws-cron-parser,mssql,pg,toposort,pug,openpgp,
+@aws-sdk/client-s3,@aws-sdk/lib-storage,
+@aws-sdk/client-lambda,@aws-sdk/client-ses
 EOF
 }
 

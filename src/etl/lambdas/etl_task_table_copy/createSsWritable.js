@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 /* eslint-disable no-console */
 const sql = require('mssql');
-const csv = require('csv');
+const { parse } = require('csv-parse');
 const { getPool } = require('./ssPools');
 
 async function createSsWritable(location) {
@@ -120,7 +120,7 @@ async function createSsWritable(location) {
 
   let tableArr = [];
   const resPromiseArr = [];
-  const SsStream = csv.parse();
+  const SsStream = parse();
 
   SsStream.on('readable', () => {
     // eslint-disable-next-line no-constant-condition
