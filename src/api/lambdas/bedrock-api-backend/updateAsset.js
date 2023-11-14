@@ -246,7 +246,9 @@ async function updateAsset(requestBody, pathElements, queryParams, connection) {
         result.result[prop] = etlInfo[prop];
       });
     }
-    result.result.tags = await addTags(assetName, body, client);
+    if ('tags' in body) {
+      result.result.tags = await addTags(assetName, body, client);
+    }
     await client.query('COMMIT');
     await client.end();
   } catch (error) {
