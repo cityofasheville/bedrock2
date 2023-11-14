@@ -257,6 +257,7 @@ async function addAsset(requestBody, pathElements, queryParams, connection) {
 
   try {
     await checkInfo(body, pathElements);
+    client = await newClient(connection);
   } catch (error) {
     result.error = true;
     result.message = error.message;
@@ -264,7 +265,6 @@ async function addAsset(requestBody, pathElements, queryParams, connection) {
   }
 
   try {
-    client = await newClient(connection);
     await checkExistence(client, pathElements);
   } catch (error) {
     await client.end();
