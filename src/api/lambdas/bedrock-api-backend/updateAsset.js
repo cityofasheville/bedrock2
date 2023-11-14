@@ -57,8 +57,6 @@ async function baseInsert(assetName, body, client) {
 
   sql += ` where asset_name = $${cnt}`;
   args.push(assetName);
-  console.log(sql);
-  console.log(JSON.stringify(args));
   try {
     await client.query(sql, args);
   } catch (error) {
@@ -69,7 +67,6 @@ async function baseInsert(assetName, body, client) {
 
 async function addDependencies(assetName, body, client) {
   // Now add any dependencies, always replacing existing with new
-  const result = {};
 
   try {
     await client.query('DELETE FROM dependencies WHERE asset_name = $1', [assetName]);
@@ -89,8 +86,7 @@ async function addDependencies(assetName, body, client) {
       }
     }
   }
-  result.dependencies = body.dependencies;
-  return result;
+  return body.dependencies;
 }
 
 async function addETL(assetName, body, client) {
@@ -132,13 +128,11 @@ async function addETL(assetName, body, client) {
   } catch (error) {
     throw new Error(`PG error updating etl: ${pgErrorCodes[error.code]}`);
   }
-  console.log('end etl function');
   return result;
 }
 
 async function addTags(assetName, body, client) {
   // Finally, update any tags.
-  const result = {};
   const tags = []; let tmpTags = [];
   let sql; let res; let cnt;
   if (Array.isArray(body.tags)) {
@@ -205,9 +199,8 @@ async function addTags(assetName, body, client) {
     } catch (error) {
       throw new Error(`PG error inserting tags for update: ${pgErrorCodes[error.code]}`);
     }
-    result.tags = body.tags;
   }
-  return result;
+  return body.tags;
   // End of adding any tags that aren't in the tags table for now
 }
 
@@ -220,11 +213,12 @@ async function updateAsset(requestBody, pathElements, queryParams, connection) {
   const result = {
     error: false,
     message: `Successfully updated asset ${assetName}`,
-    result: {},
+    result: null,
   };
 
   try {
     await checkInfo(body, assetName);
+    client = await newClient(connection);
   } catch (error) {
     result.error = true;
     result.message = error.message;
@@ -232,7 +226,6 @@ async function updateAsset(requestBody, pathElements, queryParams, connection) {
   }
 
   try {
-    client = await newClient(connection);
     await checkExistence(client, assetName);
   } catch (error) {
     await client.end();
@@ -250,13 +243,10 @@ async function updateAsset(requestBody, pathElements, queryParams, connection) {
     if ('etl_run_group' in body || 'etl_active' in body) {
       etlInfo = await addETL(assetName, body, client);
       Object.keys(etlInfo).forEach((prop) => {
-        result[prop] = etlInfo[prop];
+        result.result[prop] = etlInfo[prop];
       });
     }
     result.result.tags = await addTags(assetName, body, client);
-    if ('tag' in body) {
-      result.tags = await addTags(assetName, body, client);
-    }
     await client.query('COMMIT');
     await client.end();
   } catch (error) {
