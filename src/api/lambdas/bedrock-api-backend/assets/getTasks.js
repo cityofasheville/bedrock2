@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 const { Client } = require('pg');
-const pgErrorCodes = require('./pgErrorCodes');
+const pgErrorCodes = require('../pgErrorCodes');
 
 async function getTasks(pathElements, queryParams, connection) {
   const result = {

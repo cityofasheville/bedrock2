@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 const { Client } = require('pg');
-const pgErrorCodes = require('./pgErrorCodes');
+const pgErrorCodes = require('../pgErrorCodes');
 
 async function getAllAssetRelations(pathElements, queryParams, connection) {
   let res;

@@ -1,7 +1,7 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-console */
 const { Client } = require('pg');
-const pgErrorCodes = require('./pgErrorCodes');
+const pgErrorCodes = require('../pgErrorCodes');
 
 async function checkInfo(body, pathElements) {
   // Make sure that we have required information
