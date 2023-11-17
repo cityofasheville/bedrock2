@@ -48,8 +48,6 @@ async function baseInsert(client, body) {
     throw new Error([`Postgres error: ${pgErrorCodes[error.code]}`, error]);
   }
 
-  await client.end();
-
   if (res.rowCount !== 1) {
     throw new Error('Unknown error inserting new rungroup');
   }
@@ -89,7 +87,6 @@ async function addRungroup(requestBody, pathElements, queryParams, connection) {
     result.message = error.message;
     await client.query('ROLLBACK');
     await client.end();
-    return result;
   }
   return result;
 }

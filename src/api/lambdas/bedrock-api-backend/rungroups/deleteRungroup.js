@@ -77,8 +77,8 @@ async function deleteRungroup(pathElements, queryParams, connection) {
     result.message = error.message;
     await client.query('ROLLBACK');
     await client.end();
-    return result;
   }
+
   return result;
 }
 

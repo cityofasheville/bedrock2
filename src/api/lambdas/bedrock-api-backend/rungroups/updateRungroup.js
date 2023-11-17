@@ -38,8 +38,6 @@ async function checkExistence(client, rungroupName) {
 
 async function baseInsert(client, body, rungroupName) {
   let result;
-
-  // Start with the base rungroup
   const members = ['cron_string'];
   let cnt = 1;
   const args = [];
@@ -49,7 +47,7 @@ async function baseInsert(client, body, rungroupName) {
     if (members[i] in body) {
       sql += `${comma} ${members[i]} = $${cnt}`;
       args.push(body[members[i]]);
-      result.result[members[i]] = body[members[i]];
+      result[members[i]] = body[members[i]];
       cnt += 1;
       comma = ',';
     }
