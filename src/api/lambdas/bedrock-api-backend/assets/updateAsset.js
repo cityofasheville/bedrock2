@@ -1,7 +1,7 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-console */
 const { Client } = require('pg');
-const pgErrorCodes = require('./pgErrorCodes');
+const pgErrorCodes = require('../pgErrorCodes');
 
 async function newClient(connection) {
   const client = new Client(connection);

@@ -6,7 +6,7 @@ dirs = build
 SRC_DIR := ./deploy
 DEST_DIR := ./build
 TFFILES := config.tf datablocks.tf backend.tf local.tfvars variables.tf makefile
-code_files = ./*.js ./*.json
+code_files = ./*.js ./*.json ./assets ./rungroups
 
 TF_TARGS := $(patsubst %,$(DEST_DIR)/%,$(TFFILES))
 
@@ -23,7 +23,7 @@ init: prebuild $(TF_TARGS)
 
 function.zip: $(code_files)
 	rm -f ./function.zip
-	zip -r9q function.zip ./*.js
+	zip -r9q function.zip $(code_files)
 	
 plan: function.zip $(TF_TARGS) $(dirs)
 apply: function.zip $(TF_TARGS) $(dirs)
