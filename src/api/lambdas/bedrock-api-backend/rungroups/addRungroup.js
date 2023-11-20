@@ -80,12 +80,10 @@ async function addRungroup(requestBody, pathElements, queryParams, connection) {
   try {
     await checkExistence(client, pathElements);
     result.result = baseInsert(client, body);
-    await client.query('COMMIT');
     await client.end();
   } catch (error) {
     result.error = true;
     result.message = error.message;
-    await client.query('ROLLBACK');
     await client.end();
   }
   return result;
