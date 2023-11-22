@@ -21,30 +21,26 @@ async function buildOffset(queryParams) {
   return offset;
 }
 
-async function buildWhereClause(queryParams) {
+async function buildQueryInfo(queryParams) {
+  const queryInfo = {
+    whereClause: '',
+    sqlParams: [],
+  };
   const where = ' where';
-  let sql2 = '';
+  queryInfo.whereClause = '';
   if ('pattern' in queryParams) {
-    sql2 += `${where} a.asset_name like $1`;
+    queryInfo.whereClause += `${where} a.asset_name like $1`;
+    queryInfo.sqlParams.push(`%${queryParams.pattern}%`);
   }
-
-  const sql = `SELECT count(*) FROM bedrock.assets a  ${sql2}`;
-  return sql;
+  return queryInfo;
 }
 
-async function buildSQLParams(queryParams) {
-  const sqlParams = [];
-  if ('pattern' in queryParams) {
-    sqlParams.push(`%${queryParams.pattern}%`);
-  }
-  return sqlParams;
-}
-
-async function getCount(sql, sqlParams, client) {
+async function getCount(queryInfo, client) {
+  const sql = `SELECT count(*) FROM bedrock.assets a  ${queryInfo.whereClause}`;
   let res;
   let message;
   try {
-    res = await client.query(sql, sqlParams);
+    res = await client.query(sql, queryInfo.sqlParams);
   } catch (error) {
     throw new Error(`PG error getting asset count: ${pgErrorCodes[error.code]}`);
   }
@@ -55,15 +51,6 @@ async function getCount(sql, sqlParams, client) {
   return Number(res.rows[0].count);
 }
 
-async function buildBaseQuery(sql2, count, offset) {
-  let sql = 'SELECT a.*, e.run_group, e.active as etl_active FROM bedrock.assets a';
-  sql += ' left join bedrock.etl e on a.asset_name = e.asset_name';
-  sql += ` ${sql2}`;
-  sql += ' order by a.asset_name asc';
-  sql += ` offset ${offset} limit ${count} `;
-  return sql;
-}
-
 async function buildCount(queryParams) {
   let count = 25;
   if ('count' in queryParams) {
@@ -72,11 +59,16 @@ async function buildCount(queryParams) {
   return count;
 }
 
-async function getBase(sql, sqlParams, client) {
+async function getBase(offset, count, queryInfo, client) {
+  let sql = 'SELECT a.*, e.run_group, e.active as etl_active FROM bedrock.assets a';
+  sql += ' left join bedrock.etl e on a.asset_name = e.asset_name';
+  sql += ` ${queryInfo.whereClause}`;
+  sql += ' order by a.asset_name asc';
+  sql += ` offset ${offset} limit ${count} `;
   let res;
   console.log(sql);
   try {
-    res = await client.query(sql, sqlParams);
+    res = await client.query(sql, queryInfo.sqlParams);
   } catch (error) {
     throw new Error(pgErrorCodes[error.code]);
   }
@@ -134,13 +126,11 @@ async function getAssetList(domainName, pathElements, queryParams, connection) {
 
   let client;
   let offset;
-  let baseSql;
-  let sql;
-  let sqlParams;
   let total;
   let res;
   let url;
   let count;
+  let queryInfo;
 
   try {
     client = await newClient(connection);
@@ -152,12 +142,10 @@ async function getAssetList(domainName, pathElements, queryParams, connection) {
 
   try {
     offset = await buildOffset(queryParams);
-    sql = await buildWhereClause(queryParams);
-    sqlParams = await buildSQLParams(queryParams);
     count = await buildCount(queryParams);
-    total = await getCount(sql, sqlParams, client);
-    baseSql = buildBaseQuery(sql, count, offset);
-    res = await getBase(baseSql, sqlParams, client);
+    queryInfo = await buildQueryInfo(queryParams);
+    total = await getCount(queryInfo, client);
+    res = await getBase(offset, count, queryInfo, client);
     url = await buildURL(queryParams, domainName, res, offset, total, pathElements);
   } catch (error) {
     result.error = true;
