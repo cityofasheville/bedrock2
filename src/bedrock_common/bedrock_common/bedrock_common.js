@@ -1,26 +1,33 @@
-const AWS = require('aws-sdk');
+const {
+  SecretsManagerClient,
+  GetSecretValueCommand,
+} = require("@aws-sdk/client-secrets-manager");
 
 const region = 'us-east-1';
 let secret;
 
-function getConnection(secretName) {
-  return new Promise((resolve, reject) => {
-    const client = new AWS.SecretsManager({
-      region,
-    });
-    client.getSecretValue({ SecretId: secretName }, (err, data) => {
-      if (err) {
-        reject(new Error(`Connection string ${secretName} not found: ${err.code}`));
-      } else if ('SecretString' in data) {
-        secret = data.SecretString;
-        resolve(JSON.parse(secret));
-      } else {
-        reject(new Error('Connection secret is binary, should be JSON'));
-      }
-    });
+async function getConnection(secretName) {
+  const client = new SecretsManagerClient({
+    region
   });
+
+  let response;
+  try {
+    response = await client.send(
+      new GetSecretValueCommand({
+        SecretId: secretName,
+        VersionStage: "AWSCURRENT", // VersionStage defaults to AWSCURRENT if unspecified
+      })
+    );
+  } catch (error) {
+    // For a list of exceptions thrown, see
+    // https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
+    throw error;
+  }
+  return JSON.parse(response.SecretString);
 }
 
+// Get connection data for Bedrock database
 async function getDBConnection() {
   let connection = Promise.resolve({
     host: process.env.BEDROCK_DB_HOST || 'localhost',

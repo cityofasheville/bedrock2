@@ -9,16 +9,16 @@
       {
         "type": "table_copy",
         "source_location": {
-          "tablename": "depttodivmapping",
+          "tablename": "ad_info",
           "connection": "pubrecdb1/mdastore1/dbadmin",
           "schemaname": "internal"
         },
         "target_location": {
-          "connection": "bedrock-googlesheets",
-          "spreadsheetid": "17jqwWbnFsYMT1rFKLHS72j4n4CAMltSjYkFfd7FVL5w",
           "tab": "Sheet1",
-          "range": "Sheet1!A2:D",
-          "append": true
+          "range": "A4:G",
+          "filename": "test1",
+          "connection": "bedrock-googlesheets",
+          "spreadsheetid": "1IOcmMkhUFPMqZ8V4rwD4omO8jcAIGsKm3qVcQhp5ca0"
         },
         "active": true
       }

@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 const sql = require('mssql');
-const csv = require('csv');
+const { stringify } = require('csv-stringify');
 const MultiStream = require('multistream');
 const { getPool } = require('./ssPools');
 const createSsWritable = require('./createSsWritable');
@@ -84,7 +84,7 @@ async function getSsStream(location) {
               });
               if (index === 0) {
                 nonObjStream = request
-                  .pipe(csv.stringify({
+                  .pipe(stringify({
                     quote: '',
                   }));
               } else {
@@ -103,7 +103,7 @@ async function getSsStream(location) {
                   stringifyOptions.record_delimiter = 'windows'
                 }
                 nonObjStream = request
-                  .pipe(csv.stringify(stringifyOptions));
+                  .pipe(stringify(stringifyOptions));
               }
               return nonObjStream;
             });

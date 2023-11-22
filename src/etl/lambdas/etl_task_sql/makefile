@@ -27,7 +27,7 @@ destroy: $(TF_TARGS) $(dirs)
 
 clean:
 	rm -f *.instance
-	\rm -Rf build function.zip
+	\rm -Rf build function.zip .bedrock_common node_modules
 
 $(dirs):
 	$(MAKE) -C $@ $(MAKECMDGOALS)

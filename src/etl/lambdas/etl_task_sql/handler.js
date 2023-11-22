@@ -1,7 +1,6 @@
 const { getConnection } = require('bedrock_common');
 const pgSql = require('./pgSql');
 const ssSql = require('./ssSql');
-// const getSqlFromFile = require('./getSqlFromFile')
 
 function formatRes(code, result) {
   return {
