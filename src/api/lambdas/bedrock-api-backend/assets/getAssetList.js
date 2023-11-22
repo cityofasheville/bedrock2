@@ -2,6 +2,24 @@
 const { Client } = require('pg');
 const pgErrorCodes = require('../pgErrorCodes');
 
+function checkParameters(queryParams) {
+  const parameters = ['rungroup', 'tags', 'period', 'pattern'];
+  let message = '';
+
+  Object.keys(queryParams).forEach((key) => {
+    if (key === 'rungroup') {
+      message += 'Query parameter rungroup not yet implemented.';
+    } else if (key === 'tags') {
+      message += 'Query parameter tags not yet implemented.';
+    } else if (key === 'period') {
+      message += 'Query parameter period not yet implemented.';
+    } else if (!parameters.includes(key)) {
+      message += `${key} is not a valid parameter.`;
+    }
+  });
+  return message;
+}
+
 async function newClient(connection) {
   const client = new Client(connection);
   try {
@@ -12,46 +30,42 @@ async function newClient(connection) {
   }
 }
 
-async function buildOffset(queryParams) {
+function buildOffset(queryParams) {
   let offset = 0;
-  // Override start, count, or offset, if set in query
   if ('offset' in queryParams) {
     offset = queryParams.offset;
   }
   return offset;
 }
 
-async function buildQueryInfo(queryParams) {
-  const queryInfo = {
+function buildWhereClause(queryParams) {
+  const whereClause = {
     whereClause: '',
     sqlParams: [],
   };
   const where = ' where';
-  queryInfo.whereClause = '';
+  whereClause.whereClause = '';
+
   if ('pattern' in queryParams) {
-    queryInfo.whereClause += `${where} a.asset_name like $1`;
-    queryInfo.sqlParams.push(`%${queryParams.pattern}%`);
+    whereClause.whereClause += `${where} a.asset_name like $1`;
+    whereClause.sqlParams.push(`%${queryParams.pattern}%`);
   }
-  return queryInfo;
+  return whereClause;
 }
 
-async function getCount(queryInfo, client) {
-  const sql = `SELECT count(*) FROM bedrock.assets a  ${queryInfo.whereClause}`;
+async function getCount(whereClause, client) {
+  const sql = `SELECT count(*) FROM bedrock.assets a  ${whereClause.whereClause}`;
   let res;
-  let message;
+
   try {
-    res = await client.query(sql, queryInfo.sqlParams);
+    res = await client.query(sql, whereClause.sqlParams);
   } catch (error) {
     throw new Error(`PG error getting asset count: ${pgErrorCodes[error.code]}`);
   }
-  if (res.rowCount === 0) {
-    message = 'No results for count call in getAssetsList';
-  }
-  // Need to return message here for when no results happen too.
   return Number(res.rows[0].count);
 }
 
-async function buildCount(queryParams) {
+function buildCount(queryParams) {
   let count = 25;
   if ('count' in queryParams) {
     count = queryParams.count;
@@ -59,24 +73,23 @@ async function buildCount(queryParams) {
   return count;
 }
 
-async function getBase(offset, count, queryInfo, client) {
+async function getBase(offset, count, whereClause, client) {
   let sql = 'SELECT a.*, e.run_group, e.active as etl_active FROM bedrock.assets a';
   sql += ' left join bedrock.etl e on a.asset_name = e.asset_name';
-  sql += ` ${queryInfo.whereClause}`;
+  sql += ` ${whereClause.whereClause}`;
   sql += ' order by a.asset_name asc';
   sql += ` offset ${offset} limit ${count} `;
   let res;
-  console.log(sql);
+
   try {
-    res = await client.query(sql, queryInfo.sqlParams);
+    res = await client.query(sql, whereClause.sqlParams);
   } catch (error) {
-    throw new Error(pgErrorCodes[error.code]);
+    throw new Error(`PG error getting asset base information: ${pgErrorCodes[error.code]}`);
   }
-  // Need to put message here if res.rowCount===0
   return res;
 }
 
-async function buildURL(queryParams, domainName, res, offset, total, pathElements) {
+function buildURL(queryParams, domainName, res, offset, total, pathElements) {
   let qPrefix = '?';
   let qParams = '';
   if ('pattern' in queryParams) {
@@ -87,15 +100,10 @@ async function buildURL(queryParams, domainName, res, offset, total, pathElement
   if ('rungroups' in queryParams) {
     qParams += `${qPrefix}rungroups=${queryParams.rungroups}`;
     qPrefix = '&';
-    // result.message += 'Query parameter rungroups not yet implemented. ';
-  }
-  if ('tags' in queryParams) {
-    // result.message += 'Query parameter tags not yet implemented. ';
   }
   if ('period' in queryParams) {
     qParams += `${qPrefix}period=${queryParams.period}`;
     qPrefix = '&';
-    // result.message += 'Query parameter period not yet implemented. ';
   }
   let url = null;
   if (offset + res.rowCount < total) {
@@ -109,6 +117,7 @@ async function buildURL(queryParams, domainName, res, offset, total, pathElement
 async function getDependencies(assets, client) {
   let res;
   const sql = `select asset_name, dependency from bedrock.dependencies where asset_name in (${assets.join()})`;
+
   try {
     res = await client.query(sql);
   } catch (error) {
@@ -120,17 +129,17 @@ async function getDependencies(assets, client) {
 async function getAssetList(domainName, pathElements, queryParams, connection) {
   const result = {
     error: false,
-    message: '',
+    message: checkParameters(queryParams),
     result: null,
   };
 
   let client;
-  let offset;
   let total;
   let res;
   let url;
-  let count;
-  let queryInfo;
+  const count = buildCount(queryParams);
+  const offset = buildOffset(queryParams);
+  const whereClause = buildWhereClause(queryParams);
 
   try {
     client = await newClient(connection);
@@ -141,13 +150,15 @@ async function getAssetList(domainName, pathElements, queryParams, connection) {
   }
 
   try {
-    offset = await buildOffset(queryParams);
-    count = await buildCount(queryParams);
-    queryInfo = await buildQueryInfo(queryParams);
-    total = await getCount(queryInfo, client);
-    res = await getBase(offset, count, queryInfo, client);
-    url = await buildURL(queryParams, domainName, res, offset, total, pathElements);
+    total = await getCount(whereClause, client);
+    if (total === 0) {
+      result.message = 'No assets found.';
+      return result;
+    }
+    res = await getBase(offset, count, whereClause, client);
+    url = buildURL(queryParams, domainName, res, offset, total, pathElements);
   } catch (error) {
+    await client.end();
     result.error = true;
     result.message = error.message;
     return result;
@@ -156,7 +167,7 @@ async function getAssetList(domainName, pathElements, queryParams, connection) {
   const assets = [];
   const rows = [];
   const currentCount = res.rowCount;
-  console.log(JSON.stringify(res.rows));
+
   for (let i = 0; i < res.rowCount; i += 1) {
     assets.push(`'${res.rows[i].asset_name}'`);
     rows.push(
@@ -177,6 +188,7 @@ async function getAssetList(domainName, pathElements, queryParams, connection) {
   try {
     res = await getDependencies(assets, client);
   } catch (error) {
+    await client.end();
     result.error = true;
     result.message = error.message;
     return result;
@@ -192,11 +204,13 @@ async function getAssetList(domainName, pathElements, queryParams, connection) {
       }
     }
   }
+
   for (let i = 0; i < rows.length; i += 1) {
     if (rows[i].asset_name in map) {
       rows[i].dependencies = map[rows[i].asset_name];
     }
   }
+
   result.result = {
     items: rows,
     offset,
