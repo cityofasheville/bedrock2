@@ -44,7 +44,7 @@ destroy: $(TF_TARGS) $(dirs)
 
 clean:
 	rm -f *.instance
-	\rm -Rf build function.zip ./.package __pycache__
+	\rm -Rf build function.zip ./package __pycache__
 
 $(dirs):
 	$(MAKE) -C $@ $(MAKECMDGOALS)
