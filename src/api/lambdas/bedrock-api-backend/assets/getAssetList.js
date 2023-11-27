@@ -152,6 +152,13 @@ async function getAssetList(domainName, pathElements, queryParams, connection) {
     total = await getCount(whereClause, client);
     if (total === 0) {
       result.message = 'No assets found.';
+      result.result = {
+        items: [],
+        offset,
+        count: 0,
+        total,
+        url,
+      };
       return result;
     }
     res = await getBase(offset, count, whereClause, client);
