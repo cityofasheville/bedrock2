@@ -29,7 +29,7 @@ init: prebuild $(TF_TARGS)
 function.zip: $(code_files)
 	rm -Rf ./function.zip ./package
 ifeq ($(build_mode),sam)
-	sam build --use-container
+	sam build --template-file build/template.yaml --use-container
 	pushd .aws-sam/build/ftppy; zip -r9q ../../../function.zip . -x \*terraform\*; popd
 else
 		pip install -r requirements.txt --target ./package
@@ -44,7 +44,7 @@ destroy: $(TF_TARGS) $(dirs)
 
 clean:
 	rm -f *.instance
-	\rm -Rf build function.zip ./package
+	\rm -Rf build function.zip ./package __pycache__ .aws-sam
 
 $(dirs):
 	$(MAKE) -C $@ $(MAKECMDGOALS)
