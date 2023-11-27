@@ -1,112 +1,179 @@
-/* eslint-disable no-console */
 const { Client } = require('pg');
 const pgErrorCodes = require('../pgErrorCodes');
 
-async function getAssetList(domainName, pathElements, queryParams, connection) {
-  let offset = 0;
-  let count = 25;
-  let total = -1;
-  let where = ' where';
-  let qPrefix = '?';
-  let qParams = '';
-  const result = {
-    error: false,
-    message: '',
-    result: null,
-  };
-  const client = new Client(connection);
-  await client.connect()
-    .catch((err) => {
-      result.error = true;
-      result.message = `PG error connecting: ${pgErrorCodes[err.code]}`;
-    });
-  if (result.error) return result;
+function checkParameters(queryParams) {
+  const parameters = ['rungroup', 'tags', 'period', 'pattern'];
+  let message = '';
 
-  // Override start, count, or offset, if set in query
+  Object.keys(queryParams).forEach((key) => {
+    if (key === 'rungroup') {
+      message += 'Query parameter rungroup not yet implemented.';
+    } else if (key === 'tags') {
+      message += 'Query parameter tags not yet implemented.';
+    } else if (key === 'period') {
+      message += 'Query parameter period not yet implemented.';
+    } else if (!parameters.includes(key)) {
+      message += `${key} is not a valid parameter.`;
+    }
+  });
+  return message;
+}
+
+async function newClient(connection) {
+  const client = new Client(connection);
+  try {
+    await client.connect();
+    return client;
+  } catch (error) {
+    throw new Error(`PG error connecting: ${pgErrorCodes[error.code]}`);
+  }
+}
+
+function buildOffset(queryParams) {
+  let offset = 0;
   if ('offset' in queryParams) {
     offset = queryParams.offset;
   }
+  return offset;
+}
+
+function buildWhereClause(queryParams) {
+  const whereClause = {
+    whereClause: '',
+    sqlParams: [],
+  };
+  const where = ' where';
+  whereClause.whereClause = '';
+
+  if ('pattern' in queryParams) {
+    whereClause.whereClause += `${where} a.asset_name like $1`;
+    whereClause.sqlParams.push(`%${queryParams.pattern}%`);
+  }
+  return whereClause;
+}
+
+async function getCount(whereClause, client) {
+  const sql = `SELECT count(*) FROM bedrock.assets a  ${whereClause.whereClause}`;
+  let res;
+
+  try {
+    res = await client.query(sql, whereClause.sqlParams);
+  } catch (error) {
+    throw new Error(`PG error getting asset count: ${pgErrorCodes[error.code]}`);
+  }
+  return Number(res.rows[0].count);
+}
+
+function buildCount(queryParams) {
+  let count = 25;
   if ('count' in queryParams) {
     count = queryParams.count;
-    qParams += `${qPrefix}count=${count}`;
-    qPrefix = '&';
   }
+  return count;
+}
 
-  // Read the DB
-  const sqlParams = [];
-  let sql2 = '';
+async function getBase(offset, count, whereClause, client) {
+  let sql = 'SELECT a.*, e.run_group, e.active as etl_active FROM bedrock.assets a';
+  sql += ' left join bedrock.etl e on a.asset_name = e.asset_name';
+  sql += ` ${whereClause.whereClause}`;
+  sql += ' order by a.asset_name asc';
+  sql += ` offset ${offset} limit ${count} `;
+  let res;
+
+  try {
+    res = await client.query(sql, whereClause.sqlParams);
+  } catch (error) {
+    throw new Error(`PG error getting asset base information: ${pgErrorCodes[error.code]}`);
+  }
+  return res;
+}
+
+function buildURL(queryParams, domainName, res, offset, total, pathElements) {
+  let qPrefix = '?';
+  let qParams = '';
   if ('pattern' in queryParams) {
     const { pattern } = queryParams;
-    sql2 += `${where} a.asset_name like $1`;
-    where = ' ';
-    sqlParams.push(`%${queryParams.pattern}%`);
     qParams += `${qPrefix}pattern=${pattern}`;
     qPrefix = '&';
   }
   if ('rungroups' in queryParams) {
     qParams += `${qPrefix}rungroups=${queryParams.rungroups}`;
     qPrefix = '&';
-    result.message += 'Query parameter rungroups not yet implemented. ';
-  }
-  if ('tags' in queryParams) {
-    result.message += 'Query parameter tags not yet implemented. ';
   }
   if ('period' in queryParams) {
     qParams += `${qPrefix}period=${queryParams.period}`;
     qPrefix = '&';
-    result.message += 'Query parameter period not yet implemented. ';
   }
-  let sql = `SELECT count(*) FROM bedrock.assets a  ${sql2}`;
-  console.log('run sql1 = ', sql);
-  let res = await client.query(sql, sqlParams)
-    .catch((err) => {
-      result.error = true;
-      result.message = `PG error getting asset count: ${pgErrorCodes[err.code]}`;
-    });
-
-  if (!result.error && res.rowCount === 0) {
-    result.error = true;
-    result.message = 'No results for count call in getAssetsList';
-  }
-  if (result.error) {
-    await client.end();
-    return result;
-  }
-
-  total = Number(res.rows[0].count);
-
-  sql = 'SELECT a.*, e.run_group, e.active as etl_active FROM bedrock.assets a';
-  sql += ' left join bedrock.etl e on a.asset_name = e.asset_name';
-  sql += ` ${sql2}`;
-  sql += ' order by a.asset_name asc';
-  sql += ` offset ${offset} limit ${count} `;
-  console.log(sql);
-  res = await client.query(sql, sqlParams)
-    .catch((err) => {
-      result.error = true;
-      result.message = `PG error getting assets: ${pgErrorCodes[err.code]}`;
-    });
-  console.log(JSON.stringify(res.rows));
-  console.log('That was right away');
-  if (!result.error && res.rowCount === 0) {
-    result.error = true;
-    result.message = 'No assets found';
-  }
-  if (result.error) {
-    await client.end();
-    return result;
-  }
-
   let url = null;
   if (offset + res.rowCount < total) {
     const newOffset = parseInt(offset, 10) + res.rowCount;
     url = `https://${domainName}/${pathElements.join('/')}${qParams}`;
     url += `${qPrefix}offset=${newOffset.toString()}`;
   }
+  return url;
+}
+
+async function getDependencies(assets, client) {
+  let res;
+  const sql = `select asset_name, dependency from bedrock.dependencies where asset_name in (${assets.join()})`;
+
+  try {
+    res = await client.query(sql);
+  } catch (error) {
+    throw new Error(`PG error getting asset dependencies: ${pgErrorCodes[error.code]}`);
+  }
+  return res;
+}
+
+async function getAssetList(domainName, pathElements, queryParams, connection) {
+  const result = {
+    error: false,
+    message: checkParameters(queryParams),
+    result: null,
+  };
+
+  let client;
+  let total;
+  let res;
+  let url;
+  const count = buildCount(queryParams);
+  const offset = buildOffset(queryParams);
+  const whereClause = buildWhereClause(queryParams);
+
+  try {
+    client = await newClient(connection);
+  } catch (error) {
+    result.error = true;
+    result.message = error.message;
+    return result;
+  }
+
+  try {
+    total = await getCount(whereClause, client);
+    if (total === 0) {
+      result.message = 'No assets found.';
+      result.result = {
+        items: [],
+        offset,
+        count: 0,
+        total,
+        url,
+      };
+      return result;
+    }
+    res = await getBase(offset, count, whereClause, client);
+    url = buildURL(queryParams, domainName, res, offset, total, pathElements);
+  } catch (error) {
+    await client.end();
+    result.error = true;
+    result.message = error.message;
+    return result;
+  }
+
   const assets = [];
   const rows = [];
   const currentCount = res.rowCount;
-  console.log(JSON.stringify(res.rows));
+
   for (let i = 0; i < res.rowCount; i += 1) {
     assets.push(`'${res.rows[i].asset_name}'`);
     rows.push(
@@ -124,38 +191,39 @@ async function getAssetList(domainName, pathElements, queryParams, connection) {
     );
   }
 
-  sql = `select asset_name, dependency from bedrock.dependencies where asset_name in (${assets.join()})`;
-  res = await client.query(sql)
-    .catch((err) => {
-      result.error = true;
-      result.message = `PG error getting asset dependencies: ${pgErrorCodes[err.code]}`;
-    });
-  await client.end();
-
-  if (!result.error) {
-    const map = {};
-    if (res.rowCount > 0) {
-      for (let i = 0; i < res.rowCount; i += 1) {
-        if (res.rows[i].asset_name in map) {
-          map[res.rows[i].asset_name].push(res.rows[i].dependency);
-        } else {
-          map[res.rows[i].asset_name] = [res.rows[i].dependency];
-        }
-      }
-    }
-    for (let i = 0; i < rows.length; i += 1) {
-      if (rows[i].asset_name in map) {
-        rows[i].dependencies = map[rows[i].asset_name];
-      }
-    }
-    result.result = {
-      items: rows,
-      offset,
-      count: currentCount,
-      total,
-      url,
-    };
+  try {
+    res = await getDependencies(assets, client);
+  } catch (error) {
+    await client.end();
+    result.error = true;
+    result.message = error.message;
+    return result;
   }
+
+  const map = {};
+  if (res.rowCount > 0) {
+    for (let i = 0; i < res.rowCount; i += 1) {
+      if (res.rows[i].asset_name in map) {
+        map[res.rows[i].asset_name].push(res.rows[i].dependency);
+      } else {
+        map[res.rows[i].asset_name] = [res.rows[i].dependency];
+      }
+    }
+  }
+
+  for (let i = 0; i < rows.length; i += 1) {
+    if (rows[i].asset_name in map) {
+      rows[i].dependencies = map[rows[i].asset_name];
+    }
+  }
+
+  result.result = {
+    items: rows,
+    offset,
+    count: currentCount,
+    total,
+    url,
+  };
 
   return result;
 }
