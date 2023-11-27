@@ -3,13 +3,13 @@ provider "aws" {
 }
 
 resource "aws_lambda_function" "etl_task_sql-$$INSTANCE$$" {
-    filename        = "function.zip"
+    filename        = "../function.zip"
     function_name   = "etl_task_sql-$$INSTANCE$$"
     description     = "ETL Task SQL"
     role            = data.terraform_remote_state.lambda_role.outputs.bedrock_lambda_role_arn
     handler         = "handler.lambda_handler"
     runtime         = "nodejs20.x"
-    source_code_hash = filebase64sha256("function.zip")
+    source_code_hash = filebase64sha256("../function.zip")
         layers = [
       data.terraform_remote_state.bedrock_common_$$INSTANCE$$.outputs.bedrock_common_$$INSTANCE$$_layer_arn,
       data.terraform_remote_state.bedrock_packages_$$INSTANCE$$.outputs.bedrock_packages_$$INSTANCE$$_layer_arn

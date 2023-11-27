@@ -9,6 +9,8 @@ TFFILES := config.tf datablocks.tf backend.tf local.tfvars variables.tf makefile
 
 TF_TARGS := $(patsubst %,$(DEST_DIR)/%,$(TFFILES))
 
+code_files = ./*.py ./requirements.txt
+
 prebuild:
 	mkdir -p ./build
 
@@ -24,14 +26,25 @@ init: prebuild $(TF_TARGS)
 	@rm -f *.instance
 	@touch $(INSTANCE).instance		# Marker file to display the instance name
 
-plan: $(TF_TARGS) $(dirs)
-apply: $(TF_TARGS) $(dirs)
-apply-y: $(TF_TARGS) $(dirs)
+function.zip: $(code_files)
+	rm -Rf ./function.zip ./package
+ifeq ($(build_mode),sam)
+	sam build --template-file build/template.yaml --use-container
+	pushd .aws-sam/build/filecopy; zip -r9q ../../../function.zip . -x \*terraform\*; popd
+else
+	pip install -r requirements.txt --target ./package
+	cd package; zip -r9q ../function.zip . -x \*terraform\*; cd ..
+	zip -g function.zip $(code_files)
+endif
+
+plan: function.zip $(TF_TARGS) $(dirs)
+apply: function.zip $(TF_TARGS) $(dirs)
+apply-y: function.zip $(TF_TARGS) $(dirs)
 destroy: $(TF_TARGS) $(dirs)
 
 clean:
 	rm -f *.instance
-	\rm -Rf build function.zip
+	\rm -Rf build function.zip ./package __pycache__ .aws-sam
 
 $(dirs):
 	$(MAKE) -C $@ $(MAKECMDGOALS)

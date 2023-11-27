@@ -3,12 +3,12 @@ provider "aws" {
 }
 
 resource "aws_lambda_function" "etl_task_unknown-$$INSTANCE$$" {
-    filename        = "function.zip"
+    filename        = "../function.zip"
     function_name   = "etl_task_unknown-$$INSTANCE$$"
     role            = data.terraform_remote_state.lambda_role.outputs.bedrock_lambda_role_arn
     handler         = "handler.lambda_handler"
     runtime         = "python3.8"
-    source_code_hash = filebase64sha256("function.zip")
+    source_code_hash = filebase64sha256("../function.zip")
     tags = {
       "coa:application" = "bedrock"
       "coa:department"  = "information-technology"
