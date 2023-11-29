@@ -3,12 +3,14 @@ const { Client } = require('pg');
 const pgErrorCodes = require('../pgErrorCodes');
 
 function checkParameters(queryParams) {
-  const parameters = ['period', 'pattern', 'count'];
+  const parameters = ['period', 'pattern', 'count', 'offset'];
   let message = '';
 
   Object.keys(queryParams).forEach((key) => {
     if (key === 'period') {
       message += 'Query parameter period not yet implemented. ';
+    } else if (key === 'pattern') {
+      message += 'Query parameter pattern not yet implemented. ';
     } else if (!parameters.includes(key)) {
       message += `${key} is not a valid parameter.`;
     }
@@ -87,10 +89,6 @@ function buildURL(queryParams, domainName, res, offset, total, pathElements) {
   let qPrefix = '?';
   let qParams = '';
   let url = null;
-  if ('pattern' in queryParams) {
-    qParams += `${qPrefix}pattern=${queryParams.pattern}`;
-    qPrefix = '&';
-  }
   if ('count' in queryParams) {
     qParams += `${qPrefix}count=${queryParams.count}`;
     qPrefix = '&';

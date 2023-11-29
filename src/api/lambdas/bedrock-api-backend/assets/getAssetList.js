@@ -2,7 +2,7 @@ const { Client } = require('pg');
 const pgErrorCodes = require('../pgErrorCodes');
 
 function checkParameters(queryParams) {
-  const parameters = ['rungroup', 'tags', 'period', 'pattern', 'count'];
+  const parameters = ['rungroup', 'tags', 'period', 'pattern', 'count', 'offset'];
   let message = '';
 
   Object.keys(queryParams).forEach((key) => {
