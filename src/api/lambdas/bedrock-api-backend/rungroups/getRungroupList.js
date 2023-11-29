@@ -3,7 +3,7 @@ const { Client } = require('pg');
 const pgErrorCodes = require('../pgErrorCodes');
 
 function checkParameters(queryParams) {
-  const parameters = ['period', 'pattern'];
+  const parameters = ['period', 'pattern', 'count'];
   let message = '';
 
   Object.keys(queryParams).forEach((key) => {
@@ -83,10 +83,18 @@ async function getBase(offset, count, whereClause, client) {
   return res;
 }
 
-function buildURL(domainName, res, offset, total, pathElements) {
-  const qPrefix = '?';
-  const qParams = '';
+function buildURL(queryParams, domainName, res, offset, total, pathElements) {
+  let qPrefix = '?';
+  let qParams = '';
   let url = null;
+  if ('pattern' in queryParams) {
+    qParams += `${qPrefix}pattern=${queryParams.pattern}`;
+    qPrefix = '&';
+  }
+  if ('count' in queryParams) {
+    qParams += `${qPrefix}count=${queryParams.count}`;
+    qPrefix = '&';
+  }
   if (offset + res.rowCount < total) {
     const newOffset = parseInt(offset, 10) + res.rowCount;
     url = `https://${domainName}/${pathElements.join('/')}${qParams}`;
@@ -96,6 +104,7 @@ function buildURL(domainName, res, offset, total, pathElements) {
 }
 
 async function getRungroupList(domainName, pathElements, queryParams, connection) {
+  console.log(queryParams);
   const result = {
     error: false,
     message: checkParameters(queryParams),
