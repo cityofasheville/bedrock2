@@ -2,7 +2,7 @@ const { Client } = require('pg');
 const pgErrorCodes = require('../pgErrorCodes');
 
 function checkParameters(queryParams) {
-  const parameters = ['rungroup', 'tags', 'period', 'pattern'];
+  const parameters = ['rungroup', 'tags', 'period', 'pattern', 'count', 'offset'];
   let message = '';
 
   Object.keys(queryParams).forEach((key) => {
@@ -92,8 +92,7 @@ function buildURL(queryParams, domainName, res, offset, total, pathElements) {
   let qPrefix = '?';
   let qParams = '';
   if ('pattern' in queryParams) {
-    const { pattern } = queryParams;
-    qParams += `${qPrefix}pattern=${pattern}`;
+    qParams += `${qPrefix}pattern=${queryParams.pattern}`;
     qPrefix = '&';
   }
   if ('rungroups' in queryParams) {
@@ -102,6 +101,10 @@ function buildURL(queryParams, domainName, res, offset, total, pathElements) {
   }
   if ('period' in queryParams) {
     qParams += `${qPrefix}period=${queryParams.period}`;
+    qPrefix = '&';
+  }
+  if ('count' in queryParams) {
+    qParams += `${qPrefix}count=${queryParams.count}`;
     qPrefix = '&';
   }
   let url = null;
