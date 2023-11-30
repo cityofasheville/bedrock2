@@ -3,7 +3,7 @@
   "description": "",
   "location": {
     "tablename": "ap_vendor",
-    "connection": "munis/munprod/mssqlgisadmin",
+    "connection": "munis/munprod/fme_jobs",
     "schemaname": "dbo"
   },
   "owner_id": null,

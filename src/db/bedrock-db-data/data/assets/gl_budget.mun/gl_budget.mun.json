@@ -3,7 +3,7 @@
   "description": "Master budget table",
   "location": {
     "tablename": "gl_budget",
-    "connection": "munis/munprod/mssqlgisadmin",
+    "connection": "munis/munprod/fme_jobs",
     "schemaname": "amd"
   },
   "owner_id": null,

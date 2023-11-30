@@ -3,7 +3,7 @@
   "description": "Active Directory info",
   "location": {
     "tablename": "ad_info",
-    "connection": "munis/munprod/mssqlgisadmin",
+    "connection": "munis/munprod/fme_jobs",
     "schemaname": "amd"
   },
   "owner_id": null,

@@ -3,7 +3,7 @@
   "description": "Standard Employee - demographic data",
   "location": {
     "tablename": "base_employee_demographics",
-    "connection": "munis/munprod/mssqlgisadmin",
+    "connection": "munis/munprod/fme_jobs",
     "schemaname": "avl_bdv"
   },
   "owner_id": null,

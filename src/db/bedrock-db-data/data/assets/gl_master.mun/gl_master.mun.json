@@ -3,7 +3,7 @@
   "description": "Master general ledger history",
   "location": {
     "tablename": "gl_master",
-    "connection": "munis/munprod/mssqlgisadmin",
+    "connection": "munis/munprod/fme_jobs",
     "schemaname": "amd"
   },
   "owner_id": null,

@@ -127,3 +127,6 @@ node_modules
 
 # AWS
 .aws-sam/
+
+#vscode
+bedrock2.code-workspace

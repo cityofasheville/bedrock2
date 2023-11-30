@@ -3,7 +3,7 @@
   "description": "",
   "location": {
     "tablename": "telestaff_person01_xml",
-    "connection": "munis/munprod/mssqlgisadmin",
+    "connection": "munis/munprod/fme_jobs",
     "schemaname": "avl"
   },
   "owner_id": null,

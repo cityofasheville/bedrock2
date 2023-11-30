@@ -10,7 +10,6 @@
 "munis/munprod/fme_jobs","Munis","db"
 "coa-publicdb1/coa_share/dbadmin","DB open to internet","db"
 "bedrock-googlesheets","Google Spreadsheets","sheets"
-"munis/munprod/mssqlgisadmin","Munis","db"
 "pubrecdb1/steepslope/dbadmin","Steep Slope DB","db"
 "coa-acceladb/accela/mssqlgisadmin","Accela","db"
 "eco_visio_api","Eco-Visio (bike counters) API","api"

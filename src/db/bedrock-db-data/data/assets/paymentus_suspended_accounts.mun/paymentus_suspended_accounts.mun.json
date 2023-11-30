@@ -3,7 +3,7 @@
   "description": "Paymentus Suspended Accounts",
   "location": {
     "tablename": "ub_pm_suspended_accounts",
-    "connection": "munis/munprod/mssqlgisadmin",
+    "connection": "munis/munprod/fme_jobs",
     "schemaname": "amd"
   },
   "owner_id": null,

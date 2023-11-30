@@ -3,7 +3,7 @@
   "description": "Paymentus CIF",
   "location": {
     "tablename": "ub_pm_cif_file",
-    "connection": "munis/munprod/mssqlgisadmin",
+    "connection": "munis/munprod/fme_jobs",
     "schemaname": "amd"
   },
   "owner_id": null,

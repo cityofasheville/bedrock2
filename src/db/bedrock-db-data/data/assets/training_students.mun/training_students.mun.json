@@ -3,7 +3,7 @@
   "description": "Student registrations for training classes",
   "location": {
     "tablename": "training_students",
-    "connection": "munis/munprod/mssqlgisadmin",
+    "connection": "munis/munprod/fme_jobs",
     "schemaname": "amd"
   },
   "owner_id": null,

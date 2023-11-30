@@ -3,7 +3,7 @@
   "description": "Standard Employee",
   "location": {
     "tablename": "base_employee",
-    "connection": "munis/munprod/mssqlgisadmin",
+    "connection": "munis/munprod/fme_jobs",
     "schemaname": "avl_bdv"
   },
   "owner_id": null,

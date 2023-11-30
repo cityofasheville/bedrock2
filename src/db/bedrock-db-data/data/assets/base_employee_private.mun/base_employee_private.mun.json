@@ -3,7 +3,7 @@
   "description": "Standard Employee-Non public fields",
   "location": {
     "tablename": "base_employee_private",
-    "connection": "munis/munprod/mssqlgisadmin",
+    "connection": "munis/munprod/fme_jobs",
     "schemaname": "avl_bdv"
   },
   "owner_id": null,

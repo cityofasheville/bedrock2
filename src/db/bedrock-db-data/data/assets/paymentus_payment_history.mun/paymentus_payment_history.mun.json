@@ -3,7 +3,7 @@
   "description": "Paymentus Payment History",
   "location": {
     "tablename": "ub_pm_payment_history_loader_today_no_ivr",
-    "connection": "munis/munprod/mssqlgisadmin",
+    "connection": "munis/munprod/fme_jobs",
     "schemaname": "amd"
   },
   "owner_id": null,
