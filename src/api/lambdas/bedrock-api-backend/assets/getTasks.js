@@ -2,41 +2,60 @@
 const { Client } = require('pg');
 const pgErrorCodes = require('../pgErrorCodes');
 
+async function newClient(connection) {
+  const client = new Client(connection);
+  try {
+    await client.connect();
+    return client;
+  } catch (error) {
+    throw new Error(`PG error connecting: ${pgErrorCodes[error.code]}`);
+  }
+}
+
+async function readTasks(client, pathElements) {
+  let res;
+  const sqlParams = [pathElements[1]];
+  const sql = 'SELECT * FROM bedrock.tasks where asset_name like $1 order by seq_number asc';
+  try {
+    res = await client.query(sql, sqlParams);
+  } catch (error) {
+    throw new Error(`PG error getting assets: ${pgErrorCodes[error.code]}`);
+  }
+  return res;
+}
+
 async function getTasks(pathElements, queryParams, connection) {
   const result = {
     error: false,
     message: '',
     result: null,
   };
-  const client = new Client(connection);
-  await client.connect()
-    .catch((err) => {
-      result.error = true;
-      result.message = `PG error connecting: ${pgErrorCodes[err.code]}`;
-    });
-  if (result.error) return result;
+  const tasks = [];
+  let client;
 
-  // Read the DB
-  const sqlParams = [pathElements[1]];
-  const sql = 'SELECT * FROM bedrock.tasks where asset_name like $1 order by seq_number asc';
-  const res = await client.query(sql, sqlParams)
-    .catch((err) => {
-      result.error = true;
-      result.message = `PG error getting assets: ${pgErrorCodes[err.code]}`;
-    });
-  console.log(JSON.stringify(res.rows));
-
-  if (!result.error && res.rowCount === 0) {
+  try {
+    client = await newClient(connection);
+  } catch (error) {
     result.error = true;
-    result.message = 'No tasks found';
-  }
-  if (result.error) {
-    await client.end();
+    result.message = error.message;
     return result;
   }
 
-  const tasks = [];
-  console.log(JSON.stringify(res.rows));
+  let res;
+  try {
+    res = await readTasks(client, pathElements);
+  } catch (error) {
+    await client.end();
+    result.error = true;
+    result.message = error.message;
+    return result;
+  }
+
+  if (res.rowCount === 0) {
+    result.message = 'No tasks found';
+    return result;
+  }
+
   for (let i = 0; i < res.rowCount; i += 1) {
     tasks.push(
       {
@@ -51,13 +70,12 @@ async function getTasks(pathElements, queryParams, connection) {
       },
     );
   }
+
   await client.end();
 
-  if (!result.error) {
-    result.result = {
-      items: tasks,
-    };
-  }
+  result.result = {
+    items: tasks,
+  };
 
   return result;
 }
