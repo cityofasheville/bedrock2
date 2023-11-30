@@ -12,19 +12,19 @@ async function newClient(connection) {
   }
 }
 
-async function readAssets(client, pathElements) {
+async function readAsset(client, assetName) {
   let res;
   const sql = `SELECT a.asset_name 
   FROM bedrock.assets a where a.asset_name like $1`;
   try {
-    res = await client.query(sql, [pathElements[1]]);
+    res = await client.query(sql, [assetName]);
   } catch (error) {
     throw new Error(`PG error getting asset information: ${pgErrorCodes[error.code]}`);
   }
   return res;
 }
 
-async function readRelations(client, pathElements) {
+async function readRelations(client, assetName) {
   let res;
   const relations = {
     ancestors: {
@@ -48,7 +48,7 @@ async function readRelations(client, pathElements) {
       `;
   let check = {};
   try {
-    res = await client.query(sql, [pathElements[1]]);
+    res = await client.query(sql, [assetName]);
   } catch (error) {
     throw new Error(`PG error getting ancestor information: ${pgErrorCodes[error.code]}`);
   }
@@ -79,7 +79,7 @@ async function readRelations(client, pathElements) {
       `;
   check = {};
   try {
-    res = await client.query(sql, [pathElements[1]]);
+    res = await client.query(sql, [assetName]);
   } catch (error) {
     throw new Error(`PG error getting descendent information: ${pgErrorCodes[error.code]}`);
   }
@@ -99,6 +99,7 @@ async function readRelations(client, pathElements) {
 }
 
 async function getAllAssetRelations(pathElements, queryParams, connection) {
+  const assetName = pathElements[1];
   let client;
   let relations;
   let res;
@@ -126,12 +127,12 @@ async function getAllAssetRelations(pathElements, queryParams, connection) {
   }
 
   try {
-    res = await readAssets(client, pathElements);
+    res = await readAsset(client, assetName);
     if (res.rowCount === 0) {
       result.message = 'No assets found';
       return result;
     }
-    relations = await readRelations(client, pathElements);
+    relations = await readRelations(client, assetName);
   } catch (error) {
     await client.end();
     result.error = true;

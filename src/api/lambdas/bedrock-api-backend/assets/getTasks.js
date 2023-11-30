@@ -12,12 +12,11 @@ async function newClient(connection) {
   }
 }
 
-async function readTasks(client, pathElements) {
+async function readTasks(client, assetName) {
   let res;
-  const sqlParams = [pathElements[1]];
   const sql = 'SELECT * FROM bedrock.tasks where asset_name like $1 order by seq_number asc';
   try {
-    res = await client.query(sql, sqlParams);
+    res = await client.query(sql, [assetName]);
   } catch (error) {
     throw new Error(`PG error getting assets: ${pgErrorCodes[error.code]}`);
   }
@@ -32,6 +31,7 @@ async function getTasks(pathElements, queryParams, connection) {
   };
   const tasks = [];
   let client;
+  const assetName = pathElements[1];
 
   try {
     client = await newClient(connection);
@@ -43,7 +43,7 @@ async function getTasks(pathElements, queryParams, connection) {
 
   let res;
   try {
-    res = await readTasks(client, pathElements);
+    res = await readTasks(client, assetName);
   } catch (error) {
     await client.end();
     result.error = true;
