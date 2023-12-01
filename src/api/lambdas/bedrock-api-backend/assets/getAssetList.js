@@ -82,7 +82,6 @@ async function getBase(offset, count, whereClause, client) {
   const result = {
     rows: [],
     assets: [],
-    rowCount: null,
   };
 
   try {
@@ -107,7 +106,6 @@ async function getBase(offset, count, whereClause, client) {
       },
     );
   }
-  result.rowCount = res.rowCount;
   return result;
 }
 
@@ -226,7 +224,7 @@ async function getAssetList(domainName, pathElements, queryParams, connection) {
   result.result = {
     items: res.rows,
     offset,
-    count: res.rowCount,
+    count: res.rows.length,
     total,
     url,
   };
