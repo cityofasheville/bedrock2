@@ -78,12 +78,33 @@ async function getBase(offset, count, whereClause, client) {
   sql += ` ${whereClause.whereClause}`;
   sql += ' order by a.asset_name asc';
   sql += ` offset ${offset} limit ${count} `;
-  let res;
+  const res = {
+    result: null,
+    rows: [],
+    assets: [],
+  };
 
   try {
-    res = await client.query(sql, whereClause.sqlParams);
+    res.result = await client.query(sql, whereClause.sqlParams);
   } catch (error) {
     throw new Error(`PG error getting asset base information: ${pgErrorCodes[error.code]}`);
+  }
+
+  for (let i = 0; i < res.result.rowCount; i += 1) {
+    res.assets.push(`'${res.result.rows[i].asset_name}'`);
+    res.rows.push(
+      {
+        asset_name: res.result.rows[i].asset_name,
+        description: res.result.rows[i].description,
+        location: res.result.rows[i].location,
+        owner_id: res.result.rows[i].owner_id,
+        notes: res.result.rows[i].notes,
+        active: res.result.rows[i].active,
+        etl_run_group: res.result.rows[i].run_group,
+        etl_active: res.result.rows[i].etl_active,
+        dependencies: [],
+      },
+    );
   }
   return res;
 }
@@ -125,7 +146,18 @@ async function getDependencies(assets, client) {
   } catch (error) {
     throw new Error(`PG error getting asset dependencies: ${pgErrorCodes[error.code]}`);
   }
-  return res;
+
+  const map = {};
+  if (res.rowCount > 0) {
+    for (let i = 0; i < res.rowCount; i += 1) {
+      if (res.rows[i].asset_name in map) {
+        map[res.rows[i].asset_name].push(res.rows[i].dependency);
+      } else {
+        map[res.rows[i].asset_name] = [res.rows[i].dependency];
+      }
+    }
+  }
+  return map;
 }
 
 async function getAssetList(domainName, pathElements, queryParams, connection) {
@@ -139,6 +171,8 @@ async function getAssetList(domainName, pathElements, queryParams, connection) {
   let total;
   let res;
   let url;
+  let currentCount;
+  let map;
   const count = buildCount(queryParams);
   const offset = buildOffset(queryParams);
   const whereClause = buildWhereClause(queryParams);
@@ -165,6 +199,7 @@ async function getAssetList(domainName, pathElements, queryParams, connection) {
       return result;
     }
     res = await getBase(offset, count, whereClause, client);
+    currentCount = res.result.rowCount;
     url = buildURL(queryParams, domainName, res, offset, total, pathElements);
   } catch (error) {
     await client.end();
@@ -173,29 +208,8 @@ async function getAssetList(domainName, pathElements, queryParams, connection) {
     return result;
   }
 
-  const assets = [];
-  const rows = [];
-  const currentCount = res.rowCount;
-
-  for (let i = 0; i < res.rowCount; i += 1) {
-    assets.push(`'${res.rows[i].asset_name}'`);
-    rows.push(
-      {
-        asset_name: res.rows[i].asset_name,
-        description: res.rows[i].description,
-        location: res.rows[i].location,
-        owner_id: res.rows[i].owner_id,
-        notes: res.rows[i].notes,
-        active: res.rows[i].active,
-        etl_run_group: res.rows[i].run_group,
-        etl_active: res.rows[i].etl_active,
-        dependencies: [],
-      },
-    );
-  }
-
   try {
-    res = await getDependencies(assets, client);
+    map = await getDependencies(res.assets, client);
   } catch (error) {
     await client.end();
     result.error = true;
@@ -203,25 +217,14 @@ async function getAssetList(domainName, pathElements, queryParams, connection) {
     return result;
   }
 
-  const map = {};
-  if (res.rowCount > 0) {
-    for (let i = 0; i < res.rowCount; i += 1) {
-      if (res.rows[i].asset_name in map) {
-        map[res.rows[i].asset_name].push(res.rows[i].dependency);
-      } else {
-        map[res.rows[i].asset_name] = [res.rows[i].dependency];
-      }
-    }
-  }
-
-  for (let i = 0; i < rows.length; i += 1) {
-    if (rows[i].asset_name in map) {
-      rows[i].dependencies = map[rows[i].asset_name];
+  for (let i = 0; i < res.rows.length; i += 1) {
+    if (res.rows[i].asset_name in map) {
+      res.rows[i].dependencies = map[res.rows[i].asset_name];
     }
   }
 
   result.result = {
-    items: rows,
+    items: res.rows,
     offset,
     count: currentCount,
     total,
