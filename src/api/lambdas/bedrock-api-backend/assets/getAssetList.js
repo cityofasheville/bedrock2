@@ -78,35 +78,37 @@ async function getBase(offset, count, whereClause, client) {
   sql += ` ${whereClause.whereClause}`;
   sql += ' order by a.asset_name asc';
   sql += ` offset ${offset} limit ${count} `;
-  const res = {
-    result: null,
+  let res;
+  const result = {
     rows: [],
     assets: [],
+    rowCount: null,
   };
 
   try {
-    res.result = await client.query(sql, whereClause.sqlParams);
+    res = await client.query(sql, whereClause.sqlParams);
   } catch (error) {
     throw new Error(`PG error getting asset base information: ${pgErrorCodes[error.code]}`);
   }
 
-  for (let i = 0; i < res.result.rowCount; i += 1) {
-    res.assets.push(`'${res.result.rows[i].asset_name}'`);
-    res.rows.push(
+  for (let i = 0; i < res.rowCount; i += 1) {
+    result.assets.push(`'${res.rows[i].asset_name}'`);
+    result.rows.push(
       {
-        asset_name: res.result.rows[i].asset_name,
-        description: res.result.rows[i].description,
-        location: res.result.rows[i].location,
-        owner_id: res.result.rows[i].owner_id,
-        notes: res.result.rows[i].notes,
-        active: res.result.rows[i].active,
-        etl_run_group: res.result.rows[i].run_group,
-        etl_active: res.result.rows[i].etl_active,
+        asset_name: res.rows[i].asset_name,
+        description: res.rows[i].description,
+        location: res.rows[i].location,
+        owner_id: res.rows[i].owner_id,
+        notes: res.rows[i].notes,
+        active: res.rows[i].active,
+        etl_run_group: res.rows[i].run_group,
+        etl_active: res.rows[i].etl_active,
         dependencies: [],
       },
     );
   }
-  return res;
+  result.rowCount = res.rowCount;
+  return result;
 }
 
 function buildURL(queryParams, domainName, res, offset, total, pathElements) {
@@ -171,7 +173,6 @@ async function getAssetList(domainName, pathElements, queryParams, connection) {
   let total;
   let res;
   let url;
-  let currentCount;
   let map;
   const count = buildCount(queryParams);
   const offset = buildOffset(queryParams);
@@ -199,7 +200,6 @@ async function getAssetList(domainName, pathElements, queryParams, connection) {
       return result;
     }
     res = await getBase(offset, count, whereClause, client);
-    currentCount = res.result.rowCount;
     url = buildURL(queryParams, domainName, res, offset, total, pathElements);
   } catch (error) {
     await client.end();
@@ -226,7 +226,7 @@ async function getAssetList(domainName, pathElements, queryParams, connection) {
   result.result = {
     items: res.rows,
     offset,
-    count: currentCount,
+    count: res.rowCount,
     total,
     url,
   };
