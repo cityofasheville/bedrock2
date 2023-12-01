@@ -1,5 +1,5 @@
 {
-  "name": "bedrock_common",
+  "name": "bedrock_packages",
   "version": "1.0.0",
   "description": "Lambda Layer of common utility functions for Bedrock, including bedrock_common functions",
   "main": "bedrock_common.js",

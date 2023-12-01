@@ -1,11 +1,11 @@
 {
   "asset_name": "aclara.s3",
   "run_group": "aclara",
-  "active": false,
+  "active": true,
   "tasks": [
     {
       "type": "table_copy",
-      "active": false,
+      "active": true,
       "source_location": {
         "crlf": true,
         "asset": "aclara.mun"
