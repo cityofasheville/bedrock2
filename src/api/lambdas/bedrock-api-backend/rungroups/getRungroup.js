@@ -44,7 +44,7 @@ async function getRungroup(pathElements, queryParams, connection) {
   }
 
   try {
-    result.result = await getInfo(client);
+    result.result = await getInfo(client, pathElements);
     await client.end();
   } catch (error) {
     result.error = true;
