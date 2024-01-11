@@ -73,8 +73,9 @@ function buildCount(queryParams) {
 }
 
 async function getBase(offset, count, whereClause, client) {
-  let sql = 'SELECT a.*, e.run_group, e.active as etl_active FROM bedrock.assets a';
+  let sql = 'SELECT a.*, e.run_group, e.active as etl_active, c.connection_class FROM bedrock.assets a';
   sql += ' left join bedrock.etl e on a.asset_name = e.asset_name';
+  sql += ` left join bedrock.connections c on c.connection_name = a."location"->>'connection'`
   sql += ` ${whereClause.whereClause}`;
   sql += ' order by a.asset_name asc';
   sql += ` offset ${offset} limit ${count} `;
@@ -83,6 +84,7 @@ async function getBase(offset, count, whereClause, client) {
     rows: [],
     assets: [],
   };
+  console.log(sql)
 
   try {
     res = await client.query(sql, whereClause.sqlParams);
@@ -96,7 +98,7 @@ async function getBase(offset, count, whereClause, client) {
       {
         asset_name: res.rows[i].asset_name,
         description: res.rows[i].description,
-        location: res.rows[i].location,
+        location: { ...res.rows[i].location, connection_class: res.rows[i].connection_class},
         owner_id: res.rows[i].owner_id,
         notes: res.rows[i].notes,
         active: res.rows[i].active,
@@ -105,7 +107,8 @@ async function getBase(offset, count, whereClause, client) {
         dependencies: [],
       },
     );
-  }
+  } 
+  console.log(result)
   return result;
 }
 

@@ -53,8 +53,8 @@ async function addInfo(res, fields, available) {
       } else if (itm === 'tags') {
         result[itm] = [];
       } else if (itm === 'location') {
-        result[itm] = res[0][itm];
-        result[itm]['connection_class'] = res[0]['connection_class']
+        result[itm] = {...res[0][itm], connection_class: res[0]['connection_class']};
+        // result[itm]['connection_class'] = res[0]['connection_class']
       } else {
         result[itm] = res[0][itm];
       }
