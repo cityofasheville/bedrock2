@@ -30,7 +30,6 @@ async function readAsset(client, pathElements) {
   if (res.rowCount === 0) {
     throw new Error('Asset not found');
   }
-  console.log(JSON.stringify)
   return res.rows;
 }
 
@@ -52,15 +51,11 @@ async function addInfo(res, fields, available) {
         result[itm] = res[0].run_group;
       } else if (itm === 'tags') {
         result[itm] = [];
-      } else if (itm === 'location') {
-        result[itm] = {...res[0][itm], connection_class: res[0]['connection_class']};
-        // result[itm]['connection_class'] = res[0]['connection_class']
       } else {
         result[itm] = res[0][itm];
       }
     }
   }
-  console.log(JSON.stringify(result))
   return result;
 }
 
@@ -114,6 +109,7 @@ async function getAsset(pathElements, queryParams, connection) {
   let fields = null;
   const available = [
     'description',
+    'connection_class',
     'location',
     'active',
     'owner_id',

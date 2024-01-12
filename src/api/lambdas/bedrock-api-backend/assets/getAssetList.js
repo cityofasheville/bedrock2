@@ -84,7 +84,6 @@ async function getBase(offset, count, whereClause, client) {
     rows: [],
     assets: [],
   };
-  console.log(sql)
 
   try {
     res = await client.query(sql, whereClause.sqlParams);
@@ -98,7 +97,8 @@ async function getBase(offset, count, whereClause, client) {
       {
         asset_name: res.rows[i].asset_name,
         description: res.rows[i].description,
-        location: { ...res.rows[i].location, connection_class: res.rows[i].connection_class},
+        connection_class: res.rows[i].connection_class,
+        location: res.rows[i].location,
         owner_id: res.rows[i].owner_id,
         notes: res.rows[i].notes,
         active: res.rows[i].active,
@@ -108,7 +108,6 @@ async function getBase(offset, count, whereClause, client) {
       },
     );
   } 
-  console.log(result)
   return result;
 }
 
