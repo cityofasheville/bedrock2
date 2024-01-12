@@ -14,10 +14,11 @@ async function newClient(connection) {
 
 async function readAsset(client, pathElements) {
   let res;
-  const sql = `SELECT a.*, e.run_group, e.active as etl_active, d.dependency
+  const sql = `SELECT a.*, e.run_group, e.active as etl_active, d.dependency, c.connection_class
     FROM bedrock.assets a
     left join bedrock.etl e on e.asset_name = a.asset_name
     left join bedrock.dependencies d on d.asset_name = a.asset_name
+    left join bedrock.connections c on c.connection_name = a."location"->>'connection'
     where a.asset_name like $1`;
   try {
     res = await client.query(sql, [pathElements[1]]);
@@ -108,6 +109,7 @@ async function getAsset(pathElements, queryParams, connection) {
   let fields = null;
   const available = [
     'description',
+    'connection_class',
     'location',
     'active',
     'owner_id',
@@ -138,6 +140,6 @@ async function getAsset(pathElements, queryParams, connection) {
   }
 
   return result;
-}
+ }
 
 module.exports = getAsset;
