@@ -175,7 +175,7 @@ async function baseInsert(body, customFields, client) {
     for (let i = 0; i < customFields.length; i += 1) {
       const field_name = customFields[i].field_name;
       if (field_name in body) {
-        args = [body.asset_type, field_name, body[field_name]];
+        args = [body.asset_name, field_name, body[field_name]];
         try {
           res = await client.query(sql, args);
         }
