@@ -33,10 +33,47 @@ async function checkExistence(client, assetName) {
   }
 }
 
-async function baseInsert(assetName, body, client) {
+async function getCustomFields(client, asset_type, asset_name) {
+  let sql;
+  let res;
+  let fields = [];
+  let values = {};
+  // First the fields
+  try {
+    sql = 'SELECT field_name, field_type FROM bedrock.custom_fields where asset_type like $1';
+    res = await client.query(sql, [asset_type]);
+  } catch (error) {
+    throw new Error(
+      `PG error getting custom fields: ${pgErrorCodes[error.code]}`,
+    );
+  }
+
+  if (res.rowCount > 0) {
+    fields = res.rows;
+    // Now the values
+    try {
+      sql = 'SELECT field_name, field_value FROM bedrock.custom_values where asset_name like $1';
+      res = await client.query(sql, [asset_name]);
+    } catch (error) {
+      throw new Error(
+        `PG error getting custom fields: ${pgErrorCodes[error.code]}`,
+      );
+    }
+  
+    if (res.rowCount > 0) {
+      for (let i = 0; i < res.rowCount; i += 1) {
+        values[res.rows[i].field_name] = res.rows[i].field_value;
+      }
+    }
+  }
+
+  return { fields, values };
+}
+
+async function baseInsert(assetName, body, customFields, client) {
   const members = ['description', 'location', 'active', 'owner_id', 'notes', 'link', 'display_name', 'asset_type'];
   let cnt = 1;
-  const args = [];
+  let args = [];
   let sql = 'UPDATE assets SET ';
   const result = {};
 
@@ -61,6 +98,39 @@ async function baseInsert(assetName, body, client) {
     await client.query(sql, args);
   } catch (error) {
     throw new Error(`PG error updating base asset: ${pgErrorCodes[error.code]}`);
+  }
+  // Now see if there are any custom fields
+  if (customFields.fields.length > 0) {
+    // Simplest just to delete and re-insert
+    sql = 'DELETE FROM bedrock.custom_values WHERE asset_name like $1';
+    try {
+      res = await client.query(sql, [assetName]);
+    }
+    catch (error) {
+      throw new Error(`Error deleting custom values ${field_name}: ${pgErrorCodes[error.code]}`);
+    }
+
+    sql = 'INSERT INTO bedrock.custom_values (asset_name, field_name, field_value) VALUES($1, $2, $3)';
+
+    for (let i = 0; i < customFields.fields.length; i += 1) {
+      const field_name = customFields.fields[i].field_name;
+      if (field_name in body || field_name in customFields.values) {
+        let field_value;
+        if (field_name in body) {
+          field_value = body[field_name];
+        } else {
+          field_value = customFields.values[field_name];
+        }
+        args = [body.asset_name, field_name, field_value];
+        try {
+          res = await client.query(sql, args);
+        }
+        catch (error) {
+          throw new Error(`Error inserting custom value ${field_name}: ${pgErrorCodes[error.code]}`);
+        }
+        result[field_name] = field_value;
+      }
+    }
   }
   return result;
 }
@@ -207,6 +277,7 @@ async function addTags(assetName, body, client) {
 async function updateAsset(requestBody, pathElements, queryParams, connection) {
   const body = JSON.parse(requestBody);
   const assetName = pathElements[1];
+  let customFields = [];
   let client;
   let etlInfo;
 
@@ -227,6 +298,9 @@ async function updateAsset(requestBody, pathElements, queryParams, connection) {
 
   try {
     await checkExistence(client, assetName);
+    if ('asset_type' in body) {
+      customFields = await getCustomFields(client, body.asset_type, body.asset_name);
+    }
   } catch (error) {
     await client.end();
     result.error = true;
@@ -236,7 +310,7 @@ async function updateAsset(requestBody, pathElements, queryParams, connection) {
 
   try {
     await client.query('BEGIN');
-    result.result = await baseInsert(assetName, body, client);
+    result.result = await baseInsert(assetName, body, customFields, client);
     if ('dependencies' in body) {
       result.result.dependencies = await addDependencies(assetName, body, client);
     }
