@@ -51,10 +51,13 @@ GRANT ALL ON TABLE bedrock.connections TO bedrock_user;
 -- DROP TABLE bedrock.assets;
 CREATE TABLE bedrock.assets (
 	asset_name text NOT NULL,
+  display_name text NULL,
 	description text NULL,
 	"location" jsonb NULL,
+  asset_type text NULL,
   owner_id integer NULL,
   notes text NULL,
+  link text NULL,
 	active bool NOT NULL,
 	CONSTRAINT assets_pkey PRIMARY KEY (asset_name)
 );
