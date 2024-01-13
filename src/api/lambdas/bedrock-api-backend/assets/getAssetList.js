@@ -165,6 +165,29 @@ async function getDependencies(assets, client) {
   return map;
 }
 
+async function getCustomFields(assets, client) {
+  let res;
+  const sql = `select asset_name, field_name, field_value from bedrock.custom_values where asset_name in (${assets.join()})`;
+
+  try {
+    res = await client.query(sql);
+  } catch (error) {
+    throw new Error(`PG error getting asset custom values: ${pgErrorCodes[error.code]}`);
+  }
+
+  const map = {};
+  if (res.rowCount > 0) {
+    for (let i = 0; i < res.rowCount; i += 1) {
+      if (res.rows[i].asset_name in map) {
+        map[res.rows[i].asset_name].push(res.rows[i]);
+      } else {
+        map[res.rows[i].asset_name] = [res.rows[i]];
+      }
+    }
+  }
+  return map;
+}
+
 async function getAssetList(domainName, pathElements, queryParams, connection) {
   const result = {
     error: false,
@@ -204,6 +227,22 @@ async function getAssetList(domainName, pathElements, queryParams, connection) {
     }
     res = await getBase(offset, count, whereClause, client);
     url = buildURL(queryParams, domainName, res, offset, total, pathElements);
+  } catch (error) {
+    await client.end();
+    result.error = true;
+    result.message = error.message;
+    return result;
+  }
+  try {
+    map = await getCustomFields(res.assets, client);
+    for (let i = 0; i < res.rows.length; i += 1) {
+      if (res.rows[i].asset_name in map) {
+        const customFields = map[res.rows[i].asset_name];
+        for (let j = 0; j < customFields.length; j += 1) {
+          res.rows[i][customFields[j]['field_name']] = customFields[j]['field_value']
+        }
+      }
+    }
   } catch (error) {
     await client.end();
     result.error = true;
