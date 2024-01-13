@@ -78,7 +78,6 @@ async function getCustomFields(client, asset_type) {
   if (res.rowCount > 0) {
     customFields = res.rows;
   }
-  console.log('Custom fields: ', customFields);
   return customFields;
 }
 
@@ -342,7 +341,6 @@ async function addAsset(requestBody, pathElements, queryParams, connection) {
     if ('asset_type' in body) {
       customFields = await getCustomFields(client, body.asset_type);
     }
-
   } catch (error) {
     await client.end();
     result.error = true;
