@@ -1,13 +1,16 @@
 {
   "asset_name": "wex.ftp",
+  "display_name": null,
   "description": "Wex fleet data",
   "location": {
     "path": "/data/",
     "filename": "AshevilleExport_PostedDate_${YYYY}${MM}${DD}.csv",
     "connection": "wex_ftp"
   },
+  "asset_type": null,
   "owner_id": null,
   "notes": null,
+  "link": null,
   "active": false,
   "depends": [],
   "tags": []

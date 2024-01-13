@@ -1,13 +1,16 @@
 {
   "asset_name": "coa_cip_project_lines.lib",
+  "display_name": null,
   "description": "",
   "location": {
     "tablename": "coa_cip_project_lines",
     "connection": "pubrecdb1/mdastore1/dbadmin",
     "schemaname": "internal"
   },
+  "asset_type": null,
   "owner_id": null,
   "notes": null,
+  "link": null,
   "active": true,
   "depends": [
     "coa_cip_project_lines.wh"

@@ -1,13 +1,16 @@
 {
   "asset_name": "pcard_statement_status_history.lib",
+  "display_name": null,
   "description": "PCard transactions and status",
   "location": {
     "tablename": "pcard_statement_status_history",
     "connection": "pubrecdb1/mdastore1/dbadmin",
     "schemaname": "internal"
   },
+  "asset_type": null,
   "owner_id": null,
   "notes": null,
+  "link": null,
   "active": true,
   "depends": [
     "pcard_statement_status_history.mun"

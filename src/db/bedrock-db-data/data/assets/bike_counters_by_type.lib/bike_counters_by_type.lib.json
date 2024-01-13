@@ -1,13 +1,16 @@
 {
   "asset_name": "bike_counters_by_type.lib",
+  "display_name": null,
   "description": "Bike Counters: View of 3 tables",
   "location": {
     "tablename": "bike_counters_by_type",
     "connection": "pubrecdb1/mdastore1/dbadmin",
     "schemaname": "bike_counter"
   },
+  "asset_type": null,
   "owner_id": null,
   "notes": null,
+  "link": null,
   "active": true,
   "depends": [
     "bike_counters.lib",

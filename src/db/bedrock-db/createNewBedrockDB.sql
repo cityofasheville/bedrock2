@@ -132,3 +132,17 @@ CREATE TABLE bedrock.tasks (
 -- Permissions
 ALTER TABLE bedrock.tasks OWNER TO bedrock_user;
 GRANT ALL ON TABLE bedrock.tasks TO bedrock_user;
+
+-- DROP TABLE bedrock.custom_types
+CREATE TABLE bedrock.custom_fields (
+  asset_type text NOT NULL,
+  field_name text NOT NULL,
+  field_type text NOT NULL
+);
+
+-- DROP TABLE bedrock.custom_values
+CREATE TABLE bedrock.custom_values (
+  asset_name text NOT NULL,
+  field_name text NOT NULL,
+  field_value text NULL
+);

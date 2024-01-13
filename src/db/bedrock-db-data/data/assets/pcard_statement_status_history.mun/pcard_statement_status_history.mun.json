@@ -1,13 +1,16 @@
 {
   "asset_name": "pcard_statement_status_history.mun",
+  "display_name": null,
   "description": "PCard transactions and status",
   "location": {
     "tablename": "pcard_statement_status_history",
     "connection": "munis/munprod/fme_jobs",
     "schemaname": "amd"
   },
+  "asset_type": null,
   "owner_id": null,
   "notes": null,
+  "link": null,
   "active": true,
   "depends": [],
   "tags": []

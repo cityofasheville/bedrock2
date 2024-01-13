@@ -1,13 +1,16 @@
 {
   "asset_name": "bc_property_account_master.wh",
+  "display_name": null,
   "description": "mdastore1 copy of amaccountmaster in Buncombe County",
   "location": {
     "tablename": "bc_property_account_master",
     "connection": "gis-warehouse/coagiswarehouse/coagis",
     "schemaname": "coagis"
   },
+  "asset_type": null,
   "owner_id": null,
   "notes": null,
+  "link": null,
   "active": true,
   "depends": [],
   "tags": []

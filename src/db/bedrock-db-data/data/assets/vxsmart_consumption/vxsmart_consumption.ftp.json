@@ -1,13 +1,16 @@
 {
   "asset_name": "vxsmart_consumption.ftp",
+  "display_name": null,
   "description": "Uploaded Consumption data to vxsmart_consumption",
   "location": {
     "path": "/uploads/",
     "filename": "ch_${YYYY}${MM}${DD}.csv",
     "connection": "vxsmart_ftp"
   },
+  "asset_type": null,
   "owner_id": null,
   "notes": null,
+  "link": null,
   "active": true,
   "depends": [
     "vxsmart_consumption.s3"

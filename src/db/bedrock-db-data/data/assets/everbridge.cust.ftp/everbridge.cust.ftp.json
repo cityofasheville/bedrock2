@@ -1,13 +1,16 @@
 {
   "asset_name": "everbridge.cust.ftp",
+  "display_name": null,
   "description": "",
   "location": {
     "path": "/replace/",
     "filename": "avl.UB_Water_Customers_Everbridge.csv",
     "connection": "everbridge_cust_ftp"
   },
+  "asset_type": null,
   "owner_id": null,
   "notes": null,
+  "link": null,
   "active": true,
   "depends": [
     "everbridge.cust.s3"

@@ -1,13 +1,16 @@
 {
   "asset_name": "ap_vendor.mun",
+  "display_name": null,
   "description": "",
   "location": {
     "tablename": "ap_vendor",
     "connection": "munis/munprod/fme_jobs",
     "schemaname": "dbo"
   },
+  "asset_type": null,
   "owner_id": null,
   "notes": null,
+  "link": null,
   "active": true,
   "depends": [],
   "tags": []

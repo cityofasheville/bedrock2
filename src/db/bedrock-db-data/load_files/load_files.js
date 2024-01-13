@@ -149,10 +149,12 @@ async function writeOther(client, data_directory, tablename) {
     fs.mkdirSync(assets_directory);
   }
 
+  console.log('Connect to the DB');
   const dbConnection = await getDBConnection();
   const client = new Client(dbConnection);
   await client.connect();
-
+  console.log('Connected, create the files');
+  
   // load etl files
   let etlList = await readEtlList(client);
   etlList = await readTasks(client, etlList);

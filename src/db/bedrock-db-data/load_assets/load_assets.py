@@ -41,6 +41,8 @@ sql = f'''
   truncate table bedrock.tags;
   truncate table bedrock.run_groups;
   truncate table bedrock.connections;
+  truncate table bedrock.custom_fields;
+  truncate table bedrock.custom_values;
 '''
 cur.execute(sql)
 print('Truncated all tables')
@@ -183,6 +185,22 @@ for asset_subdir in os.listdir(assets_directory):
 
     # nm = cur.fetchone()[0] # probably can skip this, but maybe to double check
 
+# Load the custom fields
+sql = 'INSERT INTO bedrock.custom_fields (asset_type, field_name,	field_type) VALUES '
+customs = []
+with open(os.path.join(data_directory,'custom_fields.csv')) as ff:
+  rdr = csv.reader(ff)
+  
+  i = 0;
+  rows = list(rdr)
+  nrows = len(rows)
+  for row in rows:
+    i = i+1
+    sql = f"{sql} ('{row[0]}', '{row[1]}', '{row[2]}')"
+    if (i<nrows):
+      sql = sql + ','
+cur.execute(sql)
+print(f'Wrote {nrows} items to the custom fields table')
 
 conn.commit()
 cur.close()

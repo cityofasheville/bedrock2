@@ -1,13 +1,16 @@
 {
   "asset_name": "sog_water_pipe_inch_diameter_miles.ncb",
+  "display_name": null,
   "description": "Water SOG Benchmark: water_pipe_inch_diameter_miles",
   "location": {
     "tab": "water_pipe_inch_diameter_miles",
     "connection": "bedrock-googlesheets",
     "spreadsheetid": "1m2xD4JyH4BEBey_ybsEgrvYopsl0PjWNmY_PEv3l6D4"
   },
+  "asset_type": null,
   "owner_id": null,
   "notes": null,
+  "link": null,
   "active": true,
   "depends": [],
   "tags": [

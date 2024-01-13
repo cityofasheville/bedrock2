@@ -1,13 +1,16 @@
 {
   "asset_name": "base_employee_sensitive_snapshots.lib",
+  "display_name": null,
   "description": "Monthly Snapshots of employee_sensitive view",
   "location": {
     "tablename": "base_employee_sensitive_snapshots",
     "connection": "pubrecdb1/mdastore1/dbadmin",
     "schemaname": "standard"
   },
+  "asset_type": null,
   "owner_id": null,
   "notes": null,
+  "link": null,
   "active": true,
   "depends": [
     "base_employee_private.lib",
