@@ -89,6 +89,28 @@ async function baseInsert(body, client) {
     args.push(body.notes);
     argnum += 1;
   }
+
+  if ('link' in body) {
+    sql += ', link';
+    vals += `, $${argnum}`;
+    args.push(body.link);
+    argnum += 1;
+  }
+
+  if ('display_name' in body) {
+    sql += ', display_name';
+    vals += `, $${argnum}`;
+    args.push(body.display_name);
+    argnum += 1;
+  }
+
+  if ('asset_type' in body) {
+    sql += ', asset_type';
+    vals += `, $${argnum}`;
+    args.push(body.asset_type);
+    argnum += 1;
+  }
+
   sql += `${vals})`;
 
   try {
@@ -113,6 +135,15 @@ async function baseInsert(body, client) {
     }
     if ('notes' in body) {
       info.notes = body.notes;
+    }
+    if ('link' in body) {
+      info.link = body.link
+    }
+    if ('display_name' in body) {
+      info.display_name = body.display_name
+    }
+    if ('asset_type' in body) {
+      info.asset_type = body.asset_type
     }
   }
   return info;

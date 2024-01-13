@@ -108,9 +108,12 @@ async function getAsset(pathElements, queryParams, connection) {
 
   let fields = null;
   const available = [
+    'display_name',
+    'asset_type',
     'description',
     'connection_class',
     'location',
+    'link',
     'active',
     'owner_id',
     'notes',

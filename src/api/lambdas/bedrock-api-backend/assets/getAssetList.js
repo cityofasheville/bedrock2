@@ -96,11 +96,14 @@ async function getBase(offset, count, whereClause, client) {
     result.rows.push(
       {
         asset_name: res.rows[i].asset_name,
+        display_name: res.rows[i].display_name,
         description: res.rows[i].description,
+        asset_type: res.rows[i].asset_type,
         connection_class: res.rows[i].connection_class,
         location: res.rows[i].location,
         owner_id: res.rows[i].owner_id,
         notes: res.rows[i].notes,
+        link: res.rows[i].link,
         active: res.rows[i].active,
         etl_run_group: res.rows[i].run_group,
         etl_active: res.rows[i].etl_active,

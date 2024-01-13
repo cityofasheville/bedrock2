@@ -34,7 +34,7 @@ async function checkExistence(client, assetName) {
 }
 
 async function baseInsert(assetName, body, client) {
-  const members = ['description', 'location', 'active', 'owner_id', 'notes'];
+  const members = ['description', 'location', 'active', 'owner_id', 'notes', 'link', 'display_name', 'asset_type'];
   let cnt = 1;
   const args = [];
   let sql = 'UPDATE assets SET ';
