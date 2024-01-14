@@ -7,10 +7,10 @@ Create a file `make_variables` based on `make_variables.sample`. Change INSTANCE
 
 The variable build_mode can be set to "std" if deploying from Linux or "sam" to use a container. This is needed for two Python Lambdas that need Linux native compilation targets for encryption used by the paramiko package.
 
-To start, cd into ```src/bedrock_common`` and run the following. 
+To start, cd into ```src/bedrock_common`` and run
 ```bash
 make init
-make apply-y
+make apply
 ```
 
 Then cd into each other directory in ```src``` and run ```make``` commands to create the infrastructure.
