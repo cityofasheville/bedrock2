@@ -51,14 +51,40 @@ async function readTasks(client, etlList) {
 }
 ////////////////////////////////////////////
 async function readAssetList(client) {
-  const sql = `SELECT * FROM bedrock.assets order by asset_name;`;
+  let sql = `SELECT * FROM bedrock.assets order by asset_name;`;
   // eslint-disable-next-line no-await-in-loop
-  const res = await client.query(sql)
+  let res = await client.query(sql)
     .catch((err) => {
       const errmsg = [err.code];
       throw new Error([`Postgres error: ${errmsg}`, err]);
     });
   const assetList = res.rows;
+  const nAssets = res.rowCount
+  sql = `SELECT * FROM bedrock.custom_values order by asset_name;`
+  res = await client.query(sql)
+  .catch((err) => {
+    const errmsg = [err.code];
+    throw new Error([`Postgres error: ${errmsg}`, err]);
+  });
+
+  const customsMap = {};
+  for (let i = 0; i < res.rowCount; i += 1) {
+    if (res.rows[i].asset_name in customsMap) {
+      customsMap[res.rows[i].asset_name].push(res.rows[i]);
+    } else {
+      customsMap[res.rows[i].asset_name] = [res.rows[i]];
+    }
+  }
+
+  for (let i = 0; i < nAssets; i += 1) {
+    const asset = assetList[i];
+    if (asset.asset_name in customsMap) {
+      for (let j = 0; j < customsMap[asset.asset_name].length; j += 1) {
+        const customs = customsMap[asset.asset_name];
+        assetList[i][customs[j].field_name] = customs[j].field_value;
+      }
+    }
+  }
   return assetList;
 }
 
