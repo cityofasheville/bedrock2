@@ -98,6 +98,26 @@ with open(os.path.join(data_directory,'connections.csv')) as ff:
 cur.execute(sql)
 print(f'Wrote {nrows} items to the connections table')
 
+# Load the custom fields
+customs_map = {}
+sql = 'INSERT INTO bedrock.custom_fields (asset_type, field_name,	field_type) VALUES '
+with open(os.path.join(data_directory,'custom_fields.csv')) as ff:
+  rdr = csv.reader(ff)
+  
+  i = 0;
+  rows = list(rdr)
+  nrows = len(rows)
+  for row in rows:
+    i = i+1
+    sql = f"{sql} ('{row[0]}', '{row[1]}', '{row[2]}')"
+    if row[0] not in customs_map:
+      customs_map[row[0]] = []
+    customs_map[row[0]].append(row[1]);
+    if (i<nrows):
+      sql = sql + ','
+cur.execute(sql)
+print(f'Wrote {nrows} items to the custom fields table')
+
 # Load the assets
 print('Load all assets')
 assets_directory = data_directory + '/assets'
@@ -163,6 +183,18 @@ for asset_subdir in os.listdir(assets_directory):
           (asset_name, config["description"], json.dumps(config["location"]), config["owner_id"], config["notes"], config["active"]
           ))
           
+          # custom variables
+          if config['asset_type'] is not None and 'asset_type' in config and config['asset_type'] in customs_map:
+
+            for itm in customs_map[config['asset_type']]:
+              if itm in config:
+                sql = f'''
+                  insert into bedrock.custom_values
+                  (asset_name, field_name, field_value)
+                  values(%s, %s, %s);
+                '''
+                cur.execute(sql, (asset_name, itm, config[itm]))
+
           # dependencies
           dependencies = config['depends']         
           if dependencies:
@@ -184,23 +216,6 @@ for asset_subdir in os.listdir(assets_directory):
               cur.execute(sql, (asset_name, tag))              
 
     # nm = cur.fetchone()[0] # probably can skip this, but maybe to double check
-
-# Load the custom fields
-sql = 'INSERT INTO bedrock.custom_fields (asset_type, field_name,	field_type) VALUES '
-customs = []
-with open(os.path.join(data_directory,'custom_fields.csv')) as ff:
-  rdr = csv.reader(ff)
-  
-  i = 0;
-  rows = list(rdr)
-  nrows = len(rows)
-  for row in rows:
-    i = i+1
-    sql = f"{sql} ('{row[0]}', '{row[1]}', '{row[2]}')"
-    if (i<nrows):
-      sql = sql + ','
-cur.execute(sql)
-print(f'Wrote {nrows} items to the custom fields table')
 
 conn.commit()
 cur.close()
