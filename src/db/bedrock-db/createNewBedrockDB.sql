@@ -1,4 +1,16 @@
--- DROP ROLE bedrock_user;
+DROP TABLE IF EXISTS bedrock.tasks;
+DROP TABLE IF EXISTS bedrock.tags;
+DROP TABLE IF EXISTS bedrock.run_groups;
+DROP TABLE IF EXISTS bedrock.etl;
+DROP TABLE IF EXISTS bedrock.dependencies;
+DROP TABLE IF EXISTS bedrock.assets;
+DROP TABLE IF EXISTS bedrock.connections;
+DROP TYPE IF EXISTS bedrock.connections_classes;
+DROP TABLE IF EXISTS bedrock.owners;
+DROP TABLE IF EXISTS bedrock.asset_tags;
+DROP SCHEMA IF EXISTS bedrock;
+DROP ROLE IF EXISTS bedrock_user;
+
 CREATE ROLE bedrock_user WITH 
 	NOSUPERUSER
 	NOCREATEDB
@@ -9,10 +21,8 @@ CREATE ROLE bedrock_user WITH
 	NOBYPASSRLS
 	CONNECTION LIMIT -1;
 
--- DROP SCHEMA bedrock;
 CREATE SCHEMA bedrock;
 
--- DROP TABLE bedrock.asset_tags;
 CREATE TABLE bedrock.asset_tags (
 	asset_name text NOT NULL,
 	tag_name text NOT NULL,
@@ -48,7 +58,6 @@ CREATE TABLE bedrock.connections (
 ALTER TABLE bedrock.connections OWNER TO bedrock_user;
 GRANT ALL ON TABLE bedrock.connections TO bedrock_user;
 
--- DROP TABLE bedrock.assets;
 CREATE TABLE bedrock.assets (
 	asset_name text NOT NULL,
   display_name text NULL,
@@ -67,7 +76,6 @@ ALTER TABLE bedrock.assets OWNER TO bedrock_user;
 GRANT ALL ON TABLE bedrock.assets TO bedrock_user;
 
 
--- DROP TABLE bedrock.dependencies;
 CREATE TABLE bedrock.dependencies (
 	asset_name text NOT NULL,
 	dependency text NOT NULL,
@@ -79,7 +87,6 @@ ALTER TABLE bedrock.dependencies OWNER TO bedrock_user;
 GRANT ALL ON TABLE bedrock.dependencies TO bedrock_user;
 
 
--- DROP TABLE bedrock.etl;
 CREATE TABLE bedrock.etl (
 	asset_name text NOT NULL,
 	run_group text NOT NULL,
@@ -92,7 +99,6 @@ ALTER TABLE bedrock.etl OWNER TO bedrock_user;
 GRANT ALL ON TABLE bedrock.etl TO bedrock_user;
 
 
--- DROP TABLE bedrock.run_groups;
 CREATE TABLE bedrock.run_groups (
 	run_group_name text NOT NULL,
 	cron_string text NOT NULL,
@@ -104,7 +110,6 @@ ALTER TABLE bedrock.run_groups OWNER TO bedrock_user;
 GRANT ALL ON TABLE bedrock.run_groups TO bedrock_user;
 
 
--- DROP TABLE bedrock.tags;
 CREATE TABLE bedrock.tags (
 	tag_name text NOT NULL,
 	display_name text NULL,
@@ -116,7 +121,6 @@ ALTER TABLE bedrock.tags OWNER TO bedrock_user;
 GRANT ALL ON TABLE bedrock.tags TO bedrock_user;
 
 
--- DROP TABLE bedrock.tasks;
 CREATE TABLE bedrock.tasks (
 	asset_name text NOT NULL,
 	seq_number int2 NOT NULL,
@@ -133,7 +137,6 @@ CREATE TABLE bedrock.tasks (
 ALTER TABLE bedrock.tasks OWNER TO bedrock_user;
 GRANT ALL ON TABLE bedrock.tasks TO bedrock_user;
 
--- DROP TABLE bedrock.custom_fields
 CREATE TABLE bedrock.custom_fields (
   asset_type text NOT NULL,
   field_name text NOT NULL,
@@ -144,7 +147,6 @@ CREATE TABLE bedrock.custom_fields (
 ALTER TABLE bedrock.custom_fields OWNER TO bedrock_user;
 GRANT ALL ON TABLE bedrock.custom_fields TO bedrock_user;
                                       
--- DROP TABLE bedrock.custom_values
 CREATE TABLE bedrock.custom_values (
   asset_name text NOT NULL,
   field_name text NOT NULL,
