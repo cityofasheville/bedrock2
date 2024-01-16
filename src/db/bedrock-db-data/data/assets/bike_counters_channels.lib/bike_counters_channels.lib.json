@@ -1,13 +1,16 @@
 {
   "asset_name": "bike_counters_channels.lib",
+  "display_name": null,
   "description": "",
   "location": {
     "tablename": "counters_channels",
     "connection": "pubrecdb1/mdastore1/dbadmin",
     "schemaname": "bike_counter"
   },
+  "asset_type": null,
   "owner_id": null,
   "notes": null,
+  "link": null,
   "active": true,
   "depends": [
     "eco_visio.api",

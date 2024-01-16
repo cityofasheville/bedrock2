@@ -33,6 +33,30 @@ async function readAsset(client, pathElements) {
   return res.rows;
 }
 
+async function getCustomFields(client, assetRows, fields, fieldsOverride) {
+  let res;
+  let customFields = [];
+  if ('asset_type' in assetRows[0] && assetRows[0].asset_type !== null) {
+    const sql = 'SELECT field_name, field_value from bedrock.custom_values where asset_name like $1';
+    try {
+      res = await client.query(sql, [assetRows[0].asset_name]);
+    } catch (error) {
+      throw new Error(
+        `PG error getting custom fields: ${pgErrorCodes[error.code]}`,
+      );
+    }
+    if (res.rowCount > 0) {
+      for (let i = 0; i < res.rowCount; i += 1) {
+        if (!fieldsOverride || fields.includes(res.rows[i].field_name)) {
+          customFields.push(res.rows[i]);
+        }
+      }
+    }
+  }
+
+  return customFields;
+}
+
 async function addInfo(res, fields, available) {
   const result = {
     asset_name: res[0].asset_name,
@@ -107,10 +131,14 @@ async function getAsset(pathElements, queryParams, connection) {
   }
 
   let fields = null;
+  let fieldsOverride = false;
   const available = [
+    'display_name',
+    'asset_type',
     'description',
     'connection_class',
     'location',
+    'link',
     'active',
     'owner_id',
     'notes',
@@ -122,11 +150,19 @@ async function getAsset(pathElements, queryParams, connection) {
   // Use fields from the query if they're present, otherwise use all available fields
   if ('fields' in queryParams) {
     fields = queryParams.fields.replace('[', '').replace(']', '').split(',');
+    fieldsOverride = true;
   } else {
     fields = [...available];
   }
 
   result.result = await addInfo(res, fields, available);
+  const customFields = await getCustomFields(client, res, fields, fieldsOverride);
+  if (customFields.length > 0) {
+    for (let i = 0; i < customFields.length; i += 1) {
+      result.result[customFields[i].field_name] = customFields[i].field_value;
+    }
+  }
+
   if (fields === null || fields.includes('tags')) {
     try {
       res = await getTags(client, pathElements);

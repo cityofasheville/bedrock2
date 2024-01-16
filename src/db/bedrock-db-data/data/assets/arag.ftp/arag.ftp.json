@@ -1,13 +1,16 @@
 {
   "asset_name": "arag.ftp",
+  "display_name": null,
   "description": "Uploaded staff data to ARAG",
   "location": {
     "path": "/",
     "filename": "arag_asheville_${YYYY}${MM}${DD}.csv.pgp",
     "connection": "arag_ftp"
   },
+  "asset_type": null,
   "owner_id": null,
   "notes": null,
+  "link": null,
   "active": true,
   "depends": [
     "arag.encrypted.s3"

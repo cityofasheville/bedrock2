@@ -1,13 +1,16 @@
 {
   "asset_name": "aclara.mun",
+  "display_name": null,
   "description": "",
   "location": {
     "tablename": "UB_AMI_3_Aclara_Account_Feed",
     "connection": "munis/munprod/fme_jobs",
     "schemaname": "avl"
   },
+  "asset_type": null,
   "owner_id": null,
   "notes": null,
+  "link": null,
   "active": true,
   "depends": [],
   "tags": []

@@ -1,13 +1,16 @@
 {
   "asset_name": "aetna.s3",
+  "display_name": null,
   "description": "",
   "location": {
     "path": "aetna/",
     "filename": "aetna_asheville_${YYYY}${MM}${DD}.csv",
     "connection": "s3_data_files"
   },
+  "asset_type": null,
   "owner_id": null,
   "notes": null,
+  "link": null,
   "active": true,
   "depends": [
     "pr_aetna_feed.mun"

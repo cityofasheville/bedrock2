@@ -1,13 +1,16 @@
 {
   "asset_name": "maint_Surface_Parking_Lots.maint",
+  "display_name": null,
   "description": "Maintenance Responsibilities: Surface Parking Lots",
   "location": {
     "tab": "Surface Parking Lots",
     "connection": "bedrock-googlesheets",
     "spreadsheetid": "16rZUoAlISFIAmvcnSMHmhaE0qObj2OMpHQX3ddRoEwg"
   },
+  "asset_type": null,
   "owner_id": null,
   "notes": null,
+  "link": null,
   "active": true,
   "depends": [],
   "tags": [

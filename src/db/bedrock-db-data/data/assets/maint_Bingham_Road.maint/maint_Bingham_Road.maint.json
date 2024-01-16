@@ -1,13 +1,16 @@
 {
   "asset_name": "maint_Bingham_Road.maint",
+  "display_name": null,
   "description": "Maintenance Responsibilities: Bingham_Road",
   "location": {
     "tab": "Bingham Road",
     "connection": "bedrock-googlesheets",
     "spreadsheetid": "16rZUoAlISFIAmvcnSMHmhaE0qObj2OMpHQX3ddRoEwg"
   },
+  "asset_type": null,
   "owner_id": null,
   "notes": null,
+  "link": null,
   "active": true,
   "depends": [],
   "tags": [

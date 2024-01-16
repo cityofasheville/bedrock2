@@ -1,13 +1,16 @@
 {
   "asset_name": "workplans.lib",
+  "display_name": null,
   "description": "Organizational Work Plan",
   "location": {
     "tablename": "workplans",
     "connection": "pubrecdb1/mdastore1/dbadmin",
     "schemaname": "internal"
   },
+  "asset_type": null,
   "owner_id": null,
   "notes": null,
+  "link": null,
   "active": true,
   "depends": [
     "workplans.goog"

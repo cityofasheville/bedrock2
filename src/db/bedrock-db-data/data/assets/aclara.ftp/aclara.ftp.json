@@ -1,13 +1,16 @@
 {
   "asset_name": "aclara.ftp",
+  "display_name": null,
   "description": "Uploaded Accounting data to Aclara",
   "location": {
     "path": "/AclaraAccountImportFiles/",
     "filename": "AccountImport.imp",
     "connection": "aclara_ftp"
   },
+  "asset_type": null,
   "owner_id": null,
   "notes": null,
+  "link": null,
   "active": true,
   "depends": [
     "aclara.s3"

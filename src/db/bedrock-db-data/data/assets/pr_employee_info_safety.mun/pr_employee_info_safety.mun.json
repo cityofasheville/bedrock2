@@ -1,13 +1,16 @@
 {
   "asset_name": "pr_employee_info_safety.mun",
+  "display_name": null,
   "description": "",
   "location": {
     "tablename": "pr_employee_info_safety",
     "connection": "munis/munprod/fme_jobs",
     "schemaname": "amd"
   },
+  "asset_type": null,
   "owner_id": null,
   "notes": null,
+  "link": null,
   "active": true,
   "depends": [],
   "tags": []

@@ -59,6 +59,14 @@ async function tagsDelete(client, assetName) {
   }
 }
 
+async function customFieldsDelete (client, assetName) {
+  try {
+    await client.query('delete from bedrock.custom_values where asset_name = $1', [assetName]);
+  } catch (error) {
+    throw new Error(`PG error deleting asset custom values: ${pgErrorCodes[error.code]}`);
+  }
+}
+
 async function baseDelete(client, assetName) {
   try {
     await client.query('delete from assets where asset_name = $1;', [assetName]);
@@ -100,6 +108,7 @@ async function deleteAsset(pathElements, queryParams, connection) {
     await dependenciesDelete(client, assetName);
     await etlDelete(client, assetName);
     await tagsDelete(client, assetName);
+    await customFieldsDelete(client, assetName);
     await baseDelete(client, assetName);
     await client.query('COMMIT');
     await client.end();

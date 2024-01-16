@@ -1,13 +1,16 @@
 {
   "asset_name": "capital_projects_master.lib",
+  "display_name": null,
   "description": "Capital Projects General Project Information",
   "location": {
     "tablename": "capital_projects_master",
     "connection": "pubrecdb1/mdastore1/dbadmin",
     "schemaname": "internal"
   },
+  "asset_type": null,
   "owner_id": null,
   "notes": null,
+  "link": null,
   "active": true,
   "depends": [
     "capital_projects_master.goog"

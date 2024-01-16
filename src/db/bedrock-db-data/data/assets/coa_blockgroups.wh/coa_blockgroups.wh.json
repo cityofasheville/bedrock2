@@ -1,13 +1,16 @@
 {
   "asset_name": "coa_blockgroups.wh",
+  "display_name": null,
   "description": "",
   "location": {
     "tablename": "census_2015_blockgroups",
     "connection": "gis-warehouse/coagiswarehouse/coagis",
     "schemaname": "coagis"
   },
+  "asset_type": null,
   "owner_id": null,
   "notes": null,
+  "link": null,
   "active": true,
   "depends": [],
   "tags": []

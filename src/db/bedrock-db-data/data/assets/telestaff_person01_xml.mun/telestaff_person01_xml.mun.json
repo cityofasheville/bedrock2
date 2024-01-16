@@ -1,13 +1,16 @@
 {
   "asset_name": "telestaff_person01_xml.mun",
+  "display_name": null,
   "description": "",
   "location": {
     "tablename": "telestaff_person01_xml",
     "connection": "munis/munprod/fme_jobs",
     "schemaname": "avl"
   },
+  "asset_type": null,
   "owner_id": null,
   "notes": null,
+  "link": null,
   "active": true,
   "depends": [],
   "tags": []

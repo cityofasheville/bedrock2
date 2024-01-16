@@ -1,13 +1,16 @@
 {
   "asset_name": "maint_Right_of_Way.maint",
+  "display_name": null,
   "description": "Maintenance Responsibilities: Right of Way",
   "location": {
     "tab": "Right of Way",
     "connection": "bedrock-googlesheets",
     "spreadsheetid": "16rZUoAlISFIAmvcnSMHmhaE0qObj2OMpHQX3ddRoEwg"
   },
+  "asset_type": null,
   "owner_id": null,
   "notes": null,
+  "link": null,
   "active": true,
   "depends": [],
   "tags": [

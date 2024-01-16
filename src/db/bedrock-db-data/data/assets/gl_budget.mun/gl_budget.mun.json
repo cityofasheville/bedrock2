@@ -1,13 +1,16 @@
 {
   "asset_name": "gl_budget.mun",
+  "display_name": null,
   "description": "Master budget table",
   "location": {
     "tablename": "gl_budget",
     "connection": "munis/munprod/fme_jobs",
     "schemaname": "amd"
   },
+  "asset_type": null,
   "owner_id": null,
   "notes": null,
+  "link": null,
   "active": true,
   "depends": [],
   "tags": []

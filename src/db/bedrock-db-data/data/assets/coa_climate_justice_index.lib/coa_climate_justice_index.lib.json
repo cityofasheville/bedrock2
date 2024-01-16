@@ -1,13 +1,16 @@
 {
   "asset_name": "coa_climate_justice_index.lib",
+  "display_name": null,
   "description": "",
   "location": {
     "tablename": "coa_climate_justice_index",
     "connection": "pubrecdb1/mdastore1/dbadmin",
     "schemaname": "internal"
   },
+  "asset_type": null,
   "owner_id": null,
   "notes": null,
+  "link": null,
   "active": true,
   "depends": [
     "coa_climate_justice_index.wh"

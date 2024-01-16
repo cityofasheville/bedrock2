@@ -1,13 +1,16 @@
 {
   "asset_name": "permit_contacts.pub",
+  "display_name": null,
   "description": "Contacts associated with permits",
   "location": {
     "tablename": "permit_contacts",
     "connection": "coa-publicdb1/coa_share/dbadmin",
     "schemaname": "bc"
   },
+  "asset_type": null,
   "owner_id": null,
   "notes": null,
+  "link": null,
   "active": true,
   "depends": [
     "permit_contacts.lib"

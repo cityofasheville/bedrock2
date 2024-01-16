@@ -1,13 +1,16 @@
 {
   "asset_name": "pcard_transaction.lib",
+  "display_name": null,
   "description": "PCard transaction",
   "location": {
     "tablename": "pcard_transaction",
     "connection": "pubrecdb1/mdastore1/dbadmin",
     "schemaname": "internal"
   },
+  "asset_type": null,
   "owner_id": null,
   "notes": null,
+  "link": null,
   "active": true,
   "depends": [
     "pcard_transaction.mun"

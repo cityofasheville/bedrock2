@@ -16,6 +16,16 @@ The layer above the inventory is comprised of two applications: an ETL (extract-
 
 Once the API is complete, a third application layer consisting of specialized frontends is planned for development.
 
+### Bedrock Metadata
+
+There are three types of metadata maintained in the Bedrock database: core fields, custom fields, and ETL information.
+
+The core fields are kept to a minimum. The consist of basic information like the name and type of the asset, a brief description and notes, where it is, who owns it, whether it is active, and a link which can be used to access more complete documentation. The best place to see the current set of core fields is in the [SQL script that creates the ```assets``` table in the database](./src/db/bedrock-db/createNewBedrockDB.sql).
+
+Bedrock also allows custom fields to be defined for individual types. A ```custom_fields``` table in the database stores any additional fields (name and type) associated with a given ```asset_type```. The values themselves are stored in a ```custom_values``` table. The logic to access or set custom values may be seen in the various [asset endpoints in the API](./src/api/lambdas/bedrock-api-backend/assets/).
+
+ETL information consists of a sequence of tasks that either move data from one location to another or invoke a SQL or Lambda function. The ETL tasks for a given asset are associated with a "run group", which is then associated with a schedule. _NOTE: This needs better documentation._
+
 ### Bedrock ETL (in production)
 The Bedrock ETL system allows groups of ETL jobs to be run on a schedule, with the internal ordering of jobs within a group (such as the daily overnight run)  determined automatically based on dependency information for the assets involved. At the end of a run, a summary report of job successes or failures is emailed to administrators. Transfers are transactional (so a failed job will not leave the data in an inconsistent state) and, because Bedrock has dependency information, the failure of a transfer will cause all dependent jobs to be “pruned” so that errors are not propagated. 
 

@@ -1,13 +1,16 @@
 {
   "asset_name": "bc_property_pinnum_formatted_owner_names.lib",
+  "display_name": null,
   "description": "Preprocessed owner names",
   "location": {
     "tablename": "bc_property_pinnum_formatted_owner_names",
     "connection": "pubrecdb1/mdastore1/dbadmin",
     "schemaname": "internal"
   },
+  "asset_type": null,
   "owner_id": null,
   "notes": null,
+  "link": null,
   "active": true,
   "depends": [
     "bc_property_account_master.lib",
