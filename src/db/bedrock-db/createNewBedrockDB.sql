@@ -140,9 +140,17 @@ CREATE TABLE bedrock.custom_fields (
   field_type text NOT NULL
 );
 
+-- Permissions
+ALTER TABLE bedrock.custom_fields OWNER TO bedrock_user;
+GRANT ALL ON TABLE bedrock.custom_fields TO bedrock_user;
+                                      
 -- DROP TABLE bedrock.custom_values
 CREATE TABLE bedrock.custom_values (
   asset_name text NOT NULL,
   field_name text NOT NULL,
   field_value text NULL
 );
+
+-- Permissions
+ALTER TABLE bedrock.custom_values OWNER TO bedrock_user;
+GRANT ALL ON TABLE bedrock.custom_values TO bedrock_user;
