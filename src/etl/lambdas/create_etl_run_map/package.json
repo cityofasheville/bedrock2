@@ -13,7 +13,7 @@
     "aws-cron-parser": "^1.1.12",
     "bedrock_common": "file:../../../bedrock_common/bedrock_common",
     "mssql": "^6.2.1",
-    "pg": "^8.3.0",
+    "pg": "^8.11.3",
     "toposort": "^2.0.2"
   },
   "devDependencies": {
