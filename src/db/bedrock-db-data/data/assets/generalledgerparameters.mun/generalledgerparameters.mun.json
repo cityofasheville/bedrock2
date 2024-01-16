@@ -1,0 +1,17 @@
+{
+  "asset_name": "generalledgerparameters.mun",
+  "display_name": null,
+  "description": "",
+  "location": {
+    "tablename": "GeneralLedgerParameters",
+    "connection": "munis/munprod/fme_jobs",
+    "schemaname": "dbo"
+  },
+  "asset_type": null,
+  "owner_id": null,
+  "notes": null,
+  "link": null,
+  "active": true,
+  "depends": [],
+  "tags": []
+}

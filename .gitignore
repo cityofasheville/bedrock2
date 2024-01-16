@@ -5,8 +5,8 @@ tmp.json
 hold.json
 package
 function.zip
-data/
 bedrock_connections.json
+.bedrock_common/
 *NOGITHUB*
 
 # Other additions
@@ -127,3 +127,6 @@ node_modules
 
 # AWS
 .aws-sam/
+
+#vscode
+bedrock2.code-workspace

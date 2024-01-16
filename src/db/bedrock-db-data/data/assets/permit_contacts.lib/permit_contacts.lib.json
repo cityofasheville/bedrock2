@@ -1,0 +1,19 @@
+{
+  "asset_name": "permit_contacts.lib",
+  "display_name": null,
+  "description": "Contacts associated with permits",
+  "location": {
+    "tablename": "permit_contacts",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "internal"
+  },
+  "asset_type": null,
+  "owner_id": null,
+  "notes": null,
+  "link": null,
+  "active": true,
+  "depends": [
+    "permit_contacts.acc"
+  ],
+  "tags": []
+}

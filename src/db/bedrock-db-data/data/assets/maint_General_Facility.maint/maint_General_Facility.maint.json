@@ -1,0 +1,19 @@
+{
+  "asset_name": "maint_General_Facility.maint",
+  "display_name": null,
+  "description": "Maintenance Responsibilities: Administration",
+  "location": {
+    "tab": "General Facility",
+    "connection": "bedrock-googlesheets",
+    "spreadsheetid": "16rZUoAlISFIAmvcnSMHmhaE0qObj2OMpHQX3ddRoEwg"
+  },
+  "asset_type": null,
+  "owner_id": null,
+  "notes": null,
+  "link": null,
+  "active": true,
+  "depends": [],
+  "tags": [
+    "maintenance_responsibilities"
+  ]
+}

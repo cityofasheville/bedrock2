@@ -1,0 +1,19 @@
+{
+  "asset_name": "permit_tasks.pub",
+  "display_name": null,
+  "description": "Permit tasks data",
+  "location": {
+    "tablename": "permit_tasks",
+    "connection": "coa-publicdb1/coa_share/dbadmin",
+    "schemaname": "bc"
+  },
+  "asset_type": null,
+  "owner_id": null,
+  "notes": null,
+  "link": null,
+  "active": true,
+  "depends": [
+    "permit_tasks.lib"
+  ],
+  "tags": []
+}

@@ -1,0 +1,19 @@
+{
+  "asset_name": "maint_Beneficial_Fill_Sites.maint",
+  "display_name": null,
+  "description": "Maintenance Responsibilities: Beneficial Fill Sites",
+  "location": {
+    "tab": "Beneficial Fill Sites",
+    "connection": "bedrock-googlesheets",
+    "spreadsheetid": "16rZUoAlISFIAmvcnSMHmhaE0qObj2OMpHQX3ddRoEwg"
+  },
+  "asset_type": null,
+  "owner_id": null,
+  "notes": null,
+  "link": null,
+  "active": true,
+  "depends": [],
+  "tags": [
+    "maintenance_responsibilities"
+  ]
+}

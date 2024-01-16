@@ -1,0 +1,19 @@
+{
+  "asset_name": "vxsmart_billing.ftp",
+  "display_name": null,
+  "description": "Uploaded Billing data to vxsmart_billing",
+  "location": {
+    "path": "/uploads/",
+    "filename": "billinginfo_${YYYY}${MM}${DD}.csv",
+    "connection": "vxsmart_ftp"
+  },
+  "asset_type": null,
+  "owner_id": null,
+  "notes": null,
+  "link": null,
+  "active": true,
+  "depends": [
+    "vxsmart_billing.s3"
+  ],
+  "tags": []
+}

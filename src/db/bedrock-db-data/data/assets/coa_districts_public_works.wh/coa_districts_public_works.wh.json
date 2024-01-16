@@ -1,0 +1,17 @@
+{
+  "asset_name": "coa_districts_public_works.wh",
+  "display_name": null,
+  "description": "Public works districts",
+  "location": {
+    "tablename": "coa_districts_public_works",
+    "connection": "gis-warehouse/coagiswarehouse/coagis",
+    "schemaname": "coagis"
+  },
+  "asset_type": null,
+  "owner_id": null,
+  "notes": null,
+  "link": null,
+  "active": true,
+  "depends": [],
+  "tags": []
+}

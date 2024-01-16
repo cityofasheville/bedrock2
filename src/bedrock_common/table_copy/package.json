@@ -1,0 +1,22 @@
+{
+  "name": "bedrock_table_copy",
+  "version": "1.0.0",
+  "description": "Lambda Layer of common utility functions for Bedrock used in the Lambda: etl_task_table_copy",
+  "main": "bedrock_common.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "googleapis": "^127.0.0",
+    "mssql": "^10.0.1",
+    "pg": "^8.11.3",
+    "csv-parse": "^5.5.2",
+    "csv-stringify": "^6.4.4",
+    "@aws-sdk/client-s3": "^3.431.0",
+    "@aws-sdk/lib-storage": "^3.431.0",
+    "multistream": "^4.1.0",
+    "pg-copy-streams": "^6.0.6"
+  },
+  "author": "",
+  "license": "ISC"
+}

@@ -1,50 +1,43 @@
-let AWS = require('aws-sdk');
-AWS.config.update({region: 'us-east-1'});
+const { SESClient, SendEmailCommand } = require("@aws-sdk/client-ses");
+const REGION = "us-east-1";
+const sesClient = new SESClient({ region: REGION });
 
-let params = {
-  Destination: { /* required */
-    ToAddresses: []
-  },
-  Message: { /* required */
-    Body: { /* required */
-      Html: {
-       Charset: "UTF-8",
-       Data: ""
-      },
-      Text: {
-       Charset: "UTF-8",
-       Data: ""
-      }
-     },
-     Subject: {
-      Charset: 'UTF-8',
-      Data: 'Bedrock Results'
-     }
+async function ses_sendemail(emailAddrs, htmlEmail, emailSubject) {
+  let params = {
+    Destination: {
+      CcAddresses: [],
+      ToAddresses: emailAddrs,
     },
-  Source: process.env.EMAIL_SENDER, /* required */
-  ReplyToAddresses: [
-     process.env.EMAIL_SENDER,
-  ],
+    Message: { /* required */
+      Body: { /* required */
+        Html: {
+          Charset: "UTF-8",
+          Data: htmlEmail,
+        },
+        Text: {
+          Charset: "UTF-8",
+          Data: htmlEmail,
+        },
+      },
+      Subject: {
+        Charset: "UTF-8",
+        Data: emailSubject
+      },
+    },
+    Source: process.env.EMAIL_SENDER,
+    ReplyToAddresses: [
+      process.env.EMAIL_SENDER,
+    ],
+  };
+
+  const sendEmailCommand = new SendEmailCommand(params);
+
+  try {
+    return await sesClient.send(sendEmailCommand);
+  } catch (e) {
+    console.error("Failed to send email.");
+    return e;
+  }
 };
-
-function ses_sendemail(emailAddrs, htmlEmail, emailSubject){
-    params.Destination.ToAddresses = emailAddrs;
-    params.Message.Body.Html.Data = htmlEmail;
-    params.Message.Subject.Data = emailSubject
-
-    // Create the promise and SES service object
-    let sendPromise = new AWS.SES({apiVersion: '2010-12-01'}).sendEmail(params).promise();
-    
-    // Handle promise's fulfilled/rejected states
-    sendPromise.then(
-    function(data) {
-        console.log(data.MessageId);
-        return ("OK"+data.MessageId)
-    }).catch(
-        function(err) {
-        console.error(err, err.stack);
-        throw(err)
-    });
-}
 
 module.exports = ses_sendemail;

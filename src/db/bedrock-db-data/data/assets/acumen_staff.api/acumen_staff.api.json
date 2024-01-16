@@ -1,0 +1,17 @@
+{
+  "asset_name": "acumen_staff.api",
+  "display_name": null,
+  "description": "Acumen Staff API",
+  "location": {
+    "connection": "acumen_api"
+  },
+  "asset_type": null,
+  "owner_id": null,
+  "notes": null,
+  "link": null,
+  "active": true,
+  "depends": [
+    "acumen_staff.mun"
+  ],
+  "tags": []
+}

@@ -1,0 +1,17 @@
+{
+  "asset_name": "ub_water_customers_everbridge.mun",
+  "display_name": null,
+  "description": "",
+  "location": {
+    "tablename": "UB_Water_Customers_Everbridge",
+    "connection": "munis/munprod/fme_jobs",
+    "schemaname": "avl"
+  },
+  "asset_type": null,
+  "owner_id": null,
+  "notes": null,
+  "link": null,
+  "active": true,
+  "depends": [],
+  "tags": []
+}

@@ -1,0 +1,17 @@
+{
+  "asset_name": "gl_master.mun",
+  "display_name": null,
+  "description": "Master general ledger history",
+  "location": {
+    "tablename": "gl_master",
+    "connection": "munis/munprod/fme_jobs",
+    "schemaname": "amd"
+  },
+  "asset_type": null,
+  "owner_id": null,
+  "notes": null,
+  "link": null,
+  "active": true,
+  "depends": [],
+  "tags": []
+}

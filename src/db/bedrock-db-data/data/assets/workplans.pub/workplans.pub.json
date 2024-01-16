@@ -1,0 +1,19 @@
+{
+  "asset_name": "workplans.pub",
+  "display_name": null,
+  "description": "Organizational Work Plan",
+  "location": {
+    "tablename": "workplans",
+    "connection": "coa-publicdb1/coa_share/dbadmin",
+    "schemaname": "open"
+  },
+  "asset_type": null,
+  "owner_id": null,
+  "notes": null,
+  "link": null,
+  "active": true,
+  "depends": [
+    "workplans.lib"
+  ],
+  "tags": []
+}

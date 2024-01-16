@@ -1,0 +1,17 @@
+{
+  "asset_name": "vxsmart_billing.mun",
+  "display_name": null,
+  "description": "",
+  "location": {
+    "tablename": "UB_AMI_VXSmart_Billing_Nightly",
+    "connection": "munistest19",
+    "schemaname": "avl"
+  },
+  "asset_type": null,
+  "owner_id": null,
+  "notes": null,
+  "link": null,
+  "active": true,
+  "depends": [],
+  "tags": []
+}

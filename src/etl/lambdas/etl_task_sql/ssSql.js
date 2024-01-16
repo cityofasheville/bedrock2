@@ -10,7 +10,11 @@ async function ssSql(connection, sqlString) {
       database: connection.database,
       connectionTimeout: 30000,
       requestTimeout: 680000,
-      options: { enableArithAbort: true },
+      options: { 
+        enableArithAbort: true,
+        encrypt: false,
+      },
+      trustServerCertificate: true,
       pool: {
         max: 10,
         min: 0,
@@ -25,7 +29,7 @@ async function ssSql(connection, sqlString) {
     const result = await sql.query(sqlString);
     return JSON.stringify(result).slice(0, 40);
   } catch (err) {
-    throw (new Error('SQL Server error', err));
+    throw (new Error('SQL Server error' + err));
   }
 }
 

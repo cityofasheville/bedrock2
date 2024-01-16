@@ -1,11 +1,11 @@
 const { pipeline } = require('node:stream/promises'); // nodejs 16+
+const { getConnection } = require('bedrock_common');
 const getPgStream = require('./getPgStream');
 const getSsStream = require('./getSsStream');
 const getS3Stream = require('./getS3Stream');
 const getGoogleStream = require('./getGoogleStream');
 // eslint-disable-next-line no-unused-vars
 const streamDebug = require('./streamDebug');
-const getConnection = require('./getConnection');
 
 function returnError(err) {
   return {

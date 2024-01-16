@@ -1,0 +1,17 @@
+{
+  "asset_name": "paymentus_payment_history.mun",
+  "display_name": null,
+  "description": "Paymentus Payment History",
+  "location": {
+    "tablename": "ub_pm_payment_history_loader_today_no_ivr",
+    "connection": "munis/munprod/fme_jobs",
+    "schemaname": "amd"
+  },
+  "asset_type": null,
+  "owner_id": null,
+  "notes": null,
+  "link": null,
+  "active": true,
+  "depends": [],
+  "tags": []
+}

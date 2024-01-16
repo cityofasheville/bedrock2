@@ -1,0 +1,19 @@
+{
+  "asset_name": "base_employee_position_temp.lib",
+  "display_name": null,
+  "description": "",
+  "location": {
+    "tablename": "base_employee_position_temp",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "temp"
+  },
+  "asset_type": null,
+  "owner_id": null,
+  "notes": null,
+  "link": null,
+  "active": true,
+  "depends": [
+    "base_employee_position.mun"
+  ],
+  "tags": []
+}

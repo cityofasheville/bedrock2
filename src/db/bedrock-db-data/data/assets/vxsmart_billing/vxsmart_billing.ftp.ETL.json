@@ -1,0 +1,17 @@
+{
+  "asset_name": "vxsmart_billing.ftp",
+  "run_group": "vxsmart",
+  "active": true,
+  "tasks": [
+    {
+      "type": "file_copy",
+      "active": true,
+      "source_location": {
+        "asset": "vxsmart_billing.s3"
+      },
+      "target_location": {
+        "asset": "vxsmart_billing.ftp"
+      }
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "asset_name": "nc_benchmarks.lib",
+  "display_name": null,
+  "description": "North Carolina Benchmarks",
+  "location": {
+    "tablename": "nc_benchmarks",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "internal"
+  },
+  "asset_type": null,
+  "owner_id": null,
+  "notes": null,
+  "link": null,
+  "active": true,
+  "depends": [
+    "#nc_benchmarks"
+  ],
+  "tags": []
+}

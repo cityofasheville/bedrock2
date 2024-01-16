@@ -2,7 +2,7 @@
 const openpgp = require('openpgp');
 const { S3Client, GetObjectCommand } = require('@aws-sdk/client-s3');
 const { Upload } = require('@aws-sdk/lib-storage');
-const getConnection = require('./getConnection');
+const { getConnection } = require('bedrock_common');
 const fillDateTemplate = require('./fillDateTemplate');
 
 const s3Client = new S3Client({ region: 'us-east-1' });
@@ -23,8 +23,8 @@ exports.lambda_handler = async function x(event) {
     const filename = fillDateTemplate(etl.filename);
     const encryptedFilename = fillDateTemplate(etl.encrypted_filename);
     const s3Conn = await getConnection(etl.s3_connection);
-    const ftpConn = await getConnection(etl.encrypt_connection);
-    const { pgp_key: pgpKey } = ftpConn;
+    const encryptConnection = await getConnection(etl.encrypt_connection);
+    const { pgp_key: pgpKey } = encryptConnection;
 
     // get unencrypted file 'filename' from s3
     const downloadParams = {

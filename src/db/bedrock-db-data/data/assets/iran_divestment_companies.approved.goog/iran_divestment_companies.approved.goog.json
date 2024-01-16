@@ -1,0 +1,19 @@
+{
+  "asset_name": "iran_divestment_companies.approved.goog",
+  "display_name": null,
+  "description": "",
+  "location": {
+    "tab": "Approved Companies",
+    "range": "A5:B",
+    "filename": "Iran Divestment Companies",
+    "connection": "bedrock-googlesheets",
+    "spreadsheetid": "1FOmrFm5afRc_XqTeF2T-ilWtZDIYzdqKiZlPX129IQA"
+  },
+  "asset_type": null,
+  "owner_id": null,
+  "notes": null,
+  "link": null,
+  "active": true,
+  "depends": [],
+  "tags": []
+}

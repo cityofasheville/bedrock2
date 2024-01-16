@@ -1,0 +1,17 @@
+{
+  "asset_name": "pcard_transaction.mun",
+  "display_name": null,
+  "description": "PCard transaction",
+  "location": {
+    "tablename": "pcard_transaction",
+    "connection": "munis/munprod/fme_jobs",
+    "schemaname": "amd"
+  },
+  "asset_type": null,
+  "owner_id": null,
+  "notes": null,
+  "link": null,
+  "active": true,
+  "depends": [],
+  "tags": []
+}

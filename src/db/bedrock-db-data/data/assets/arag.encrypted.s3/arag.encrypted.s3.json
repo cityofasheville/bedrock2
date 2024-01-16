@@ -1,0 +1,19 @@
+{
+  "asset_name": "arag.encrypted.s3",
+  "display_name": null,
+  "description": "",
+  "location": {
+    "path": "arag/",
+    "filename": "arag_asheville_${YYYY}${MM}${DD}.csv.pgp",
+    "connection": "s3_data_files"
+  },
+  "asset_type": null,
+  "owner_id": null,
+  "notes": null,
+  "link": null,
+  "active": true,
+  "depends": [
+    "arag.s3"
+  ],
+  "tags": []
+}

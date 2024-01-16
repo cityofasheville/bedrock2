@@ -4,8 +4,8 @@
 // eslint-disable-next-line import/no-unresolved
 const { getDBConnection } = require('bedrock_common');
 
-const handleAssets = require('./handleAssets');
-const handleRungroups = require('./handleRungroups');
+const handleAssets = require('./assets/handleAssets');
+const handleRungroups = require('./rungroups/handleRungroups');
 
 // eslint-disable-next-line camelcase
 const lambda_handler = async function x(event) {

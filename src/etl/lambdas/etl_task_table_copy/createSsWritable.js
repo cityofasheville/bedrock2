@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 /* eslint-disable no-console */
 const sql = require('mssql');
-const csv = require('csv');
+const { parse } = require('csv-parse');
 const { getPool } = require('./ssPools');
 
 async function createSsWritable(location) {
@@ -42,6 +42,11 @@ async function createSsWritable(location) {
     },
     trustServerCertificate: true, // Accela has self-signed certs?
   };
+  if (connInfo.domain) config.domain = connInfo.domain;
+  if (connInfo.parameters) {
+    // for <= SQL 2008
+    if (connInfo.parameters.encrypt === false) config.options.encrypt = false;
+  }
   const pool = await getPool(poolName, config);
 
   // copyFromTemp: After temp table is full, load real table
@@ -115,7 +120,7 @@ async function createSsWritable(location) {
 
   let tableArr = [];
   const resPromiseArr = [];
-  const SsStream = csv.parse();
+  const SsStream = parse();
 
   SsStream.on('readable', () => {
     // eslint-disable-next-line no-constant-condition

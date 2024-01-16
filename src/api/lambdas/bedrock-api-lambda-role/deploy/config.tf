@@ -15,14 +15,14 @@ resource "aws_iam_role" "bedrock-api-lambda-role-$$INSTANCE$$" {
     }
 }
 
-resource "aws_iam_policy" "secrets_manager_policy-$$INSTANCE$$" {
-  name        = "secrets_manager_policy-${var.instance}"
+resource "aws_iam_policy" "secrets_manager_api_policy-$$INSTANCE$$" {
+  name        = "secrets_manager_api_policy-${var.instance}"
   description = "Read secrets"
   policy = templatefile("./policy_secrets_manager.json",{})
 }
 
-resource "aws_iam_policy" "invoke_lambda_policy-$$INSTANCE$$" {
-  name        = "invoke_lambda_policy-${var.instance}"
+resource "aws_iam_policy" "invoke_lambda_api_policy-$$INSTANCE$$" {
+  name        = "invoke_lambda_api_policy-${var.instance}"
   description = "Invoke another Lambda"
   policy = templatefile("./policy_invoke_lambda.json",{})
 }
@@ -49,12 +49,12 @@ resource "aws_iam_role_policy_attachment" "lambda_vpc_access-$$INSTANCE$$" {
 
 resource "aws_iam_role_policy_attachment" "secrets_manager-$$INSTANCE$$" {
     role        = aws_iam_role.bedrock-api-lambda-role-$$INSTANCE$$.name
-    policy_arn  = aws_iam_policy.secrets_manager_policy-$$INSTANCE$$.arn
+    policy_arn  = aws_iam_policy.secrets_manager_api_policy-$$INSTANCE$$.arn
 }
 
-resource "aws_iam_role_policy_attachment" "invoke_lambda_policy-$$INSTANCE$$" {
+resource "aws_iam_role_policy_attachment" "invoke_lambda_api_policy-$$INSTANCE$$" {
     role        = aws_iam_role.bedrock-api-lambda-role-$$INSTANCE$$.name
-    policy_arn  = aws_iam_policy.invoke_lambda_policy-$$INSTANCE$$.arn
+    policy_arn  = aws_iam_policy.invoke_lambda_api_policy-$$INSTANCE$$.arn
 }
 
 output "bedrock_lambda_role_arn" {

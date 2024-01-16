@@ -1,0 +1,19 @@
+{
+  "asset_name": "workplans.goog",
+  "display_name": null,
+  "description": "Organizational Work Plan",
+  "location": {
+    "tab": "Sheet1",
+    "range": "A2:N",
+    "filename": "Work Plan - Web Site",
+    "connection": "bedrock-googlesheets",
+    "spreadsheetid": "1lT8ep9PipcMiT5yVv-BkGaCRR331VN_4ANeWM0tQNgc"
+  },
+  "asset_type": null,
+  "owner_id": null,
+  "notes": null,
+  "link": null,
+  "active": true,
+  "depends": [],
+  "tags": []
+}

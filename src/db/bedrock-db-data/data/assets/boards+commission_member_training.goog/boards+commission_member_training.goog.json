@@ -1,0 +1,19 @@
+{
+  "asset_name": "boards+commission_member_training.goog",
+  "display_name": null,
+  "description": "",
+  "location": {
+    "tab": "Member Training",
+    "range": "A2:F",
+    "filename": "Boards+Commission Member Training",
+    "connection": "bedrock-googlesheets",
+    "spreadsheetid": "1Efr6hn24-9e4eENkZy3Y_8uaYlYqFv4Iz2uqzrUwuRw"
+  },
+  "asset_type": null,
+  "owner_id": null,
+  "notes": null,
+  "link": null,
+  "active": true,
+  "depends": [],
+  "tags": []
+}

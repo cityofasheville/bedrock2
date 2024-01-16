@@ -1,0 +1,19 @@
+{
+  "asset_name": "maint_Comm_Towers.maint",
+  "display_name": null,
+  "description": "Maintenance Responsibilities: Comm_Towers",
+  "location": {
+    "tab": "Comm Towers",
+    "connection": "bedrock-googlesheets",
+    "spreadsheetid": "16rZUoAlISFIAmvcnSMHmhaE0qObj2OMpHQX3ddRoEwg"
+  },
+  "asset_type": null,
+  "owner_id": null,
+  "notes": null,
+  "link": null,
+  "active": true,
+  "depends": [],
+  "tags": [
+    "maintenance_responsibilities"
+  ]
+}

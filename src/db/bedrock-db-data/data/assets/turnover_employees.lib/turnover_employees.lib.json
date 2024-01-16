@@ -1,0 +1,19 @@
+{
+  "asset_name": "turnover_employees.lib",
+  "display_name": null,
+  "description": "Report of Employees who were termed this month",
+  "location": {
+    "tablename": "turnover_employees",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "standard"
+  },
+  "asset_type": null,
+  "owner_id": null,
+  "notes": null,
+  "link": null,
+  "active": true,
+  "depends": [
+    "base_employee_sensitive_snapshots.lib"
+  ],
+  "tags": []
+}

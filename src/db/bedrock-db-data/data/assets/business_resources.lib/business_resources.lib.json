@@ -1,0 +1,19 @@
+{
+  "asset_name": "business_resources.lib",
+  "display_name": null,
+  "description": "",
+  "location": {
+    "tablename": "business_resources",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "internal"
+  },
+  "asset_type": null,
+  "owner_id": null,
+  "notes": null,
+  "link": null,
+  "active": true,
+  "depends": [
+    "business_resources.goog"
+  ],
+  "tags": []
+}

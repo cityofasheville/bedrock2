@@ -1,0 +1,19 @@
+{
+  "asset_name": "capital_projects_master.goog",
+  "display_name": null,
+  "description": "Capital Projects General Project Information",
+  "location": {
+    "tab": "General Project Information",
+    "range": "A2:Z",
+    "filename": "Capital Projects Master",
+    "connection": "bedrock-googlesheets",
+    "spreadsheetid": "1IepJrSjqbGK7UcTmFHqknNUD6Iyx6-3_zpj6qHprBgY"
+  },
+  "asset_type": null,
+  "owner_id": null,
+  "notes": null,
+  "link": null,
+  "active": true,
+  "depends": [],
+  "tags": []
+}

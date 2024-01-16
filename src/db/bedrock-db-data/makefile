@@ -1,14 +1,16 @@
-include ../../make_variables
--include ../make_variables.generated
+dirs = load_assets
 
-.PHONY: seed init plan apply apply-y destroy db seed
+.PHONY: $(dirs) init plan apply apply-y destroy db seed
 
-seed:	load_assets.py
-	pip install -r ./requirements.txt
-	python3 load_assets.py $(BEDROCK_DB_HOST_ENDPOINT)
-
-clean:
-	echo 'Nothing to clean'
+init: $(dirs)
+plan: $(dirs)
+apply: $(dirs)
+apply-y: $(dirs)
+destroy: $(dirs)
+db: $(dirs)
+seed: $(dirs)
+clean: $(dirs)
+	rm make_variables.generated
 
 $(dirs):
 	$(MAKE) -C $@ $(MAKECMDGOALS)

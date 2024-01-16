@@ -37,12 +37,12 @@ CREATE TABLE bedrock.owners (
 ALTER TABLE bedrock.owners OWNER TO bedrock_user;
 GRANT ALL ON TABLE bedrock.owners TO bedrock_user;
 
-CREATE TYPE bedrock.connection_types AS ENUM ('db', 'aggr', 'api', 'file', 'sheets');
+CREATE TYPE bedrock.connections_classes AS ENUM ('db', 'api', 'file', 'sheets');
 
 CREATE TABLE bedrock.connections (
   connection_name text NOT NULL,
   description text NULL,
-  connection_type bedrock.connection_types NULL,
+  connection_class bedrock.connections_classes NULL,
   CONSTRAINT connections_pkey PRIMARY KEY (connection_name)
 );
 ALTER TABLE bedrock.connections OWNER TO bedrock_user;
@@ -51,10 +51,13 @@ GRANT ALL ON TABLE bedrock.connections TO bedrock_user;
 -- DROP TABLE bedrock.assets;
 CREATE TABLE bedrock.assets (
 	asset_name text NOT NULL,
+  display_name text NULL,
 	description text NULL,
 	"location" jsonb NULL,
+  asset_type text NULL,
   owner_id integer NULL,
   notes text NULL,
+  link text NULL,
 	active bool NOT NULL,
 	CONSTRAINT assets_pkey PRIMARY KEY (asset_name)
 );
@@ -129,3 +132,25 @@ CREATE TABLE bedrock.tasks (
 -- Permissions
 ALTER TABLE bedrock.tasks OWNER TO bedrock_user;
 GRANT ALL ON TABLE bedrock.tasks TO bedrock_user;
+
+-- DROP TABLE bedrock.custom_fields
+CREATE TABLE bedrock.custom_fields (
+  asset_type text NOT NULL,
+  field_name text NOT NULL,
+  field_type text NOT NULL
+);
+
+-- Permissions
+ALTER TABLE bedrock.custom_fields OWNER TO bedrock_user;
+GRANT ALL ON TABLE bedrock.custom_fields TO bedrock_user;
+                                      
+-- DROP TABLE bedrock.custom_values
+CREATE TABLE bedrock.custom_values (
+  asset_name text NOT NULL,
+  field_name text NOT NULL,
+  field_value text NULL
+);
+
+-- Permissions
+ALTER TABLE bedrock.custom_values OWNER TO bedrock_user;
+GRANT ALL ON TABLE bedrock.custom_values TO bedrock_user;

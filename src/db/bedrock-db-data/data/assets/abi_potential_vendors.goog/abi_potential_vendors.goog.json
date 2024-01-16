@@ -1,0 +1,19 @@
+{
+  "asset_name": "abi_potential_vendors.goog",
+  "display_name": null,
+  "description": "List of unregistered MWBE vendors who should be included in outreach efforts",
+  "location": {
+    "tab": "Vendors",
+    "range": "A2:Z",
+    "filename": "abi_potential_vendors",
+    "connection": "bedrock-googlesheets",
+    "spreadsheetid": "1lQzl5-MM0SUblcyuOdxsm6duaERA5017c4eSgbnlDoI"
+  },
+  "asset_type": null,
+  "owner_id": null,
+  "notes": null,
+  "link": null,
+  "active": true,
+  "depends": [],
+  "tags": []
+}

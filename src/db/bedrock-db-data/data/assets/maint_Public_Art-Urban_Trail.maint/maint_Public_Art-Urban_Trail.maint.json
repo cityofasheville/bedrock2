@@ -1,0 +1,19 @@
+{
+  "asset_name": "maint_Public_Art-Urban_Trail.maint",
+  "display_name": null,
+  "description": "Maintenance Responsibilities: Public_Art-Urban_Trail",
+  "location": {
+    "tab": "Public Art/Urban Trail",
+    "connection": "bedrock-googlesheets",
+    "spreadsheetid": "16rZUoAlISFIAmvcnSMHmhaE0qObj2OMpHQX3ddRoEwg"
+  },
+  "asset_type": null,
+  "owner_id": null,
+  "notes": null,
+  "link": null,
+  "active": true,
+  "depends": [],
+  "tags": [
+    "maintenance_responsibilities"
+  ]
+}

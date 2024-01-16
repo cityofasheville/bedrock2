@@ -1,0 +1,19 @@
+{
+  "asset_name": "vxsmart_account.ftp",
+  "display_name": null,
+  "description": "Uploaded Account data to vxsmart_account",
+  "location": {
+    "path": "/uploads/",
+    "filename": "acctinfo_${YYYY}${MM}${DD}.csv",
+    "connection": "vxsmart_ftp"
+  },
+  "asset_type": null,
+  "owner_id": null,
+  "notes": null,
+  "link": null,
+  "active": true,
+  "depends": [
+    "vxsmart_account.s3"
+  ],
+  "tags": []
+}
