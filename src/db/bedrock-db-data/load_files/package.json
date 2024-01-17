@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "bedrock_common": "file:../../../bedrock_common",
+    "bedrock_common": "file:../../../bedrock_common/bedrock_common",
     "pg": "^8.10.0",
     "toposort": "^2.0.2"
   },
