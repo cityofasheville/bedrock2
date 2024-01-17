@@ -12,6 +12,12 @@
       "target_location": {
         "asset": "bc_location.lib"
       }
+    },
+    {
+      "type": "sql",
+      "active": true,
+      "connection": "pubrecdb1/mdastore1/dbadmin",
+      "sql_string": "begin transaction;\ntruncate table internal.bc_location_dupes;\ninsert into internal.bc_location_dupes\nselect objectid from internal.bc_location loc\nleft join (\nSELECT min(objectid) as dupe_obj_id\nFROM internal.bc_location\ngroup by location_id\n) mins\non loc.objectid = mins.dupe_obj_id\nwhere dupe_obj_id is null\nand loc.objectid is not null;\ndelete from internal.bc_location loc\nusing internal.bc_location_dupes dup\nwhere loc.objectid = dup.dupe_obj_id;\ncommit;"
     }
   ]
 }
