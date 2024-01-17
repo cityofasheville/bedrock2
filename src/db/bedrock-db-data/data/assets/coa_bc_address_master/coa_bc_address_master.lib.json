@@ -1,0 +1,30 @@
+{
+  "asset_name": "coa_bc_address_master.lib",
+  "display_name": "Master Address Table",
+  "description": "Master address table",
+  "location": {
+    "loctype": "db",
+    "tablename": "coa_bc_address_mastery",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "internal"
+  },
+  "asset_type": null,
+  "owner_id": 14,
+  "notes": "Try this now.\nBut also this!",
+  "link": null,
+  "active": true,
+  "period": "weekly",
+  "depends": [
+    "bc_civicaddress_table",
+    "bc_location",
+    "bc_property",
+    "coa_active_jurisdictions",
+    "coa_districts_public_works",
+    "coa_districts_water",
+    "bc_property_pinnum_formatted_owner_names",
+    "coa_districts_zoning",
+    "bc_property_account_master",
+    "coa_zip_code"
+  ],
+  "tags": []
+}

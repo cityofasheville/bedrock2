@@ -124,14 +124,23 @@ async function readTags(client, assetList) {
   return assetList;
 }
 
+function getAssetBase(assetName) {
+  const idx = assetName.lastIndexOf('.');
+  if (idx < 0) {
+    return assetName;
+  }
+  return assetName.substr(0, idx);
+}
+
 ////////////////////////////////////////////
 function writeAsset(assetList, assets_directory) {
   for (asset of assetList) {
     let name = asset.asset_name;
-    if (!fs.existsSync(assets_directory + name)) {
-      fs.mkdirSync(assets_directory + name);
+    let base_name = getAssetBase(name);
+    if (!fs.existsSync(assets_directory + base_name)) {
+      fs.mkdirSync(assets_directory + base_name);
     }
-    fs.writeFileSync(assets_directory + name + '/' + name + '.json', JSON.stringify(asset, null, 2));
+    fs.writeFileSync(assets_directory + base_name + '/' + name + '.json', JSON.stringify(asset, null, 2));
   }
 }
 
@@ -139,10 +148,11 @@ function writeAsset(assetList, assets_directory) {
 function writeEtl(etlList, assets_directory) {
   for (etl of etlList) {
     let name = etl.asset_name;
-    if (!fs.existsSync(assets_directory + name)) {
-      fs.mkdirSync(assets_directory + name);
+    let base_name = getAssetBase(name);
+    if (!fs.existsSync(assets_directory + base_name)) {
+      fs.mkdirSync(assets_directory + base_name);
     }
-    fs.writeFileSync(assets_directory + name + '/' + name + '.ETL.json', JSON.stringify(etl, null, 2));
+    fs.writeFileSync(assets_directory + base_name + '/' + name + '.ETL.json', JSON.stringify(etl, null, 2));
   }
 }
 
