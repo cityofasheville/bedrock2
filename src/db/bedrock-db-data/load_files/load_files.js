@@ -126,6 +126,9 @@ async function readTags(client, assetList) {
 
 function getAssetBase(assetName) {
   const idx = assetName.lastIndexOf('.');
+  if (idx < 0) {
+    return assetName;
+  }
   return assetName.substr(0, idx);
 }
 
