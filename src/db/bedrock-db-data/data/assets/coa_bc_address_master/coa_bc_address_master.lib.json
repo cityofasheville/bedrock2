@@ -13,7 +13,6 @@
   "notes": "Try this now.\nBut also this!",
   "link": null,
   "active": true,
-  "period": "weekly",
   "depends": [
     "bc_civicaddress_table",
     "bc_location",
