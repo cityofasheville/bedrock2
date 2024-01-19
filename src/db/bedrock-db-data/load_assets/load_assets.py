@@ -43,6 +43,7 @@ sql = f'''
   truncate table bedrock.connections;
   truncate table bedrock.custom_fields;
   truncate table bedrock.custom_values;
+  truncate table bedrock.owners;
 '''
 cur.execute(sql)
 print('Truncated all tables')

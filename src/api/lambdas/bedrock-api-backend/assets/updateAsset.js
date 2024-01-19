@@ -143,9 +143,9 @@ async function addDependencies(assetName, body, client) {
   } catch (error) {
     throw new Error(`PG error deleting dependencies for update: ${pgErrorCodes[error.code]}`);
   }
-  if (body.dependencies.length > 0) {
-    for (let i = 0; i < body.dependencies.length; i += 1) {
-      const dependency = body.dependencies[i];
+  if (body.parents.length > 0) {
+    for (let i = 0; i < body.parents.length; i += 1) {
+      const dependency = body.parents[i];
       try {
         await client.query(
           'INSERT INTO dependencies (asset_name, dependency) VALUES ($1, $2)',
@@ -156,7 +156,7 @@ async function addDependencies(assetName, body, client) {
       }
     }
   }
-  return body.dependencies;
+  return body.parents;
 }
 
 async function addETL(assetName, body, client) {
@@ -311,8 +311,8 @@ async function updateAsset(requestBody, pathElements, queryParams, connection) {
   try {
     await client.query('BEGIN');
     result.result = await baseInsert(assetName, body, customFields, client);
-    if ('dependencies' in body) {
-      result.result.dependencies = await addDependencies(assetName, body, client);
+    if ('parents' in body) {
+      result.result.parents = await addDependencies(assetName, body, client);
     }
     if ('etl_run_group' in body || 'etl_active' in body) {
       etlInfo = await addETL(assetName, body, client);

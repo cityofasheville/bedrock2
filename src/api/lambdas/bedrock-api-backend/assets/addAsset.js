@@ -190,11 +190,11 @@ async function baseInsert(body, customFields, client) {
 }
 
 async function addDependencies(body, client) {
-  let dependencies;
+  let parents;
 
-  if ('dependencies' in body && body.dependencies.length > 0) {
-    for (let i = 0; i < body.dependencies.length; i += 1) {
-      const dependency = body.dependencies[i];
+  if ('parents' in body && body.parents.length > 0) {
+    for (let i = 0; i < body.parents.length; i += 1) {
+      const dependency = body.parents[i];
       try {
         await client.query(
           'INSERT INTO dependencies (asset_name, dependency) VALUES ($1, $2)',
@@ -206,9 +206,9 @@ async function addDependencies(body, client) {
         );
       }
     }
-    dependencies = body.dependencies;
+    parents = body.parents;
   }
-  return dependencies;
+  return parents;
 }
 
 async function addETL(body, client) {
@@ -351,7 +351,7 @@ async function addAsset(requestBody, pathElements, queryParams, connection) {
   try {
     await client.query('BEGIN');
     result.result = await baseInsert(body, customFields, client);
-    result.dependencies = await addDependencies(body, client);
+    result.result.parents = await addDependencies(body, client);
     ETLInfo = await addETL(body, client);
     result.result.etl_run_group = ETLInfo.etl_run_group;
     result.result.etl_active = ETLInfo.etl_active;
