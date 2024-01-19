@@ -118,6 +118,22 @@ with open(os.path.join(data_directory,'custom_fields.csv')) as ff:
 cur.execute(sql)
 print(f'Wrote {nrows} items to the custom fields table')
 
+# Load the owners
+sql = 'INSERT INTO bedrock.owners (owner_id, contact_name, contact_email, contact_phone, organization, department, division, notes) VALUES '
+with open(os.path.join(data_directory,'owners.csv')) as ff:
+  rdr = csv.reader(ff)
+  
+  i = 0;
+  rows = list(rdr)
+  nrows = len(rows)
+  for row in rows:
+    i = i+1
+    sql = f"{sql} ('{row[0]}', '{row[1]}', '{row[2]}', '{row[3]}', '{row[4]}', '{row[5]}', '{row[6]}', '{row[7]}')"
+    if (i<nrows):
+      sql = sql + ','
+cur.execute(sql)
+print(f'Wrote {nrows} items to the owners table')
+
 # Load the assets
 print('Load all assets')
 assets_directory = data_directory + '/assets'
