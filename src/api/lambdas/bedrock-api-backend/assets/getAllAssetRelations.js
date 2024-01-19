@@ -57,7 +57,7 @@ async function readRelations(client, assetName) {
     relations.ancestors.items.push(
       {
         asset_name: res.rows[i].asset_name,
-        dependency: res.rows[i].dependency,
+        parent: res.rows[i].dependency,
       },
     );
     if (!(res.rows[i].dependency in check)) {
@@ -87,7 +87,7 @@ async function readRelations(client, assetName) {
     relations.descendants.items.push(
       {
         asset_name: res.rows[i].asset_name,
-        dependency: res.rows[i].dependency,
+        parent: res.rows[i].dependency,
       },
     );
     if (!(res.rows[i].asset_name in check)) {

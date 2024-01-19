@@ -1,2 +1,2 @@
-"metric","period","text"
-"metric","disaggregations","text[]"
+"metric","period","Period", "text"
+"metric","disaggregations","Disaggregations", "text[]"

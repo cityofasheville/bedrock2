@@ -64,11 +64,11 @@ async function addInfo(res, fields, available) {
   for (let j = 0; j < fields.length; j += 1) {
     const itm = fields[j];
     if (available.includes(itm)) {
-      if (itm === 'dependencies') {
-        result.dependencies = [];
+      if (itm === 'parents') {
+        result.parents = [];
         for (let i = 0; i < res.length; i += 1) {
           if (res[i].dependency !== null) {
-            result.dependencies.push(res[i].dependency);
+            result.parents.push(res[i].dependency);
           }
         }
       } else if (itm === 'etl_run_group') {
@@ -143,7 +143,7 @@ async function getAsset(pathElements, queryParams, connection) {
     'owner_id',
     'notes',
     'tags',
-    'dependencies',
+    'parents',
     'etl_run_group',
     'etl_active',
   ];

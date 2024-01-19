@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS bedrock.custom_values;
+DROP TABLE IF EXISTS bedrock.custom_fields;
 DROP TABLE IF EXISTS bedrock.tasks;
 DROP TABLE IF EXISTS bedrock.tags;
 DROP TABLE IF EXISTS bedrock.run_groups;
@@ -6,6 +8,7 @@ DROP TABLE IF EXISTS bedrock.dependencies;
 DROP TABLE IF EXISTS bedrock.assets;
 DROP TABLE IF EXISTS bedrock.connections;
 DROP TYPE IF EXISTS bedrock.connections_classes;
+DROP TYPE IF EXISTS bedrock.task_types;
 DROP TABLE IF EXISTS bedrock.owners;
 DROP TABLE IF EXISTS bedrock.asset_tags;
 DROP SCHEMA IF EXISTS bedrock;
@@ -34,8 +37,7 @@ ALTER TABLE bedrock.asset_tags OWNER TO bedrock_user;
 GRANT ALL ON TABLE bedrock.asset_tags TO bedrock_user;
 
 CREATE TABLE bedrock.owners (
-  owner_id SERIAL PRIMARY KEY,
-  owner_name text NOT NULL,
+  owner_id text PRIMARY KEY,
   contact_name text NOT NULL,
   contact_email text NOT NULL,
   contact_phone text,
@@ -147,6 +149,7 @@ GRANT ALL ON TABLE bedrock.tasks TO bedrock_user;
 CREATE TABLE bedrock.custom_fields (
   asset_type text NOT NULL,
   field_name text NOT NULL,
+  field_display text NOT NULL, -- display name
   field_type text NOT NULL
 );
 

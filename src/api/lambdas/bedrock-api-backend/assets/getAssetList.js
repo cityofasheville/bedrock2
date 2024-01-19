@@ -107,7 +107,7 @@ async function getBase(offset, count, whereClause, client) {
         active: res.rows[i].active,
         etl_run_group: res.rows[i].run_group,
         etl_active: res.rows[i].etl_active,
-        dependencies: [],
+        parents: [],
       },
     );
   } 
@@ -261,7 +261,7 @@ async function getAssetList(domainName, pathElements, queryParams, connection) {
 
   for (let i = 0; i < res.rows.length; i += 1) {
     if (res.rows[i].asset_name in map) {
-      res.rows[i].dependencies = map[res.rows[i].asset_name];
+      res.rows[i].parents = map[res.rows[i].asset_name];
     }
   }
 

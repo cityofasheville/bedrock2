@@ -43,6 +43,7 @@ sql = f'''
   truncate table bedrock.connections;
   truncate table bedrock.custom_fields;
   truncate table bedrock.custom_values;
+  truncate table bedrock.owners;
 '''
 cur.execute(sql)
 print('Truncated all tables')
@@ -100,7 +101,7 @@ print(f'Wrote {nrows} items to the connections table')
 
 # Load the custom fields
 customs_map = {}
-sql = 'INSERT INTO bedrock.custom_fields (asset_type, field_name,	field_type) VALUES '
+sql = 'INSERT INTO bedrock.custom_fields (asset_type, field_name,	field_display, field_type) VALUES '
 with open(os.path.join(data_directory,'custom_fields.csv')) as ff:
   rdr = csv.reader(ff)
   
@@ -109,7 +110,7 @@ with open(os.path.join(data_directory,'custom_fields.csv')) as ff:
   nrows = len(rows)
   for row in rows:
     i = i+1
-    sql = f"{sql} ('{row[0]}', '{row[1]}', '{row[2]}')"
+    sql = f"{sql} ('{row[0]}', '{row[1]}', '{row[2]}', '{row[3]}')"
     if row[0] not in customs_map:
       customs_map[row[0]] = []
     customs_map[row[0]].append(row[1]);
@@ -117,6 +118,22 @@ with open(os.path.join(data_directory,'custom_fields.csv')) as ff:
       sql = sql + ','
 cur.execute(sql)
 print(f'Wrote {nrows} items to the custom fields table')
+
+# Load the owners
+sql = 'INSERT INTO bedrock.owners (owner_id, contact_name, contact_email, contact_phone, organization, department, division, notes) VALUES '
+with open(os.path.join(data_directory,'owners.csv')) as ff:
+  rdr = csv.reader(ff)
+  
+  i = 0;
+  rows = list(rdr)
+  nrows = len(rows)
+  for row in rows:
+    i = i+1
+    sql = f"{sql} ('{row[0]}', '{row[1]}', '{row[2]}', '{row[3]}', '{row[4]}', '{row[5]}', '{row[6]}', '{row[7]}')"
+    if (i<nrows):
+      sql = sql + ','
+cur.execute(sql)
+print(f'Wrote {nrows} items to the owners table')
 
 # Load the assets
 print('Load all assets')
