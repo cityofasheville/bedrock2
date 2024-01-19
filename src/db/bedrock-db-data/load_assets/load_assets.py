@@ -100,7 +100,7 @@ print(f'Wrote {nrows} items to the connections table')
 
 # Load the custom fields
 customs_map = {}
-sql = 'INSERT INTO bedrock.custom_fields (asset_type, field_name,	field_type) VALUES '
+sql = 'INSERT INTO bedrock.custom_fields (asset_type, field_name,	field_display, field_type) VALUES '
 with open(os.path.join(data_directory,'custom_fields.csv')) as ff:
   rdr = csv.reader(ff)
   
@@ -109,7 +109,7 @@ with open(os.path.join(data_directory,'custom_fields.csv')) as ff:
   nrows = len(rows)
   for row in rows:
     i = i+1
-    sql = f"{sql} ('{row[0]}', '{row[1]}', '{row[2]}')"
+    sql = f"{sql} ('{row[0]}', '{row[1]}', '{row[2]}', '{row[3]}')"
     if row[0] not in customs_map:
       customs_map[row[0]] = []
     customs_map[row[0]].append(row[1]);
