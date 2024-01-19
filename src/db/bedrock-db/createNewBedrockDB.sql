@@ -120,12 +120,19 @@ CREATE TABLE bedrock.tags (
 ALTER TABLE bedrock.tags OWNER TO bedrock_user;
 GRANT ALL ON TABLE bedrock.tags TO bedrock_user;
 
+CREATE TYPE bedrock.task_types AS ENUM (
+'aggregate', 
+'encrypt', 
+'file_copy', 
+'run_lambda', 
+'sql', 
+'table_copy');
 
 CREATE TABLE bedrock.tasks (
 	asset_name text NOT NULL,
 	seq_number int2 NOT NULL,
 	description text NULL,
-	"type" text NOT NULL,
+	"type" bedrock.task_types NOT NULL,
 	active bool NOT NULL,
 	"source" jsonb NULL,
 	target jsonb NULL,
