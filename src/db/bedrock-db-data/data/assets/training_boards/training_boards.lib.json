@@ -1,6 +1,6 @@
 {
   "asset_name": "training_boards.lib",
-  "display_name": null,
+  "display_name": "training_boards.lib",
   "description": "Training records for board and commission members",
   "location": {
     "tablename": "training_boards",

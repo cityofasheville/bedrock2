@@ -1,6 +1,6 @@
 {
   "asset_name": "google_info.mun",
-  "display_name": null,
+  "display_name": "google_info.mun",
   "description": "",
   "location": {
     "tablename": "Google_Info",

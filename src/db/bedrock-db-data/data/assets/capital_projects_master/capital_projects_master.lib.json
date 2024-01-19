@@ -1,6 +1,6 @@
 {
   "asset_name": "capital_projects_master.lib",
-  "display_name": null,
+  "display_name": "capital_projects_master.lib",
   "description": "Capital Projects General Project Information",
   "location": {
     "tablename": "capital_projects_master",

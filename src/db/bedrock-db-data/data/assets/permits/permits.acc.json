@@ -1,6 +1,6 @@
 {
   "asset_name": "permits.acc",
-  "display_name": null,
+  "display_name": "permits.acc",
   "description": "Permits data",
   "location": {
     "tablename": "permits",

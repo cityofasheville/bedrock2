@@ -1,6 +1,6 @@
 {
   "asset_name": "arag.ftp",
-  "display_name": null,
+  "display_name": "arag.ftp",
   "description": "Uploaded staff data to ARAG",
   "location": {
     "path": "/",

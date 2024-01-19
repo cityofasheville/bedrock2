@@ -1,6 +1,6 @@
 {
   "asset_name": "base_employee_position_temp.lib",
-  "display_name": null,
+  "display_name": "base_employee_position_temp.lib",
   "description": "",
   "location": {
     "tablename": "base_employee_position_temp",

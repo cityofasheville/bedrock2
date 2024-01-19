@@ -1,6 +1,6 @@
 {
   "asset_name": "google_info.pub",
-  "display_name": null,
+  "display_name": "google_info.pub",
   "description": "Google Group info",
   "location": {
     "tablename": "google_info",

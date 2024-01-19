@@ -1,6 +1,6 @@
 {
   "asset_name": "everbridge.emp.s3",
-  "display_name": null,
+  "display_name": "everbridge.emp.s3",
   "description": "",
   "location": {
     "path": "everbridge/",

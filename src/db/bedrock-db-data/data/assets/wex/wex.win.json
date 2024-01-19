@@ -1,6 +1,6 @@
 {
   "asset_name": "wex.win",
-  "display_name": null,
+  "display_name": "wex.win",
   "description": "Wex File on CityWorks Fleet file share",
   "location": {
     "path": "/wex/",

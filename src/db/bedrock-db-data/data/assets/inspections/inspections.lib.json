@@ -1,6 +1,6 @@
 {
   "asset_name": "inspections.lib",
-  "display_name": null,
+  "display_name": "inspections.lib",
   "description": "",
   "location": {
     "tablename": "inspections",

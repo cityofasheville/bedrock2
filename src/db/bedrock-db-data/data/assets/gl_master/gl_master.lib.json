@@ -1,6 +1,6 @@
 {
   "asset_name": "gl_master.lib",
-  "display_name": null,
+  "display_name": "gl_master.lib",
   "description": "Master general ledger history",
   "location": {
     "tablename": "gl_master",

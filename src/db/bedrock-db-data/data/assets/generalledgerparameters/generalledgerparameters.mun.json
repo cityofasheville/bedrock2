@@ -1,6 +1,6 @@
 {
   "asset_name": "generalledgerparameters.mun",
-  "display_name": null,
+  "display_name": "generalledgerparameters.mun",
   "description": "",
   "location": {
     "tablename": "GeneralLedgerParameters",

@@ -1,6 +1,6 @@
 {
   "asset_name": "turnover_employees.lib",
-  "display_name": null,
+  "display_name": "turnover_employees.lib",
   "description": "Report of Employees who were termed this month",
   "location": {
     "tablename": "turnover_employees",

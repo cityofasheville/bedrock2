@@ -1,6 +1,6 @@
 {
   "asset_name": "permit_contractors.pub",
-  "display_name": null,
+  "display_name": "permit_contractors.pub",
   "description": "Permit contractors data",
   "location": {
     "tablename": "permit_contractors",

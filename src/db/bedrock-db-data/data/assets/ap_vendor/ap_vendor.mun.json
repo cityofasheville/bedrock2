@@ -1,6 +1,6 @@
 {
   "asset_name": "ap_vendor.mun",
-  "display_name": null,
+  "display_name": "ap_vendor.mun",
   "description": "",
   "location": {
     "tablename": "ap_vendor",

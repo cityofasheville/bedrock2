@@ -1,6 +1,6 @@
 {
   "asset_name": "aip.ftp",
-  "display_name": null,
+  "display_name": "aip.ftp",
   "description": "Uploaded staff data to AIP/Allstate/InfoArmor",
   "location": {
     "path": "/home/asheville-5871-sftp/inbound/",

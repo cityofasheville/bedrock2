@@ -1,6 +1,6 @@
 {
   "asset_name": "paymentus_payment_history.s3",
-  "display_name": null,
+  "display_name": "paymentus_payment_history.s3",
   "description": "Paymentus Payment History",
   "location": {
     "path": "paymentus/",

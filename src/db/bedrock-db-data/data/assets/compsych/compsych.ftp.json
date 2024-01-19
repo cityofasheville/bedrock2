@@ -1,6 +1,6 @@
 {
   "asset_name": "compsych.ftp",
-  "display_name": null,
+  "display_name": "compsych.ftp",
   "description": "Uploaded staff data to ComPsych(SunLife)",
   "location": {
     "path": "/",

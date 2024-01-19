@@ -1,6 +1,6 @@
 {
   "asset_name": "wex.s3",
-  "display_name": null,
+  "display_name": "wex.s3",
   "description": "Wex File on s3",
   "location": {
     "path": "wex/",

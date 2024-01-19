@@ -1,6 +1,6 @@
 {
   "asset_name": "pcard_transaction.mun",
-  "display_name": null,
+  "display_name": "pcard_transaction.mun",
   "description": "PCard transaction",
   "location": {
     "tablename": "pcard_transaction",

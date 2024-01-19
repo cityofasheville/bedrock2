@@ -1,6 +1,6 @@
 {
   "asset_name": "sog_filter_run_volume.ncb",
-  "display_name": null,
+  "display_name": "sog_filter_run_volume.ncb",
   "description": "Water SOG Benchmark: Filter Run Volume",
   "location": {
     "tab": "filter_run_volume",

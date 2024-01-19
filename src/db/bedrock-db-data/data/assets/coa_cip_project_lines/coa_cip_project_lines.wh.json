@@ -1,6 +1,6 @@
 {
   "asset_name": "coa_cip_project_lines.wh",
-  "display_name": null,
+  "display_name": "coa_cip_project_lines.wh",
   "description": "",
   "location": {
     "tablename": "coa_cip_project_lines",

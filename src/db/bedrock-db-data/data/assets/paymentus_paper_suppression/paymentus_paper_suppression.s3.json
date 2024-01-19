@@ -1,6 +1,6 @@
 {
   "asset_name": "paymentus_paper_suppression.s3",
-  "display_name": null,
+  "display_name": "paymentus_paper_suppression.s3",
   "description": "",
   "location": {
     "path": "paymentus/",

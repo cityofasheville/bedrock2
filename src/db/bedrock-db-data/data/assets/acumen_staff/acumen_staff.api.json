@@ -1,6 +1,6 @@
 {
   "asset_name": "acumen_staff.api",
-  "display_name": null,
+  "display_name": "acumen_staff.api",
   "description": "Acumen Staff API",
   "location": {
     "connection": "acumen_api"

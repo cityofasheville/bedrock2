@@ -1,6 +1,6 @@
 {
   "asset_name": "sog_purchased_water_volume.ncb",
-  "display_name": null,
+  "display_name": "sog_purchased_water_volume.ncb",
   "description": "Water SOG Benchmark: Purchased Water Volume",
   "location": {
     "tab": "purchased_water_volume",

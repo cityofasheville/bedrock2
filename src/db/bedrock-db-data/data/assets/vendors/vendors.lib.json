@@ -1,6 +1,6 @@
 {
   "asset_name": "vendors.lib",
-  "display_name": null,
+  "display_name": "vendors.lib",
   "description": "City Vendors",
   "location": {
     "tablename": "vendors",

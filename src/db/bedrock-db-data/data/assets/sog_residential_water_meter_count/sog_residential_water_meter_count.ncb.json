@@ -1,6 +1,6 @@
 {
   "asset_name": "sog_residential_water_meter_count.ncb",
-  "display_name": null,
+  "display_name": "sog_residential_water_meter_count.ncb",
   "description": "Water SOG Benchmark: residential_water_meter_count",
   "location": {
     "tab": "residential_water_meter_count",

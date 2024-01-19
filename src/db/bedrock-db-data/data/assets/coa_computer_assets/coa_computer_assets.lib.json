@@ -1,6 +1,6 @@
 {
   "asset_name": "coa_computer_assets.lib",
-  "display_name": null,
+  "display_name": "coa_computer_assets.lib",
   "description": "Computers on our network",
   "location": {
     "tablename": "coa_computer_assets",

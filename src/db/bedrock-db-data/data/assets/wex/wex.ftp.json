@@ -1,6 +1,6 @@
 {
   "asset_name": "wex.ftp",
-  "display_name": null,
+  "display_name": "wex.ftp",
   "description": "Wex fleet data",
   "location": {
     "path": "/data/",

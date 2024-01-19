@@ -1,6 +1,6 @@
 {
   "asset_name": "coa_districts_zoning.lib",
-  "display_name": null,
+  "display_name": "coa_districts_zoning.lib",
   "description": "Asheville zoning districts",
   "location": {
     "tablename": "coa_districts_zoning",

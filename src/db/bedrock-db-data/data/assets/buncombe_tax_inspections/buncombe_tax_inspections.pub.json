@@ -1,6 +1,6 @@
 {
   "asset_name": "buncombe_tax_inspections.pub",
-  "display_name": null,
+  "display_name": "buncombe_tax_inspections.pub",
   "description": "",
   "location": {
     "tablename": "buncombe_tax_inspections",

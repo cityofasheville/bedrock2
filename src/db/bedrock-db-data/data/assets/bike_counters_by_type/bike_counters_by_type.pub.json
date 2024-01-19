@@ -1,6 +1,6 @@
 {
   "asset_name": "bike_counters_by_type.pub",
-  "display_name": null,
+  "display_name": "bike_counters_by_type.pub",
   "description": "Eco_Visio greenway pedestrian and bike counts-PublicDB",
   "location": {
     "tablename": "bike_counters_by_type",

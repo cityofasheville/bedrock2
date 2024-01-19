@@ -1,6 +1,6 @@
 {
   "asset_name": "aetna.ftp",
-  "display_name": null,
+  "display_name": "aetna.ftp",
   "description": "Uploaded staff data to Aetna",
   "location": {
     "path": "/AetnaSRC_Reports/toAetna/",

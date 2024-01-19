@@ -1,6 +1,6 @@
 {
   "asset_name": "training_students.lib",
-  "display_name": null,
+  "display_name": "training_students.lib",
   "description": "Student registrations for training classes",
   "location": {
     "tablename": "training_students",

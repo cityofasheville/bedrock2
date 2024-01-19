@@ -1,6 +1,6 @@
 {
   "asset_name": "coa_national_register_properties.lib",
-  "display_name": null,
+  "display_name": "coa_national_register_properties.lib",
   "description": "National register properties",
   "location": {
     "tablename": "coa_national_register_properties",

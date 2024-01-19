@@ -1,6 +1,6 @@
 {
   "asset_name": "pcard_transaction.lib",
-  "display_name": null,
+  "display_name": "pcard_transaction.lib",
   "description": "PCard transaction",
   "location": {
     "tablename": "pcard_transaction",

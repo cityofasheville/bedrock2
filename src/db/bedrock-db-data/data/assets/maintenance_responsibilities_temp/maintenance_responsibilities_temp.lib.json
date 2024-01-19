@@ -1,6 +1,6 @@
 {
   "asset_name": "maintenance_responsibilities_temp.lib",
-  "display_name": null,
+  "display_name": "maintenance_responsibilities_temp.lib",
   "description": "City Property Maintenance Responsibilities-Temp Table",
   "location": {
     "tablename": "maintenance_responsibilities_temp",

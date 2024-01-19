@@ -1,6 +1,6 @@
 {
   "asset_name": "aclara.ftp",
-  "display_name": null,
+  "display_name": "aclara.ftp",
   "description": "Uploaded Accounting data to Aclara",
   "location": {
     "path": "/AclaraAccountImportFiles/",

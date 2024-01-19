@@ -1,6 +1,6 @@
 {
   "asset_name": "nc_benchmarks.lib",
-  "display_name": null,
+  "display_name": "nc_benchmarks.lib",
   "description": "North Carolina Benchmarks",
   "location": {
     "tablename": "nc_benchmarks",

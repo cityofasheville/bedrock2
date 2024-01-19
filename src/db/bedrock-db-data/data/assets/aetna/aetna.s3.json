@@ -1,6 +1,6 @@
 {
   "asset_name": "aetna.s3",
-  "display_name": null,
+  "display_name": "aetna.s3",
   "description": "",
   "location": {
     "path": "aetna/",

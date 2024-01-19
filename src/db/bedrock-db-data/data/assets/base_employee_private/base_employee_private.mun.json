@@ -1,6 +1,6 @@
 {
   "asset_name": "base_employee_private.mun",
-  "display_name": null,
+  "display_name": "base_employee_private.mun",
   "description": "Standard Employee-Non public fields",
   "location": {
     "tablename": "base_employee_private",

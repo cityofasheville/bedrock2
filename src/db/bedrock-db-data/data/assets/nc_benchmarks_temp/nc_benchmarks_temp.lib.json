@@ -1,6 +1,6 @@
 {
   "asset_name": "nc_benchmarks_temp.lib",
-  "display_name": null,
+  "display_name": "nc_benchmarks_temp.lib",
   "description": "North Carolina Benchmarks-Temp Table",
   "location": {
     "tablename": "nc_benchmarks_temp",

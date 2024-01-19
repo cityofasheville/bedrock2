@@ -1,6 +1,6 @@
 {
   "asset_name": "dsd_first_review_sla.acc",
-  "display_name": null,
+  "display_name": "dsd_first_review_sla.acc",
   "description": "DSD first-review SLA performance",
   "location": {
     "tablename": "dsd_first_review_sla",

@@ -1,6 +1,6 @@
 {
   "asset_name": "coa_blockgroups.lib",
-  "display_name": null,
+  "display_name": "coa_blockgroups.lib",
   "description": "",
   "location": {
     "tablename": "coa_blockgroups",

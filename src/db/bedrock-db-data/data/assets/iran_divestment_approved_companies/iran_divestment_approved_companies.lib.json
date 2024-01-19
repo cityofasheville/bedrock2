@@ -1,6 +1,6 @@
 {
   "asset_name": "iran_divestment_approved_companies.lib",
-  "display_name": null,
+  "display_name": "iran_divestment_approved_companies.lib",
   "description": "Non-Iranian Companies with names similar to Iranian Companies",
   "location": {
     "tablename": "iran_divestment_approved_companies",

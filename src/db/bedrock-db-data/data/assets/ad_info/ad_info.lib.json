@@ -1,6 +1,6 @@
 {
   "asset_name": "ad_info.lib",
-  "display_name": null,
+  "display_name": "ad_info.lib",
   "description": "Active Directory info",
   "location": {
     "tablename": "ad_info",

@@ -1,6 +1,6 @@
 {
   "asset_name": "base_employee_position.mun",
-  "display_name": null,
+  "display_name": "base_employee_position.mun",
   "description": "Standard Employee Work fields: dept/supv/etc.",
   "location": {
     "tablename": "base_employee_position",

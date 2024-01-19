@@ -1,6 +1,6 @@
 {
   "asset_name": "coa_districts_water.lib",
-  "display_name": null,
+  "display_name": "coa_districts_water.lib",
   "description": "Asheville water districts",
   "location": {
     "tablename": "coa_districts_water",

@@ -1,6 +1,6 @@
 {
   "asset_name": "ub_water_customers_everbridge.mun",
-  "display_name": null,
+  "display_name": "ub_water_customers_everbridge.mun",
   "description": "",
   "location": {
     "tablename": "UB_Water_Customers_Everbridge",

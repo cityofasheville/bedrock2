@@ -1,6 +1,6 @@
 {
   "asset_name": "coa_blockgroups.wh",
-  "display_name": null,
+  "display_name": "coa_blockgroups.wh",
   "description": "",
   "location": {
     "tablename": "census_2015_blockgroups",

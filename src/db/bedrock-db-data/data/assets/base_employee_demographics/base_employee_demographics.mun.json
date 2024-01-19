@@ -1,6 +1,6 @@
 {
   "asset_name": "base_employee_demographics.mun",
-  "display_name": null,
+  "display_name": "base_employee_demographics.mun",
   "description": "Standard Employee - demographic data",
   "location": {
     "tablename": "base_employee_demographics",

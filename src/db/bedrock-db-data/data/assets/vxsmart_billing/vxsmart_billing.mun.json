@@ -1,6 +1,6 @@
 {
   "asset_name": "vxsmart_billing.mun",
-  "display_name": null,
+  "display_name": "vxsmart_billing.mun",
   "description": "",
   "location": {
     "tablename": "UB_AMI_VXSmart_Billing_Nightly",

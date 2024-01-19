@@ -1,6 +1,6 @@
 {
   "asset_name": "coa_zoning_overlays.lib",
-  "display_name": null,
+  "display_name": "coa_zoning_overlays.lib",
   "description": "Asheville zoning overlays",
   "location": {
     "tablename": "coa_zoning_overlays",

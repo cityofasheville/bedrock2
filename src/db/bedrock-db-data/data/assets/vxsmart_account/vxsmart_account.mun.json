@@ -1,6 +1,6 @@
 {
   "asset_name": "vxsmart_account.mun",
-  "display_name": null,
+  "display_name": "vxsmart_account.mun",
   "description": "",
   "location": {
     "tablename": "UB_AMI_VXSmart_Accounts_Nightly",

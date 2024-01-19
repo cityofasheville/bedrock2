@@ -1,6 +1,6 @@
 {
   "asset_name": "bc_property_pinnum_formatted_owner_names.lib",
-  "display_name": null,
+  "display_name": "bc_property_pinnum_formatted_owner_names.lib",
   "description": "Preprocessed owner names",
   "location": {
     "tablename": "bc_property_pinnum_formatted_owner_names",

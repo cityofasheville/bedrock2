@@ -1,6 +1,6 @@
 {
   "asset_name": "permit_custom_fields.lib",
-  "display_name": null,
+  "display_name": "permit_custom_fields.lib",
   "description": "Permit custom fields data ADD THIS depends BACK!!!! \"permits\"",
   "location": {
     "tablename": "permit_custom_fields",

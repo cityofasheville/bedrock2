@@ -1,6 +1,6 @@
 {
   "asset_name": "gl_budget.lib",
-  "display_name": null,
+  "display_name": "gl_budget.lib",
   "description": "Master budget table",
   "location": {
     "tablename": "gl_budget",

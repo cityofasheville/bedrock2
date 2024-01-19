@@ -1,6 +1,6 @@
 {
   "asset_name": "permit_owners.lib",
-  "display_name": null,
+  "display_name": "permit_owners.lib",
   "description": "Owners associated with permits",
   "location": {
     "tablename": "permit_owners",

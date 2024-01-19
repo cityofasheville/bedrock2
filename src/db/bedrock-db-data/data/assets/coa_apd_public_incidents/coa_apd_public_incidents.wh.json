@@ -1,6 +1,6 @@
 {
   "asset_name": "coa_apd_public_incidents.wh",
-  "display_name": null,
+  "display_name": "coa_apd_public_incidents.wh",
   "description": "",
   "location": {
     "tablename": "coa_apd_public_incidents",

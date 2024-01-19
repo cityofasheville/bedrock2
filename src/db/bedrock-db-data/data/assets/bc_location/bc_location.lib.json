@@ -1,6 +1,6 @@
 {
   "asset_name": "bc_location.lib",
-  "display_name": null,
+  "display_name": "bc_location.lib",
   "description": "Locations table from County",
   "location": {
     "tablename": "bc_location",

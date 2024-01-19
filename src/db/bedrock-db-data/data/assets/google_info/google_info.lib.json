@@ -1,6 +1,6 @@
 {
   "asset_name": "google_info.lib",
-  "display_name": null,
+  "display_name": "google_info.lib",
   "description": "",
   "location": {
     "tablename": "google_info",

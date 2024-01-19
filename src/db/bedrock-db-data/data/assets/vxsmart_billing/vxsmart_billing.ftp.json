@@ -1,6 +1,6 @@
 {
   "asset_name": "vxsmart_billing.ftp",
-  "display_name": null,
+  "display_name": "vxsmart_billing.ftp",
   "description": "Uploaded Billing data to vxsmart_billing",
   "location": {
     "path": "/uploads/",

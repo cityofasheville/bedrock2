@@ -1,6 +1,6 @@
 {
   "asset_name": "permit_comments.acc",
-  "display_name": null,
+  "display_name": "permit_comments.acc",
   "description": "Permit comments data",
   "location": {
     "tablename": "permit_comments",

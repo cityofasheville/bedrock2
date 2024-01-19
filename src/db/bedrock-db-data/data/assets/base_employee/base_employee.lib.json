@@ -1,6 +1,6 @@
 {
   "asset_name": "base_employee.lib",
-  "display_name": null,
+  "display_name": "base_employee.lib",
   "description": "Standard Employee",
   "location": {
     "tablename": "base_employee",

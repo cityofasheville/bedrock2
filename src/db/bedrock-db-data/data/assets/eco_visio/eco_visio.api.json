@@ -1,6 +1,6 @@
 {
   "asset_name": "eco_visio.api",
-  "display_name": null,
+  "display_name": "eco_visio.api",
   "description": "Eco-Visio (bike counters) API",
   "location": {
     "connection": "eco_visio_api"

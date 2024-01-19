@@ -1,6 +1,6 @@
 {
   "asset_name": "permit_review_times.acc",
-  "display_name": null,
+  "display_name": "permit_review_times.acc",
   "description": "Count days to review permits",
   "location": {
     "tablename": "permit_review_times",

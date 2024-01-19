@@ -1,6 +1,6 @@
 {
   "asset_name": "base_employee_sensitive_snapshots.lib",
-  "display_name": null,
+  "display_name": "base_employee_sensitive_snapshots.lib",
   "description": "Monthly Snapshots of employee_sensitive view",
   "location": {
     "tablename": "base_employee_sensitive_snapshots",

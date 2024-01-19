@@ -1,6 +1,6 @@
 {
   "asset_name": "inspections.pub",
-  "display_name": null,
+  "display_name": "inspections.pub",
   "description": "",
   "location": {
     "tablename": "inspections",

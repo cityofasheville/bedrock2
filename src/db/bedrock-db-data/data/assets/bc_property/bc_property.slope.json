@@ -1,6 +1,6 @@
 {
   "asset_name": "bc_property.slope",
-  "display_name": null,
+  "display_name": "bc_property.slope",
   "description": "Property table from County",
   "location": {
     "tablename": "bc_property",

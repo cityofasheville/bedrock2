@@ -1,6 +1,6 @@
 {
   "asset_name": "coa_street_maintenance.lib",
-  "display_name": null,
+  "display_name": "coa_street_maintenance.lib",
   "description": "Street Maintenance",
   "location": {
     "tablename": "coa_street_maintenance",

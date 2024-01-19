@@ -1,6 +1,6 @@
 {
   "asset_name": "nc_benchmarks.pub",
-  "display_name": null,
+  "display_name": "nc_benchmarks.pub",
   "description": "",
   "location": {
     "tablename": "nc_benchmarks",

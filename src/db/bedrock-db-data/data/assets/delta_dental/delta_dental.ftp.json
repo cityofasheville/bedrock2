@@ -1,6 +1,6 @@
 {
   "asset_name": "delta_dental.ftp",
-  "display_name": null,
+  "display_name": "delta_dental.ftp",
   "description": "Uploaded staff and customer data to Delta Dental",
   "location": {
     "path": "/in/",

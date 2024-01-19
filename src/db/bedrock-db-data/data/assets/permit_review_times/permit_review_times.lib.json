@@ -1,6 +1,6 @@
 {
   "asset_name": "permit_review_times.lib",
-  "display_name": null,
+  "display_name": "permit_review_times.lib",
   "description": "Count days to review permits",
   "location": {
     "tablename": "permit_review_times",

@@ -1,6 +1,6 @@
 {
   "asset_name": "vxsmart_billing.s3",
-  "display_name": null,
+  "display_name": "vxsmart_billing.s3",
   "description": "",
   "location": {
     "path": "vxsmart/",

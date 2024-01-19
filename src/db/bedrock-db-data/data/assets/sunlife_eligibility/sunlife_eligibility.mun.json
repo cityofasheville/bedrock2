@@ -1,6 +1,6 @@
 {
   "asset_name": "sunlife_eligibility.mun",
-  "display_name": null,
+  "display_name": "sunlife_eligibility.mun",
   "description": "",
   "location": {
     "tablename": "sunlife_eligibility",

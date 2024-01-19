@@ -1,6 +1,6 @@
 {
   "asset_name": "paymentus_suspended_accounts.mun",
-  "display_name": null,
+  "display_name": "paymentus_suspended_accounts.mun",
   "description": "Paymentus Suspended Accounts",
   "location": {
     "tablename": "ub_pm_suspended_accounts",

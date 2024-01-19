@@ -1,6 +1,6 @@
 {
   "asset_name": "workplans.pub",
-  "display_name": null,
+  "display_name": "workplans.pub",
   "description": "Organizational Work Plan",
   "location": {
     "tablename": "workplans",

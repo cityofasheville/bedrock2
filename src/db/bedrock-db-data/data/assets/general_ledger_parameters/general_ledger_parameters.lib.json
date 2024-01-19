@@ -1,6 +1,6 @@
 {
   "asset_name": "general_ledger_parameters.lib",
-  "display_name": null,
+  "display_name": "general_ledger_parameters.lib",
   "description": "Various GL parameters, especially budget year",
   "location": {
     "tablename": "general_ledger_parameters",

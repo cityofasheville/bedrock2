@@ -1,6 +1,6 @@
 {
   "asset_name": "business_resources.pub",
-  "display_name": null,
+  "display_name": "business_resources.pub",
   "description": "Planning and Development Business Resources-Public DB to be accessed from website",
   "location": {
     "tablename": "business_resources",

@@ -1,6 +1,6 @@
 {
   "asset_name": "sog_billed_water_volume.ncb",
-  "display_name": null,
+  "display_name": "sog_billed_water_volume.ncb",
   "description": "Water SOG Benchmark: Billed Water Volume",
   "location": {
     "tab": "billed_water_volume",

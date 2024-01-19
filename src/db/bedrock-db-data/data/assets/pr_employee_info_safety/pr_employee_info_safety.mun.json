@@ -1,6 +1,6 @@
 {
   "asset_name": "pr_employee_info_safety.mun",
-  "display_name": null,
+  "display_name": "pr_employee_info_safety.mun",
   "description": "",
   "location": {
     "tablename": "pr_employee_info_safety",

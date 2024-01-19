@@ -1,6 +1,6 @@
 {
   "asset_name": "maintenance_buildings.pub",
-  "display_name": null,
+  "display_name": "maintenance_buildings.pub",
   "description": "City Facility Maintenance Responsibilties Buildings",
   "location": {
     "tablename": "maintenance_buildings",

@@ -1,6 +1,6 @@
 {
   "asset_name": "permit_tasks.pub",
-  "display_name": null,
+  "display_name": "permit_tasks.pub",
   "description": "Permit tasks data",
   "location": {
     "tablename": "permit_tasks",

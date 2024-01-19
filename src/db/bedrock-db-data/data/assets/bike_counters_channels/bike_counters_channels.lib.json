@@ -1,6 +1,6 @@
 {
   "asset_name": "bike_counters_channels.lib",
-  "display_name": null,
+  "display_name": "bike_counters_channels.lib",
   "description": "",
   "location": {
     "tablename": "counters_channels",

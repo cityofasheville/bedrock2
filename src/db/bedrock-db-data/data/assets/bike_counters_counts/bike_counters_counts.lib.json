@@ -1,6 +1,6 @@
 {
   "asset_name": "bike_counters_counts.lib",
-  "display_name": null,
+  "display_name": "bike_counters_counts.lib",
   "description": "",
   "location": {
     "tablename": "counter_counts",

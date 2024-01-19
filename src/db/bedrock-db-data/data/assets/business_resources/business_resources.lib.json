@@ -1,6 +1,6 @@
 {
   "asset_name": "business_resources.lib",
-  "display_name": null,
+  "display_name": "business_resources.lib",
   "description": "",
   "location": {
     "tablename": "business_resources",

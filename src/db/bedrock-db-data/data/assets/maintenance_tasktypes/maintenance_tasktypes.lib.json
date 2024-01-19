@@ -1,6 +1,6 @@
 {
   "asset_name": "maintenance_tasktypes.lib",
-  "display_name": null,
+  "display_name": "maintenance_tasktypes.lib",
   "description": "City Facility Maintenance: Task Types",
   "location": {
     "tablename": "maintenance_tasktypes",

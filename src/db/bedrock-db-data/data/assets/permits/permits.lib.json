@@ -1,6 +1,6 @@
 {
   "asset_name": "permits.lib",
-  "display_name": null,
+  "display_name": "permits.lib",
   "description": "Permits data",
   "location": {
     "tablename": "permits",

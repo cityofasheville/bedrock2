@@ -1,6 +1,6 @@
 {
   "asset_name": "bc_civicaddress_table.wh",
-  "display_name": null,
+  "display_name": "bc_civicaddress_table.wh",
   "description": "Civic address table from County",
   "location": {
     "tablename": "bc_civicaddress_table",

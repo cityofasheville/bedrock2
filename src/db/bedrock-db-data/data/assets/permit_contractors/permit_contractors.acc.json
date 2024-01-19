@@ -1,6 +1,6 @@
 {
   "asset_name": "permit_contractors.acc",
-  "display_name": null,
+  "display_name": "permit_contractors.acc",
   "description": "Permit contractors data",
   "location": {
     "tablename": "permit_contractors",

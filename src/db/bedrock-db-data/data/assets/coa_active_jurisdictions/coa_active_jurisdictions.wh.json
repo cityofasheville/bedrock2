@@ -1,6 +1,6 @@
 {
   "asset_name": "coa_active_jurisdictions.wh",
-  "display_name": null,
+  "display_name": "coa_active_jurisdictions.wh",
   "description": "Asheville corporate limits",
   "location": {
     "tablename": "coa_active_jurisdictions",

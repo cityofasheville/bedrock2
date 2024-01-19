@@ -1,6 +1,6 @@
 {
   "asset_name": "mwbe_vendors_by_commodity.mun",
-  "display_name": null,
+  "display_name": "mwbe_vendors_by_commodity.mun",
   "description": "",
   "location": {
     "tablename": "mwbe_vendors_by_commodity",

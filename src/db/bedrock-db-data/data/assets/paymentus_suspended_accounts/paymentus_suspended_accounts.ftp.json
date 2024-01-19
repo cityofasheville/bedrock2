@@ -1,6 +1,6 @@
 {
   "asset_name": "paymentus_suspended_accounts.ftp",
-  "display_name": null,
+  "display_name": "paymentus_suspended_accounts.ftp",
   "description": "Paymentus Suspended Accounts",
   "location": {
     "path": "/suspended/",

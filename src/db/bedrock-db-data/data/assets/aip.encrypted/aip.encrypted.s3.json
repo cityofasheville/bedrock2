@@ -1,6 +1,6 @@
 {
   "asset_name": "aip.encrypted.s3",
-  "display_name": null,
+  "display_name": "aip.encrypted.s3",
   "description": "",
   "location": {
     "path": "aip/",

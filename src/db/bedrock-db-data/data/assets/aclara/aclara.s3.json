@@ -1,6 +1,6 @@
 {
   "asset_name": "aclara.s3",
-  "display_name": null,
+  "display_name": "aclara.s3",
   "description": "",
   "location": {
     "path": "aclara/",

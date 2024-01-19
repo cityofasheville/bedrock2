@@ -1,6 +1,6 @@
 {
   "asset_name": "paymentus_cif.mun",
-  "display_name": null,
+  "display_name": "paymentus_cif.mun",
   "description": "Paymentus CIF",
   "location": {
     "tablename": "ub_pm_cif_file",

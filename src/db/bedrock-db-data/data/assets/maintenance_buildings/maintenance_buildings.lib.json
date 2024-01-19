@@ -1,6 +1,6 @@
 {
   "asset_name": "maintenance_buildings.lib",
-  "display_name": null,
+  "display_name": "maintenance_buildings.lib",
   "description": "City Property Maintenance Responsibility Building List",
   "location": {
     "tablename": "maintenance_buildings",

@@ -1,6 +1,6 @@
 {
   "asset_name": "pr_city_employees_everbridge.mun",
-  "display_name": null,
+  "display_name": "pr_city_employees_everbridge.mun",
   "description": "",
   "location": {
     "tablename": "PR_City_Employees_Everbridge",

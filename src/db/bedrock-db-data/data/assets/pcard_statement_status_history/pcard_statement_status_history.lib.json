@@ -1,6 +1,6 @@
 {
   "asset_name": "pcard_statement_status_history.lib",
-  "display_name": null,
+  "display_name": "pcard_statement_status_history.lib",
   "description": "PCard transactions and status",
   "location": {
     "tablename": "pcard_statement_status_history",

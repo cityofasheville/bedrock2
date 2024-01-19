@@ -1,6 +1,6 @@
 {
   "asset_name": "cigna.ftp",
-  "display_name": null,
+  "display_name": "cigna.ftp",
   "description": "Uploaded staff data to Cigna",
   "location": {
     "path": "/Outbox/",

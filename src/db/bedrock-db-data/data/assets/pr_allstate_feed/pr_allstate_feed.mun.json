@@ -1,6 +1,6 @@
 {
   "asset_name": "pr_allstate_feed.mun",
-  "display_name": null,
+  "display_name": "pr_allstate_feed.mun",
   "description": "",
   "location": {
     "tablename": "PR_ALLSTATE_Feed",

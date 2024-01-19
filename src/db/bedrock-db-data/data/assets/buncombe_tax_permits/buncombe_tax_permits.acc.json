@@ -1,6 +1,6 @@
 {
   "asset_name": "buncombe_tax_permits.acc",
-  "display_name": null,
+  "display_name": "buncombe_tax_permits.acc",
   "description": "",
   "location": {
     "tablename": "BUNCOMBE_TAX_PERMITS",

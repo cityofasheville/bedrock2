@@ -1,6 +1,6 @@
 {
   "asset_name": "sog_filter_run_time.ncb",
-  "display_name": null,
+  "display_name": "sog_filter_run_time.ncb",
   "description": "Water SOG Benchmark: Filter Run Time",
   "location": {
     "tab": "filter_run_time",

@@ -1,6 +1,6 @@
 {
   "asset_name": "turnover_counts.lib",
-  "display_name": null,
+  "display_name": "turnover_counts.lib",
   "description": "",
   "location": {
     "tablename": "turnover_counts",

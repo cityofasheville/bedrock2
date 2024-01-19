@@ -1,6 +1,6 @@
 {
   "asset_name": "coa_zip_code.lib",
-  "display_name": null,
+  "display_name": "coa_zip_code.lib",
   "description": "Asheville zip code areas",
   "location": {
     "tablename": "coa_zip_code",

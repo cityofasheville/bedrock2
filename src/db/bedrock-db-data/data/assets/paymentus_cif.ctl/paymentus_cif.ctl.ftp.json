@@ -1,6 +1,6 @@
 {
   "asset_name": "paymentus_cif.ctl.ftp",
-  "display_name": null,
+  "display_name": "paymentus_cif.ctl.ftp",
   "description": "paymentus_cif control file",
   "location": {
     "path": "/input/",

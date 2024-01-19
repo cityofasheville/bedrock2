@@ -1,6 +1,6 @@
 {
   "asset_name": "bc_street.lib",
-  "display_name": null,
+  "display_name": "bc_street.lib",
   "description": "",
   "location": {
     "tablename": "bc_street",
