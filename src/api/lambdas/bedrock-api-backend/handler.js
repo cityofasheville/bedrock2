@@ -6,6 +6,8 @@ const { getDBConnection } = require('bedrock_common');
 
 const handleAssets = require('./assets/handleAssets');
 const handleRungroups = require('./rungroups/handleRungroups');
+const handleReference = require('./reference/handleReference');
+
 
 // eslint-disable-next-line camelcase
 const lambda_handler = async function x(event) {
@@ -39,6 +41,15 @@ const lambda_handler = async function x(event) {
         console.log('Error in handleAssets ', e);
       }
       break;
+
+      case 'reference':
+        try {
+          result = await handleReference(event, pathElements, queryParams || {}, verb, connection);
+        } catch (e) {
+          result.message = e;
+          console.log('Error in handleAssets ', e);
+        }
+        break;
 
     default:
       console.log('Unknown path ', pathElements[0]);
