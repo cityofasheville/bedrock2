@@ -42,14 +42,14 @@ const lambda_handler = async function x(event) {
       }
       break;
 
-      case 'reference':
-        try {
-          result = await handleReference(event, pathElements, queryParams || {}, verb, connection);
-        } catch (e) {
-          result.message = e;
-          console.log('Error in handleAssets ', e);
-        }
-        break;
+    case 'reference':
+      try {
+        result = await handleReference(event, pathElements, queryParams || {}, verb, connection);
+      } catch (e) {
+        result.message = e;
+        console.log('Error in handleReference ', e);
+      }
+      break;
 
     default:
       console.log('Unknown path ', pathElements[0]);

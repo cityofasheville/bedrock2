@@ -40,8 +40,8 @@ async function getInfo(client, info) {
   return resultArray;
 }
 
-async function getTasks(client) {
-  let sql = `SELECT * FROM bedrock.tasks`;
+async function getTaskType(client) {
+  let sql = `SELECT unnest(enum_range(NULL::task_types)) as task_type;`;
   let res;
   let resultArray = []
 
@@ -49,9 +49,25 @@ async function getTasks(client) {
   try {
     res = await client.query(sql, []);
     for (let i=0;i<res.rows.length;i++) {
-      if (!(resultArray.includes(res.rows[i].type))) {
-        resultArray.push(res.rows[i].type)
-      }
+      resultArray.push(res.rows[i]['task_type'])
+    }
+  } catch (error) {
+    throw new Error(`PG error getting tasks information: ${pgErrorCodes[error.code]}`);
+  }
+
+  return resultArray;
+}
+
+async function getConnectionClass(client) {
+  let sql = `SELECT unnest(enum_range(NULL::connections_classes)) as connection_class;`;
+  let res;
+  let resultArray = []
+
+  // We're only adding unique task types
+  try {
+    res = await client.query(sql, []);
+    for (let i=0;i<res.rows.length;i++) {
+      resultArray.push(res.rows[i]['connection_class'])
     }
   } catch (error) {
     throw new Error(`PG error getting tasks information: ${pgErrorCodes[error.code]}`);
@@ -130,9 +146,10 @@ async function getReference(domainName, pathElements, queryParams, connection) {
     }
   }
 
-  // Tasks gets its own function because we have to build the array differently
+  // Tasks and connections class gets their own functions because we have to build the array differently
   try {
-    result.result.tasks = await getTasks(client);
+    result.result.task_type = await getTaskType(client);
+    result.result.connection_class = await getConnectionClass(client);
   } catch (error) {
     await client.end();
     result.error = true;
@@ -143,6 +160,7 @@ async function getReference(domainName, pathElements, queryParams, connection) {
   // Custom fields also gets its own function because we're creating a map to return
   try {
     result.result.custom_fields = await getCustomFields(client);
+    await client.end()
   } catch (error) {
     await client.end();
     result.error = true;
