@@ -85,18 +85,20 @@ async function getCustomFields(client) {
     res = await client.query(sql, []);
 
     res.rows.forEach(item => {
-      const { asset_type, field_name, field_type } = item;
+      const { asset_type, field_name, field_display, field_type } = item;
       if (!resultMap[asset_type]) {
           resultMap[asset_type] = [
               {
                   "field_name": field_name,
-                  "field_type": field_type
+                  "field_type": field_type,
+                  "field_display": field_display
               }
           ];
       } else {
           resultMap[asset_type].push({
               "field_name": field_name,
-              "field_type": field_type
+              "field_type": field_type,
+              "field_display": field_display
           });
       }
   });
@@ -120,7 +122,7 @@ async function getReference(domainName, pathElements, queryParams, connection) {
   // or all the columns, just add it to this array
   queryInfo = [
   {table_name: 'run_groups', field_name: 'run_group_name'},
-  {table_name: 'tags', field_name: 'tag_name'},
+  {table_name: 'tags', field_name: 'all'},
   {table_name: 'connections', field_name: 'all'},
   {table_name: 'owners', field_name: 'all'},
 ]
