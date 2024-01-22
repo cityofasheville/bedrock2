@@ -187,17 +187,17 @@ for asset_subdir in os.listdir(assets_directory):
               cur.execute(sql, (asset_name, seq_number, description, type, task['active'], 
               None, json.dumps(task), None))
       elif file.endswith('.json'):
-        # configFile
+        # configFile - load the asset itself
         with open(os.path.join(d, file), 'r') as ff:
           config = json.load(ff)
           asset_name = config['asset_name']
           sql = f'''
             insert into bedrock.assets
-            (asset_name, description, location, owner_id, notes, active)
-            values(%s, %s, %s, %s, %s, %s);
+            (asset_name, display_name, description, location, asset_type, owner_id, notes, link, active)
+            values(%s, %s, %s, %s, %s, %s, %s, %s, %s);
           '''
           cur.execute(sql,
-          (asset_name, config["description"], json.dumps(config["location"]), config["owner_id"], config["notes"], config["active"]
+          (asset_name, config["display_name"], config["description"], json.dumps(config["location"]), config["asset_type"], config["owner_id"], config["notes"], config["link"], config["active"]
           ))
           
           # custom variables
