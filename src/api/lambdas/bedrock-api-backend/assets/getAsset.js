@@ -111,25 +111,6 @@ async function getAsset(pathElements, queryParams, connection) {
     message: '',
     result: null,
   };
-
-  let client;
-  try {
-    client = await newClient(connection);
-  } catch (error) {
-    result.error = true;
-    result.message = error.message;
-    return result;
-  }
-
-  let res;
-  try {
-    res = await readAsset(client, pathElements);
-  } catch (error) {
-    result.error = true;
-    result.message = error.message;
-    return result;
-  }
-
   let fields = null;
   let fieldsOverride = false;
   const available = [
@@ -147,7 +128,27 @@ async function getAsset(pathElements, queryParams, connection) {
     'etl_run_group',
     'etl_active',
   ];
-  // Use fields from the query if they're present, otherwise use all available fields
+
+  let client;
+  try {
+    client = await newClient(connection);
+  } catch (error) {
+    result.error = true;
+    result.message = error.message;
+    return result;
+  }
+
+  let res;
+  try {
+    res = await readAsset(client, pathElements);
+  } catch (error) {
+    await client.end();
+    result.error = true;
+    result.message = error.message;
+    return result;
+  }
+
+  // Use fields from the query if they're present, otherwise use all available
   if ('fields' in queryParams) {
     fields = queryParams.fields.replace('[', '').replace(']', '').split(',');
     fieldsOverride = true;
@@ -156,11 +157,19 @@ async function getAsset(pathElements, queryParams, connection) {
   }
 
   result.result = await addInfo(res, fields, available);
-  const customFields = await getCustomFields(client, res, fields, fieldsOverride);
-  if (customFields.length > 0) {
-    for (let i = 0; i < customFields.length; i += 1) {
-      result.result[customFields[i].field_name] = customFields[i].field_value;
+  try {
+    const customFields = await getCustomFields(client, res, fields, fieldsOverride);
+    if (customFields.length > 0) {
+      for (let i = 0; i < customFields.length; i += 1) {
+        result.result[customFields[i].field_name] = customFields[i].field_value;
+      }
     }
+  } catch (error) {
+    await client.end();
+    result.error = true;
+    result.message = error.message;
+    result.result = null;
+    return result;
   }
 
   if (fields === null || fields.includes('tags')) {
@@ -168,13 +177,14 @@ async function getAsset(pathElements, queryParams, connection) {
       res = await getTags(client, pathElements);
       result.result.tags = res;
     } catch (error) {
+      await client.end();
       result.error = true;
       result.message = error.message;
       result.result = null;
       return result;
     }
   }
-
+  client.end()
   return result;
  }
 
