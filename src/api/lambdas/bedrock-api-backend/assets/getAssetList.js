@@ -29,92 +29,76 @@ async function newClient(connection) {
   }
 }
 
-function buildOffset(queryParams) {
-  let offset = 0;
-  if ('offset' in queryParams) {
-    offset = queryParams.offset;
-  }
-  return offset;
-}
-
-function buildWhereClause(queryParams) {
+function createSqlWhereClause(queryParams) {
   const whereClause = {
     whereClause: '',
     sqlParams: [],
   };
-  const where = ' where';
-  whereClause.whereClause = '';
-
   if ('pattern' in queryParams) {
-    whereClause.whereClause += `${where} a.asset_name like $1`;
+    whereClause.whereClause = `where a.asset_name like $1`;
     whereClause.sqlParams.push(`%${queryParams.pattern}%`);
   }
   return whereClause;
 }
 
-async function getCount(whereClause, client) {
-  const sql = `SELECT count(*) FROM bedrock.assets a  ${whereClause.whereClause}`;
-  let res;
-
+async function getAssetCount(whereClause, client) {
+  const sql = `SELECT count(*) FROM bedrock.assets a ${whereClause.whereClause}`;
+  let sqlResult;
   try {
-    res = await client.query(sql, whereClause.sqlParams);
+    sqlResult = await client.query(sql, whereClause.sqlParams);
   } catch (error) {
     throw new Error(`PG error getting asset count: ${pgErrorCodes[error.code]}`);
   }
-  return Number(res.rows[0].count);
+  return Number(sqlResult.rows[0].count);
 }
 
-function buildCount(queryParams) {
-  let count = 25;
-  if ('count' in queryParams) {
-    count = queryParams.count;
-  }
-  return count;
-}
-
-async function getBase(offset, count, whereClause, client) {
-  let sql = 'SELECT a.*, e.run_group, e.active as etl_active, c.connection_class FROM bedrock.assets a';
-  sql += ' left join bedrock.etl e on a.asset_name = e.asset_name';
-  sql += ` left join bedrock.connections c on c.connection_name = a."location"->>'connection'`
-  sql += ` ${whereClause.whereClause}`;
-  sql += ' order by a.asset_name asc';
-  sql += ` offset ${offset} limit ${count} `;
-  let res;
-  const result = {
-    rows: [],
-    assets: [],
-  };
-
+async function readAssets(client, offset, count, whereClause) {
+  let sql = `
+    SELECT a.*, e.run_group as etl_run_group, e.active as etl_active,
+      c.connection_class FROM bedrock.assets a
+    left join bedrock.etl e on a.asset_name = e.asset_name
+    left join bedrock.connections c
+      on c.connection_name = a."location"->>'connection'
+    ${whereClause.whereClause}
+    order by a.asset_name asc
+    offset ${offset} limit ${count}
+  `;
+  let sqlResult;
   try {
-    res = await client.query(sql, whereClause.sqlParams);
+    sqlResult = await client.query(sql, whereClause.sqlParams);
   } catch (error) {
     throw new Error(`PG error getting asset base information: ${pgErrorCodes[error.code]}`);
   }
-
-  for (let i = 0; i < res.rowCount; i += 1) {
-    result.assets.push(`'${res.rows[i].asset_name}'`);
-    result.rows.push(
-      {
-        asset_name: res.rows[i].asset_name,
-        display_name: res.rows[i].display_name,
-        description: res.rows[i].description,
-        asset_type: res.rows[i].asset_type,
-        connection_class: res.rows[i].connection_class,
-        location: res.rows[i].location,
-        owner_id: res.rows[i].owner_id,
-        notes: res.rows[i].notes,
-        link: res.rows[i].link,
-        active: res.rows[i].active,
-        etl_run_group: res.rows[i].run_group,
-        etl_active: res.rows[i].etl_active,
-        parents: [],
-      },
-    );
-  } 
-  return result;
+  return sqlResult;
 }
 
-function buildURL(queryParams, domainName, res, offset, total, pathElements) {
+async function addBaseFields(assets, sqlResult, requestedFields, availableFields) {
+  for (let i = 0; i < sqlResult.rowCount; i += 1) {
+    const row = sqlResult.rows[i];
+    const assetName = row.asset_name;
+    assets.assetNames.push(`'${assetName}'`)
+    const asset = new Map();
+    assets.assetMap.set(assetName, asset);
+    asset.set('asset_name', row.asset_name);
+    asset.set('asset_type', row.asset_type);
+    
+    for (let j = 0; j < requestedFields.length; j += 1) {
+      const itm = requestedFields[j];
+      if (availableFields.includes(itm)) {
+        if (itm === 'parents') {
+          asset.set('parents', []);
+        } else if (itm === 'tags') {
+          asset.set('tags', []);
+        } else {
+          asset.set(itm, row[itm]);
+        }
+      }
+    }
+  }
+  return assets;
+}
+
+function buildURL(queryParams, domainName, rowsReadCount, offset, total, pathElements) {
   let qPrefix = '?';
   let qParams = '';
   if ('pattern' in queryParams) {
@@ -134,17 +118,41 @@ function buildURL(queryParams, domainName, res, offset, total, pathElements) {
     qPrefix = '&';
   }
   let url = null;
-  if (offset + res.rowCount < total) {
-    const newOffset = parseInt(offset, 10) + res.rowCount;
+  if (offset + rowsReadCount < total) {
+    const newOffset = parseInt(offset, 10) + rowsReadCount;
     url = `https://${domainName}/${pathElements.join('/')}${qParams}`;
     url += `${qPrefix}offset=${newOffset.toString()}`;
   }
   return url;
 }
 
-async function getDependencies(assets, client) {
+async function addCustomFields(client, assets, requestedFields, overrideFields) {
+  const sql = `
+    select asset_name, field_name, field_value from bedrock.custom_values
+    where asset_name in (${assets.assetNames.join()})
+  `;
+  let sqlResult;
+  try {
+    sqlResult = await client.query(sql);
+  } catch (error) {
+    throw new Error(`PG error getting asset custom values: ${pgErrorCodes[error.code]}`);
+  }
+
+  for (let i = 0; i < sqlResult.rowCount; i += 1) {
+    const row = sqlResult.rows[i];
+    if (!overrideFields || requestedFields.includes(row.field_name)) {
+      assets.assetMap.get(row.asset_name).set(row.field_name, row.field_value);
+    }
+  }
+  return;
+}
+
+async function addDependencies(client, assets) {
   let res;
-  const sql = `select asset_name, dependency from bedrock.dependencies where asset_name in (${assets.join()})`;
+  const sql = `
+    select asset_name, dependency from bedrock.dependencies
+    where asset_name in (${assets.assetNames.join()})
+  `;
 
   try {
     res = await client.query(sql);
@@ -152,128 +160,103 @@ async function getDependencies(assets, client) {
     throw new Error(`PG error getting asset dependencies: ${pgErrorCodes[error.code]}`);
   }
 
-  const map = {};
-  if (res.rowCount > 0) {
-    for (let i = 0; i < res.rowCount; i += 1) {
-      if (res.rows[i].asset_name in map) {
-        map[res.rows[i].asset_name].push(res.rows[i].dependency);
-      } else {
-        map[res.rows[i].asset_name] = [res.rows[i].dependency];
-      }
-    }
+  for (let i = 0; i < res.rowCount; i += 1) {
+    const row = res.rows[i];
+    assets.assetMap.get(row.asset_name).get('parents').push(row.dependency);
   }
-  return map;
-}
-
-async function getCustomFields(assets, client) {
-  let res;
-  const sql = `select asset_name, field_name, field_value from bedrock.custom_values where asset_name in (${assets.join()})`;
-
-  try {
-    res = await client.query(sql);
-  } catch (error) {
-    throw new Error(`PG error getting asset custom values: ${pgErrorCodes[error.code]}`);
-  }
-
-  const map = {};
-  if (res.rowCount > 0) {
-    for (let i = 0; i < res.rowCount; i += 1) {
-      if (res.rows[i].asset_name in map) {
-        map[res.rows[i].asset_name].push(res.rows[i]);
-      } else {
-        map[res.rows[i].asset_name] = [res.rows[i]];
-      }
-    }
-  }
-  return map;
+  return;
 }
 
 async function getAssetList(domainName, pathElements, queryParams, connection) {
-  const result = {
+  const availableFields = [
+    'display_name',
+    'description',
+    'connection_class',
+    'location',
+    'link',
+    'active',
+    'owner_id',
+    'notes',
+    'tags',
+    'parents',
+    'etl_run_group',
+    'etl_active',
+  ];
+
+  // Use fields from the query if they're present, otherwise use all available
+  let requestedFields = null;
+  if ('fields' in queryParams) {
+    requestedFields = queryParams.fields.replace('[', '').replace(']', '').split(',');
+  } else {
+    requestedFields = [...availableFields];
+  }
+  let client;
+  const count = ('count' in queryParams) ? queryParams.count : 25;
+  const offset = ('offset' in queryParams) ? queryParams.offset : 0;
+  const whereClause = createSqlWhereClause(queryParams);
+  const response = {
     error: false,
     message: checkParameters(queryParams),
-    result: null,
+    result: {
+      items: [],
+      offset,
+      count,
+      total: 0,
+      url: null,
+    }
   };
-
-  let client;
-  let total;
-  let res;
-  let url;
-  let map;
-  const count = buildCount(queryParams);
-  const offset = buildOffset(queryParams);
-  const whereClause = buildWhereClause(queryParams);
 
   try {
     client = await newClient(connection);
   } catch (error) {
-    result.error = true;
-    result.message = error.message;
-    return result;
+    response.error = true;
+    response.message = error.message;
+    response.result = null;
+    return response;
   }
 
   try {
-    total = await getCount(whereClause, client);
-    if (total === 0) {
-      result.message = 'No assets found.';
-      result.result = {
-        items: [],
-        offset,
-        count: 0,
-        total,
-        url,
-      };
-      return result;
+    // Get the total asset count. If 0, return early.
+    response.result.total = await getAssetCount(whereClause, client);
+    if (response.result.total === 0) {
+      client.end();
+      response.message = 'No assets found.';
+      return response;
     }
-    res = await getBase(offset, count, whereClause, client);
-    url = buildURL(queryParams, domainName, res, offset, total, pathElements);
+
+    // Read the base fields
+    const overrideFields = ('fields' in queryParams);
+    const sqlResult = await readAssets(client, offset, count, whereClause);
+    const assets = {
+      count: sqlResult.rowCount,
+      assetNames: [],
+      assetMap: new Map(),
+    };
+    response.result.count = assets.count;
+
+    // Build the asset list
+    await addBaseFields(assets, sqlResult, requestedFields, availableFields);
+    await addCustomFields(client, assets, requestedFields, overrideFields);
+    if ('parents' in requestedFields) {
+      await addDependencies(client, assets);
+    }
+
+    // Now package up all the assets
+    for (let [assetName, asset] of assets.assetMap) {
+      response.result.items.push(Object.fromEntries(asset.entries()));
+    }
+
+    response.result.url = buildURL(queryParams, domainName, assets.count, offset, response.result.total, pathElements);
+
   } catch (error) {
     await client.end();
-    result.error = true;
-    result.message = error.message;
-    return result;
+    response.error = true;
+    response.message = error.message;
+    response.result = null;
+    return response;
   }
-  try {
-    map = await getCustomFields(res.assets, client);
-    for (let i = 0; i < res.rows.length; i += 1) {
-      if (res.rows[i].asset_name in map) {
-        const customFields = map[res.rows[i].asset_name];
-        for (let j = 0; j < customFields.length; j += 1) {
-          res.rows[i][customFields[j]['field_name']] = customFields[j]['field_value']
-        }
-      }
-    }
-  } catch (error) {
-    await client.end();
-    result.error = true;
-    result.message = error.message;
-    return result;
-  }
-
-  try {
-    map = await getDependencies(res.assets, client);
-  } catch (error) {
-    await client.end();
-    result.error = true;
-    result.message = error.message;
-    return result;
-  }
-
-  for (let i = 0; i < res.rows.length; i += 1) {
-    if (res.rows[i].asset_name in map) {
-      res.rows[i].parents = map[res.rows[i].asset_name];
-    }
-  }
-
-  result.result = {
-    items: res.rows,
-    offset,
-    count: res.rows.length,
-    total,
-    url,
-  };
-
-  return result;
+  await client.end();
+  return response;
 }
 
 module.exports = getAssetList;

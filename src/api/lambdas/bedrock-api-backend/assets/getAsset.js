@@ -80,6 +80,7 @@ async function addBaseFields(asset, assetRows, requestedFields, available) {
   }
   return;
 }
+
 async function addTags(client, asset, pathElements) {
   const tags = [];
   const res = await client
@@ -117,16 +118,16 @@ async function getAsset(pathElements, queryParams, connection) {
     'etl_run_group',
     'etl_active',
   ];
-  const result = {
+  const response = {
     error: false,
     message: '',
     result: null,
   };
   const asset = new Map();
-  let requestedFields = null;
   let client;
 
   // Use fields from the query if they're present, otherwise use all available
+  let requestedFields = null;
   if ('fields' in queryParams) {
     requestedFields = queryParams.fields.replace('[', '').replace(']', '').split(',');
   } else {
@@ -136,9 +137,9 @@ async function getAsset(pathElements, queryParams, connection) {
   try {
     client = await newClient(connection);
   } catch (error) {
-    result.error = true;
-    result.message = error.message;
-    return result;
+    response.error = true;
+    response.message = error.message;
+    return response;
   }
 
   try {
@@ -152,15 +153,15 @@ async function getAsset(pathElements, queryParams, connection) {
     }
   } catch (error) {
     await client.end();
-    result.error = true;
-    result.message = error.message;
-    return result;
+    response.error = true;
+    response.message = error.message;
+    return response;
   }
 
   await client.end()
   // Convert the map back to an object
-  result.result = Object.fromEntries(asset.entries());
-  return result;
+  response.result = Object.fromEntries(asset.entries());
+  return response;
  }
 
 module.exports = getAsset;
