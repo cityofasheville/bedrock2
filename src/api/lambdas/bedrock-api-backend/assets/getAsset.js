@@ -60,6 +60,7 @@ async function getCustomFields(client, assetRows, fields, fieldsOverride) {
 async function addInfo(res, fields, available) {
   const result = {
     asset_name: res[0].asset_name,
+    asset_type: res[0].asset_type,
   };
   for (let j = 0; j < fields.length; j += 1) {
     const itm = fields[j];
@@ -106,16 +107,15 @@ async function getTags(client, pathElements) {
 }
 
 async function getAsset(pathElements, queryParams, connection) {
+  console.log('In getAsset');
   const result = {
     error: false,
     message: '',
     result: null,
   };
-  let fields = null;
-  let fieldsOverride = false;
+  const asset = new Map();
   const available = [
     'display_name',
-    'asset_type',
     'description',
     'connection_class',
     'location',
@@ -128,8 +128,19 @@ async function getAsset(pathElements, queryParams, connection) {
     'etl_run_group',
     'etl_active',
   ];
-
+  let requestedFields = null;
+  let fieldsOverride = false;
+  console.log('Check fields');
+  // Use fields from the query if they're present, otherwise use all available
+  if ('fields' in queryParams) {
+    requestedFields = queryParams.fields.replace('[', '').replace(']', '').split(',');
+    fieldsOverride = true;
+  } else {
+    requestedFields = [...available];
+  }
+  console.log('Got fields: ', requestedFields);
   let client;
+
   try {
     client = await newClient(connection);
   } catch (error) {
@@ -148,17 +159,9 @@ async function getAsset(pathElements, queryParams, connection) {
     return result;
   }
 
-  // Use fields from the query if they're present, otherwise use all available
-  if ('fields' in queryParams) {
-    fields = queryParams.fields.replace('[', '').replace(']', '').split(',');
-    fieldsOverride = true;
-  } else {
-    fields = [...available];
-  }
-
-  result.result = await addInfo(res, fields, available);
+  result.result = await addInfo(res, requestedFields, available);
   try {
-    const customFields = await getCustomFields(client, res, fields, fieldsOverride);
+    const customFields = await getCustomFields(client, res, requestedFields, fieldsOverride);
     if (customFields.length > 0) {
       for (let i = 0; i < customFields.length; i += 1) {
         result.result[customFields[i].field_name] = customFields[i].field_value;
@@ -172,7 +175,7 @@ async function getAsset(pathElements, queryParams, connection) {
     return result;
   }
 
-  if (fields === null || fields.includes('tags')) {
+  if (requestedFields === null || requestedFields.includes('tags')) {
     try {
       res = await getTags(client, pathElements);
       result.result.tags = res;
