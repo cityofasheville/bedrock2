@@ -23,9 +23,8 @@ async function readAsset(client, pathElements) {
   try {
     res = await client.query(sql, [pathElements[1]]);
   } catch (error) {
-    throw new Error(
-      `PG error getting asset information: ${pgErrorCodes[error.code]}`,
-    );
+    console.log(`PG error getting asset information: ${pgErrorCodes[error.code]}`);
+    throw new Error(`PG error getting asset information: ${pgErrorCodes[error.code]}`);
   }
   if (res.rowCount === 0) {
     throw new Error('Asset not found');
@@ -33,55 +32,53 @@ async function readAsset(client, pathElements) {
   return res.rows;
 }
 
-async function getCustomFields(client, assetRows, fields, fieldsOverride) {
-  let res;
-  let customFields = [];
-  if ('asset_type' in assetRows[0] && assetRows[0].asset_type !== null) {
+async function addCustomFields(client, asset, requestedFields, fieldsOverride) {
+  if (asset.get('asset_type') !== null) {
+    let res;
     const sql = 'SELECT field_name, field_value from bedrock.custom_values where asset_name like $1';
     try {
-      res = await client.query(sql, [assetRows[0].asset_name]);
+      res = await client.query(sql, [asset.get('asset_name')]);
     } catch (error) {
+      console.log(`PG error getting custom fields: ${pgErrorCodes[error.code]}`);
       throw new Error(
-        `PG error getting custom fields: ${pgErrorCodes[error.code]}`,
-      );
+        `PG error getting custom fields: ${pgErrorCodes[error.code]}`);
     }
     if (res.rowCount > 0) {
       for (let i = 0; i < res.rowCount; i += 1) {
-        if (!fieldsOverride || fields.includes(res.rows[i].field_name)) {
-          customFields.push(res.rows[i]);
+        if (!fieldsOverride || requestedFields.includes(res.rows[i].field_name)) {
+          asset.set(res.rows[i].field_name, res.rows[i].field_value);
         }
       }
     }
   }
-
-  return customFields;
+  return;
 }
 
-async function addInfo(res, fields, available) {
-  const result = {
-    asset_name: res[0].asset_name,
-    asset_type: res[0].asset_type,
-  };
-  for (let j = 0; j < fields.length; j += 1) {
-    const itm = fields[j];
+async function addBaseFields(asset, assetRows, requestedFields, available) {
+  asset.set('asset_name', assetRows[0].asset_name);
+  asset.set('asset_type', assetRows[0].asset_type);
+  
+  for (let j = 0; j < requestedFields.length; j += 1) {
+    const itm = requestedFields[j];
     if (available.includes(itm)) {
       if (itm === 'parents') {
-        result.parents = [];
-        for (let i = 0; i < res.length; i += 1) {
-          if (res[i].dependency !== null) {
-            result.parents.push(res[i].dependency);
+        let parents = [];
+        for (let i = 0; i < assetRows.length; i += 1) {
+          if (assetRows[i].dependency !== null) {
+            parents.push(assetRows[i].dependency);
           }
         }
+        asset.set('parents', parents);
       } else if (itm === 'etl_run_group') {
-        result[itm] = res[0].run_group;
+        asset.set('etl_run_group', assetRows[0].run_group);
       } else if (itm === 'tags') {
-        result[itm] = [];
+        asset.set('tags', []);
       } else {
-        result[itm] = res[0][itm];
+        asset.set(itm, assetRows[0][itm]);
       }
     }
   }
-  return result;
+  return;
 }
 
 async function getTags(client, pathElements) {
@@ -91,9 +88,8 @@ async function getTags(client, pathElements) {
       pathElements[1],
     ])
     .catch((error) => {
-      throw new Error(
-        `PG error getting asset_tags: ${pgErrorCodes[error.code]}`,
-      );
+      console.log(`PG error getting asset_tags: ${pgErrorCodes[error.code]}`);
+      throw new Error(`PG error getting asset_tags: ${pgErrorCodes[error.code]}`);
     });
   await client.end();
   if (res.rowCount > 0) {
@@ -107,13 +103,11 @@ async function getTags(client, pathElements) {
 }
 
 async function getAsset(pathElements, queryParams, connection) {
-  console.log('In getAsset');
   const result = {
     error: false,
     message: '',
     result: null,
   };
-  const asset = new Map();
   const available = [
     'display_name',
     'description',
@@ -128,18 +122,16 @@ async function getAsset(pathElements, queryParams, connection) {
     'etl_run_group',
     'etl_active',
   ];
+  const asset = new Map();
   let requestedFields = null;
-  let fieldsOverride = false;
-  console.log('Check fields');
+  let client;
+
   // Use fields from the query if they're present, otherwise use all available
   if ('fields' in queryParams) {
     requestedFields = queryParams.fields.replace('[', '').replace(']', '').split(',');
-    fieldsOverride = true;
   } else {
     requestedFields = [...available];
   }
-  console.log('Got fields: ', requestedFields);
-  let client;
 
   try {
     client = await newClient(connection);
@@ -149,9 +141,14 @@ async function getAsset(pathElements, queryParams, connection) {
     return result;
   }
 
-  let res;
   try {
-    res = await readAsset(client, pathElements);
+    const assetRows = await readAsset(client, pathElements);
+    await addBaseFields(asset, assetRows, requestedFields, available);
+    await addCustomFields(client, asset, requestedFields, ('fields' in queryParams));
+    if (requestedFields === null || requestedFields.includes('tags')) {
+      const tags = await getTags(client, pathElements);
+      asset.set('tags', tags);
+    }
   } catch (error) {
     await client.end();
     result.error = true;
@@ -159,35 +156,8 @@ async function getAsset(pathElements, queryParams, connection) {
     return result;
   }
 
-  result.result = await addInfo(res, requestedFields, available);
-  try {
-    const customFields = await getCustomFields(client, res, requestedFields, fieldsOverride);
-    if (customFields.length > 0) {
-      for (let i = 0; i < customFields.length; i += 1) {
-        result.result[customFields[i].field_name] = customFields[i].field_value;
-      }
-    }
-  } catch (error) {
-    await client.end();
-    result.error = true;
-    result.message = error.message;
-    result.result = null;
-    return result;
-  }
-
-  if (requestedFields === null || requestedFields.includes('tags')) {
-    try {
-      res = await getTags(client, pathElements);
-      result.result.tags = res;
-    } catch (error) {
-      await client.end();
-      result.error = true;
-      result.message = error.message;
-      result.result = null;
-      return result;
-    }
-  }
   client.end()
+  result.result = Object.fromEntries(asset.entries());
   return result;
  }
 
