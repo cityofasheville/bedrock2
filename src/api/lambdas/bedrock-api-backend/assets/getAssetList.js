@@ -98,34 +98,6 @@ async function addBaseFields(assets, sqlResult, requestedFields, availableFields
   return assets;
 }
 
-function buildURL(queryParams, domainName, rowsReadCount, offset, total, pathElements) {
-  let qPrefix = '?';
-  let qParams = '';
-  if ('pattern' in queryParams) {
-    qParams += `${qPrefix}pattern=${queryParams.pattern}`;
-    qPrefix = '&';
-  }
-  if ('rungroups' in queryParams) {
-    qParams += `${qPrefix}rungroups=${queryParams.rungroups}`;
-    qPrefix = '&';
-  }
-  if ('period' in queryParams) {
-    qParams += `${qPrefix}period=${queryParams.period}`;
-    qPrefix = '&';
-  }
-  if ('count' in queryParams) {
-    qParams += `${qPrefix}count=${queryParams.count}`;
-    qPrefix = '&';
-  }
-  let url = null;
-  if (offset + rowsReadCount < total) {
-    const newOffset = parseInt(offset, 10) + rowsReadCount;
-    url = `https://${domainName}/${pathElements.join('/')}${qParams}`;
-    url += `${qPrefix}offset=${newOffset.toString()}`;
-  }
-  return url;
-}
-
 async function addCustomFields(client, assets, requestedFields, overrideFields) {
   const sql = `
     select asset_name, field_name, field_value from bedrock.custom_values
@@ -165,6 +137,34 @@ async function addDependencies(client, assets) {
     assets.assetMap.get(row.asset_name).get('parents').push(row.dependency);
   }
   return;
+}
+
+function buildURL(queryParams, domainName, rowsReadCount, offset, total, pathElements) {
+  let qPrefix = '?';
+  let qParams = '';
+  if ('pattern' in queryParams) {
+    qParams += `${qPrefix}pattern=${queryParams.pattern}`;
+    qPrefix = '&';
+  }
+  if ('rungroups' in queryParams) {
+    qParams += `${qPrefix}rungroups=${queryParams.rungroups}`;
+    qPrefix = '&';
+  }
+  if ('period' in queryParams) {
+    qParams += `${qPrefix}period=${queryParams.period}`;
+    qPrefix = '&';
+  }
+  if ('count' in queryParams) {
+    qParams += `${qPrefix}count=${queryParams.count}`;
+    qPrefix = '&';
+  }
+  let url = null;
+  if (offset + rowsReadCount < total) {
+    const newOffset = parseInt(offset, 10) + rowsReadCount;
+    url = `https://${domainName}/${pathElements.join('/')}${qParams}`;
+    url += `${qPrefix}offset=${newOffset.toString()}`;
+  }
+  return url;
 }
 
 async function getAssetList(domainName, pathElements, queryParams, connection) {
