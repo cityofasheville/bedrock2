@@ -80,8 +80,7 @@ async function addBaseFields(asset, assetRows, requestedFields, available) {
   }
   return;
 }
-
-async function getTags(client, pathElements) {
+async function addTags(client, asset, pathElements) {
   const tags = [];
   const res = await client
     .query('SELECT * from bedrock.asset_tags where asset_name like $1', [
@@ -99,16 +98,12 @@ async function getTags(client, pathElements) {
       }
     }
   }
-  return tags;
+  asset.set('tags', tags);
+  return;
 }
 
 async function getAsset(pathElements, queryParams, connection) {
-  const result = {
-    error: false,
-    message: '',
-    result: null,
-  };
-  const available = [
+  const availableFields = [
     'display_name',
     'description',
     'connection_class',
@@ -122,6 +117,11 @@ async function getAsset(pathElements, queryParams, connection) {
     'etl_run_group',
     'etl_active',
   ];
+  const result = {
+    error: false,
+    message: '',
+    result: null,
+  };
   const asset = new Map();
   let requestedFields = null;
   let client;
@@ -130,7 +130,7 @@ async function getAsset(pathElements, queryParams, connection) {
   if ('fields' in queryParams) {
     requestedFields = queryParams.fields.replace('[', '').replace(']', '').split(',');
   } else {
-    requestedFields = [...available];
+    requestedFields = [...availableFields];
   }
 
   try {
@@ -142,12 +142,13 @@ async function getAsset(pathElements, queryParams, connection) {
   }
 
   try {
+    const overrideFields = ('fields' in queryParams);
+
     const assetRows = await readAsset(client, pathElements);
-    await addBaseFields(asset, assetRows, requestedFields, available);
-    await addCustomFields(client, asset, requestedFields, ('fields' in queryParams));
-    if (requestedFields === null || requestedFields.includes('tags')) {
-      const tags = await getTags(client, pathElements);
-      asset.set('tags', tags);
+    await addBaseFields(asset, assetRows, requestedFields, availableFields);
+    await addCustomFields(client, asset, requestedFields, overrideFields);
+    if (requestedFields.includes('tags')) {
+      await addTags(client, asset, pathElements);
     }
   } catch (error) {
     await client.end();
@@ -156,7 +157,8 @@ async function getAsset(pathElements, queryParams, connection) {
     return result;
   }
 
-  client.end()
+  await client.end()
+  // Convert the map back to an object
   result.result = Object.fromEntries(asset.entries());
   return result;
  }
