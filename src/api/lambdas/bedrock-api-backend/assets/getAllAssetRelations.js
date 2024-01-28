@@ -103,7 +103,7 @@ async function getAllAssetRelations(pathElements, queryParams, connection) {
   let client;
   let relations;
   let res;
-  const result = {
+  const response = {
     error: false,
     message: '',
     result: {
@@ -121,34 +121,34 @@ async function getAllAssetRelations(pathElements, queryParams, connection) {
   try {
     client = await newClient(connection);
   } catch (error) {
-    result.error = true;
-    result.message = error.message;
-    return result;
+    response.error = true;
+    response.message = error.message;
+    return response;
   }
 
   try {
     res = await readAsset(client, assetName);
     if (res.rowCount === 0) {
-      result.message = 'No assets found';
-      return result;
+      response.message = 'No assets found';
+      return response;
     }
     relations = await readRelations(client, assetName);
   } catch (error) {
     await client.end();
-    result.error = true;
-    result.message = error.message;
+    response.error = true;
+    response.message = error.message;
     await client.end();
-    return result;
+    return response;
   }
 
   await client.end();
 
-  result.result.ancestors.items = relations.ancestors.items;
-  result.result.ancestors.unique_items = relations.ancestors.unique_items;
-  result.result.descendants.items = relations.descendants.items;
-  result.result.descendants.unique_items = relations.descendants.unique_items;
+  response.result.ancestors.items = relations.ancestors.items;
+  response.result.ancestors.unique_items = relations.ancestors.unique_items;
+  response.result.descendants.items = relations.descendants.items;
+  response.result.descendants.unique_items = relations.descendants.unique_items;
 
-  return result;
+  return response;
 }
 
 module.exports = getAllAssetRelations;

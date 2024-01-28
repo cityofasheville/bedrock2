@@ -24,7 +24,7 @@ async function readTasks(client, assetName) {
 }
 
 async function getTasks(pathElements, queryParams, connection) {
-  const result = {
+  const response = {
     error: false,
     message: '',
     result: null,
@@ -36,9 +36,9 @@ async function getTasks(pathElements, queryParams, connection) {
   try {
     client = await newClient(connection);
   } catch (error) {
-    result.error = true;
-    result.message = error.message;
-    return result;
+    response.error = true;
+    response.message = error.message;
+    return response;
   }
 
   let res;
@@ -46,14 +46,14 @@ async function getTasks(pathElements, queryParams, connection) {
     res = await readTasks(client, assetName);
   } catch (error) {
     await client.end();
-    result.error = true;
-    result.message = error.message;
-    return result;
+    response.error = true;
+    response.message = error.message;
+    return response;
   }
 
   if (res.rowCount === 0) {
-    result.message = 'No tasks found';
-    return result;
+    response.message = 'No tasks found';
+    return response;
   }
 
   for (let i = 0; i < res.rowCount; i += 1) {
@@ -73,11 +73,11 @@ async function getTasks(pathElements, queryParams, connection) {
 
   await client.end();
 
-  result.result = {
+  response.result = {
     items: tasks,
   };
 
-  return result;
+  return response;
 }
 
 module.exports = getTasks;
