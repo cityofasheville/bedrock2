@@ -31,6 +31,7 @@ async function checkExistence(client, assetName) {
   if (res.rowCount === 0) {
     throw new Error(`Asset ${assetName} does not exist`);
   }
+  return res.rows[0].asset_type;
 }
 
 async function getCustomFields(client, asset_type, asset_name) {
@@ -70,12 +71,12 @@ async function getCustomFields(client, asset_type, asset_name) {
   return { fields, values };
 }
 
-async function baseInsert(assetName, body, customFields, client) {
+async function updateBase(assetName, body, customFields, client) {
   const members = ['description', 'location', 'active', 'owner_id', 'notes', 'link', 'display_name', 'asset_type'];
   let cnt = 1;
   let args = [];
   let sql = 'UPDATE assets SET ';
-  const result = {};
+  const asset = new Map();
 
   for (let i = 0, comma = ''; i < members.length; i += 1) {
     if (members[i] in body) {
@@ -86,7 +87,7 @@ async function baseInsert(assetName, body, customFields, client) {
       } else {
         args.push(body[members[i]]);
       }
-      result[members[i]] = body[members[i]];
+      asset.set(members[i], body[members[i]]);
       cnt += 1;
       comma = ',';
     }
@@ -102,6 +103,7 @@ async function baseInsert(assetName, body, customFields, client) {
   // Now see if there are any custom fields
   if (customFields.fields.length > 0) {
     // Simplest just to delete and re-insert
+    // TODO: !!This is wrong - Fix when we implement hierarchical custom fields!!
     sql = 'DELETE FROM bedrock.custom_values WHERE asset_name like $1';
     try {
       res = await client.query(sql, [assetName]);
@@ -128,14 +130,14 @@ async function baseInsert(assetName, body, customFields, client) {
         catch (error) {
           throw new Error(`Error inserting custom value ${field_name}: ${pgErrorCodes[error.code]}`);
         }
-        result[field_name] = field_value;
+        asset.set(field_name, field_value);
       }
     }
   }
-  return result;
+  return asset;
 }
 
-async function addDependencies(assetName, body, client) {
+async function updateDependencies(assetName, body, client) {
   // Now add any dependencies, always replacing existing with new
 
   try {
@@ -159,7 +161,7 @@ async function addDependencies(assetName, body, client) {
   return body.parents;
 }
 
-async function addETL(assetName, body, client) {
+async function updateETL(assetName, asset, body, client) {
   const result = {};
   let sql;
   // Now add any ETL information. Null run group means delete
@@ -187,7 +189,7 @@ async function addETL(assetName, body, client) {
     if (members[i] in body) {
       sql += `${comma} ${members[i].substring(4)} = $${cnt}`;
       args.push(body[members[i]]);
-      result[members[i]] = body[members[i]];
+      asset.set(members[i], body[members[i]]);
     }
   }
   sql += ` where asset_name = $${cnt}`;
@@ -198,10 +200,10 @@ async function addETL(assetName, body, client) {
   } catch (error) {
     throw new Error(`PG error updating etl: ${pgErrorCodes[error.code]}`);
   }
-  return result;
+  return;
 }
 
-async function addTags(assetName, body, client) {
+async function updateTags(assetName, asset, body, client) {
   // Finally, update any tags.
   const tags = []; let tmpTags = [];
   let sql; let res; let cnt;
@@ -270,7 +272,8 @@ async function addTags(assetName, body, client) {
       throw new Error(`PG error inserting tags for update: ${pgErrorCodes[error.code]}`);
     }
   }
-  return body.tags;
+  asset.set('tags', body.tags);
+  return;
   // End of adding any tags that aren't in the tags table for now
 }
 
@@ -280,8 +283,9 @@ async function updateAsset(requestBody, pathElements, queryParams, connection) {
   let customFields = [];
   let client;
   let etlInfo;
+  let asset;
 
-  const result = {
+  const response = {
     error: false,
     message: `Successfully updated asset ${assetName}`,
     result: null,
@@ -291,48 +295,48 @@ async function updateAsset(requestBody, pathElements, queryParams, connection) {
     await checkInfo(body, assetName);
     client = await newClient(connection);
   } catch (error) {
-    result.error = true;
-    result.message = error.message;
-    return result;
+    response.error = true;
+    response.message = error.message;
+    return response;
   }
 
   try {
-    await checkExistence(client, assetName);
-    if ('asset_type' in body) {
-      customFields = await getCustomFields(client, body.asset_type, body.asset_name);
+    const asset_type = await checkExistence(client, assetName);
+    if (asset_type !== null) {
+      customFields = await getCustomFields(client, asset_type, assetName);
     }
   } catch (error) {
     await client.end();
-    result.error = true;
-    result.message = error.message;
-    return result;
+    response.error = true;
+    response.message = error.message;
+    return response;
   }
 
   try {
     await client.query('BEGIN');
-    result.result = await baseInsert(assetName, body, customFields, client);
+    asset = await updateBase(assetName, body, customFields, client);
     if ('parents' in body) {
-      result.result.parents = await addDependencies(assetName, body, client);
+      const parents = await updateDependencies(assetName, body, client);
+      asset.set('parents', parents);
     }
     if ('etl_run_group' in body || 'etl_active' in body) {
-      etlInfo = await addETL(assetName, body, client);
-      Object.keys(etlInfo).forEach((prop) => {
-        result.result[prop] = etlInfo[prop];
-      });
+      await updateETL(assetName, asset, body, client);
     }
     if ('tags' in body) {
-      result.result.tags = await addTags(assetName, body, client);
+      await updateTags(assetName, asset, body, client);
     }
     await client.query('COMMIT');
     await client.end();
   } catch (error) {
     await client.query('ROLLBACK');
     await client.end();
-    result.error = true;
-    result.message = error.message;
+    response.error = true;
+    response.message = error.message;
   }
 
-  return result;
+  response.result = Object.fromEntries(asset.entries());
+
+  return response;
 }
 
 module.exports = updateAsset;

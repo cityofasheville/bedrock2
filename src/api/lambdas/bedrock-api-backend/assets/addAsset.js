@@ -83,7 +83,7 @@ async function getCustomFields(client, asset_type) {
 
 async function baseInsert(body, customFields, client) {
   // All is well - let's go ahead and add. Start by beginning the transaction
-  let info = null;
+  let asset = null;
   let sql;
   let res;
   let argnum = 5;
@@ -144,26 +144,26 @@ async function baseInsert(body, customFields, client) {
   if (res.rowCount !== 1) {
     throw new Error('Unknown error inserting new asset');
   } else {
-    info = {
-      asset_name: body.asset_name,
-      description: body.description,
-      location: body.location,
-      active: body.active,
-    };
+    asset = new Map([
+      ['asset_name', body.asset_name],
+      ['description', body.description],
+      ['location', body.location],
+      ['active', body.active],
+    ]);
     if ('owner_id' in body) {
-      info.owner_id = body.owner_id;
+      asset.set('owner_id', body.owner_id);
     }
     if ('notes' in body) {
-      info.notes = body.notes;
+      asset.set('notes', body.notes);
     }
     if ('link' in body) {
-      info.link = body.link
+      asset.set('link', body.link);
     }
     if ('display_name' in body) {
-      info.display_name = body.display_name
+      asset.set('display_name', body.display_name);
     }
     if ('asset_type' in body) {
-      info.asset_type = body.asset_type
+      asset.set('asset_type', body.asset_type);
     }
   }
 
@@ -181,15 +181,15 @@ async function baseInsert(body, customFields, client) {
         catch (error) {
           throw new Error(`Error inserting custom value ${field_name}: ${pgErrorCodes[error.code]}`);
         }
-        info[field_name] = body[field_name];
+        asset.set(field_name, body[field_name]);
       }
     }
   }
     
-  return info;
+  return asset;
 }
 
-async function addDependencies(body, client) {
+async function addDependencies(asset, body, client) {
   let parents;
 
   if ('parents' in body && body.parents.length > 0) {
@@ -206,18 +206,12 @@ async function addDependencies(body, client) {
         );
       }
     }
-    parents = body.parents;
+    asset.set('parents', body.parents);
   }
-  return parents;
+  return;
 }
 
-async function addETL(body, client) {
-  const info = {
-    etl_run_group: null,
-    etl_active: null,
-  };
-
-  // Now add any ETL information
+async function addETL(asset, body, client) {
   if ('etl_run_group' in body && 'etl_active' in body) {
     try {
       await client.query(
@@ -229,13 +223,13 @@ async function addETL(body, client) {
         `PG error adding etl information: ${pgErrorCodes[error.code]}`,
       );
     }
-    info.etl_run_group = body.etl_run_group;
-    info.etl_active = body.etl_active;
+    asset.set('etl_run_group', body.etl_run_group);
+    asset.set('etl_active', body.etl_active);
   }
-  return info;
+  return;
 }
 
-async function addTags(body, client) {
+async function addTags(asset, body, client) {
   let sql;
   let res;
   let tags = [];
@@ -310,8 +304,8 @@ async function addTags(body, client) {
     throw new Error(`PG error adding asset_tags: ${pgErrorCodes[error.code]}`);
   }
 
-  tags = body.tags;
-  return tags;
+  asset.set('tags', body.tags);
+  return;
 }
 
 async function addAsset(requestBody, pathElements, queryParams, connection) {
@@ -319,9 +313,8 @@ async function addAsset(requestBody, pathElements, queryParams, connection) {
   let customFields = [];
 
   let client;
-  let ETLInfo;
 
-  const result = {
+  const response = {
     error: false,
     message: '',
     result: null,
@@ -331,9 +324,9 @@ async function addAsset(requestBody, pathElements, queryParams, connection) {
     await checkInfo(body, pathElements);
     client = await newClient(connection);
   } catch (error) {
-    result.error = true;
-    result.message = error.message;
-    return result;
+    response.error = true;
+    response.message = error.message;
+    return response;
   }
 
   try {
@@ -343,28 +336,27 @@ async function addAsset(requestBody, pathElements, queryParams, connection) {
     }
   } catch (error) {
     await client.end();
-    result.error = true;
-    result.message = error.message;
-    return result;
+    response.error = true;
+    response.message = error.message;
+    return response;
   }
-
+  let asset;
   try {
     await client.query('BEGIN');
-    result.result = await baseInsert(body, customFields, client);
-    result.result.parents = await addDependencies(body, client);
-    ETLInfo = await addETL(body, client);
-    result.result.etl_run_group = ETLInfo.etl_run_group;
-    result.result.etl_active = ETLInfo.etl_active;
-    result.result.tags = await addTags(body, client);
+    asset = await baseInsert(body, customFields, client);
+    await addDependencies(asset, body, client);
+    await addETL(asset, body, client);
+    await addTags(asset, body, client);
     await client.query('COMMIT');
     await client.end();
-    return result;
+    response.result = Object.fromEntries(asset.entries());
+    return response;
   } catch (error) {
     await client.query('ROLLBACK');
     await client.end();
-    result.error = true;
-    result.message = error.message;
-    return result;
+    response.error = true;
+    response.message = error.message;
+    return response;
   }
 }
 

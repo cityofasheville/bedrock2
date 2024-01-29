@@ -9,7 +9,7 @@ const getTasks = require('./getTasks');
 
 // eslint-disable-next-line no-unused-vars
 async function handleAssets(event, pathElements, queryParams, verb, connection) {
-  let result = {
+  let response = {
     error: false,
     message: '',
     result: null,
@@ -18,7 +18,7 @@ async function handleAssets(event, pathElements, queryParams, verb, connection) 
   switch (pathElements.length) {
     // GET assets
     case 1:
-      result = await getAssetList(
+      response = await getAssetList(
         event.requestContext.domainName,
         pathElements,
         queryParams,
@@ -30,24 +30,24 @@ async function handleAssets(event, pathElements, queryParams, verb, connection) 
     case 2:
       switch (verb) {
         case 'GET':
-          result = await getAsset(pathElements, queryParams, connection);
+          response = await getAsset(pathElements, queryParams, connection);
           break;
 
         case 'POST':
-          result = await addAsset(event.body, pathElements, queryParams, connection);
+          response = await addAsset(event.body, pathElements, queryParams, connection);
           break;
 
         case 'PUT':
-          result = await updateAsset(event.body, pathElements, queryParams, connection);
+          response = await updateAsset(event.body, pathElements, queryParams, connection);
           break;
 
         case 'DELETE':
-          result = deleteAsset(pathElements, queryParams, connection);
+          response = deleteAsset(pathElements, queryParams, connection);
           break;
 
         default:
-          result.message = `handleAssets: unknown verb ${verb}`;
-          result.error = true;
+          response.message = `handleAssets: unknown verb ${verb}`;
+          response.error = true;
           break;
       }
       break;
@@ -57,16 +57,16 @@ async function handleAssets(event, pathElements, queryParams, verb, connection) 
     case 3:
       if (pathElements[2] === 'tasks') {
         if (verb === 'GET') {
-          result = await getTasks(pathElements, queryParams, connection);
+          response = await getTasks(pathElements, queryParams, connection);
         } else if (verb === 'DELETE') {
-          result.message = 'Delete all asset tasks not implemented';
-          result.error = true;
+          response.message = 'Delete all asset tasks not implemented';
+          response.error = true;
         }
       } else if (pathElements[2] === 'relations') {
-        result = await getAllAssetRelations(pathElements, queryParams, connection);
+        response = await getAllAssetRelations(pathElements, queryParams, connection);
       } else {
-        result.message = `Unknown assets endpoint: [${pathElements.join()}]`;
-        result.error = true;
+        response.message = `Unknown assets endpoint: [${pathElements.join()}]`;
+        response.error = true;
       }
       break;
 
@@ -74,45 +74,45 @@ async function handleAssets(event, pathElements, queryParams, verb, connection) 
     // GET /bedrock/assets/search/{searchString}
     case 4:
       if (pathElements[1] === 'search') {
-        result.message = 'Assets search not implemented';
-        result.error = true;
+        response.message = 'Assets search not implemented';
+        response.error = true;
       } else if (pathElements[2] === 'tasks') {
         switch (verb) {
           case 'POST':
-            result.message = 'Add asset task not implemented';
-            result.error = true;
+            response.message = 'Add asset task not implemented';
+            response.error = true;
             break;
 
           case 'PUT':
-            result.message = 'Update asset task not implemented';
-            result.error = true;
+            response.message = 'Update asset task not implemented';
+            response.error = true;
             break;
 
           case 'DELETE':
-            result.message = 'Delete asset task not implemented';
-            result.error = true;
+            response.message = 'Delete asset task not implemented';
+            response.error = true;
             break;
 
           default:
-            result.message = `handleAssets: unknown verb ${verb}`;
-            result.error = true;
+            response.message = `handleAssets: unknown verb ${verb}`;
+            response.error = true;
             break;
         }
       } else {
-        result.message = `Unknown assets endpoint: [${pathElements.join()}]`;
-        result.error = true;
+        response.message = `Unknown assets endpoint: [${pathElements.join()}]`;
+        response.error = true;
       }
       break;
 
     default:
-      result.message = `Unknown assets endpoint: [${pathElements.join()}]`;
-      result.error = true;
+      response.message = `Unknown assets endpoint: [${pathElements.join()}]`;
+      response.error = true;
       break;
   }
-  if (result.error) {
-    console.log(`We have an error but do not know why! - ${result.message}`);
+  if (response.error) {
+    console.log(`We have an error but do not know why! - ${response.message}`);
   }
-  return result;
+  return response;
 }
 
 module.exports = handleAssets;
