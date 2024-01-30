@@ -1,2 +1,5 @@
 "metric","period","Period","text"
 "metric","disaggregations","Disaggregations","text[]"
+"metric","program_manager","Program Manager","text"
+"metric","executive_sponsor","Executive Sponsor","text"
+"metric","units","Units","text"
