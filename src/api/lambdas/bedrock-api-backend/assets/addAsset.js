@@ -16,6 +16,28 @@ async function checkInfo(body, pathElements) {
       'Asset lacks required property (asset_name, description, location, active)',
     );
   }
+  // Make sure that the body includes values for all required custom fields
+  if ('asset_type' in body) {
+    let sql;
+    try {
+      sql = `
+        select j.asset_type_id, c.id, c.field_name, BOOL_OR(j.required) as required from bedrock.asset_type_custom_fields j
+        left join bedrock.custom_fields c
+        on j.custom_field_id = c.id
+        where j.asset_type_id = '2a044f15-0906-4004-bd23-947269c0e444'
+        group by c.id, c.field_name, j.asset_type_id
+      `
+      res = await client.query(sql, body['asset_type']);
+    } catch (error) {
+      throw new Error(
+        `PG error checking if asset already exists: ${pgErrorCodes[error.code]}`,
+      );
+    }
+  }
+
+  if (res.rowCount > 0) {
+    throw new Error('Asset already exists');
+  }
 
   if (pathElements[1] !== body.asset_name) {
     throw new Error(
