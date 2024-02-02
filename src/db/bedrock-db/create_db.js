@@ -21,4 +21,3 @@ lambda_handler = async function (event, context) {
 }
 
 lambda_handler()
-

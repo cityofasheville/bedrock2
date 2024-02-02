@@ -28,7 +28,7 @@ apply: $(TF_TARGS) $(dirs)
 apply-y: $(TF_TARGS) $(dirs)
 destroy: $(dirs)
 
-db:	create_db.js package.json package-lock.json
+db:
 	npm install
 	echo $(BEDROCK_DB_HOST_ENDPOINT)
 	BEDROCK_DB_HOST_ENDPOINT=$(BEDROCK_DB_HOST_ENDPOINT) node create_db.js

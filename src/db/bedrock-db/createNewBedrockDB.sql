@@ -1,4 +1,5 @@
 DROP TABLE IF EXISTS bedrock.custom_values;
+DROP TABLE IF EXISTS bedrock.asset_type_custom_fields;
 DROP TABLE IF EXISTS bedrock.custom_fields;
 DROP TABLE IF EXISTS bedrock.tasks;
 DROP TABLE IF EXISTS bedrock.tags;
@@ -6,6 +7,7 @@ DROP TABLE IF EXISTS bedrock.run_groups;
 DROP TABLE IF EXISTS bedrock.etl;
 DROP TABLE IF EXISTS bedrock.dependencies;
 DROP TABLE IF EXISTS bedrock.assets;
+DROP TABLE IF EXISTS bedrock.asset_types;
 DROP TABLE IF EXISTS bedrock.connections;
 DROP TYPE IF EXISTS bedrock.connections_classes;
 DROP TYPE IF EXISTS bedrock.task_types;
@@ -59,6 +61,14 @@ CREATE TABLE bedrock.connections (
 );
 ALTER TABLE bedrock.connections OWNER TO bedrock_user;
 GRANT ALL ON TABLE bedrock.connections TO bedrock_user;
+
+CREATE TABLE bedrock.asset_types (
+  id text NOT NULL,
+  "name" text NOT NULL,
+  parent text NULL
+);
+ALTER TABLE bedrock.asset_types OWNER TO bedrock_user;
+GRANT ALL ON TABLE bedrock.asset_types TO bedrock_user;
 
 CREATE TABLE bedrock.assets (
 	asset_name text NOT NULL,
@@ -147,7 +157,7 @@ ALTER TABLE bedrock.tasks OWNER TO bedrock_user;
 GRANT ALL ON TABLE bedrock.tasks TO bedrock_user;
 
 CREATE TABLE bedrock.custom_fields (
-  asset_type text NOT NULL,
+  id text NOT NULL,
   field_name text NOT NULL,
   field_display text NOT NULL, -- display name
   field_type text NOT NULL
@@ -156,13 +166,20 @@ CREATE TABLE bedrock.custom_fields (
 -- Permissions
 ALTER TABLE bedrock.custom_fields OWNER TO bedrock_user;
 GRANT ALL ON TABLE bedrock.custom_fields TO bedrock_user;
-                                      
+
+CREATE TABLE bedrock.asset_type_custom_fields (
+  asset_type_id text NOT NULL,
+  custom_field_id text NOT NULL,
+  required boolean NOT NULL DEFAULT FALSE
+);
+ALTER TABLE bedrock.asset_type_custom_fields OWNER TO bedrock_user;
+GRANT ALL ON TABLE bedrock.asset_type_custom_fields TO bedrock_user;
+
 CREATE TABLE bedrock.custom_values (
   asset_name text NOT NULL,
   field_name text NOT NULL,
   field_value text NULL
 );
 
--- Permissions
 ALTER TABLE bedrock.custom_values OWNER TO bedrock_user;
 GRANT ALL ON TABLE bedrock.custom_values TO bedrock_user;
