@@ -1,5 +1,5 @@
-"2a044f15-0906-4004-bd23-947269c0e444","9a6ddda5-958c-4315-8818-596dde177201",TRUE
-"2a044f15-0906-4004-bd23-947269c0e444","8c86b844f-484d-4603-9af1-4a278ed3a88",TRUE
-"2a044f15-0906-4004-bd23-947269c0e444","248d4ebb-dd01-471d-ba22-01f481f2dac8",TRUE
-"2a044f15-0906-4004-bd23-947269c0e444","d91849c8-b902-4477-80f8-4a10f331ecc0",TRUE
-"2a044f15-0906-4004-bd23-947269c0e444","1f03ae4d-1f68-44e7-a3c0-19901f1a4105",TRUE
+"metric","period",TRUE
+"metric","disaggregations",TRUE
+"metric","program_manager",TRUE
+"metric","executive_sponsor",TRUE
+"metric","units",TRUE

@@ -99,7 +99,6 @@ GRANT ALL ON TABLE bedrock.dependencies TO bedrock_user;
 
 CREATE TABLE bedrock.custom_fields (
   id text NOT NULL,
-  field_name text NOT NULL,
   field_display text NOT NULL, -- display name
   field_type text NOT NULL
 );

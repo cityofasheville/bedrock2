@@ -117,7 +117,7 @@ with open(os.path.join(data_directory,'asset_types.csv')) as ff:
 
 # Load the custom fields
 
-sql = 'INSERT INTO bedrock.custom_fields (id, field_name,	field_display, field_type) VALUES '
+sql = 'INSERT INTO bedrock.custom_fields (id, field_display, field_type) VALUES '
 with open(os.path.join(data_directory,'custom_fields.csv')) as ff:
   rdr = csv.reader(ff)
   
@@ -126,7 +126,7 @@ with open(os.path.join(data_directory,'custom_fields.csv')) as ff:
   nrows = len(rows)
   for row in rows:
     i = i+1
-    sql = f"{sql} ('{row[0]}', '{row[1]}', '{row[2]}', '{row[3]}')"
+    sql = f"{sql} ('{row[0]}', '{row[1]}', '{row[2]}')"
     if (i<nrows):
       sql = sql + ','
 cur.execute(sql)
