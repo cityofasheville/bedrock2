@@ -29,7 +29,7 @@ make db      #(Creates bedrock database and captures DB endpoint in src/db/make_
 make seed    #(Fill database with assets from Github)
 # Copy the database host from src/db/make_variables.generated into the value of BEDROCK_DB_HOST
 # in src/make_variables (without the port number)
-
+```
 ### Building the ETL and/or API infrastructure
 The ETL and API infrastructure are independent of one another. You may build only one and the order is unimportant.
 
