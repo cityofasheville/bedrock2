@@ -7,7 +7,7 @@ resource "aws_db_instance" "bedrock-db-$$INSTANCE$$" {
   db_name              = "bedrock"
   identifier           = "bedrock-db-$$INSTANCE$$"
   engine               = "postgres"
-  engine_version       = "13.7"
+  engine_version       = "13.10"
   instance_class       = "db.t3.micro"
   username             = "bedrock"
   password             = "test-bedrock"
