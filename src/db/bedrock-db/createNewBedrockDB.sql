@@ -117,7 +117,7 @@ GRANT ALL ON TABLE bedrock.asset_type_custom_fields TO bedrock_user;
 
 CREATE TABLE bedrock.custom_values (
   asset_name text NOT NULL,
-  field_name text NOT NULL,
+  field_id text NOT NULL,
   field_value text NULL
 );
 -- Permissions

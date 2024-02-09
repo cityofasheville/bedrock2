@@ -3,11 +3,22 @@
 const { Client } = require('pg');
 const pgErrorCodes = require('../pgErrorCodes');
 
-async function checkInfo(body, pathElements) {
-  // Make sure that we have required information
+async function newClient(connection) {
+  const client = new Client(connection);
 
+  try {
+    await client.connect();
+    return client;
+  } catch (error) {
+    throw new Error(`PG error connecting: ${pgErrorCodes[error.code]}`);
+  }
+}
+
+async function checkBaseInfo(client, body, pathElements) {
+  // Make sure that we have all required base fields
   if (
     !('asset_name' in body)
+    || !('asset_type' in body)
     || !('description' in body)
     || !('location' in body)
     || !('active' in body)
@@ -15,28 +26,6 @@ async function checkInfo(body, pathElements) {
     throw new Error(
       'Asset lacks required property (asset_name, description, location, active)',
     );
-  }
-  // Make sure that the body includes values for all required custom fields
-  if ('asset_type' in body) {
-    let sql;
-    try {
-      sql = `
-        select j.asset_type_id, c.id, c.field_name, BOOL_OR(j.required) as required from bedrock.asset_type_custom_fields j
-        left join bedrock.custom_fields c
-        on j.custom_field_id = c.id
-        where j.asset_type_id = '2a044f15-0906-4004-bd23-947269c0e444'
-        group by c.id, c.field_name, j.asset_type_id
-      `
-      res = await client.query(sql, body['asset_type']);
-    } catch (error) {
-      throw new Error(
-        `PG error checking if asset already exists: ${pgErrorCodes[error.code]}`,
-      );
-    }
-  }
-
-  if (res.rowCount > 0) {
-    throw new Error('Asset already exists');
   }
 
   if (pathElements[1] !== body.asset_name) {
@@ -51,17 +40,6 @@ async function checkInfo(body, pathElements) {
         'Addition of ETL information requires both etl_run_group and etl_active elements',
       );
     }
-  }
-}
-
-async function newClient(connection) {
-  const client = new Client(connection);
-
-  try {
-    await client.connect();
-    return client;
-  } catch (error) {
-    throw new Error(`PG error connecting: ${pgErrorCodes[error.code]}`);
   }
 }
 
@@ -83,28 +61,74 @@ async function checkExistence(client, pathElements) {
   }
 }
 
-async function getCustomFields(client, asset_type) {
-  let sql;
-  let res;
-  let customFields = [];
-
+async function getCustomFieldsInfo(client, asset_type) {
+  let sqlQuery;
+  let sqlResult;
+  let types = '';
+  let customFields = new Map();
   try {
-    sql = 'SELECT field_name, field_type FROM bedrock.custom_fields where asset_type like $1';
-    res = await client.query(sql, [asset_type]);
+    // Get the asset type hierarchy
+    sqlQuery = `
+      WITH RECURSIVE ancestors AS (
+        SELECT id, parent, name FROM asset_types
+        WHERE id = $1
+        UNION
+          SELECT t.id, t.parent, t.name
+          FROM asset_types t
+          INNER JOIN ancestors a ON a.parent = t.id
+      ) SELECT * FROM ancestors;
+    `;
+    sqlResult = await client.query(sqlQuery, [asset_type]);
+    if (sqlResult.rowCount < 1) {
+      console.log(`Asset type ${asset_type} not found`);
+      throw new Error(`Asset type ${asset_type} not found`);
+    }
+    sqlResult.rows.forEach((itm, i) => {
+      const comma = i > 0 ? ',' : '';
+      types = `${types}${comma} '${itm.id}'`;
+    });
+    // Now get custom fields associated with any of the types
+    sqlQuery = `
+      select c.id, c.field_display, j.asset_type_id, j.required
+      from bedrock.custom_fields c
+      left outer join bedrock.asset_type_custom_fields j
+      on c.id = j.custom_field_id
+      where j.asset_type_id in (${types})
+    `;
+    sqlResult = await client.query(sqlQuery, []);
+    sqlResult.rows.forEach(itm => {
+      customFields.set(itm.id, itm);
+    });
   } catch (error) {
     throw new Error(
-      `PG error getting custom fields: ${pgErrorCodes[error.code]}`,
+      `PG error getting asset type hierarchy for type ${asset_type}: ${pgErrorCodes[error.code]}`,
     );
-  }
-
-  if (res.rowCount > 0) {
-    customFields = res.rows;
-  }
+  } 
   return customFields;
 }
 
-async function baseInsert(body, customFields, client) {
-  // All is well - let's go ahead and add. Start by beginning the transaction
+function getCustomValues(body) {
+  const customValues = new Map();
+  if ('custom_fields' in body) {
+    for (val in body.custom_fields) {
+      customValues.set(val, body.custom_fields[val]);
+    }
+  }
+  return customValues;
+}
+
+function checkCustomFieldsInfo(customValues, customFields) {
+  for (let [id, field] of customFields) {
+    if (field.required && !(customValues.has(field.id))) {
+      throw new Error(
+        `Asset lacks required custom field ${field.field_display} (id=${field.id})`,
+      );
+    }
+  }
+}
+
+async function baseInsert(body, customFields, customValues, client) {
+  // All is well - let's go ahead and add.
   let asset = null;
   let sql;
   let res;
@@ -189,25 +213,22 @@ async function baseInsert(body, customFields, client) {
     }
   }
 
-  // Now see if there are any custom fields
-  if (customFields.length > 0) {
-    sql = 'INSERT INTO bedrock.custom_values (asset_name, field_name, field_value) VALUES($1, $2, $3)';
-
-    for (let i = 0; i < customFields.length; i += 1) {
-      const field_name = customFields[i].field_name;
-      if (field_name in body) {
-        args = [body.asset_name, field_name, body[field_name]];
-        try {
-          res = await client.query(sql, args);
-        }
-        catch (error) {
-          throw new Error(`Error inserting custom value ${field_name}: ${pgErrorCodes[error.code]}`);
-        }
-        asset.set(field_name, body[field_name]);
+  // Now deal with custom fields
+  const customOut = new Map();
+  for (let [id, field] of customFields) {
+    if (customValues.has(id)) {
+      sql = 'INSERT INTO bedrock.custom_values (asset_name, field_id, field_value) VALUES($1, $2, $3)';
+      args = [body.asset_name, field.id, customValues.get(field.id).value];
+      try {
+        res = await client.query(sql, args);
       }
+      catch (error) {
+        throw new Error(`Error inserting custom value ${id}: ${pgErrorCodes[error.code]}`);
+      }
+      customOut.set(id, customValues.get(id));
     }
   }
-    
+  asset.set('custom_fields', Object.fromEntries(customOut.entries()));
   return asset;
 }
 
@@ -332,7 +353,9 @@ async function addTags(asset, body, client) {
 
 async function addAsset(requestBody, pathElements, queryParams, connection) {
   const body = JSON.parse(requestBody);
-  let customFields = [];
+  let customFields;
+  let customValues;
+  let transactionStarted = false;
 
   let client;
 
@@ -343,29 +366,24 @@ async function addAsset(requestBody, pathElements, queryParams, connection) {
   };
 
   try {
-    await checkInfo(body, pathElements);
-    client = await newClient(connection);
+    client = await newClient(connection);    
   } catch (error) {
     response.error = true;
     response.message = error.message;
     return response;
   }
 
-  try {
-    await checkExistence(client, pathElements);
-    if ('asset_type' in body) {
-      customFields = await getCustomFields(client, body.asset_type);
-    }
-  } catch (error) {
-    await client.end();
-    response.error = true;
-    response.message = error.message;
-    return response;
-  }
   let asset;
   try {
+    await checkExistence(client, pathElements);
+    await checkBaseInfo(client, body, pathElements);
+    customFields = await getCustomFieldsInfo(client, body.asset_type);
+    customValues = getCustomValues(body);
+    checkCustomFieldsInfo(customValues, customFields);
+
     await client.query('BEGIN');
-    asset = await baseInsert(body, customFields, client);
+    transactionStarted = true;
+    asset = await baseInsert(body, customFields, customValues, client);
     await addDependencies(asset, body, client);
     await addETL(asset, body, client);
     await addTags(asset, body, client);
@@ -374,12 +392,11 @@ async function addAsset(requestBody, pathElements, queryParams, connection) {
     response.result = Object.fromEntries(asset.entries());
     return response;
   } catch (error) {
-    await client.query('ROLLBACK');
+    if (transactionStarted) await client.query('ROLLBACK');
     await client.end();
     response.error = true;
     response.message = error.message;
     return response;
   }
 }
-
 module.exports = addAsset;
