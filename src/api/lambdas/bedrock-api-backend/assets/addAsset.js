@@ -218,7 +218,7 @@ async function baseInsert(body, customFields, customValues, client) {
   for (let [id, field] of customFields) {
     if (customValues.has(id)) {
       sql = 'INSERT INTO bedrock.custom_values (asset_name, field_id, field_value) VALUES($1, $2, $3)';
-      args = [body.asset_name, field.id, customValues.get(field.id).value];
+      args = [body.asset_name, field.id, customValues.get(field.id)];
       try {
         res = await client.query(sql, args);
       }
