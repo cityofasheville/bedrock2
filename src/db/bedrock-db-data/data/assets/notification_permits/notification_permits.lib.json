@@ -1,0 +1,19 @@
+{
+  "asset_name": "notification_permits.lib",
+  "display_name": "notification_permits.note",
+  "description": "Recent Permits to be sent in Notification Emails-view",
+  "location": {
+    "tablename": "notification_permits",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "internal"
+  },
+  "asset_type": null,
+  "owner_id": null,
+  "notes": null,
+  "link": null,
+  "active": true,
+  "depends": [
+    "notification_permits.note"
+  ],
+  "tags": []
+}
