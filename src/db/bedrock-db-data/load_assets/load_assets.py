@@ -232,16 +232,16 @@ for asset_subdir in os.listdir(assets_directory):
           ))
           
           # custom variables
-          if config['asset_type'] is not None and 'asset_type' in config and config['asset_type'] in customs_map:
-
-            for itm in customs_map[config['asset_type']]:
-              if itm in config:
+          # Note that we should validate the custom variables, but not
+          # doing it for now.
+          if 'custom_fields' in config and config['custom_fields'] is not None:
+            for itm in config['custom_fields']:
                 sql = f'''
                   insert into bedrock.custom_values
-                  (asset_name, field_name, field_value)
+                  (asset_name, field_id, field_value)
                   values(%s, %s, %s);
                 '''
-                cur.execute(sql, (asset_name, itm, config[itm]))
+                cur.execute(sql, (asset_name, itm, config['custom_fields'][itm]))
 
           # dependencies
           dependencies = config['depends']         
