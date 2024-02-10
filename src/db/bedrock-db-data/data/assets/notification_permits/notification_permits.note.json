@@ -7,7 +7,7 @@
     "connection": "pubrecdb1/notifications/dbadmin",
     "schemaname": "note"
   },
-  "asset_type": null,
+  "asset_type": "data",
   "owner_id": null,
   "notes": null,
   "link": null,

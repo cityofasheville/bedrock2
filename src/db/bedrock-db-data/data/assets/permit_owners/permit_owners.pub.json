@@ -7,7 +7,7 @@
     "connection": "coa-publicdb1/coa_share/dbadmin",
     "schemaname": "bc"
   },
-  "asset_type": null,
+  "asset_type": "data",
   "owner_id": null,
   "notes": null,
   "link": null,

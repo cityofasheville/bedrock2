@@ -9,7 +9,7 @@
     "connection": "bedrock-googlesheets",
     "spreadsheetid": "1xGD2jVSveuYjDLRc6Z8dlwGIA78LKJKxu0ck0Y7easg"
   },
-  "asset_type": null,
+  "asset_type": "data",
   "owner_id": null,
   "notes": null,
   "link": null,

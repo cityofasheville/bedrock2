@@ -7,7 +7,7 @@
     "connection": "gis-warehouse/coagiswarehouse/coagis",
     "schemaname": "coagis"
   },
-  "asset_type": null,
+  "asset_type": "data",
   "owner_id": null,
   "notes": null,
   "link": null,

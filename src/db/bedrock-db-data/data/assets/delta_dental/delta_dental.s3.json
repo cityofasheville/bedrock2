@@ -7,7 +7,7 @@
     "filename": "deltadental_asheville_${YYYY}${MM}${DD}.txt",
     "connection": "s3_data_files"
   },
-  "asset_type": null,
+  "asset_type": "data",
   "owner_id": null,
   "notes": null,
   "link": null,

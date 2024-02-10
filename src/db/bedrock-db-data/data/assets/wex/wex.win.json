@@ -7,7 +7,7 @@
     "filename": "AshevilleExport_PostedDate_${YYYY}${MM}${DD}.csv",
     "connection": "cityworks_fleet"
   },
-  "asset_type": null,
+  "asset_type": "data",
   "owner_id": null,
   "notes": null,
   "link": null,

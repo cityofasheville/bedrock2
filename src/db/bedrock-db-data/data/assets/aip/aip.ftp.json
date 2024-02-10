@@ -7,7 +7,7 @@
     "filename": "CityofAsheville5871_To_InfoArmor_FULL_${YYYY}${MM}${DD}",
     "connection": "aip_ftp"
   },
-  "asset_type": null,
+  "asset_type": "data",
   "owner_id": null,
   "notes": null,
   "link": null,

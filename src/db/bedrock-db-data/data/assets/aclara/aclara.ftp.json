@@ -7,7 +7,7 @@
     "filename": "AccountImport.imp",
     "connection": "aclara_ftp"
   },
-  "asset_type": null,
+  "asset_type": "data",
   "owner_id": null,
   "notes": null,
   "link": null,

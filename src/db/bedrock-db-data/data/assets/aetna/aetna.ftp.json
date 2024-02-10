@@ -7,7 +7,7 @@
     "filename": "aetna_asheville_${YYYY}${MM}${DD}.csv",
     "connection": "aetna_ftp"
   },
-  "asset_type": null,
+  "asset_type": "data",
   "owner_id": null,
   "notes": null,
   "link": null,

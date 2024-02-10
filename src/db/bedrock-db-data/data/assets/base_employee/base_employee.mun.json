@@ -7,7 +7,7 @@
     "connection": "munis/munprod/fme_jobs",
     "schemaname": "avl_bdv"
   },
-  "asset_type": null,
+  "asset_type": "data",
   "owner_id": null,
   "notes": null,
   "link": null,

@@ -5,7 +5,7 @@
   "location": {
     "connection": "acumen_api"
   },
-  "asset_type": null,
+  "asset_type": "data",
   "owner_id": null,
   "notes": null,
   "link": null,
