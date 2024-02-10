@@ -6,7 +6,7 @@ dirs = build
 SRC_DIR := ./deploy
 DEST_DIR := ./build
 TFFILES := config.tf datablocks.tf backend.tf local.tfvars variables.tf makefile
-code_files = ./*.js ./*.json ./assets/*.js ./rungroups/*.js ./reference/*.js
+code_files = ./*.js ./*.json ./assets/*.js ./rungroups/*.js ./reference/*.js ./common/*.js
 
 TF_TARGS := $(patsubst %,$(DEST_DIR)/%,$(TFFILES))
 
