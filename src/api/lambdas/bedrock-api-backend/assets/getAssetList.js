@@ -79,7 +79,6 @@ async function addBaseFields(assets, sqlResult, requestedFields, availableFields
     assets.assetNames.push(`'${assetName}'`)
     const asset = new Map();
     assets.assetMap.set(assetName, asset);
-    console.log('Creating asset ', assetName);
     asset.set('asset_name', row.asset_name);
     asset.set('asset_type', row.asset_type);
     asset.set('custom_fields', new Map());
@@ -95,7 +94,6 @@ async function addBaseFields(assets, sqlResult, requestedFields, availableFields
         }
       }
     }
-    console.log(asset);
   }
   return assets;
 }

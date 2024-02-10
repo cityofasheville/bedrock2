@@ -92,17 +92,13 @@ async function getCustomFields(client) {
       typeMap.set('name', row.name);
       resultMap.set(row.id, typeMap);
     });
-    console.log('Got types: ', types);
   } catch (error) {
-    console.log('Error: ', error);
     throw new Error(`PG error getting asset types: ${pgErrorCodes[error.code]}`);
   }
   for (type of types) {
-    console.log('Work on type ', type);
     let customFields = await getCustomFieldsInfo(client, type);
     const typeMap = resultMap.get(type);
     typeMap.set('fields', Object.fromEntries(customFields.entries()));
-    console.log('customFields', customFields);
   }
  
   for (let [id, itm] of resultMap) {
