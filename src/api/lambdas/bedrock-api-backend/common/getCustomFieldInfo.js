@@ -27,7 +27,7 @@ async function getCustomFieldsInfo(client, asset_type) {
     // Now get custom fields associated with any of the types
     // Field is required if any type in the hierarchy requires it
     sqlQuery = `
-      select id, field_display, bool_or(required) as required
+      select id, field_display, field_type, bool_or(required) as required
       from (
         select c.id, c.field_display, j.asset_type_id, j.required from bedrock.custom_fields c
         left outer join bedrock.asset_type_custom_fields j
