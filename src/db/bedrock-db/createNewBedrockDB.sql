@@ -78,7 +78,7 @@ CREATE TABLE bedrock.assets (
 	description text NULL,
 	"location" jsonb NULL,
   asset_type text NULL,
-  owner_id integer NULL,
+  owner_id text NULL,
   notes text NULL,
   link text NULL,
 	active bool NOT NULL,
