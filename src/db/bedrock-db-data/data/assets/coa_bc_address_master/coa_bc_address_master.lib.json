@@ -8,7 +8,7 @@
     "connection": "pubrecdb1/mdastore1/dbadmin",
     "schemaname": "internal"
   },
-  "asset_type": null,
+  "asset_type": "data",
   "owner_id": 14,
   "notes": "Try this now.\nBut also this!",
   "link": null,

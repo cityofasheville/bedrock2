@@ -81,7 +81,7 @@ async function addBaseFields(assets, sqlResult, requestedFields, availableFields
     assets.assetMap.set(assetName, asset);
     asset.set('asset_name', row.asset_name);
     asset.set('asset_type', row.asset_type);
-    
+    asset.set('custom_fields', new Map());
     for (let j = 0; j < requestedFields.length; j += 1) {
       const itm = requestedFields[j];
       if (availableFields.includes(itm)) {
@@ -100,7 +100,7 @@ async function addBaseFields(assets, sqlResult, requestedFields, availableFields
 
 async function addCustomFields(client, assets, requestedFields, overrideFields) {
   const sql = `
-    select asset_name, field_name, field_value from bedrock.custom_values
+    select asset_name, field_id, field_value from bedrock.custom_values
     where asset_name in (${assets.assetNames.join()})
   `;
   let sqlResult;
@@ -109,12 +109,18 @@ async function addCustomFields(client, assets, requestedFields, overrideFields) 
   } catch (error) {
     throw new Error(`PG error getting asset custom values: ${pgErrorCodes[error.code]}`);
   }
-
+  // Add them to their respective assets
   for (let i = 0; i < sqlResult.rowCount; i += 1) {
     const row = sqlResult.rows[i];
-    if (!overrideFields || requestedFields.includes(row.field_name)) {
-      assets.assetMap.get(row.asset_name).set(row.field_name, row.field_value);
+    if (!overrideFields || requestedFields.includes(row.field_id)) {
+      const cv = assets.assetMap.get(row.asset_name).get('custom_fields');
+      cv.set(row.field_id, row.field_value);
     }
+  }
+
+  // Now convert all the Map objects to ordinary objects
+  for (let [nm, asset] of assets.assetMap) {
+    asset.set('custom_fields', Object.fromEntries(asset.get('custom_fields').entries()));
   }
   return;
 }

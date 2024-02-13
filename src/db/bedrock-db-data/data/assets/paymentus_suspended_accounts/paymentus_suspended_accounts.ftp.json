@@ -7,7 +7,7 @@
     "filename": "Susp${YYYY}${MM}${DD}.csv",
     "connection": "paymentus_ftp"
   },
-  "asset_type": null,
+  "asset_type": "data",
   "owner_id": null,
   "notes": null,
   "link": null,

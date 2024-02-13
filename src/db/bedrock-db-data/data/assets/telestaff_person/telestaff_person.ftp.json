@@ -7,7 +7,7 @@
     "filename": "${YYYY}-${MM}-${DD}T${HH}-${mm}-${SS}.000ZPerson.xml",
     "connection": "telestaff_ftp"
   },
-  "asset_type": null,
+  "asset_type": "data",
   "owner_id": null,
   "notes": null,
   "link": null,

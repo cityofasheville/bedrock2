@@ -2,6 +2,7 @@
 /* eslint-disable no-console */
 const { Client } = require('pg');
 const pgErrorCodes = require('../pgErrorCodes');
+const getCustomFieldsInfo = require('../common/getCustomFieldInfo');
 
 async function newClient(connection) {
   const client = new Client(connection);
@@ -13,7 +14,7 @@ async function newClient(connection) {
   }
 }
 
-async function checkInfo(body, assetName) {
+async function checkBaseInfo(body, assetName) {
   if ('asset_name' in body && body.asset_name !== assetName) {
     throw new Error(`Asset name ${assetName} in path does not match asset name ${body.asset_name} in body`);
   }
@@ -71,12 +72,38 @@ async function getCustomFields(client, asset_type, asset_name) {
   return { fields, values };
 }
 
-async function updateBase(assetName, body, customFields, client) {
+function getCustomValues(body) {
+  const customValues = new Map();
+  if ('custom_fields' in body) {
+    for (val in body.custom_fields) {
+      customValues.set(val, body.custom_fields[val]);
+    }
+  }
+  return customValues;
+}
+
+// The only thing to check for custom fields in an update is
+// that they're not trying to set a required value to null
+function checkCustomFieldsInfo(customValues, customFields) {
+  for (let [id, field] of customFields) {
+    if (field.required && customValues.has(id)) {
+      if (customValues.get(id) == null) {
+        throw new Error(
+          `Attempt to unset required custom field ${field.field_display} (id=${id})`,
+        );
+      }
+    }
+  }
+}
+
+async function updateBase(assetName, body, customValues, client) {
   const members = ['description', 'location', 'active', 'owner_id', 'notes', 'link', 'display_name', 'asset_type'];
   let cnt = 1;
   let args = [];
   let sql = 'UPDATE assets SET ';
+  let sqlResult;
   const asset = new Map();
+  const currentCustomValues = new Map();
 
   for (let i = 0, comma = ''; i < members.length; i += 1) {
     if (members[i] in body) {
@@ -100,39 +127,37 @@ async function updateBase(assetName, body, customFields, client) {
   } catch (error) {
     throw new Error(`PG error updating base asset: ${pgErrorCodes[error.code]}`);
   }
+
   // Now see if there are any custom fields
-  if (customFields.fields.length > 0) {
-    // Simplest just to delete and re-insert
-    // TODO: !!This is wrong - Fix when we implement hierarchical custom fields!!
-    sql = 'DELETE FROM bedrock.custom_values WHERE asset_name like $1';
+  if (customValues.size > 0) {
+    sql = 'select field_id, field_value from custom_values where asset_name like $1';
     try {
-      res = await client.query(sql, [assetName]);
-    }
-    catch (error) {
-      throw new Error(`Error deleting custom values ${field_name}: ${pgErrorCodes[error.code]}`);
-    }
-
-    sql = 'INSERT INTO bedrock.custom_values (asset_name, field_name, field_value) VALUES($1, $2, $3)';
-
-    for (let i = 0; i < customFields.fields.length; i += 1) {
-      const field_name = customFields.fields[i].field_name;
-      if (field_name in body || field_name in customFields.values) {
-        let field_value;
-        if (field_name in body) {
-          field_value = body[field_name];
-        } else {
-          field_value = customFields.values[field_name];
-        }
-        args = [body.asset_name, field_name, field_value];
-        try {
-          res = await client.query(sql, args);
-        }
-        catch (error) {
-          throw new Error(`Error inserting custom value ${field_name}: ${pgErrorCodes[error.code]}`);
-        }
-        asset.set(field_name, field_value);
+      sqlResult = await client.query(sql, [assetName]);
+      for (let i = 0; i < sqlResult.rowCount; i += 1) {
+        const row = sqlResult.rows[i];
+        currentCustomValues.set(row.field_id, row.field_value);
       }
+    } catch (error) {
+      throw new Error(`Error reading current custom values: ${pgErrorCodes[error.code]}`);
     }
+    try {
+      for (let [id, cval] of customValues) {
+        if (currentCustomValues.has(id)) {
+          sql = `
+            update bedrock.custom_values set field_value = $1
+            where asset_name = $2 and field_id = $3
+          `;
+          sqlResult = await client.query(sql, [customValues.get(id), assetName, id]);
+        } else {
+          sql = 'INSERT INTO bedrock.custom_values (asset_name, field_id, field_value) VALUES($1, $2, $3)';
+          args = [assetName, id, customValues.get(id)];
+          sqlR = await client.query(sql, args);
+        }
+      }
+    } catch (error) {
+        throw new Error(`Error updating custom value ${id}: ${pgErrorCodes[error.code]}`);
+    }
+    asset.set('custom_fields', Object.fromEntries(customValues.entries()));
   }
   return asset;
 }
@@ -280,7 +305,8 @@ async function updateTags(assetName, asset, body, client) {
 async function updateAsset(requestBody, pathElements, queryParams, connection) {
   const body = JSON.parse(requestBody);
   const assetName = pathElements[1];
-  let customFields = [];
+  let customFields;
+  let customValues;
   let client;
   let etlInfo;
   let asset;
@@ -292,7 +318,7 @@ async function updateAsset(requestBody, pathElements, queryParams, connection) {
   };
 
   try {
-    await checkInfo(body, assetName);
+    await checkBaseInfo(body, assetName);
     client = await newClient(connection);
   } catch (error) {
     response.error = true;
@@ -303,7 +329,9 @@ async function updateAsset(requestBody, pathElements, queryParams, connection) {
   try {
     const asset_type = await checkExistence(client, assetName);
     if (asset_type !== null) {
-      customFields = await getCustomFields(client, asset_type, assetName);
+      customFields = await getCustomFieldsInfo(client, asset_type);
+      customValues = getCustomValues(body);
+      checkCustomFieldsInfo(customValues, customFields);
     }
   } catch (error) {
     await client.end();
@@ -314,7 +342,7 @@ async function updateAsset(requestBody, pathElements, queryParams, connection) {
 
   try {
     await client.query('BEGIN');
-    asset = await updateBase(assetName, body, customFields, client);
+    asset = await updateBase(assetName, body, customValues, client);
     if ('parents' in body) {
       const parents = await updateDependencies(assetName, body, client);
       asset.set('parents', parents);

@@ -7,7 +7,7 @@
     "filename": "arag_asheville_${YYYY}${MM}${DD}.csv.pgp",
     "connection": "arag_ftp"
   },
-  "asset_type": null,
+  "asset_type": "data",
   "owner_id": null,
   "notes": null,
   "link": null,

@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 const { Client } = require('pg');
 const pgErrorCodes = require('../pgErrorCodes');
+const getCustomFieldsInfo = require('../common/getCustomFieldInfo');
 
 async function newClient(connection) {
   const client = new Client(connection);
@@ -77,33 +78,31 @@ async function getConnectionClass(client) {
 }
 
 async function getCustomFields(client) {
-  let sql = `SELECT * FROM bedrock.custom_fields`;
+  let sql = `SELECT id, name FROM bedrock.asset_types`;
   let res;
-  const resultMap = {};
+
+  const resultMap = new Map();
+  const types = [];
 
   try {
     res = await client.query(sql, []);
-
-    res.rows.forEach(item => {
-      const { asset_type, field_name, field_display, field_type } = item;
-      if (!resultMap[asset_type]) {
-          resultMap[asset_type] = [
-              {
-                  "field_name": field_name,
-                  "field_type": field_type,
-                  "field_display": field_display
-              }
-          ];
-      } else {
-          resultMap[asset_type].push({
-              "field_name": field_name,
-              "field_type": field_type,
-              "field_display": field_display
-          });
-      }
-  });
+    res.rows.forEach(row => {
+      types.push(row.id);
+      const typeMap = new Map();
+      typeMap.set('name', row.name);
+      resultMap.set(row.id, typeMap);
+    });
   } catch (error) {
-    throw new Error(`PG error getting custom_fields information: ${pgErrorCodes[error.code]}`);
+    throw new Error(`PG error getting asset types: ${pgErrorCodes[error.code]}`);
+  }
+  for (type of types) {
+    let customFields = await getCustomFieldsInfo(client, type);
+    const typeMap = resultMap.get(type);
+    typeMap.set('fields', Object.fromEntries(customFields.entries()));
+  }
+ 
+  for (let [id, itm] of resultMap) {
+    resultMap[id] = Object.fromEntries(resultMap.get(id).entries());
   }
 
   return resultMap;

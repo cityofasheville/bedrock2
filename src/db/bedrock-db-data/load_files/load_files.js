@@ -62,27 +62,11 @@ async function readAssetList(client) {
   const nAssets = res.rowCount
 
   /*
-   * Get custom fields for all the asset. An asset only has a custom field
-   * if that field is defined for the asset_type of the asset.
+   * Get custom fields for all the asset. We are just going to assume
+   * that the fields are valid for the type
    */
 
-  // First set up a map of valid fields, by type
-  sql = 'SELECT * from bedrock.custom_fields';
-  res = await client.query(sql)
-  .catch((err) => {
-    const errmsg = [err.code];
-    throw new Error([`Postgres error: ${errmsg}`, err]);
-  });
-  const cFields = {};
-  for (let i = 0; i < res.rowCount; i += 1) {
-    const asset_type = res.rows[i].asset_type;
-    if (!(asset_type in cFields)) {
-      cFields[asset_type] = {};
-    }
-    cFields[asset_type][res.rows[i].field_name] = true;
-  }
-
-  // Now set up a map of custom field values, by asset_name
+  // Set up a map of custom field values, by asset_name
   sql = 'SELECT * FROM bedrock.custom_values order by asset_name;'
   res = await client.query(sql)
   .catch((err) => {
@@ -102,16 +86,12 @@ async function readAssetList(client) {
   // Now insert the custom values in the asset, if valid for the asset's type
   for (let i = 0; i < nAssets; i += 1) {
     const asset = assetList[i];
-    const nm = asset.asset_name;
-    if ((asset.asset_type !== null && asset.asset_type in cFields)) {
-      const validFields = cFields[asset.asset_type];
-      if (asset.asset_name in cValues) {
-        const vals = cValues[asset.asset_name];
-        for (let j = 0; j < vals.length; j += 1) {
-          if (vals[j].field_name in validFields) {
-            assetList[i][vals[j].field_name] = vals[j].field_value;
-          }
-        }
+    if (asset.asset_name in cValues) {
+      asset['custom_fields'] = {};
+      const vals = cValues[asset.asset_name];
+      for (let j = 0; j < vals.length; j += 1) {
+        asset['custom_fields'][vals[j].field_id] = vals[j].field_value;
+//        assetList[i][vals[j].field_name] = vals[j].field_value;
       }
     }
   }

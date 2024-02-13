@@ -7,7 +7,7 @@
     "filename": "deltadental_asheville_${YYYY}${MM}${DD}.txt.asc",
     "connection": "delta_dental_ftp"
   },
-  "asset_type": null,
+  "asset_type": "data",
   "owner_id": null,
   "notes": null,
   "link": null,

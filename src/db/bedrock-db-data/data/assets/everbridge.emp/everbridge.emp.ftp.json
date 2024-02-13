@@ -7,7 +7,7 @@
     "filename": "avl.PR_City_Employees_Everbridge.csv",
     "connection": "everbridge_emp_ftp"
   },
-  "asset_type": null,
+  "asset_type": "data",
   "owner_id": null,
   "notes": null,
   "link": null,

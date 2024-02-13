@@ -99,9 +99,25 @@ with open(os.path.join(data_directory,'connections.csv')) as ff:
 cur.execute(sql)
 print(f'Wrote {nrows} items to the connections table')
 
+# Load the asset types
+sql = 'INSERT INTO bedrock.asset_types (id, name, parent) VALUES '
+with open(os.path.join(data_directory,'asset_types.csv')) as ff:
+  rdr = csv.reader(ff)
+  
+  i = 0;
+  rows = list(rdr)
+  nrows = len(rows)
+  for row in rows:
+    i = i+1
+    sql = f"{sql} ('{row[0]}', '{row[1]}', '{row[2]}')"
+    if i < nrows:
+      sql = sql + ','
+  cur.execute(sql)
+  print(f'Wrote {nrows} items to the asset types table')
+
 # Load the custom fields
-customs_map = {}
-sql = 'INSERT INTO bedrock.custom_fields (asset_type, field_name,	field_display, field_type) VALUES '
+
+sql = 'INSERT INTO bedrock.custom_fields (id, field_display, field_type) VALUES '
 with open(os.path.join(data_directory,'custom_fields.csv')) as ff:
   rdr = csv.reader(ff)
   
@@ -110,14 +126,29 @@ with open(os.path.join(data_directory,'custom_fields.csv')) as ff:
   nrows = len(rows)
   for row in rows:
     i = i+1
-    sql = f"{sql} ('{row[0]}', '{row[1]}', '{row[2]}', '{row[3]}')"
-    if row[0] not in customs_map:
-      customs_map[row[0]] = []
-    customs_map[row[0]].append(row[1]);
+    sql = f"{sql} ('{row[0]}', '{row[1]}', '{row[2]}')"
     if (i<nrows):
       sql = sql + ','
 cur.execute(sql)
 print(f'Wrote {nrows} items to the custom fields table')
+
+
+# Load the asset-type/custom-field connection table
+customs_map = {}
+sql = 'INSERT INTO bedrock.asset_type_custom_fields (asset_type_id, custom_field_id,	required) VALUES '
+with open(os.path.join(data_directory,'asset_type_custom_fields.csv')) as ff:
+  rdr = csv.reader(ff)
+  
+  i = 0;
+  rows = list(rdr)
+  nrows = len(rows)
+  for row in rows:
+    i = i+1
+    sql = f"{sql} ('{row[0]}', '{row[1]}', {row[2]})"
+    if (i<nrows):
+      sql = sql + ','
+cur.execute(sql)
+print(f'Wrote {nrows} items to the asset-type/custom-field connection table')
 
 # Load the owners
 sql = 'INSERT INTO bedrock.owners (owner_id, contact_name, contact_email, contact_phone, organization, department, division, notes) VALUES '
@@ -201,16 +232,16 @@ for asset_subdir in os.listdir(assets_directory):
           ))
           
           # custom variables
-          if config['asset_type'] is not None and 'asset_type' in config and config['asset_type'] in customs_map:
-
-            for itm in customs_map[config['asset_type']]:
-              if itm in config:
+          # Note that we should validate the custom variables, but not
+          # doing it for now.
+          if 'custom_fields' in config and config['custom_fields'] is not None:
+            for itm in config['custom_fields']:
                 sql = f'''
                   insert into bedrock.custom_values
-                  (asset_name, field_name, field_value)
+                  (asset_name, field_id, field_value)
                   values(%s, %s, %s);
                 '''
-                cur.execute(sql, (asset_name, itm, config[itm]))
+                cur.execute(sql, (asset_name, itm, config['custom_fields'][itm]))
 
           # dependencies
           dependencies = config['depends']         

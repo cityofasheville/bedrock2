@@ -33,9 +33,10 @@ async function readAsset(client, pathElements) {
 }
 
 async function addCustomFields(client, asset, requestedFields, fieldsOverride) {
+  let cv = new Map();
   if (asset.get('asset_type') !== null) {
     let res;
-    const sql = 'SELECT field_name, field_value from bedrock.custom_values where asset_name like $1';
+    const sql = 'SELECT field_id, field_value from bedrock.custom_values where asset_name like $1';
     try {
       res = await client.query(sql, [asset.get('asset_name')]);
     } catch (error) {
@@ -46,10 +47,13 @@ async function addCustomFields(client, asset, requestedFields, fieldsOverride) {
     if (res.rowCount > 0) {
       for (let i = 0; i < res.rowCount; i += 1) {
         if (!fieldsOverride || requestedFields.includes(res.rows[i].field_name)) {
-          asset.set(res.rows[i].field_name, res.rows[i].field_value);
+          cv.set(res.rows[i].field_id, res.rows[i].field_value);
         }
       }
     }
+    asset.set('custom_fields', Object.fromEntries(cv.entries()));
+
+
   }
   return;
 }
