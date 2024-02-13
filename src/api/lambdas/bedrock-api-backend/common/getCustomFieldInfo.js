@@ -1,3 +1,5 @@
+const pgErrorCodes = require('../pgErrorCodes');
+
 async function getCustomFieldsInfo(client, asset_type) {
   let sqlQuery;
   let sqlResult;
@@ -29,12 +31,12 @@ async function getCustomFieldsInfo(client, asset_type) {
     sqlQuery = `
       select id, field_display, field_type, bool_or(required) as required
       from (
-        select c.id, c.field_display, j.asset_type_id, j.required from bedrock.custom_fields c
+        select c.id, c.field_display, c.field_type, j.asset_type_id, j.required from bedrock.custom_fields c
         left outer join bedrock.asset_type_custom_fields j
         on c.id = j.custom_field_id
         where j.asset_type_id in (${types})
       ) a
-      group by id, field_display
+      group by id, field_display, field_type
     `;
     sqlResult = await client.query(sqlQuery, []);
     sqlResult.rows.forEach(itm => {
