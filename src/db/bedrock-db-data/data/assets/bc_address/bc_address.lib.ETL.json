@@ -1,5 +1,5 @@
 {
-  "asset_name": "bc_civicaddress_table.lib",
+  "asset_name": "bc_address.lib",
   "run_group": "daily",
   "active": true,
   "tasks": [
@@ -7,10 +7,10 @@
       "type": "table_copy",
       "active": true,
       "source_location": {
-        "asset": "bc_civicaddress_table.wh"
+        "asset": "bc_address.wh"
       },
       "target_location": {
-        "asset": "bc_civicaddress_table.lib"
+        "asset": "bc_address.lib"
       }
     }
   ]
