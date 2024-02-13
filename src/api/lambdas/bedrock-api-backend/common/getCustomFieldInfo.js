@@ -18,7 +18,6 @@ async function getCustomFieldsInfo(client, asset_type) {
       ) SELECT * FROM ancestors;
     `;
     sqlResult = await client.query(sqlQuery, [asset_type]);
-    console.log(sqlResult);
     if (sqlResult.rowCount < 1) {
       console.log(`Asset type ${asset_type} not found`);
       throw new Error(`Asset type ${asset_type} not found`);
