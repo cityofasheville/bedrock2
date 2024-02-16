@@ -17,7 +17,7 @@
       "type": "sql",
       "active": true,
       "connection": "pubrecdb1/mdastore1/dbadmin",
-      "sql_string": "begin transaction;\ntruncate table internal.bc_location_dupes;\ninsert into internal.bc_location_dupes\nselect objectid from internal.bc_location loc\nleft join (\nSELECT min(objectid) as dupe_obj_id\nFROM internal.bc_location\ngroup by location_id\n) mins\non loc.objectid = mins.dupe_obj_id\nwhere dupe_obj_id is null\nand loc.objectid is not null;\ndelete from internal.bc_location loc\nusing internal.bc_location_dupes dup\nwhere loc.objectid = dup.dupe_obj_id;\ncommit;"
+      "sql_string": "begin transaction;\nCREATE temporary TABLE bc_location_dupes (\ndupe_obj_id int4 NOT NULL,\nCONSTRAINT bc_location_dupes_pk PRIMARY KEY (dupe_obj_id)\n);\ninsert into bc_location_dupes\nselect objectid from internal.bc_location loc\nleft join (\nSELECT min(objectid) as dupe_obj_id\nFROM internal.bc_location\ngroup by location_id\n) mins\non loc.objectid = mins.dupe_obj_id\nwhere dupe_obj_id is null\nand loc.objectid is not null;\ndelete from internal.bc_location loc\nusing bc_location_dupes dup\nwhere loc.objectid = dup.dupe_obj_id;\ncommit;\n"
     }
   ]
 }
