@@ -1,0 +1,17 @@
+{
+  "asset_name": "bc_civicaddress_table.wh",
+  "display_name": "bc_civicaddress_table.wh",
+  "description": "bc_civicaddress_table table from County",
+  "location": {
+    "tablename": "bc_civicaddress_table",
+    "connection": "gis-warehouse/coagiswarehouse/coagis",
+    "schemaname": "coagis"
+  },
+  "asset_type": "data",
+  "owner_id": null,
+  "notes": null,
+  "link": null,
+  "active": true,
+  "depends": [],
+  "tags": []
+}
