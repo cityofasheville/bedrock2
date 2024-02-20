@@ -13,7 +13,8 @@
   "link": null,
   "active": true,
   "depends": [
-    "notification_permits.note"
+    "permits.lib",
+    "coa_bc_address_master.lib"
   ],
   "tags": []
 }
