@@ -14,14 +14,14 @@ resource "aws_db_instance" "bedrock-db-$$INSTANCE$$" {
   parameter_group_name = "default.postgres13"
   skip_final_snapshot  = true
   publicly_accessible  = true
-  db_subnet_group_name = "public-db-subnet-group"
+  db_subnet_group_name = $$DB_SUBNET_GROUP_NAME$$
   vpc_security_group_ids = [aws_security_group.bedrock-pg-sg-$$INSTANCE$$.id]
 }
 
 resource "aws_security_group" "bedrock-pg-sg-$$INSTANCE$$" {
   name        = "bedrock-pg-sg-$$INSTANCE$$"
   description = "Allow public access to postgres"
-  vpc_id      = "vpc-0340a3823e5b5f0d2"
+  vpc_id      = $$BEDROCK_VPC_ID$$
 
   ingress {
     description      = "Inbound access to postgres"

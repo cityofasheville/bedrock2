@@ -1,0 +1,6 @@
+DB_SUBNET_GROUP_NAME = "public-db-subnet-group-loc"
+VPC_ID = "vpc-02c2eb86aa0e6df86"
+bd-private-subnets-loc = [
+  "subnet-0c2a5540fb36381e0",
+  "subnet-05115dc853f56cd7e",
+]

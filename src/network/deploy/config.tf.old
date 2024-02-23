@@ -1,0 +1,122 @@
+provider "aws" {
+  region	= var.region
+}
+# https://spacelift.io/blog/terraform-aws-vpc
+# https://medium.com/appgambit/terraform-aws-vpc-with-private-public-subnets-with-nat-4094ad2ab331
+
+
+# VPC with 256 IP addresses
+resource "aws_vpc" "bedrock-vpc-$$INSTANCE$$" {
+  cidr_block = "10.99.0.0/24"
+  enable_dns_hostnames = true
+  enable_dns_support   = true
+}
+
+/* Internet gateway for the public subnet */
+resource "aws_internet_gateway" "ig-$$INSTANCE$$" {
+  vpc_id = "aws_vpc.bedrock-vpc-$$INSTANCE$$.id"
+}
+
+/* Elastic IP for NAT */
+resource "aws_eip" "nat_eip-$$INSTANCE$$" {
+  domain        = "vpc"
+  depends_on = [aws_internet_gateway.ig-$$INSTANCE$$]
+}
+
+/* NAT */
+resource "aws_nat_gateway" "nat" {
+  allocation_id = "${aws_eip.nat_eip-$$INSTANCE$$.id}"
+  subnet_id     = ["${aws_subnet.bedrock-subnet-public-0-$$INSTANCE$$.id}", "${aws_subnet.bedrock-subnet-public-1-$$INSTANCE$$.id}"]
+  depends_on    = [aws_internet_gateway.ig-$$INSTANCE$$]
+}
+
+# Subnets, 2 public, 2 private, with 64 IP addresses in each
+resource "aws_subnet" "bedrock-subnet-private-0-$$INSTANCE$$" {
+  vpc_id     = aws_vpc.bedrock-vpc-$$INSTANCE$$.id
+  cidr_block = "10.99.0.0/26"
+  availability_zone = "us-east-1a"
+  map_public_ip_on_launch = false
+}
+
+resource "aws_subnet" "bedrock-subnet-private-1-$$INSTANCE$$" {
+  vpc_id     = aws_vpc.bedrock-vpc-$$INSTANCE$$.id
+  cidr_block = "10.99.0.64/26"
+  availability_zone = "us-east-1b"
+  map_public_ip_on_launch = false
+}
+
+resource "aws_subnet" "bedrock-subnet-public-0-$$INSTANCE$$" {
+  vpc_id     = aws_vpc.bedrock-vpc-$$INSTANCE$$.id
+  cidr_block = "10.99.0.128/26"
+  availability_zone = "us-east-1a"
+  map_public_ip_on_launch = true
+}
+
+resource "aws_subnet" "bedrock-subnet-public-1-$$INSTANCE$$" {
+  vpc_id     = aws_vpc.bedrock-vpc-$$INSTANCE$$.id
+  cidr_block = "10.99.0.192/26"
+  availability_zone = "us-east-1b"
+  map_public_ip_on_launch = true
+}
+
+####################################################################################
+
+
+/* Routing table for private subnets */
+resource "aws_route_table" "private-$$INSTANCE$$" {
+  vpc_id = "${aws_vpc.bedrock-vpc-$$INSTANCE$$.id}"
+}
+/* Routing table for public subnets */
+resource "aws_route_table" "public-$$INSTANCE$$" {
+  vpc_id = "${aws_vpc.bedrock-vpc-$$INSTANCE$$.id}"
+}
+
+resource "aws_route" "public_internet_gateway-$$INSTANCE$$" {
+  route_table_id         = "${aws_route_table.public.id}"
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = "${aws_internet_gateway.ig-$$INSTANCE$$.id}"
+}
+resource "aws_route" "private_nat_gateway-$$INSTANCE$$" {
+  route_table_id         = "${aws_route_table.private.id}"
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id         = "${aws_nat_gateway.nat-$$INSTANCE$$.id}"
+}
+/* Route table associations */
+resource "aws_route_table_association" "public-$$INSTANCE$$" {
+  count          = 2
+  subnet_id      = "${element(aws_subnet.bedrock-subnet-public-*-$$INSTANCE$$.id, count.index)}"
+  route_table_id = "${aws_route_table.public-$$INSTANCE$$.id}"
+}
+resource "aws_route_table_association" "private-$$INSTANCE$$" {
+  count          = 2
+  subnet_id      = "${element(aws_subnet.bedrock-subnet-private-*-$$INSTANCE$$.id, count.index)}"
+  route_table_id = "${aws_route_table.private-$$INSTANCE$$.id}"
+}
+/*==== VPC's Default Security Group ======*/
+resource "aws_security_group" "default" {
+  name        = "bedrock-default-sg-$$INSTANCE$$"
+  description = "Default security group to allow inbound/outbound from the VPC"
+  vpc_id      = "${aws_vpc.bedrock-vpc-$$INSTANCE$$.id}"
+  depends_on  = [aws_vpc.bedrock-vpc-$$INSTANCE$$]
+  ingress {
+    from_port = "0"
+    to_port   = "0"
+    protocol  = "-1"
+    self      = true
+  }
+  
+  egress {
+    from_port = "0"
+    to_port   = "0"
+    protocol  = "-1"
+    self      = "true"
+  }
+}
+
+output "VPC_ID" {
+  value = "${aws_vpc.bedrock-vpc-$$INSTANCE$$.id}"
+}
+
+output "PRIVATE_SUBNETS" {
+  value = ["aws_subnet.bedrock-subnet-private0-$$INSTANCE$$","aws_subnet.bedrock-subnet-private1-$$INSTANCE$$"]
+}
