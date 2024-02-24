@@ -4,6 +4,15 @@ statebucket = "avl-tfstate-store"
 account = 518970837364
 email_recipients = "['dummy@ashevillenc.gov']"
 build_mode = std # Set to sam to build using SAM
+
+# The next four variables provide information on the VPC, subnets and security
+# groups that Bedrock will use. They can be created in the network folder and
+# the resulting output copied here, or you can use existing resources.
+BEDROCK_VPC_ID = "vpc-0340a3823e5b5f0d2"
+DB_SUBNET_GROUP_NAME =  "public-db-subnet-group"
+BEDROCK_SECURITY_GROUP_IDS = ["sg-076e12ba2a9012944"]
+BEDROCK_PRIVATE_SUBNETS = ["subnet-00e55df750014753d", "subnet-0c119b605ff498f3b"]
+
 # The next variable is the database host name built in the db directory,
 # e.g., bedrock-db-ej-test-0.cd9h9tveyb58.us-east-1.rds.amazonaws.com.
 # If using the database built as part of this instance, you can copy from

@@ -91,6 +91,40 @@ resource "aws_route_table_association" "public_subnet_asso" {
  route_table_id = aws_route_table.second_rt.id
 }
 
+resource "aws_security_group" "bedrock-vpc-sg-$$INSTANCE$$" {
+  name        = "bedrock-vpc-sg-$$INSTANCE$$"
+  description = "Allow TLS inbound traffic,Postgres and all outbound traffic"
+  vpc_id      = aws_vpc.bd-main-$$INSTANCE$$.id
+
+  tags = {
+    Name = "bedrock-vpc-sg-$$INSTANCE$$"
+  }
+
+  egress {
+    from_port        = 0
+    to_port          = 0
+    protocol         = "-1"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+  }
+}
+
+resource "aws_vpc_security_group_ingress_rule" "allow_tls_ipv4-$$INSTANCE$$" {
+  security_group_id = aws_security_group.bedrock-vpc-sg-$$INSTANCE$$.id
+  cidr_ipv4         = aws_vpc.bd-main-$$INSTANCE$$.cidr_block
+  from_port         = 443
+  ip_protocol       = "tcp"
+  to_port           = 443
+}
+
+resource "aws_vpc_security_group_ingress_rule" "allow_pg_ipv4-$$INSTANCE$$" {
+  security_group_id = aws_security_group.bedrock-vpc-sg-$$INSTANCE$$.id
+  cidr_ipv4         = aws_vpc.bd-main-$$INSTANCE$$.cidr_block
+  from_port         = 5432
+  ip_protocol       = "tcp"
+  to_port           = 5432
+}
+
 /** Database Subnet Group **/
 
 resource "aws_db_subnet_group" "db_subnet_group_$$INSTANCE$$" {
@@ -110,12 +144,13 @@ output "VPC_ID" {
   value = "${aws_vpc.bd-main-$$INSTANCE$$.id}"
 }
 
-
-output "bd-private-subnets-$$INSTANCE$$" {
+output "BEDROCK_PRIVATE_SUBNETS" {
   value = aws_subnet.bd-public-subnets-$$INSTANCE$$[*].id
-#  value = ["aws_subnet.bedrock-subnet-private0-$$INSTANCE$$","aws_subnet.bedrock-subnet-private1-$$INSTANCE$$"]
 }
 
+output BEDROCK_SECURITY_GROUP_IDS {
+  value = aws_security_group.bedrock-vpc-sg-$$INSTANCE$$.id
+}
 
 output "DB_SUBNET_GROUP_NAME" {
   value = aws_db_subnet_group.db_subnet_group_$$INSTANCE$$.name

@@ -17,12 +17,12 @@ plan: terraform.tfvars $(config_files)
 .PHONY: apply
 apply: terraform.tfvars $(config_files)
 	terraform apply
-	terraform output > ../networkvariables.generated
+	terraform output > ../bedrock_network_variables.generated
 
 .PHONY: apply-y
 apply-y: terraform.tfvars $(config_files)
 	terraform apply -auto-approve
-	terraform output > ../networkvariables.generated
+	terraform output > ../bedrock_network_variables.generated
 
 .PHONY: destroy itgoaway
 destroy: terraform.tfvars $(config_files)
