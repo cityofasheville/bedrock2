@@ -29,7 +29,7 @@ If you are using an existing database, set the value of ```BEDROCK_DB_HOST``` in
 ```sh
 cd ../db
 make init
-make apply-y #(Creates database server - takes a while)
+make apply #(Creates database server - takes a while)
 make db      #(Creates bedrock database and captures DB endpoint in src/db/make_variables.generated)
 make seed    #(Fill database with assets from Github)
 # Copy the database host from src/db/make_variables.generated into the value of BEDROCK_DB_HOST
@@ -50,10 +50,10 @@ Now you may create the ETL and API infrastructure.
 ```sh
 cd ../etl
 make init
-make apply-y
+make apply
 cd ../api
 make init
-make apply-y
+make apply
 ```
 
 ### To build one Lambda
@@ -61,10 +61,10 @@ make apply-y
 # Make sure you create the role needed first
 cd src/etl/bedrock-lambda-role
 make init
-make apply-y
+make apply
 cd ../etl_task_sql  #(for example)
 make init
-make apply-y
+make apply
 ```
 
 ![directory-structure](./deployment-folders.png)
