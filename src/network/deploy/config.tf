@@ -140,7 +140,7 @@ resource "aws_db_subnet_group" "db_subnet_group_$$INSTANCE$$" {
 /******** Outputs **********/
 /***************************/
 
-output "VPC_ID" {
+output "BEDROCK_VPC_ID" {
   value = "${aws_vpc.bd-main-$$INSTANCE$$.id}"
 }
 
@@ -149,7 +149,7 @@ output "BEDROCK_PRIVATE_SUBNETS" {
 }
 
 output BEDROCK_SECURITY_GROUP_IDS {
-  value = aws_security_group.bedrock-vpc-sg-$$INSTANCE$$.id
+  value =  [aws_security_group.bedrock-vpc-sg-$$INSTANCE$$.id]
 }
 
 output "DB_SUBNET_GROUP_NAME" {
