@@ -1,2 +1,1 @@
-- Make BRANCH= files
-- 
+- local.tfvars in bedrock_common has subnet/sg ids, but doesn't need them

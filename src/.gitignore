@@ -1,3 +1,4 @@
 make_variables
 make_variables.generated
+bedrock_network_variables.generated
 *.instance
