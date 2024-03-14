@@ -1,0 +1,19 @@
+{
+  "asset_name": "vxsmart_payments.ftp",
+  "display_name": "vxsmart_payments.ftp",
+  "description": "Uploaded Payment data to vxsmart_payments",
+  "location": {
+    "path": "/uploads/",
+    "filename": "payments_${YYYY}${MM}${DD}.csv",
+    "connection": "vxsmart_ftp"
+  },
+  "asset_type": "data",
+  "owner_id": null,
+  "notes": null,
+  "link": null,
+  "active": true,
+  "depends": [
+    "vxsmart_payments.s3"
+  ],
+  "tags": []
+}
