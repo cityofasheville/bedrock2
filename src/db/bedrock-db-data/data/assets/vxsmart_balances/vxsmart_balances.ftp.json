@@ -1,0 +1,19 @@
+{
+  "asset_name": "vxsmart_balances.ftp",
+  "display_name": "vxsmart_balances.ftp",
+  "description": "Uploaded Balances data to vxsmart_account",
+  "location": {
+    "path": "/uploads/",
+    "filename": "balances_${YYYY}${MM}${DD}.csv",
+    "connection": "vxsmart_ftp"
+  },
+  "asset_type": "data",
+  "owner_id": null,
+  "notes": null,
+  "link": null,
+  "active": true,
+  "depends": [
+    "vxsmart_balances.s3"
+  ],
+  "tags": []
+}

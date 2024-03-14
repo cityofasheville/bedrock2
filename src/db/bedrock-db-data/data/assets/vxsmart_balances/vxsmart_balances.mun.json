@@ -1,0 +1,17 @@
+{
+  "asset_name": "vxsmart_balances.mun",
+  "display_name": "vxsmart_balances.mun",
+  "description": "",
+  "location": {
+    "tablename": "UB_AMI_VXSmart_Balances_Nightly",
+    "connection": "munis/munprod/fme_jobs",
+    "schemaname": "avl"
+  },
+  "asset_type": "data",
+  "owner_id": null,
+  "notes": null,
+  "link": null,
+  "active": true,
+  "depends": [],
+  "tags": []
+}

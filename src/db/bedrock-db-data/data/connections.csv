@@ -22,3 +22,4 @@
 "paymentus_ftp","Paymentus SFTP Site","file"
 "wex_ftp","Wex SFTP Site","file"
 "gis-warehouse/coagiswarehouse/coagis","GIS Warehouse","db"
+"vxsmart_ftp","VXSmart SFTP Site","file"
