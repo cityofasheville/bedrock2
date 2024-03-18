@@ -1,6 +1,6 @@
 {
   "asset_name": "vxsmart_balances.s3",
-  "run_group": "vxsmart",
+  "run_group": "daily",
   "active": true,
   "tasks": [
     {
