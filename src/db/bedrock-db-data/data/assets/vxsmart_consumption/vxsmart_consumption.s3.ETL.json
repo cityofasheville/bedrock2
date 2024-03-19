@@ -7,7 +7,8 @@
       "type": "table_copy",
       "active": true,
       "source_location": {
-        "asset": "vxsmart_consumption.mun"
+        "asset": "vxsmart_consumption.mun",
+        "tableheaders": true
       },
       "target_location": {
         "asset": "vxsmart_consumption.s3"

@@ -7,7 +7,8 @@
       "type": "table_copy",
       "active": true,
       "source_location": {
-        "asset": "vxsmart_account.mun"
+        "asset": "vxsmart_account.mun",
+        "tableheaders": true
       },
       "target_location": {
         "asset": "vxsmart_account.s3"

@@ -13,7 +13,8 @@
       "type": "table_copy",
       "active": true,
       "source_location": {
-        "asset": "vxsmart_balances.mun"
+        "asset": "vxsmart_balances.mun",
+        "tableheaders": true
       },
       "target_location": {
         "asset": "vxsmart_balances.s3"
