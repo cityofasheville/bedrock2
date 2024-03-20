@@ -9,9 +9,11 @@ from copy_win import put_win, get_win
 
 region_name = "us-east-1"  # for secrets manager
 
-def fillDateTemplate(filename):  # Convert file_${YYYY}${MM}${DD}.csv to file_20220721.csv
+# Convert file_${YYYY}${MM}${DD}.csv to file_20220721.csv (current date)
+# If dateadjustment is defined, it will add or subtract days from the current date
+def fillDateTemplate(filename, dateadjustment = 0):
     filename = filename.replace('${','{')
-    now = datetime.datetime.now()
+    now = datetime.datetime.now() + datetime.timedelta(days = dateadjustment)
     year = now.year
     month = now.strftime("%m")
     day = now.strftime("%d")
@@ -54,9 +56,10 @@ def lambda_handler(event, context):
 
         for loc in locations:
             location = etl[loc["name"]]
+            dateadjustment = location.get('adjustdate', 0)
             loc["connection_data"] = getConnection(location["connection"])
-            loc["filename"] = fillDateTemplate(location["filename"])
-            loc["path"] = fillDateTemplate(location["path"])
+            loc["filename"] = fillDateTemplate(location["filename"], dateadjustment)
+            loc["path"] = fillDateTemplate(location["path"], dateadjustment)
             loc["connection"] = location["connection"]
 
         source_location = locations[0]

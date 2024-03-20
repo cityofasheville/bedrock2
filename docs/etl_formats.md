@@ -75,6 +75,7 @@ Also see [Managed Data Assets README](https://github.com/cityofasheville/managed
 ## File Copy
 File copy can read and write from S3, Windows file share, and SFTP sites. Google Drive to be added.
 All locations have the same three fields: connection, filename, and path. Connections include a type field to distinguish S3 from SFTP, etc.
+The option "adjustdate" on a target or source changes the filename created in fillDateTemplate by that number of days. (-1 means yesterday)
 ```
 {
     "run_group": "daily",
@@ -84,12 +85,14 @@ All locations have the same three fields: connection, filename, and path. Connec
             "source_location": {
                 "connection": "",
                 "filename": "",
-                "path": ""
+                "path": "",
+                <OPTIONAL>: "adjustdate": -1
             },
             "target_location": {
                 "connection": "",
                 "filename": "",
-                "path": ""
+                "path": "",
+                <OPTIONAL>: "adjustdate": -1
             },
             "active": true
         }

@@ -8,6 +8,6 @@ Resources:
     Properties:
       CodeUri: $$codeuri$$
 #      CodeUri: ..
-      Runtime: python3.8
+      Runtime: python3.10
       Handler: handler.lambda_handler
       Timeout: 600
