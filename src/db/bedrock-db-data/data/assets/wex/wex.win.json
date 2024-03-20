@@ -11,9 +11,9 @@
   "owner_id": null,
   "notes": null,
   "link": null,
-  "active": false,
+  "active": true,
   "depends": [
-    "wex.ftp"
+    "wex.s3"
   ],
   "tags": []
 }
