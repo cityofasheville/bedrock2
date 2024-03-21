@@ -13,7 +13,8 @@
   "link": null,
   "active": true,
   "depends": [
-    "vxsmart_balances.mun"
+    "vxsmart_balances.mun",
+    "vxsmart_acct_cust_bal.mun"
   ],
   "tags": []
 }

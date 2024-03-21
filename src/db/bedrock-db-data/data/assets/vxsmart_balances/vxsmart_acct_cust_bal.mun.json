@@ -1,0 +1,17 @@
+{
+  "asset_name": "vxsmart_acct_cust_bal.mun",
+  "display_name": "vxsmart_acct_cust_bal.mun",
+  "description": "Prerequisite table for view UB_AMI_VXSmart_Balances_Nightly",
+  "location": {
+    "tablename": "UB_VX_Acct_Cust_Bal",
+    "connection": "munis/munprod/fme_jobs",
+    "schemaname": "avl"
+  },
+  "asset_type": "data",
+  "owner_id": null,
+  "notes": null,
+  "link": null,
+  "active": true,
+  "depends": [],
+  "tags": []
+}

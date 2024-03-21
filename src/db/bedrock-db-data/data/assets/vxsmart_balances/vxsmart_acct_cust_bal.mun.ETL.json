@@ -1,0 +1,13 @@
+{
+  "asset_name": "vxsmart_acct_cust_bal.mun",
+  "run_group": "daily",
+  "active": true,
+  "tasks": [
+    {
+      "type": "sql",
+      "active": true,
+      "connection": "munis/munprod/fme_jobs",
+      "sql_string": "execute [avl].[UB_VX_Balances_Insert];"
+    }
+  ]
+}

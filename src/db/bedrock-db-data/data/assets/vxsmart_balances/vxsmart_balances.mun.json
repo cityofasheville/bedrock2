@@ -12,6 +12,8 @@
   "notes": null,
   "link": null,
   "active": true,
-  "depends": [],
+  "depends": [
+    "vxsmart_acct_cust_bal.mun"
+  ],
   "tags": []
 }
