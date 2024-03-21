@@ -12,4 +12,3 @@
 "paymentus_payment_history","15 22 ? * MON-FRI *"
 "paymentus_suspended_accounts","30 22 ? * MON-FRI *"
 "paymentus_paper_suppression","00 12 ? * * *"
-"wex","00 09 * * ? *"
