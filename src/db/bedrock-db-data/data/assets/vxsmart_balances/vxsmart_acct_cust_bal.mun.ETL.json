@@ -1,6 +1,6 @@
 {
   "asset_name": "vxsmart_acct_cust_bal.mun",
-  "run_group": "daily",
+  "run_group": "vxsmart_balances",
   "active": true,
   "tasks": [
     {
