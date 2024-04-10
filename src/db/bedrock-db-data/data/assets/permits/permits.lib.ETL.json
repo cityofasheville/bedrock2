@@ -17,7 +17,7 @@
       "type": "sql",
       "active": true,
       "connection": "pubrecdb1/mdastore1/dbadmin",
-      "sql_string": "truncate table internal.permits_temp;\nINSERT INTO internal.permits_temp\nSELECT distinct * FROM temp.permits_temp\nON CONFLICT(permit_num) DO nothing;"
+      "sql_string": "truncate table internal.permits;\nINSERT INTO internal.permits\nSELECT distinct * FROM temp.permits_temp\nON CONFLICT(permit_num) DO nothing;"
     }
   ]
 }
