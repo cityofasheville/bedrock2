@@ -1,0 +1,19 @@
+{
+  "asset_name": "workforce_development.pub",
+  "display_name": "workforce_development.pub",
+  "description": "Workforce and Career Development Resources-Public DB to be accessed from website",
+  "location": {
+    "tablename": "workforce_development",
+    "connection": "coa-publicdb1/coa_share/dbadmin",
+    "schemaname": "open"
+  },
+  "asset_type": "data",
+  "owner_id": null,
+  "notes": null,
+  "link": null,
+  "active": true,
+  "depends": [
+    "workforce_development.lib"
+  ],
+  "tags": []
+}

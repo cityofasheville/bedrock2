@@ -1,0 +1,19 @@
+{
+  "asset_name": "workforce_development.lib",
+  "display_name": "workforce_development.lib",
+  "description": "Workforce and Career Development Resources",
+  "location": {
+    "tablename": "workforce_development",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "internal"
+  },
+  "asset_type": "data",
+  "owner_id": null,
+  "notes": null,
+  "link": null,
+  "active": true,
+  "depends": [
+    "workforce_development.goog"
+  ],
+  "tags": []
+}
