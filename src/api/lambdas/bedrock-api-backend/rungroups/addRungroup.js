@@ -61,6 +61,7 @@ async function baseInsert(client, body) {
 async function addRungroup(requestBody, pathElements, queryParams, connection) {
   const body = JSON.parse(requestBody);
   let client;
+  let transactionStarted = false;
 
   const result = {
     error: false,
@@ -79,9 +80,13 @@ async function addRungroup(requestBody, pathElements, queryParams, connection) {
 
   try {
     await checkExistence(client, pathElements);
+    await client.query('BEGIN');
+    transactionStarted = true;
     result.result = baseInsert(client, body);
+    await client.query('COMMIT');
     await client.end();
   } catch (error) {
+    if (transactionStarted) await client.query('ROLLBACK');
     result.error = true;
     result.message = error.message;
     await client.end();
