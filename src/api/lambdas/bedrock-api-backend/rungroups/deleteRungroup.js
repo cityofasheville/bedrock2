@@ -60,7 +60,7 @@ async function deleteRungroup(pathElements, queryParams, connection) {
   }
 
   try {
-    checkExistence(client, rungroupName);
+    await checkExistence(client, rungroupName);
   } catch (error) {
     result.error = true;
     result.message = error.message;
@@ -70,10 +70,12 @@ async function deleteRungroup(pathElements, queryParams, connection) {
 
   try {
     await baseDelete(client, rungroupName);
+    await client.query('COMMIT');
     await client.end();
   } catch (error) {
     result.error = true;
     result.message = error.message;
+    await client.query('ROLLBACK');
     await client.end();
   }
 
