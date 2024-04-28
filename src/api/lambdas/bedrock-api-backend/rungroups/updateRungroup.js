@@ -37,17 +37,17 @@ async function checkExistence(client, rungroupName) {
 }
 
 async function baseInsert(client, body, rungroupName) {
-  let result;
   const members = ['cron_string'];
   let cnt = 1;
   const args = [];
+  const rungroup = new Map()
   let sql = 'UPDATE run_groups SET ';
 
   for (let i = 0, comma = ''; i < members.length; i += 1) {
     if (members[i] in body) {
       sql += `${comma} ${members[i]} = $${cnt}`;
       args.push(body[members[i]]);
-      result[members[i]] = body[members[i]];
+      rungroup.set(members[i], body[members[i]]);
       cnt += 1;
       comma = ',';
     }
@@ -63,16 +63,17 @@ async function baseInsert(client, body, rungroupName) {
     throw new Error(`PG error updating rungroup: ${pgErrorCodes[error.code]}`);
   }
 
-  return result;
+  return rungroup;
 }
 
 async function updateRungroup(requestBody, pathElements, queryParams, connection) {
   const rungroupName = pathElements[1];
   const body = JSON.parse(requestBody);
   let client;
-  const result = {
+  let rungroup;
+  const response = {
     error: false,
-    message: `Successfully updated asset ${rungroupName}`,
+    message: `Successfully updated rungroup ${rungroupName}`,
     result: null,
   };
 
@@ -80,32 +81,32 @@ async function updateRungroup(requestBody, pathElements, queryParams, connection
     await checkInfo(body, rungroupName);
     client = await newClient(connection);
   } catch (error) {
-    result.error = true;
-    result.message = error.message;
-    return result;
+    response.error = true;
+    response.message = error.message;
+    return response;
   }
 
   try {
     await checkExistence(client, rungroupName);
   } catch (error) {
-    result.error = true;
-    result.message = error.message;
+    response.error = true;
+    response.message = error.message;
     await client.end();
-    return result;
+    return response;
   }
   try {
     await client.query('BEGIN');
-    result.result = await baseInsert(client, body, rungroupName);
+    rungroup = await baseInsert(client, body, rungroupName);
     await client.query('COMMIT');
     await client.end();
   } catch (error) {
     await client.query('ROLLBACK');
     await client.end();
-    result.error = true;
-    result.message = error.message;
+    response.error = true;
+    response.message = error.message;
   }
-
-  return result;
+  response.result = Object.fromEntries(rungroup.entries());
+  return response;
 }
 
 module.exports = updateRungroup;
