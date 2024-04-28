@@ -24,7 +24,7 @@ async function getInfo(client, pathElements) {
   if (res.rowCount === 0) {
     throw new Error('Rungroup not found');
   }
-  return res.rows;
+  return res.rows[0];
 }
 
 async function getRungroup(pathElements, queryParams, connection) {
