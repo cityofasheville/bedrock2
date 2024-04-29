@@ -287,7 +287,6 @@ async function addAsset(requestBody, pathElements, queryParams, connection) {
 
   await client.query('BEGIN');
 
-
   try {
     await checkExistence(client, pathElements);
     await checkBaseInfo(client, body, pathElements);
