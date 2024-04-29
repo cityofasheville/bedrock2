@@ -38,6 +38,7 @@ async function checkExistence(client, pathElements) {
 
 async function baseInsert(client, body) {
   let res;
+
   try {
     res = await client
       .query(
@@ -54,7 +55,7 @@ async function baseInsert(client, body) {
 
   return {
     run_group_name: body.run_group_name,
-    crong_string: body.cron_string,
+    cron_string: body.cron_string,
   };
 }
 
@@ -79,11 +80,11 @@ async function addRungroup(requestBody, pathElements, queryParams, connection) {
 
   try {
     await checkExistence(client, pathElements);
-    result.result = baseInsert(client, body);
-    await client.end();
+    result.result = await baseInsert(client, body);
   } catch (error) {
     result.error = true;
     result.message = error.message;
+  } finally {
     await client.end();
   }
   return result;

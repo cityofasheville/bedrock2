@@ -30,7 +30,6 @@ async function checkExistence(client, rungroupName) {
 }
 
 async function baseDelete(client, rungroupName) {
-  await client.query('BEGIN');
 
   try {
     await client
@@ -60,7 +59,7 @@ async function deleteRungroup(pathElements, queryParams, connection) {
   }
 
   try {
-    checkExistence(client, rungroupName);
+    await checkExistence(client, rungroupName);
   } catch (error) {
     result.error = true;
     result.message = error.message;
