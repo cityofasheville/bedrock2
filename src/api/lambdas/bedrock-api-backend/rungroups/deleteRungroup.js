@@ -30,7 +30,6 @@ async function checkExistence(client, rungroupName) {
 }
 
 async function baseDelete(client, rungroupName) {
-  await client.query('BEGIN');
 
   try {
     await client
@@ -70,12 +69,10 @@ async function deleteRungroup(pathElements, queryParams, connection) {
 
   try {
     await baseDelete(client, rungroupName);
-    await client.query('COMMIT');
     await client.end();
   } catch (error) {
     result.error = true;
     result.message = error.message;
-    await client.query('ROLLBACK');
     await client.end();
   }
 
