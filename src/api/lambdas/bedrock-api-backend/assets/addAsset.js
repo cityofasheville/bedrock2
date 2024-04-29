@@ -268,7 +268,6 @@ async function addAsset(requestBody, pathElements, queryParams, connection) {
   const body = JSON.parse(requestBody);
   let customFields;
   let customValues;
-  let transactionStarted = false;
   let asset;
   let client;
 
@@ -286,35 +285,31 @@ async function addAsset(requestBody, pathElements, queryParams, connection) {
     return response;
   }
 
+  await client.query('BEGIN');
+
+
   try {
     await checkExistence(client, pathElements);
     await checkBaseInfo(client, body, pathElements);
     customFields = await getCustomFieldsInfo(client, body.asset_type);
     customValues = getCustomValues(body);
     checkCustomFieldsInfo(customValues, customFields);
-    
-    await client.query('BEGIN');
-    transactionStarted = true;
     asset = await baseInsert(body, customFields, customValues, client);
     asset.set('parents',  await addDependencies(asset, body, client));
-
     let [run_group, active] = await addETL(asset, body, client);
     asset.set('etl_run_group', run_group);
     asset.set('etl_active', active);
-
     asset.set('tags', await addTags(asset, body, client));
     await client.query('COMMIT');
-    await client.end();
     response.result = Object.fromEntries(asset.entries());
-    return response;
   } catch (error) {
-    if (transactionStarted) await client.query('ROLLBACK');
-    await client.end();
+    await client.query('ROLLBACK');
     response.error = true;
     response.message = error.message;
+  } finally {
+    await client.end();
     return response;
   }
  }
-
 
 module.exports = addAsset;
