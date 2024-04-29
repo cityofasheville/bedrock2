@@ -84,7 +84,7 @@ function checkCustomFieldsInfo(customValues, customFields) {
 
 async function baseInsert(body, customFields, customValues, client) {
   // All is well - let's go ahead and add.
-  let asset = null;
+  let tempAsset = null;
   let sql;
   let res;
   let argnum = 5;
@@ -96,41 +96,15 @@ async function baseInsert(body, customFields, customValues, client) {
   ];
   sql = 'INSERT INTO assets (asset_name, description, location, active';
   let vals = ') VALUES($1, $2, $3, $4';
+  let fields = ['owner_id', 'notes', 'link', 'display_name', 'asset_type']
 
-  if ('owner_id' in body) {
-    sql += ', owner_id';
-    vals += `, $${argnum}`;
-    args.push(body.owner_id);
-    argnum += 1;
-  }
-
-  if ('notes' in body) {
-    sql += ', notes';
-    vals += `, $${argnum}`;
-    args.push(body.notes);
-    argnum += 1;
-  }
-
-  if ('link' in body) {
-    sql += ', link';
-    vals += `, $${argnum}`;
-    args.push(body.link);
-    argnum += 1;
-  }
-
-  if ('display_name' in body) {
-    sql += ', display_name';
-    vals += `, $${argnum}`;
-    args.push(body.display_name);
-    argnum += 1;
-  }
-
-  if ('asset_type' in body) {
-    sql += ', asset_type';
-    vals += `, $${argnum}`;
-    args.push(body.asset_type);
-    argnum += 1;
-  }
+  for (let i = 0; i < fields.length; i += 1) {
+    if (fields[i] in body) {
+      sql += `, ${fields[i]}`;
+      vals += `, $${argnum}`;
+      args.push(body[fields[i]]);
+      argnum += 1;
+    }}
 
   sql += `${vals})`;
 
@@ -145,28 +119,17 @@ async function baseInsert(body, customFields, customValues, client) {
   if (res.rowCount !== 1) {
     throw new Error('Unknown error inserting new asset');
   } else {
-    asset = new Map([
+    tempAsset = new Map([
       ['asset_name', body.asset_name],
       ['description', body.description],
       ['location', body.location],
       ['active', body.active],
     ]);
-    if ('owner_id' in body) {
-      asset.set('owner_id', body.owner_id);
-    }
-    if ('notes' in body) {
-      asset.set('notes', body.notes);
-    }
-    if ('link' in body) {
-      asset.set('link', body.link);
-    }
-    if ('display_name' in body) {
-      asset.set('display_name', body.display_name);
-    }
-    if ('asset_type' in body) {
-      asset.set('asset_type', body.asset_type);
-    }
-  }
+    for (let i = 0; i < fields.length; i += 1) {
+      if (fields[0] in body) {
+        tempAsset.set(fields[0], body[fields[0]])
+      }
+  }}
 
   // Now deal with custom fields
   const customOut = new Map();
@@ -183,8 +146,8 @@ async function baseInsert(body, customFields, customValues, client) {
       customOut.set(id, customValues.get(id));
     }
   }
-  asset.set('custom_fields', Object.fromEntries(customOut.entries()));
-  return asset;
+  tempAsset.set('custom_fields', Object.fromEntries(customOut.entries()));
+  return tempAsset;
 }
 
 async function addDependencies(asset, body, client) {
@@ -204,9 +167,8 @@ async function addDependencies(asset, body, client) {
         );
       }
     }
-    asset.set('parents', body.parents);
   }
-  return;
+  return body.parents;
 }
 
 async function addETL(asset, body, client) {
@@ -221,10 +183,8 @@ async function addETL(asset, body, client) {
         `PG error adding etl information: ${pgErrorCodes[error.code]}`,
       );
     }
-    asset.set('etl_run_group', body.etl_run_group);
-    asset.set('etl_active', body.etl_active);
   }
-  return;
+  return [body.etl_run_group, body.etl_active];
 }
 
 async function addTags(asset, body, client) {
@@ -301,17 +261,14 @@ async function addTags(asset, body, client) {
     await client.query('ROLLBACK');
     throw new Error(`PG error adding asset_tags: ${pgErrorCodes[error.code]}`);
   }
-
-  asset.set('tags', body.tags);
-  return;
+  return body.tags;
 }
 
 async function addAsset(requestBody, pathElements, queryParams, connection) {
   const body = JSON.parse(requestBody);
   let customFields;
   let customValues;
-  let transactionStarted = false;
-
+  let asset;
   let client;
 
   const response = {
@@ -328,30 +285,30 @@ async function addAsset(requestBody, pathElements, queryParams, connection) {
     return response;
   }
 
-  let asset;
+  await client.query('BEGIN');
+
   try {
     await checkExistence(client, pathElements);
     await checkBaseInfo(client, body, pathElements);
     customFields = await getCustomFieldsInfo(client, body.asset_type);
     customValues = getCustomValues(body);
     checkCustomFieldsInfo(customValues, customFields);
-
-    await client.query('BEGIN');
-    transactionStarted = true;
     asset = await baseInsert(body, customFields, customValues, client);
-    await addDependencies(asset, body, client);
-    await addETL(asset, body, client);
-    await addTags(asset, body, client);
+    asset.set('parents',  await addDependencies(asset, body, client));
+    let [run_group, active] = await addETL(asset, body, client);
+    asset.set('etl_run_group', run_group);
+    asset.set('etl_active', active);
+    asset.set('tags', await addTags(asset, body, client));
     await client.query('COMMIT');
-    await client.end();
     response.result = Object.fromEntries(asset.entries());
-    return response;
   } catch (error) {
-    if (transactionStarted) await client.query('ROLLBACK');
-    await client.end();
+    await client.query('ROLLBACK');
     response.error = true;
     response.message = error.message;
+  } finally {
+    await client.end();
     return response;
   }
-}
+ }
+
 module.exports = addAsset;
