@@ -107,8 +107,6 @@ async function baseInsert(body, customFields, customValues, client) {
     }}
 
   sql += `${vals})`;
-    console.log(sql);
-    console.log(args);
 
   try {
     res = await client.query(sql, args);
