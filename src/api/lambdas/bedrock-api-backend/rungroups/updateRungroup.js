@@ -95,12 +95,9 @@ async function updateRungroup(requestBody, pathElements, queryParams, connection
     return response;
   }
   try {
-    await client.query('BEGIN');
     rungroup = await baseInsert(client, body, rungroupName);
-    await client.query('COMMIT');
     await client.end();
   } catch (error) {
-    await client.query('ROLLBACK');
     await client.end();
     response.error = true;
     response.message = error.message;
