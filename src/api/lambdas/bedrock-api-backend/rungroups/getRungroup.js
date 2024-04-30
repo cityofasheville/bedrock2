@@ -28,7 +28,7 @@ async function getInfo(client, pathElements) {
 }
 
 async function getRungroup(pathElements, queryParams, connection) {
-  const result = {
+  const response = {
     error: false,
     message: '',
     result: null,
@@ -38,20 +38,21 @@ async function getRungroup(pathElements, queryParams, connection) {
   try {
     client = await newClient(connection);
   } catch (error) {
-    result.error = true;
-    result.message = error.message;
-    return result;
+    response.error = true;
+    response.message = error.message;
+    return response;
   }
 
   try {
-    result.result = await getInfo(client, pathElements);
-    await client.end();
+    response.result = await getInfo(client, pathElements);
   } catch (error) {
-    result.error = true;
-    result.message = error.message;
+    response.error = true;
+    response.message = error.message;
+  } finally {
+    await client.end();
+    return response;
   }
 
-  return result;
 }
 
 module.exports = getRungroup;
