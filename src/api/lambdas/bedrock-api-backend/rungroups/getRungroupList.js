@@ -103,7 +103,10 @@ function buildURL(queryParams, domainName, res, offset, total, pathElements) {
 
 async function getRungroupList(domainName, pathElements, queryParams, connection) {
   console.log(queryParams);
-  const result = {
+  let rungroupList = new Map();
+  // setting items first makes the order of the properties in the final object better
+  rungroupList.set("items", ""); 
+  const response = {
     error: false,
     message: checkParameters(queryParams),
     result: null,
@@ -112,50 +115,41 @@ async function getRungroupList(domainName, pathElements, queryParams, connection
   let client;
   let total;
   let res;
-  let url;
+  // Below, I could just use the values from the rungroupList, but I found it made the code
+  // less readable. 
   const count = buildCount(queryParams);
+  rungroupList.set('count', buildCount(queryParams));
   const offset = buildOffset(queryParams);
+  rungroupList.set('offset', buildOffset(queryParams));
   const whereClause = buildWhereClause(queryParams);
 
   try {
     client = await newClient(connection);
   } catch (error) {
-    result.error = true;
-    result.message = error.message;
-    return result;
+    response.error = true;
+    response.message = error.message;
+    return response;
   }
 
   try {
     total = await getCount(whereClause, client);
+    rungroupList.set('total', total);
     if (total === 0) {
-      result.message = 'No rungroups found.';
-      result.result = {
-        items: [],
-        offset,
-        count: 0,
-        total,
-        url,
-      };
-      return result;
+      response.message = 'No rungroups found.';
+      response.result = Object.fromEntries(rungroupList.entries())
+      return response;
     }
     res = await getBase(offset, count, whereClause, client);
-    url = buildURL(queryParams, domainName, res, offset, total, pathElements);
+    rungroupList.set('items', res.rows);
+    rungroupList.set('url', buildURL(queryParams, domainName, res, offset, total, pathElements))
+    response.result = Object.fromEntries(rungroupList.entries());
   } catch (error) {
+    response.error = true;
+    response.message = error.message;
+  } finally {
     await client.end();
-    result.error = true;
-    result.message = error.message;
-    return result;
+    return response;
   }
-
-  result.result = {
-    items: res.rows,
-    offset,
-    count: res.rowCount,
-    total,
-    url,
-  };
-
-  return result;
 }
 
 module.exports = getRungroupList;
