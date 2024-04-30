@@ -133,22 +133,18 @@ async function getAllAssetRelations(pathElements, queryParams, connection) {
       return response;
     }
     relations = await readRelations(client, assetName);
+    response.result.ancestors.items = relations.ancestors.items;
+    response.result.ancestors.unique_items = relations.ancestors.unique_items;
+    response.result.descendants.items = relations.descendants.items;
+    response.result.descendants.unique_items = relations.descendants.unique_items;
   } catch (error) {
-    await client.end();
     response.error = true;
     response.message = error.message;
-    await client.end();
     return response;
+  } finally {
+    await client.end();
+    return response
   }
-
-  await client.end();
-
-  response.result.ancestors.items = relations.ancestors.items;
-  response.result.ancestors.unique_items = relations.ancestors.unique_items;
-  response.result.descendants.items = relations.descendants.items;
-  response.result.descendants.unique_items = relations.descendants.unique_items;
-
-  return response;
 }
 
 module.exports = getAllAssetRelations;
