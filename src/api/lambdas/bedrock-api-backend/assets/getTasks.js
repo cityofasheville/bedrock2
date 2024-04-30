@@ -23,41 +23,10 @@ async function readTasks(client, assetName) {
   return res;
 }
 
-async function getTasks(pathElements, queryParams, connection) {
-  const response = {
-    error: false,
-    message: '',
-    result: null,
-  };
-  const tasks = [];
-  let client;
-  const assetName = pathElements[1];
-
-  try {
-    client = await newClient(connection);
-  } catch (error) {
-    response.error = true;
-    response.message = error.message;
-    return response;
-  }
-
-  let res;
-  try {
-    res = await readTasks(client, assetName);
-  } catch (error) {
-    await client.end();
-    response.error = true;
-    response.message = error.message;
-    return response;
-  }
-
-  if (res.rowCount === 0) {
-    response.message = 'No tasks found';
-    return response;
-  }
-
+function formatTasks(res) {
+  let tempTasks = [];
   for (let i = 0; i < res.rowCount; i += 1) {
-    tasks.push(
+    tempTasks.push(
       {
         asset_name: res.rows[i].asset_name,
         seq_number: res.rows[i].seq_number,
@@ -70,14 +39,47 @@ async function getTasks(pathElements, queryParams, connection) {
       },
     );
   }
+  return tempTasks;
+}
 
-  await client.end();
-
-  response.result = {
-    items: tasks,
+async function getTasks(pathElements, queryParams, connection) {
+  const response = {
+    error: false,
+    message: '',
+    result: null,
   };
+  let client;
+  let res;
+  let tasks = [];
+  const assetName = pathElements[1];
 
-  return response;
+  try {
+    client = await newClient(connection);
+  } catch (error) {
+    response.error = true;
+    response.message = error.message;
+    return response;
+  }
+
+  try {
+    res = await readTasks(client, assetName);
+    if (res.rowCount === 0) {
+      response.message = 'No tasks found';
+    } else {
+      tasks = formatTasks(res)
+      response.result = {
+        items: tasks,
+      };
+    }
+  } catch (error) {
+    await client.end();
+    response.error = true;
+    response.message = error.message;
+    return response;
+  } finally {
+    await client.end()
+    return response;
+  }
 }
 
 module.exports = getTasks;
