@@ -78,7 +78,8 @@ async function baseDelete(client, assetName) {
 async function deleteAsset(pathElements, queryParams, connection) {
   const assetName = pathElements[1];
   let client;
-  const result = {
+  // no need for building a map object to send to the requester, as we only return the asset name. 
+  const response= {
     error: false,
     message: `Successfully deleted asset ${assetName}`,
     result: null,
@@ -87,18 +88,18 @@ async function deleteAsset(pathElements, queryParams, connection) {
   try {
     client = await newClient(connection);
   } catch (error) {
-    result.error = true;
-    result.message = error.message;
-    return result;
+    response.error = true;
+    response.message = error.message;
+    return response;
   }
 
   try {
     await checkExistence(client, assetName);
   } catch (error) {
     await client.end();
-    result.error = true;
-    result.message = error.message;
-    return result;
+    response.error = true;
+    response.message = error.message;
+    return response;
   }
 
   await client.query('BEGIN');
@@ -111,15 +112,15 @@ async function deleteAsset(pathElements, queryParams, connection) {
     await customFieldsDelete(client, assetName);
     await baseDelete(client, assetName);
     await client.query('COMMIT');
-    await client.end();
   } catch (error) {
     await client.query('ROLLBACK');
+    response.error = true;
+    response.message = error.message;
+  } finally {
     await client.end();
-    result.error = true;
-    result.message = error.message;
+    return response;
   }
 
-  return result;
 }
 
 module.exports = deleteAsset;

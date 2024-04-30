@@ -51,16 +51,15 @@ async function addCustomFields(client, asset, requestedFields, fieldsOverride) {
         }
       }
     }
-    asset.set('custom_fields', Object.fromEntries(cv.entries()));
-
 
   }
-  return;
+  return Object.fromEntries(cv.entries());
 }
 
-async function addBaseFields(asset, assetRows, requestedFields, available) {
-  asset.set('asset_name', assetRows[0].asset_name);
-  asset.set('asset_type', assetRows[0].asset_type);
+async function addBaseFields(assetRows, requestedFields, available) {
+  let tempAsset = new Map()
+  tempAsset.set('asset_name', assetRows[0].asset_name);
+  tempAsset.set('asset_type', assetRows[0].asset_type);
   
   for (let j = 0; j < requestedFields.length; j += 1) {
     const itm = requestedFields[j];
@@ -72,20 +71,20 @@ async function addBaseFields(asset, assetRows, requestedFields, available) {
             parents.push(assetRows[i].dependency);
           }
         }
-        asset.set('parents', parents);
+        tempAsset.set('parents', parents);
       } else if (itm === 'etl_run_group') {
-        asset.set('etl_run_group', assetRows[0].run_group);
+        tempAsset.set('etl_run_group', assetRows[0].run_group);
       } else if (itm === 'tags') {
-        asset.set('tags', []);
+        tempAsset.set('tags', []);
       } else {
-        asset.set(itm, assetRows[0][itm]);
+        tempAsset.set(itm, assetRows[0][itm]);
       }
     }
   }
-  return;
+  return tempAsset;
 }
 
-async function addTags(client, asset, pathElements) {
+async function addTags(client, pathElements) {
   const tags = [];
   const res = await client
     .query('SELECT * from bedrock.asset_tags where asset_name like $1', [
@@ -103,8 +102,7 @@ async function addTags(client, asset, pathElements) {
       }
     }
   }
-  asset.set('tags', tags);
-  return;
+  return tags;
 }
 
 async function getAsset(pathElements, queryParams, connection) {
@@ -122,13 +120,13 @@ async function getAsset(pathElements, queryParams, connection) {
     'etl_run_group',
     'etl_active',
   ];
+  let asset = new Map();
+  let client;
   const response = {
     error: false,
     message: '',
     result: null,
   };
-  const asset = new Map();
-  let client;
 
   // Use fields from the query if they're present, otherwise use all available
   let requestedFields = null;
@@ -148,24 +146,21 @@ async function getAsset(pathElements, queryParams, connection) {
 
   try {
     const overrideFields = ('fields' in queryParams);
-
     const assetRows = await readAsset(client, pathElements);
-    await addBaseFields(asset, assetRows, requestedFields, availableFields);
-    await addCustomFields(client, asset, requestedFields, overrideFields);
+    asset = await addBaseFields(assetRows, requestedFields, availableFields);
+    asset.set('custom_fields', await addCustomFields(client, asset, requestedFields, overrideFields));
     if (requestedFields.includes('tags')) {
-      await addTags(client, asset, pathElements);
+      asset.set('tags', await addTags(client, pathElements));
     }
+    // Convert the map back to an object
+    response.result = Object.fromEntries(asset.entries());
   } catch (error) {
-    await client.end();
     response.error = true;
     response.message = error.message;
+  } finally {
+    await client.end()
     return response;
   }
-
-  await client.end()
-  // Convert the map back to an object
-  response.result = Object.fromEntries(asset.entries());
-  return response;
  }
 
 module.exports = getAsset;
