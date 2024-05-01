@@ -1,0 +1,19 @@
+{
+  "asset_name": "wex.s3",
+  "run_group": "wex",
+  "active": true,
+  "tasks": [
+    {
+      "type": "file_copy",
+      "active": true,
+      "source_location": {
+        "asset": "wex.ftp",
+        "adjustdate": -1
+      },
+      "target_location": {
+        "asset": "wex.s3",
+        "adjustdate": -1
+      }
+    }
+  ]
+}
