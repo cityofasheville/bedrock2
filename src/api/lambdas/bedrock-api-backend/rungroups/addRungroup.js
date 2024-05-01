@@ -63,7 +63,7 @@ async function addRungroup(requestBody, pathElements, queryParams, connection) {
   const body = JSON.parse(requestBody);
   let client;
 
-  const result = {
+  const response = {
     error: false,
     message: '',
     result: null,
@@ -73,21 +73,21 @@ async function addRungroup(requestBody, pathElements, queryParams, connection) {
     client = await newClient(connection);
     checkInfo(body, pathElements);
   } catch (error) {
-    result.error = true;
-    result.message = error.message;
-    return result;
+    response.error = true;
+    response.message = error.message;
+    return response;
   }
 
   try {
     await checkExistence(client, pathElements);
-    result.result = await baseInsert(client, body);
+    response.result = await baseInsert(client, body);
   } catch (error) {
-    result.error = true;
-    result.message = error.message;
+    response.error = true;
+    response.message = error.message;
   } finally {
     await client.end();
+    return response;
   }
-  return result;
 }
 
 module.exports = addRungroup;

@@ -88,22 +88,15 @@ async function updateRungroup(requestBody, pathElements, queryParams, connection
 
   try {
     await checkExistence(client, rungroupName);
+    rungroup = await baseInsert(client, body, rungroupName);
+    response.result = Object.fromEntries(rungroup.entries());
   } catch (error) {
     response.error = true;
     response.message = error.message;
+  } finally {
     await client.end();
     return response;
   }
-  try {
-    rungroup = await baseInsert(client, body, rungroupName);
-    await client.end();
-  } catch (error) {
-    await client.end();
-    response.error = true;
-    response.message = error.message;
-  }
-  response.result = Object.fromEntries(rungroup.entries());
-  return response;
 }
 
 module.exports = updateRungroup;

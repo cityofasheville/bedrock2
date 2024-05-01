@@ -44,7 +44,7 @@ async function baseDelete(client, rungroupName) {
 async function deleteRungroup(pathElements, queryParams, connection) {
   const rungroupName = pathElements[1];
   let client;
-  const result = {
+  const response = {
     error: false,
     message: `Successfully deleted asset ${rungroupName}`,
     result: null,
@@ -53,30 +53,30 @@ async function deleteRungroup(pathElements, queryParams, connection) {
   try {
     client = await newClient(connection);
   } catch (error) {
-    result.error = true;
-    result.message = error.message;
-    return result;
+    response.error = true;
+    response.message = error.message;
+    return response;
   }
 
   try {
     await checkExistence(client, rungroupName);
   } catch (error) {
-    result.error = true;
-    result.message = error.message;
+    response.error = true;
+    response.message = error.message;
     await client.end();
-    return result;
+    return response;
   }
 
   try {
     await baseDelete(client, rungroupName);
-    await client.end();
   } catch (error) {
-    result.error = true;
-    result.message = error.message;
+    response.error = true;
+    response.message = error.message;
+  } finally {
     await client.end();
+    return response;
   }
 
-  return result;
 }
 
 module.exports = deleteRungroup;
