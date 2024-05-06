@@ -72,13 +72,17 @@ async function readAssets(client, offset, count, whereClause) {
   return sqlResult;
 }
 
-async function addBaseFields(assets, sqlResult, requestedFields, availableFields) {
+async function addBaseFields(sqlResult, requestedFields, availableFields) {
+  const tempAssets = {
+    assetNames: [],
+    assetMap: new Map(),
+  };
   for (let i = 0; i < sqlResult.rowCount; i += 1) {
     const row = sqlResult.rows[i];
     const assetName = row.asset_name;
-    assets.assetNames.push(`'${assetName}'`)
+    tempAssets.assetNames.push(`'${assetName}'`)
     const asset = new Map();
-    assets.assetMap.set(assetName, asset);
+    tempAssets.assetMap.set(assetName, asset);
     asset.set('asset_name', row.asset_name);
     asset.set('asset_type', row.asset_type);
     asset.set('custom_fields', new Map());
@@ -95,7 +99,7 @@ async function addBaseFields(assets, sqlResult, requestedFields, availableFields
       }
     }
   }
-  return assets;
+  return tempAssets;
 }
 
 async function addCustomFields(client, assets, requestedFields, overrideFields) {
@@ -109,20 +113,8 @@ async function addCustomFields(client, assets, requestedFields, overrideFields) 
   } catch (error) {
     throw new Error(`PG error getting asset custom values: ${pgErrorCodes[error.code]}`);
   }
-  // Add them to their respective assets
-  for (let i = 0; i < sqlResult.rowCount; i += 1) {
-    const row = sqlResult.rows[i];
-    if (!overrideFields || requestedFields.includes(row.field_id)) {
-      const cv = assets.assetMap.get(row.asset_name).get('custom_fields');
-      cv.set(row.field_id, row.field_value);
-    }
-  }
 
-  // Now convert all the Map objects to ordinary objects
-  for (let [nm, asset] of assets.assetMap) {
-    asset.set('custom_fields', Object.fromEntries(asset.get('custom_fields').entries()));
-  }
-  return;
+  return sqlResult;
 }
 
 async function addDependencies(client, assets) {
@@ -137,12 +129,7 @@ async function addDependencies(client, assets) {
   } catch (error) {
     throw new Error(`PG error getting asset dependencies: ${pgErrorCodes[error.code]}`);
   }
-
-  for (let i = 0; i < res.rowCount; i += 1) {
-    const row = res.rows[i];
-    assets.assetMap.get(row.asset_name).get('parents').push(row.dependency);
-  }
-  return;
+  return res;
 }
 
 function buildURL(queryParams, domainName, rowsReadCount, offset, total, pathElements) {
@@ -232,8 +219,8 @@ async function getAssetList(domainName, pathElements, queryParams, connection) {
 
     // Read the base fields
     const overrideFields = ('fields' in queryParams);
-    const sqlResult = await readAssets(client, offset, count, whereClause);
-    const assets = {
+    let sqlResult = await readAssets(client, offset, count, whereClause);
+    let assets = {
       count: sqlResult.rowCount,
       assetNames: [],
       assetMap: new Map(),
@@ -241,28 +228,42 @@ async function getAssetList(domainName, pathElements, queryParams, connection) {
     response.result.count = assets.count;
 
     // Build the asset list
-    await addBaseFields(assets, sqlResult, requestedFields, availableFields);
-    await addCustomFields(client, assets, requestedFields, overrideFields);
-    if ('parents' in requestedFields) {
-      await addDependencies(client, assets);
+    assets = await addBaseFields(sqlResult, requestedFields, availableFields);
+    // Add custom fields them to their respective assets
+    sqlResult = await addCustomFields(client, assets, requestedFields, overrideFields);
+    for (let i = 0; i < sqlResult.rowCount; i += 1) {
+      const row = sqlResult.rows[i];
+      if (!overrideFields || requestedFields.includes(row.field_id)) {
+        const cv = assets.assetMap.get(row.asset_name).get('custom_fields');
+        cv.set(row.field_id, row.field_value);
+      }
     }
 
+    // Now convert all the Map objects to ordinary objects
+    for (let [nm, asset] of assets.assetMap) {
+      asset.set('custom_fields', Object.fromEntries(asset.get('custom_fields').entries()));
+    }
+    if ('parents' in requestedFields) {
+      await addDependencies(client, assets);
+      for (let i = 0; i < res.rowCount; i += 1) {
+        const row = res.rows[i];
+        assets.assetMap.get(row.asset_name).get('parents').push(row.dependency);
+      }
+    }
+    
     // Now package up all the assets
     for (let [assetName, asset] of assets.assetMap) {
       response.result.items.push(Object.fromEntries(asset.entries()));
     }
-
     response.result.url = buildURL(queryParams, domainName, assets.count, offset, response.result.total, pathElements);
-
   } catch (error) {
-    await client.end();
     response.error = true;
     response.message = error.message;
     response.result = null;
+  } finally {
+    await client.end();
     return response;
   }
-  await client.end();
-  return response;
 }
 
 module.exports = getAssetList;

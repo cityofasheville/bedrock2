@@ -297,8 +297,7 @@ async function updateTags(assetName, asset, body, client) {
       throw new Error(`PG error inserting tags for update: ${pgErrorCodes[error.code]}`);
     }
   }
-  asset.set('tags', body.tags);
-  return;
+  return tags;
   // End of adding any tags that aren't in the tags table for now
 }
 
@@ -308,7 +307,6 @@ async function updateAsset(requestBody, pathElements, queryParams, connection) {
   let customFields;
   let customValues;
   let client;
-  let etlInfo;
   let asset;
 
   const response = {
@@ -340,8 +338,9 @@ async function updateAsset(requestBody, pathElements, queryParams, connection) {
     return response;
   }
 
+  await client.query('BEGIN');
+
   try {
-    await client.query('BEGIN');
     asset = await updateBase(assetName, body, customValues, client);
     if ('parents' in body) {
       const parents = await updateDependencies(assetName, body, client);
@@ -352,19 +351,19 @@ async function updateAsset(requestBody, pathElements, queryParams, connection) {
     }
     if ('tags' in body) {
       await updateTags(assetName, asset, body, client);
+      asset.set('tags', body.tags);
     }
     await client.query('COMMIT');
-    await client.end();
+    response.result = Object.fromEntries(asset.entries());
   } catch (error) {
     await client.query('ROLLBACK');
     await client.end();
     response.error = true;
     response.message = error.message;
+  } finally {
+    await client.end();
+    return response;
   }
-
-  response.result = Object.fromEntries(asset.entries());
-
-  return response;
 }
 
 module.exports = updateAsset;
