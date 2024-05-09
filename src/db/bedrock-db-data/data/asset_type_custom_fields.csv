@@ -1,5 +1,5 @@
-"metric","period",TRUE
-"metric","disaggregations",TRUE
-"metric","program_manager",TRUE
-"metric","executive_sponsor",TRUE
-"metric","units",TRUE
+"metric","period","true"
+"metric","disaggregations","true"
+"metric","program_manager","true"
+"metric","executive_sponsor","true"
+"metric","units","true"

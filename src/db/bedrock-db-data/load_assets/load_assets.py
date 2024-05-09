@@ -44,6 +44,8 @@ sql = f'''
   truncate table bedrock.custom_fields;
   truncate table bedrock.custom_values;
   truncate table bedrock.owners;
+  truncate table bedrock.asset_types;
+  truncate table bedrock.asset_type_custom_fields;
 '''
 cur.execute(sql)
 print('Truncated all tables')
@@ -117,7 +119,7 @@ with open(os.path.join(data_directory,'asset_types.csv')) as ff:
 
 # Load the custom fields
 
-sql = 'INSERT INTO bedrock.custom_fields (id, field_display, field_type) VALUES '
+sql = 'INSERT INTO bedrock.custom_fields (id, field_display, field_type, field_data) VALUES '
 with open(os.path.join(data_directory,'custom_fields.csv')) as ff:
   rdr = csv.reader(ff)
   
@@ -126,7 +128,7 @@ with open(os.path.join(data_directory,'custom_fields.csv')) as ff:
   nrows = len(rows)
   for row in rows:
     i = i+1
-    sql = f"{sql} ('{row[0]}', '{row[1]}', '{row[2]}')"
+    sql = f"{sql} ('{row[0]}', '{row[1]}', '{row[2]}', '{row[3]}')"
     if (i<nrows):
       sql = sql + ','
 cur.execute(sql)
