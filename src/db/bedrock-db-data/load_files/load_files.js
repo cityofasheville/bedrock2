@@ -150,6 +150,7 @@ function writeAsset(assetList, assets_directory) {
     if (!fs.existsSync(assets_directory + base_name)) {
       fs.mkdirSync(assets_directory + base_name);
     }
+    console.log(`Writing ${name}.json`);
     fs.writeFileSync(assets_directory + base_name + '/' + name + '.json', JSON.stringify(asset, null, 2));
   }
 }
@@ -169,6 +170,7 @@ function writeEtl(etlList, assets_directory) {
 ////////////////////////////////////////////
 // load stand-alone files: run_groups.csv and tags.csv
 async function writeOther(client, data_directory, tablename) {
+  console.log(`Writing ${tablename}.csv`);
   const sql = `SELECT * FROM bedrock.${tablename}`;
   // eslint-disable-next-line no-await-in-loop
   const res = await client.query(sql)
@@ -178,6 +180,9 @@ async function writeOther(client, data_directory, tablename) {
     });
   let fileContent = "";
   for (row of res.rows) {
+    if(tablename === 'custom_fields') {
+      row.field_data = JSON.stringify(row.field_data).replace(/"/g, '""');
+    }
     let vals = Object.values(row);
     fileContent += vals.map(val => '"' + val + '"').join(",") + "\n";
   }
@@ -214,9 +219,14 @@ async function writeOther(client, data_directory, tablename) {
   // console.log(JSON.stringify(assetList, null, 2));
   writeAsset(assetList, assets_directory);
 
+  await writeOther(client, data_directory, 'asset_type_custom_fields');
+  await writeOther(client, data_directory, 'asset_types');
+  await writeOther(client, data_directory, 'connections');
+  await writeOther(client, data_directory, 'custom_fields');
+  await writeOther(client, data_directory, 'owners');
   await writeOther(client, data_directory, 'run_groups');
   await writeOther(client, data_directory, 'tags');
-  await writeOther(client, data_directory, 'connections');
+
 
   await client.end();
 })();
