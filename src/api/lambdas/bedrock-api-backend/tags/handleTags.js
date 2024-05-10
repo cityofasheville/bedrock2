@@ -2,8 +2,8 @@
 const getTagList = require('./getTagList');
 const getTag = require('./getTag');
 const addTag = require('./addTag');
-// const updateRungroup = require('./updateRungroup');
-// const deleteRungroup = require('./deleteRungroup');
+const updateTag = require('./updateTag');
+const deleteTag = require('./deleteTag');
 
 // eslint-disable-next-line no-unused-vars
 async function handleTags(
@@ -49,21 +49,21 @@ async function handleTags(
           break;
 
         case 'PUT':
-          // result = await updateRungroup(
-          //   event.body,
-          //   pathElements,
-          //   queryParams,
-          //   connection,
-          // );
+          result = await updateTag(
+            event.body,
+            pathElements,
+            queryParams,
+            connection,
+          );
           break;
 
         case 'DELETE':
-        //   result = deleteRungroup(pathElements, queryParams, connection);
-        //   break;
+          result = deleteTag(pathElements, queryParams, connection);
+          break;
 
-        // default:
-        //   result.message = `handleRungroups: unknown verb ${verb}`;
-        //   result.error = true;
+        default:
+          result.message = `handleTags: unknown verb ${verb}`;
+          result.error = true;
           break;
       }
       break;

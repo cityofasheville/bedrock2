@@ -13,7 +13,7 @@ async function newClient(connection) {
   }
 }
 
-async function checkInfo(body, pathElements) {
+function checkInfo(body, pathElements) {
   if (!('tag_name' in body) || !('display_name' in body)) {
     throw new Error('Tag lacks required property (one of tag_name or display_name)');
   }
