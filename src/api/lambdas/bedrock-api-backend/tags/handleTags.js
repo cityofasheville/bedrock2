@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 const getTagList = require('./getTagList');
 const getTag = require('./getTag');
-// const addRungroup = require('./addRungroup');
+const addTag = require('./addTag');
 // const updateRungroup = require('./updateRungroup');
 // const deleteRungroup = require('./deleteRungroup');
 
@@ -40,12 +40,12 @@ async function handleTags(
           break;
 
         case 'POST':
-          // result = await addRungroup(
-          //   event.body,
-          //   pathElements,
-          //   queryParams,
-          //   connection,
-          // );
+          result = await addTag(
+            event.body,
+            pathElements,
+            queryParams,
+            connection,
+          );
           break;
 
         case 'PUT':
