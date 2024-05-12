@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
 const getAssetTypeList = require('./getAssetTypeList');
 const getAssetType = require('./getAssetType');
-// const addAssetType = require('./addAssetType');
-// const updateAssetType = require('./updateAssetType');
+const addAssetType = require('./addAssetType');
+const updateAssetType = require('./updateAssetType');
 // const deleteAssetType = require('./deleteAssetType');
 
 // eslint-disable-next-line no-unused-vars
@@ -40,21 +40,21 @@ async function handleAssetTypes(
           break;
 
         case 'POST':
-          // result = await addAssetType(
-          //   event.body,
-          //   pathElements,
-          //   queryParams,
-          //   connection,
-          // );
+          result = await addAssetType(
+            event.body,
+            pathElements,
+            queryParams,
+            connection,
+          );
           break;
 
         case 'PUT':
-          // result = await updateAssetType(
-          //   event.body,
-          //   pathElements,
-          //   queryParams,
-          //   connection,
-          // );
+          result = await updateAssetType(
+            event.body,
+            pathElements,
+            queryParams,
+            connection,
+          );
           break;
 
         case 'DELETE':

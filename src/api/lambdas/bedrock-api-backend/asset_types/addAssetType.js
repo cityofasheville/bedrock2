@@ -13,17 +13,17 @@ async function newClient(connection) {
   }
 }
 
-async function checkInfo(body, pathElements) {
-  if (!('run_group_name' in body) || !('cron_string' in body)) {
-    throw new Error('Rungroup lacks required property (one of run_group_name or cron_string)');
+function checkInfo(body, pathElements) {
+  if (!('id' in body) || !('name' in body)) {
+    throw new Error('Asset type lacks required property (one of id or name)');
   }
-  if (pathElements[1] !== body.run_group_name) {
-    throw new Error(`Rungroup name ${pathElements[1]} in path does not match rungroup name ${body.run_group_name} in body`);
+  if (pathElements[1] !== body.id) {
+    throw new Error(`Asset type id ${pathElements[1]} in path does not match asset type id ${body.id} in body`);
   }
 }
 
 async function checkExistence(client, pathElements) {
-  const sql = 'SELECT * FROM bedrock.run_groups where run_group_name like $1';
+  const sql = 'SELECT * FROM bedrock.asset_types where id like $1';
   let res;
   try {
     res = await client.query(sql, [pathElements[1]]);
@@ -32,36 +32,62 @@ async function checkExistence(client, pathElements) {
   }
 
   if (res.rowCount > 0) {
-    throw new Error('Rungroup already exists');
+    throw new Error('Asset type already exists');
   }
 }
 
 async function baseInsert(client, body) {
+  let tempAssetType = null;
+  let sql;
   let res;
+  let argnum = 3;
+  let args = [
+    body.id,
+    body.name
+  ];
+  sql = 'INSERT INTO asset_types (id, name';
+  let vals = ') VALUES($1, $2';
+  let fields = ['parent']
 
+  for (let i = 0; i < fields.length; i += 1) {
+    if (fields[i] in body) {
+      sql += `, ${fields[i]}`;
+      vals += `, $${argnum}`;
+      args.push(body[fields[i]]);
+      argnum += 1;
+    }}
+
+  sql += `${vals})`;
+    console.log(sql)
+    console.log(args)
   try {
-    res = await client
-      .query(
-        'INSERT INTO run_groups (run_group_name, cron_string) VALUES($1, $2)',
-        [body.run_group_name, body.cron_string],
-      );
+    res = await client.query(sql, args);
   } catch (error) {
-    throw new Error([`Postgres error: ${pgErrorCodes[error.code]}`, error]);
+    throw new Error(
+      `PG error adding new base asset: ${pgErrorCodes[error.code]}`,
+    );
   }
 
   if (res.rowCount !== 1) {
-    throw new Error('Unknown error inserting new rungroup');
-  }
-
-  return {
-    run_group_name: body.run_group_name,
-    cron_string: body.cron_string,
-  };
+    throw new Error('Unknown error inserting new asset');
+  } else {
+    tempAssetType = new Map([
+      ['id', body.id],
+      ['name', body.name],
+    ]);
+    for (let i = 0; i < fields.length; i += 1) {
+      if (fields[0] in body) {
+        tempAssetType.set(fields[0], body[fields[0]])
+      }
+  }}
+  console.log(tempAssetType)
+  return tempAssetType;
 }
 
-async function addRungroup(requestBody, pathElements, queryParams, connection) {
+async function addAssetType(requestBody, pathElements, queryParams, connection) {
   const body = JSON.parse(requestBody);
   let client;
+  let assetType;
 
   const response = {
     error: false,
@@ -80,7 +106,8 @@ async function addRungroup(requestBody, pathElements, queryParams, connection) {
 
   try {
     await checkExistence(client, pathElements);
-    response.result = await baseInsert(client, body);
+    assetType = await baseInsert(client, body);
+    response.result = Object.fromEntries(assetType.entries())
   } catch (error) {
     response.error = true;
     response.message = error.message;
@@ -90,4 +117,4 @@ async function addRungroup(requestBody, pathElements, queryParams, connection) {
   }
 }
 
-module.exports = addRungroup;
+module.exports = addAssetType;
