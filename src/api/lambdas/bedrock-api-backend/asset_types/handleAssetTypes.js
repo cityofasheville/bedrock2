@@ -3,7 +3,7 @@ const getAssetTypeList = require('./getAssetTypeList');
 const getAssetType = require('./getAssetType');
 const addAssetType = require('./addAssetType');
 const updateAssetType = require('./updateAssetType');
-// const deleteAssetType = require('./deleteAssetType');
+const deleteAssetType = require('./deleteAssetType');
 
 // eslint-disable-next-line no-unused-vars
 async function handleAssetTypes(
@@ -58,7 +58,7 @@ async function handleAssetTypes(
           break;
 
         case 'DELETE':
-          // result = deleteAssetType(pathElements, queryParams, connection);
+          result = deleteAssetType(pathElements, queryParams, connection);
           break;
 
         default:
