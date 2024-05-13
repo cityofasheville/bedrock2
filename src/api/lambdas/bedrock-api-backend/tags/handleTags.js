@@ -22,7 +22,7 @@ async function handleTags(
   if (nParams == 2 && (pathElements[1] === null || pathElements[1].length == 0)) nParams = 1;
 
   switch (nParams) {
-    // GET rungroups
+    // GET tags
     case 1:
       result = await getTagList(
         event.requestContext.domainName,
@@ -32,7 +32,7 @@ async function handleTags(
       );
       break;
 
-    // VERB rungroups/{rungroupname}
+    // VERB tags/{tag_name}
     case 2:
       switch (verb) {
         case 'GET':
