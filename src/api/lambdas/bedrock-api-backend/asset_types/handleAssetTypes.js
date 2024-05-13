@@ -69,7 +69,7 @@ async function handleAssetTypes(
       break;
 
     default:
-      result.message = `Unknown rungroups endpoint: [${pathElements.join()}]`;
+      result.message = `Unknown asset types endpoint: [${pathElements.join()}]`;
       result.error = true;
       break;
   }
