@@ -8,7 +8,7 @@ const handleAssets = require('./assets/handleAssets');
 const handleRungroups = require('./rungroups/handleRungroups');
 const handleReference = require('./reference/handleReference');
 const handleTags = require('./tags/handleTags');
-
+const handleCustomFields = require('./custom_fields/handleCustomFields');
 
 
 // eslint-disable-next-line camelcase
@@ -61,6 +61,15 @@ const lambda_handler = async function x(event) {
           console.log('Error in handleTags ', e);
         }
         break;
+
+        case 'custom_fields':
+          try {
+            result = await handleCustomFields(event, pathElements, queryParams || {}, verb, connection);
+          } catch (e) {
+            result.message = e;
+            console.log('Error in handleTags ', e);
+          }
+          break;
 
     default:
       console.log('Unknown path ', pathElements[0]);
