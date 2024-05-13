@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 const getCustomFieldList = require('./getCustomFieldList');
 const getCustomField = require('./getCustomField');
-// const addCustomField = require('./addCustomField');
+const addCustomField = require('./addCustomField');
 // const updateCustomField = require('./updateCustomField');
 // const deleteCustomField = require('./deleteCustomField');
 
@@ -40,12 +40,12 @@ async function handleCustomFields(
           break;
 
         case 'POST':
-          // result = await addCustomField(
-          //   event.body,
-          //   pathElements,
-          //   queryParams,
-          //   connection,
-          // );
+          result = await addCustomField(
+            event.body,
+            pathElements,
+            queryParams,
+            connection,
+          );
           break;
 
         case 'PUT':
