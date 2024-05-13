@@ -27,6 +27,21 @@ async function getInfo(client, pathElements) {
   return res.rows[0];
 }
 
+async function getAssetInfo(client, pathElements) {
+  const sql = 'SELECT * FROM bedrock.asset_type_custom_fields where custom_field_id like $1';
+  let res;
+  try {
+    res = await client.query(sql, [pathElements[1]]);
+  } catch (error) {
+    throw new Error([`Postgres error: ${pgErrorCodes[error.code]}`, error]);
+  }
+
+  if (res.rowCount === 0) {
+    throw new Error('Associated asset type not found');
+  }
+  return res.rows[0];
+}
+
 async function getCustomField(pathElements, queryParams, connection) {
   const response = {
     error: false,
@@ -45,6 +60,9 @@ async function getCustomField(pathElements, queryParams, connection) {
 
   try {
     response.result = await getInfo(client, pathElements);
+    assetTypeInfo = await getAssetInfo(client, pathElements);
+    response.result.asset_type_id = assetTypeInfo.asset_type_id
+    response.result.required = assetTypeInfo.required
   } catch (error) {
     response.error = true;
     response.message = error.message;
