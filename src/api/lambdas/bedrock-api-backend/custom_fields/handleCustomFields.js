@@ -2,7 +2,7 @@
 const getCustomFieldList = require('./getCustomFieldList');
 const getCustomField = require('./getCustomField');
 const addCustomField = require('./addCustomField');
-// const updateCustomField = require('./updateCustomField');
+const updateCustomField = require('./updateCustomField');
 // const deleteCustomField = require('./deleteCustomField');
 
 // eslint-disable-next-line no-unused-vars
@@ -49,12 +49,12 @@ async function handleCustomFields(
           break;
 
         case 'PUT':
-          // result = await updateCustomField(
-          //   event.body,
-          //   pathElements,
-          //   queryParams,
-          //   connection,
-          // );
+          result = await updateCustomField(
+            event.body,
+            pathElements,
+            queryParams,
+            connection,
+          );
           break;
 
         case 'DELETE':
