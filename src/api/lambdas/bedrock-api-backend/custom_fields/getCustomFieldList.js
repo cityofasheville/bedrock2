@@ -56,7 +56,10 @@ async function getCount(whereClause, client) {
 }
 
 async function getBase(offset, count, whereClause, client) {
-  let sql = `SELECT * FROM bedrock.custom_fields ${whereClause.whereClause}`;
+  let sql = `SELECT a.*, b.asset_type_id, b.required FROM bedrock.custom_fields a 
+  LEFT JOIN bedrock.asset_type_custom_fields b
+  ON a.id = b.custom_field_id 
+  ${whereClause.whereClause}`;
   sql += ' order by id asc';
   sql += ` offset ${offset} limit ${count} `;
   let res;
@@ -68,6 +71,8 @@ async function getBase(offset, count, whereClause, client) {
   }
   return res;
 }
+
+
 
 function buildURL(queryParams, domainName, res, offset, total, pathElements) {
   let qPrefix = '?';
