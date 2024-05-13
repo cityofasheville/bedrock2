@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 const getCustomFieldList = require('./getCustomFieldList');
-// const getCustomField = require('./getCustomField');
+const getCustomField = require('./getCustomField');
 // const addCustomField = require('./addCustomField');
 // const updateCustomField = require('./updateCustomField');
 // const deleteCustomField = require('./deleteCustomField');
@@ -36,7 +36,7 @@ async function handleCustomFields(
     case 2:
       switch (verb) {
         case 'GET':
-          // result = await getCustomField(pathElements, queryParams, connection);
+          result = await getCustomField(pathElements, queryParams, connection);
           break;
 
         case 'POST':
