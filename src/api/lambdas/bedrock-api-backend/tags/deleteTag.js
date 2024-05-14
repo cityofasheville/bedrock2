@@ -8,8 +8,9 @@ async function deleteTag(pathElements, queryParams, connection) {
   const tableName = 'tags';
   const idField = 'tag_name';
   const idValue = pathElements[1];
-  let client;
   const shouldExist = true;
+  let client;
+  let clientInitiated = false;
 
   const response = {
     error: false,
@@ -19,31 +20,18 @@ async function deleteTag(pathElements, queryParams, connection) {
 
   try {
     client = await newClient(connection);
-  } catch (error) {
-    response.error = true;
-    response.message = error.message;
-    return response;
-  }
-
-  try {
+    clientInitiated = true;
     await checkExistence(client, tableName, idField, idValue, name, shouldExist);
-  } catch (error) {
-    response.error = true;
-    response.message = error.message;
-    await client.end();
-    return response;
-  }
-
-  try {
     await deleteInfo(client, tableName, idField, idValue, name);
-    console.log('no error i swear');
+    await client.end();
   } catch (error) {
+    if (clientInitiated) {
+      await client.end();
+    }
     response.error = true;
     response.message = error.message;
-    await client.end();
     return response;
   }
-  await client.end();
   return response;
 }
 

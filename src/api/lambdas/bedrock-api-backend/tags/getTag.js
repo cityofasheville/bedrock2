@@ -7,6 +7,7 @@ async function getTag(pathElements, queryParams, connection) {
   const idField = 'tag_name';
   const idValue = pathElements[1];
   let client;
+  let clientInitiated = false;
 
   const response = {
     error: false,
@@ -16,20 +17,16 @@ async function getTag(pathElements, queryParams, connection) {
 
   try {
     client = await newClient(connection);
-  } catch (error) {
-    response.error = true;
-    response.message = error.message;
-    return response;
-  }
-
-  try {
+    clientInitiated = true;
     response.result = await getInfo(client, idField, idValue, name, tableName);
+    await client.end();
   } catch (error) {
+    if (clientInitiated) {
+      await client.end();
+    }
     response.error = true;
     response.message = error.message;
     return response;
-  } finally {
-    await client.end();
   }
   return response;
 }

@@ -5,13 +5,14 @@ const {
 
 async function updateTag(requestBody, pathElements, queryParams, connection) {
   const body = JSON.parse(requestBody);
-  let client;
   const name = 'tag';
   const tableName = 'tags';
   const idField = 'tag_name';
   const requiredFields = ['tag_name', 'display_name'];
   const tagShouldExist = true;
   const idValue = pathElements[1];
+  let client;
+  let clientInitiated = false;
 
   let tagInfo;
   const response = {
@@ -23,22 +24,18 @@ async function updateTag(requestBody, pathElements, queryParams, connection) {
   try {
     checkInfo(body, requiredFields, name, idValue);
     client = await newClient(connection);
-  } catch (error) {
-    response.error = true;
-    response.message = error.message;
-    return response;
-  }
-
-  try {
+    clientInitiated = true;
     await checkExistence(client, tableName, idField, idValue, name, tagShouldExist);
     tagInfo = await updateInfo(client, body, tableName, idField, idValue, name);
     response.result = Object.fromEntries(tagInfo.entries());
+    await client.end();
   } catch (error) {
+    if (clientInitiated) {
+      await client.end();
+    }
     response.error = true;
     response.message = error.message;
     return response;
-  } finally {
-    await client.end();
   }
   return response;
 }
