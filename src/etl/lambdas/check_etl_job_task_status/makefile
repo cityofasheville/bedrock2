@@ -31,6 +31,9 @@ apply: function.zip $(TF_TARGS) $(dirs)
 apply-y: function.zip $(TF_TARGS) $(dirs)
 destroy: $(TF_TARGS) $(dirs)
 
+local:
+	python3 local.py
+
 clean:
 	rm -f *.instance
 	\rm -Rf build function.zip
