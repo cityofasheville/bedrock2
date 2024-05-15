@@ -1,6 +1,6 @@
 
-let sendEmails = require('./sendEmails');
+import sendEmails from './sendEmails.js';
 
-exports.lambda_handler = (event, context, callback) => {
-  sendEmails(event)
+export function lambda_handler(event, context, callback) {
+  sendEmails(event);
 }

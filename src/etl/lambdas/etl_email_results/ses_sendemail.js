@@ -1,4 +1,4 @@
-const { SESClient, SendEmailCommand } = require("@aws-sdk/client-ses");
+import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
 const REGION = "us-east-1";
 const sesClient = new SESClient({ region: REGION });
 
@@ -40,4 +40,4 @@ async function ses_sendemail(emailAddrs, htmlEmail, emailSubject) {
   }
 };
 
-module.exports = ses_sendemail;
+export default ses_sendemail;
