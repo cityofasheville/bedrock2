@@ -2,17 +2,17 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-console */
 
-const { Client } = require('pg');
-const awsCronParser = require('aws-cron-parser');
-const toposort = require('toposort');
+import pgpkg from 'pg';
+const { Client } = pgpkg;
+import acppkg from 'aws-cron-parser';
+const { parse, prev } = acppkg;
+import toposort from 'toposort';
 // Disabling import/no-unresolved because the dependency as defined
 // in package.json only works in the build subdirectory.
 // eslint-disable-next-line import/no-unresolved
-const { getDBConnection } = require('bedrock_common');
+import { getDBConnection } from 'bedrock_common';
 
 const TIME_INTERVAL = 15; // Frequency - must match Eventbridge scheduler
-
-let debug = false;
 
 function formatRes(code, result) {
   return {
@@ -21,7 +21,7 @@ function formatRes(code, result) {
   };
 }
 
-const pgErrorCodes = require('./pgErrorCodes');
+import pgErrorCodes from './pgErrorCodes.js';
 
 async function readEtlList(client, rungroups) {
   let etlList = [];
@@ -212,7 +212,7 @@ async function readTasks(client, assetMap) {
   return assetMap;
 }
 
-async function getRungroups(client) {
+async function getRungroups(client, debug) {
   const sql = 'SELECT run_group_name, cron_string FROM bedrock.run_groups;';
   return client.query(sql)
     .then((res) => {
@@ -220,11 +220,11 @@ async function getRungroups(client) {
       for (let i = 0; i < res.rowCount; i += 1) {
         const cname = res.rows[i].run_group_name;
         const cstring = res.rows[i].cron_string;
-        const cron = awsCronParser.parse(cstring);
+        const cron = parse(cstring);
         const minutes = TIME_INTERVAL;
         const ms = 1000 * 60 * minutes;
         const curTime = new Date();
-        const latestPreviousTimeMS = (awsCronParser.prev(cron, curTime)).getTime();
+        const latestPreviousTimeMS = (prev(cron, curTime)).getTime();
         const endPreviousTimeSlot = latestPreviousTimeMS + ms;
         // See if current time falls within TIME_INTERVAL following the latest run time
         if (endPreviousTimeSlot >= curTime.getTime()) {
@@ -242,6 +242,7 @@ async function getRungroups(client) {
 
 // eslint-disable-next-line camelcase
 const lambda_handler = async function x(event) {
+  let debug = event.debug || false;
   try {
     const dbConnection = await getDBConnection();
     const client = new Client(dbConnection);
@@ -252,7 +253,7 @@ const lambda_handler = async function x(event) {
       });
     let rungroups = [event.rungroup];
     if (event.rungroup === 'UseCronStrings') {
-      rungroups = await getRungroups(client);
+      rungroups = await getRungroups(client, debug);
     }
     let assetMap = await readEtlList(client, rungroups);
     assetMap = await readDependencies(client, assetMap);
@@ -321,18 +322,5 @@ const lambda_handler = async function x(event) {
     return res;
   }
 };
-/* Set debug to true to run locally */
-debug = false;
-let event = {};
-if (debug) {
-  event = { rungroup: 'daily' };
-  (async () => {
-    await lambda_handler(event);
-    process.exit();
-  })();
-}
 
-module.exports = {
-  // eslint-disable-next-line camelcase
-  lambda_handler,
-};
+export { lambda_handler };
