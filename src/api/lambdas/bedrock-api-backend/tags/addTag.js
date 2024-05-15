@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 const {
-  newClient, checkInfo, checkExistence, insertInfo,
+  newClient, checkInfo, checkExistence, addInfo,
 } = require('../utilities/utilities');
 
 async function addTag(requestBody, pathElements, queryParams, connection) {
@@ -9,7 +9,6 @@ async function addTag(requestBody, pathElements, queryParams, connection) {
   const tableName = 'tags';
   const idField = 'tag_name';
   const requiredFields = ['tag_name', 'display_name'];
-  const allFields = ['tag_name', 'display_name'];
   const idValue = pathElements[1];
   const tagShouldExist = false;
   let client;
@@ -26,7 +25,7 @@ async function addTag(requestBody, pathElements, queryParams, connection) {
     clientInitiated = true;
     checkInfo(body, requiredFields, name, idValue, idField);
     await checkExistence(client, tableName, idField, idValue, name, tagShouldExist);
-    response.result = await insertInfo(client, body, allFields, tableName, name);
+    response.result = await addInfo(client, body, tableName, name);
     await client.end();
   } catch (error) {
     if (clientInitiated) {

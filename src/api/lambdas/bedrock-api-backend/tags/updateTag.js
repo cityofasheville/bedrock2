@@ -9,13 +9,11 @@ async function updateTag(requestBody, pathElements, queryParams, connection) {
   const tableName = 'tags';
   const idField = 'tag_name';
   const requiredFields = ['tag_name', 'display_name'];
-  const allFields = ['tag_name', 'display_name'];
   const tagShouldExist = true;
   const idValue = pathElements[1];
   let client;
   let clientInitiated = false;
 
-  let tagInfo;
   const response = {
     error: false,
     message: `Successfully updated tag ${idValue}`,
@@ -27,8 +25,8 @@ async function updateTag(requestBody, pathElements, queryParams, connection) {
     client = await newClient(connection);
     clientInitiated = true;
     await checkExistence(client, tableName, idField, idValue, name, tagShouldExist);
-    tagInfo = await updateInfo(client, body, tableName, idField, idValue, name, allFields);
-    response.result = Object.fromEntries(tagInfo.entries());
+    response.result = await updateInfo(client, body, tableName, idField, idValue, name);
+    // = Object.fromEntries(tagInfo.entries());
     await client.end();
   } catch (error) {
     if (clientInitiated) {

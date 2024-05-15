@@ -51,7 +51,7 @@ async function checkExistence(client, tableName, idField, idValue, name, shouldE
 }
 
 async function getInfo(client, idField, idValue, name, tableName) {
-  // Queryinng database to get information. Function can be used multiple times per method
+  // Querying database to get information. Function can be used multiple times per method
   // if we need information from multiple tables
   const sql = `SELECT * FROM bedrock.${tableName} where ${idField} like $1`;
   let res;
@@ -67,7 +67,7 @@ async function getInfo(client, idField, idValue, name, tableName) {
   return res.rows[0];
 }
 
-async function insertInfo(client, body, allFields, tableName, name) {
+async function addInfo(client, body, tableName, name) {
   let res;
   let fieldsString = '(';
   let valueString = '(';
@@ -116,31 +116,24 @@ async function insertInfo(client, body, allFields, tableName, name) {
     throw new Error(`Unknown error inserting new ${name}`);
   }
 
-  const result = {};
-  for (let i = 0; i < allFields.length; i += 1) {
-    result[allFields[i]] = body[allFields[i]];
-  }
-
-  return result;
+  return body;
 }
 
-async function updateInfo(client, body, tableName, idField, idValue, name, allFields) {
+async function updateInfo(client, body, tableName, idField, idValue, name) {
   let cnt = 1;
   const args = [];
-  const tag = new Map();
   let sql = `UPDATE ${tableName} SET `;
+  let comma = '';
 
   // Creating a string like 'tag_name = $1, display_name = 2$' etc
   // and adding the actual value to the args array
-  for (let i = 0, comma = ''; i < allFields.length; i += 1) {
-    if (allFields[i] in body) {
-      sql += `${comma} ${allFields[i]} = $${cnt}`;
-      args.push(body[allFields[i]]);
-      tag.set(allFields[i], body[allFields[i]]);
-      cnt += 1;
-      comma = ',';
-    }
-  }
+  Object.keys(body).forEach((key) => {
+    sql += `${comma} ${key} = $${cnt}`;
+    args.push(body[key]);
+    cnt += 1;
+    comma = ',';
+  });
+
   sql += ` where ${idField} = $${cnt}`;
   args.push(idValue);
   try {
@@ -149,7 +142,7 @@ async function updateInfo(client, body, tableName, idField, idValue, name, allFi
     throw new Error(`PG error updating ${name}: ${pgErrorCodes[error.code]}`);
   }
 
-  return tag;
+  return body;
 }
 
 async function deleteInfo(client, tableName, idField, idValue, name) {
@@ -168,7 +161,7 @@ module.exports = {
   checkInfo,
   checkExistence,
   getInfo,
-  insertInfo,
+  addInfo,
   updateInfo,
   deleteInfo,
 };
