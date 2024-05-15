@@ -1,58 +1,34 @@
 /* eslint-disable no-console */
-const { Client } = require('pg');
-const pgErrorCodes = require('../pgErrorCodes');
-
-async function newClient(connection) {
-  const client = new Client(connection);
-  try {
-    await client.connect();
-    return client;
-  } catch (error) {
-    throw new Error(`PG error connecting: ${pgErrorCodes[error.code]}`);
-  }
-}
-
-async function getInfo(client, pathElements) {
-  const sql = 'SELECT * FROM bedrock.run_groups where run_group_name like $1';
-  let res;
-  try {
-    res = await client.query(sql, [pathElements[1]]);
-  } catch (error) {
-    throw new Error([`Postgres error: ${pgErrorCodes[error.code]}`, error]);
-  }
-
-  if (res.rowCount === 0) {
-    throw new Error('Rungroup not found');
-  }
-  return res.rows[0];
-}
+const { newClient, getInfo } = require('../utilities/utilities');
 
 async function getRungroup(pathElements, queryParams, connection) {
+  const name = 'run group';
+  const tableName = 'run_groups';
+  const idField = 'run_group_name';
+  const idValue = pathElements[1];
+  let client;
+  let clientInitiated = false;
+
   const response = {
     error: false,
     message: '',
     result: null,
   };
 
-  let client;
   try {
     client = await newClient(connection);
-  } catch (error) {
-    response.error = true;
-    response.message = error.message;
-    return response;
-  }
-
-  try {
-    response.result = await getInfo(client, pathElements);
-  } catch (error) {
-    response.error = true;
-    response.message = error.message;
-  } finally {
+    clientInitiated = true;
+    response.result = await getInfo(client, idField, idValue, name, tableName);
     await client.end();
+  } catch (error) {
+    if (clientInitiated) {
+      await client.end();
+    }
+    response.error = true;
+    response.message = error.message;
     return response;
   }
-
+  return response;
 }
 
 module.exports = getRungroup;

@@ -25,7 +25,9 @@ function checkInfo(body, requiredFields, name, idValue, idField) {
     }
   }
 
-  if (idValue !== body.tag_name) {
+  if (idValue !== body[idField]) {
+    console.log(idValue);
+    console.log(body[idField]);
     throw new Error(`${idValue} in path does not match ${body[idField]} in body`);
   }
 }
@@ -40,7 +42,8 @@ async function checkExistence(client, tableName, idField, idValue, name, shouldE
     throw new Error([`Postgres error: ${pgErrorCodes[error.code]}`, error]);
   }
 
-  // for some methods, the tag needs to exist (PUT), while others, the tag should not exist (POST)
+  // for some methods, the resource needs to exist (PUT),
+  // while others, the resource should not exist (POST)
   if (shouldExist && (res.rowCount === 0)) {
     throw new Error(`${capitalizeFirstLetter(name)} like ${idValue} does not exist`);
   }

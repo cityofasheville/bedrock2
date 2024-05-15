@@ -10,7 +10,7 @@ async function addTag(requestBody, pathElements, queryParams, connection) {
   const idField = 'tag_name';
   const requiredFields = ['tag_name', 'display_name'];
   const idValue = pathElements[1];
-  const tagShouldExist = false;
+  const shouldExist = false;
   let client;
   let clientInitiated = false;
 
@@ -24,7 +24,7 @@ async function addTag(requestBody, pathElements, queryParams, connection) {
     client = await newClient(connection);
     clientInitiated = true;
     checkInfo(body, requiredFields, name, idValue, idField);
-    await checkExistence(client, tableName, idField, idValue, name, tagShouldExist);
+    await checkExistence(client, tableName, idField, idValue, name, shouldExist);
     response.result = await addInfo(client, body, tableName, name);
     await client.end();
   } catch (error) {
