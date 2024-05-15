@@ -24,7 +24,7 @@ async function addTag(requestBody, pathElements, queryParams, connection) {
   try {
     client = await newClient(connection);
     clientInitiated = true;
-    checkInfo(body, requiredFields, name, idValue);
+    checkInfo(body, requiredFields, name, idValue, idField);
     await checkExistence(client, tableName, idField, idValue, name, tagShouldExist);
     response.result = await insertInfo(client, body, allFields, tableName, name);
     await client.end();

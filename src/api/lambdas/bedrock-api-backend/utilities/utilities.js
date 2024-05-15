@@ -16,24 +16,23 @@ async function newClient(connection) {
   }
 }
 
-function checkInfo(body, requiredFields, name, idValue) {
+function checkInfo(body, requiredFields, name, idValue, idField) {
+// loop through requiredFields array and check that each one is in body
   for (let i = 0; i < requiredFields.length; i += 1) {
     const field = requiredFields[i];
-    console.log(field);
     if (!(field in body)) {
       throw new Error(`${capitalizeFirstLetter(name)} lacks required property ${requiredFields[i]}`);
     }
   }
 
   if (idValue !== body.tag_name) {
-    throw new Error(`${capitalizeFirstLetter(name)} ${idValue} in path does not match ${name} ${body.tag_name} in body`);
+    throw new Error(`${idValue} in path does not match ${body[idField]} in body`);
   }
 }
 
-// eslint-disable-next-line max-len
 async function checkExistence(client, tableName, idField, idValue, name, shouldExist) {
+  // query the database to make sure resource exists
   const sql = `SELECT * FROM bedrock.${tableName} where ${idField} like $1`;
-  console.log(sql);
   let res;
   try {
     res = await client.query(sql, [idValue]);
@@ -41,6 +40,7 @@ async function checkExistence(client, tableName, idField, idValue, name, shouldE
     throw new Error([`Postgres error: ${pgErrorCodes[error.code]}`, error]);
   }
 
+  // for some methods, the tag needs to exist (PUT), while others, the tag should not exist (POST)
   if (shouldExist && (res.rowCount === 0)) {
     throw new Error(`${capitalizeFirstLetter(name)} like ${idValue} does not exist`);
   }
@@ -51,8 +51,9 @@ async function checkExistence(client, tableName, idField, idValue, name, shouldE
 }
 
 async function getInfo(client, idField, idValue, name, tableName) {
+  // Queryinng database to get information. Function can be used multiple times per method
+  // if we need information from multiple tables
   const sql = `SELECT * FROM bedrock.${tableName} where ${idField} like $1`;
-  console.log(sql);
   let res;
   try {
     res = await client.query(sql, [idValue]);
@@ -68,47 +69,38 @@ async function getInfo(client, idField, idValue, name, tableName) {
 
 async function insertInfo(client, body, allFields, tableName, name) {
   let res;
-
   let fieldsString = '(';
   let valueString = '(';
   let comma = '';
   let cnt = 0;
 
   // This is just a bunch of string manipulation.
-  // It creates a string of the columns ala '(tag_name, display_name)'
-  for (let i = 0; i < allFields.length; i += 1) {
+  // It creates a string of the column names/fields like '(tag_name, display_name)'
+  Object.keys(body).forEach((key) => {
     fieldsString += comma;
-    fieldsString += allFields[i];
+    fieldsString += key;
     comma = ', ';
-    if ((i === (allFields.length - 1))) {
-      fieldsString += ')';
-    }
-  }
-  console.log(fieldsString);
+  });
+  fieldsString += ')';
 
   // More string manipulation that creates a string '($1, $2, $3)'
   // The length is based on the number of fields.
   comma = '';
-  for (let i = 0; i < allFields.length; i += 1) {
+  Object.keys(body).forEach(() => {
     valueString += comma;
     valueString += '$';
     valueString += (cnt + 1).toString();
     cnt += 1;
     comma = ', ';
-    if ((i === (allFields.length - 1))) {
-      valueString += ')';
-    }
-  }
-  console.log(valueString);
+  });
+  valueString += ')';
 
-  // Creating an array of the actual values from the body
+  // Creating an array of the actual values from the body like
+  // ['test_tag_name', 'test_display_name']
   const valuesFromBody = [];
-  for (let i = 0; i < allFields.length; i += 1) {
-    valuesFromBody.push(body[allFields[i]]);
-  }
-
-  console.log(valuesFromBody);
-  console.log(`INSERT INTO bedrock.${tableName} ${fieldsString} VALUES${valueString}`);
+  Object.keys(body).forEach((key) => {
+    valuesFromBody.push(body[key]);
+  });
 
   try {
     res = await client
@@ -132,27 +124,25 @@ async function insertInfo(client, body, allFields, tableName, name) {
   return result;
 }
 
-async function updateInfo(client, body, tableName, idField, idValue, name) {
-  const members = ['display_name'];
+async function updateInfo(client, body, tableName, idField, idValue, name, allFields) {
   let cnt = 1;
   const args = [];
   const tag = new Map();
   let sql = `UPDATE ${tableName} SET `;
 
-  for (let i = 0, comma = ''; i < members.length; i += 1) {
-    if (members[i] in body) {
-      sql += `${comma} ${members[i]} = $${cnt}`;
-      args.push(body[members[i]]);
-      tag.set(members[i], body[members[i]]);
+  // Creating a string like 'tag_name = $1, display_name = 2$' etc
+  // and adding the actual value to the args array
+  for (let i = 0, comma = ''; i < allFields.length; i += 1) {
+    if (allFields[i] in body) {
+      sql += `${comma} ${allFields[i]} = $${cnt}`;
+      args.push(body[allFields[i]]);
+      tag.set(allFields[i], body[allFields[i]]);
       cnt += 1;
       comma = ',';
     }
   }
   sql += ` where ${idField} = $${cnt}`;
-  console.log(` where ${idField} = $${cnt}`);
   args.push(idValue);
-  console.log(sql);
-  console.log(JSON.stringify(args));
   try {
     await client.query(sql, args);
   } catch (error) {
