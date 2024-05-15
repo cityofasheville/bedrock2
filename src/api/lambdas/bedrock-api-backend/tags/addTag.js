@@ -16,7 +16,7 @@ async function addTag(requestBody, pathElements, queryParams, connection) {
 
   const response = {
     error: false,
-    message: `Successfully added tag ${idValue}`,
+    message: `Successfully added ${name} ${idValue}`,
     result: null,
   };
 
