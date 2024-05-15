@@ -19,7 +19,7 @@ async function handleTags(
     result: null,
   };
   let nParams = pathElements.length;
-  if (nParams == 2 && (pathElements[1] === null || pathElements[1].length == 0)) nParams = 1;
+  if (nParams === 2 && (pathElements[1] === null || pathElements[1].length === 0)) nParams = 1;
 
   switch (nParams) {
     // GET tags
