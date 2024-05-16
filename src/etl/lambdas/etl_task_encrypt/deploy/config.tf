@@ -3,9 +3,9 @@ provider "aws" {
 }
 
 resource "aws_lambda_function" "etl_task_encrypt-$$INSTANCE$$" {
+    description      = "Bedrock - Encrypts files:read from and write back to S3" 
     filename        = "../function.zip"
     function_name   = "etl_task_encrypt-$$INSTANCE$$"
-    description     = "Encrypts files read from and write back to S3."
     role            = data.terraform_remote_state.lambda_role.outputs.bedrock_lambda_role_arn
     handler         = "handler.lambda_handler"
     runtime         = "nodejs20.x"

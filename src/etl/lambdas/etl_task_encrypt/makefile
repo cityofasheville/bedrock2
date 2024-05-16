@@ -31,6 +31,12 @@ apply: function.zip $(TF_TARGS) $(dirs)
 apply-y: function.zip $(TF_TARGS) $(dirs)
 destroy: $(TF_TARGS) $(dirs)
 
+node_modules:
+	npm install
+
+local: node_modules
+	node local.js
+
 clean:
 	rm -f *.instance
 	\rm -Rf build function.zip node_modules .bedrock_common
