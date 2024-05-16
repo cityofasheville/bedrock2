@@ -1,7 +1,8 @@
 include ../../../make_variables
 
 dirs = build
-.PHONY: $(dirs) init plan apply destroy prebuild
+.PHONY: $(dirs) init plan apply destroy prebuild local
+current_dir := $(shell pwd)
 
 SRC_DIR := ./deploy
 DEST_DIR := ./build
@@ -32,7 +33,7 @@ ifeq ($(build_mode),sam)
 	sam build --template-file build/template.yaml --use-container
 	pushd .aws-sam/build/filecopy; zip -r9q ../../../function.zip . -x \*terraform\*; popd
 else
-	pip install -r requirements.txt --target ./package
+	pip3 install -r requirements.txt --target ./package
 	cd package; zip -r9q ../function.zip . -x \*terraform\*; cd ..
 	zip -g function.zip $(code_files)
 endif
@@ -41,6 +42,13 @@ plan: function.zip $(TF_TARGS) $(dirs)
 apply: function.zip $(TF_TARGS) $(dirs)
 apply-y: function.zip $(TF_TARGS) $(dirs)
 destroy: $(TF_TARGS) $(dirs)
+
+package:
+	rm -Rf ./package
+	pip3 install -r requirements.txt --target ./package  
+
+local: package
+	PYTHONPATH=./package python3 local.py
 
 clean:
 	rm -f *.instance
