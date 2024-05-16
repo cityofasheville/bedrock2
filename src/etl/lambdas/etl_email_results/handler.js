@@ -1,6 +1,16 @@
 
 import sendEmails from './sendEmails.js';
 
-export function lambda_handler(event, context, callback) {
-  sendEmails(event);
+function formatRes(code, result) {
+  return {
+    statusCode: code,
+    body: {
+      lambda_output: result,
+    },
+  };
+}
+
+export async function lambda_handler(event) {
+  let ret = await sendEmails(event);
+  return formatRes(ret['$metadata'].httpStatusCode, ret.MessageId);
 }

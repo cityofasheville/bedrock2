@@ -1,8 +1,8 @@
 import { lambda_handler } from './handler.js';
 let event = {
     "success": [
-        "paymentus_paper_suppression.s3",
-        "paymentus_paper_suppression.mun"
+        "fakey_mcfakesterson.s3",
+        "fakey_mcfakesterson.mun"
     ],
     "skipped": [],
     "failure": [],
@@ -10,5 +10,5 @@ let event = {
     "RunSetIsGo": false
 };
 
-lambda_handler(event);
+console.log(await lambda_handler(event));
 

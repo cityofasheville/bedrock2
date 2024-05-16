@@ -25,7 +25,7 @@ function sendEmails(results) {
       let pugObj = {};
       pugObj.results = results;
       htmlEmail = compiledFunction(pugObj);
-      ses_sendemail(emailAddrs, htmlEmail, emailSubject);
+      return ses_sendemail(emailAddrs, htmlEmail, emailSubject);
   }else{
     console.log('No email sent');
   }
