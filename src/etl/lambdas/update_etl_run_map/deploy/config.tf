@@ -3,6 +3,7 @@ provider "aws" {
 }
 
 resource "aws_lambda_function" "update_etl_run_map-$$INSTANCE$$" {
+    description      = "Bedrock - Update ETL Run Map" 
     filename        = "../function.zip"
     function_name   = "update_etl_run_map-$$INSTANCE$$"
     role            = data.terraform_remote_state.lambda_role.outputs.bedrock_lambda_role_arn

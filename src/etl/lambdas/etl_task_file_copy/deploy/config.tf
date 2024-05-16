@@ -3,6 +3,7 @@ provider "aws" {
 }
 
 resource "aws_lambda_function" "etl_task_file_copy-$$INSTANCE$$" {
+    description      = "Bedrock - ETL Task File Copy" 
     filename        = "../function.zip"
     function_name   = "etl_task_file_copy-$$INSTANCE$$"
     description     = "Copies files, such as between S3, Google Drive, or FTP sites."

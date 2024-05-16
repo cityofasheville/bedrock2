@@ -3,6 +3,7 @@ provider "aws" {
 }
 
 resource "aws_lambda_function" "etl_task_sql-$$INSTANCE$$" {
+    description      = "Bedrock - ETL Task SQL" 
     filename        = "../function.zip"
     function_name   = "etl_task_sql-$$INSTANCE$$"
     description     = "ETL Task SQL"

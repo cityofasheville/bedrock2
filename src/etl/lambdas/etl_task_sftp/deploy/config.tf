@@ -3,6 +3,7 @@ provider "aws" {
 }
 
 resource "aws_lambda_function" "etl_task_sftp-$$INSTANCE$$" {
+    description      = "Bedrock - ETL Task SFTP" 
     filename        = "../function.zip"
     function_name   = "etl_task_sftp-$$INSTANCE$$"
     description     = "Copies files between S3 and FTP sites."
