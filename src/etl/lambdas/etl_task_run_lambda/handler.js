@@ -1,7 +1,7 @@
 
-const { LambdaClient, InvokeCommand } = require("@aws-sdk/client-lambda");
+import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
 
-exports.lambda_handler = async function x(event, context) {
+export const lambda_handler = async function x(event, context) {
   try {
     let TaskIndex = event.TaskIndex;
     let FunctionName = event.ETLJob.etl_tasks[TaskIndex].lambda_arn;
