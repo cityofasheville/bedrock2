@@ -3,8 +3,9 @@ const {
   newClient, checkInfo, checkExistence, updateInfo,
 } = require('../utilities/utilities');
 
-async function updateTag(
+async function updateAssetType(
   connection,
+  allFields,
   body,
   idField,
   idValue,
@@ -27,7 +28,7 @@ async function updateTag(
     client = await newClient(connection);
     clientInitiated = true;
     await checkExistence(client, tableName, idField, idValue, name, shouldExist);
-    response.result = await updateInfo(client, body, tableName, idField, idValue, name);
+    response.result = await updateInfo(client, allFields, body, tableName, idField, idValue, name);
     await client.end();
   } catch (error) {
     if (clientInitiated) {
@@ -40,4 +41,4 @@ async function updateTag(
   return response;
 }
 
-module.exports = updateTag;
+module.exports = updateAssetType;

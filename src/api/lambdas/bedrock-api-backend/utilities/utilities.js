@@ -17,7 +17,8 @@ async function newClient(connection) {
 }
 
 function checkInfo(body, requiredFields, name, idValue, idField) {
-// loop through requiredFields array and check that each one is in body
+  console.log('entering checkInfo');
+  // loop through requiredFields array and check that each one is in body
   for (let i = 0; i < requiredFields.length; i += 1) {
     const field = requiredFields[i];
     if (!(field in body)) {
@@ -70,7 +71,7 @@ async function getInfo(client, idField, idValue, name, tableName) {
   return res.rows[0];
 }
 
-async function addInfo(client, body, tableName, name) {
+async function addInfo(client, allFields, body, tableName, name) {
   let res;
   let fieldsString = '(';
   let valueString = '(';
@@ -80,21 +81,26 @@ async function addInfo(client, body, tableName, name) {
   // This is just a bunch of string manipulation.
   // It creates a string of the column names/fields like '(tag_name, display_name)'
   Object.keys(body).forEach((key) => {
-    fieldsString += comma;
-    fieldsString += key;
-    comma = ', ';
+    console.log(key);
+    if (allFields.includes(key)) {
+      fieldsString += comma;
+      fieldsString += key;
+      comma = ', ';
+    }
   });
   fieldsString += ')';
 
   // More string manipulation that creates a string '($1, $2, $3)'
   // The length is based on the number of fields.
   comma = '';
-  Object.keys(body).forEach(() => {
-    valueString += comma;
-    valueString += '$';
-    valueString += (cnt + 1).toString();
-    cnt += 1;
-    comma = ', ';
+  Object.keys(body).forEach((key) => {
+    if (allFields.includes(key)) {
+      valueString += comma;
+      valueString += '$';
+      valueString += (cnt + 1).toString();
+      cnt += 1;
+      comma = ', ';
+    }
   });
   valueString += ')';
 
@@ -102,7 +108,9 @@ async function addInfo(client, body, tableName, name) {
   // ['test_tag_name', 'test_display_name']
   const valuesFromBody = [];
   Object.keys(body).forEach((key) => {
-    valuesFromBody.push(body[key]);
+    if (allFields.includes(key)) {
+      valuesFromBody.push(body[key]);
+    }
   });
 
   try {
@@ -122,7 +130,7 @@ async function addInfo(client, body, tableName, name) {
   return body;
 }
 
-async function updateInfo(client, body, tableName, idField, idValue, name) {
+async function updateInfo(client, allFields, body, tableName, idField, idValue, name) {
   let cnt = 1;
   const args = [];
   let sql = `UPDATE ${tableName} SET `;
@@ -131,10 +139,12 @@ async function updateInfo(client, body, tableName, idField, idValue, name) {
   // Creating a string like 'tag_name = $1, display_name = 2$' etc
   // and adding the actual value to the args array
   Object.keys(body).forEach((key) => {
-    sql += `${comma} ${key} = $${cnt}`;
-    args.push(body[key]);
-    cnt += 1;
-    comma = ',';
+    if (allFields.includes(key)) {
+      sql += `${comma} ${key} = $${cnt}`;
+      args.push(body[key]);
+      cnt += 1;
+      comma = ',';
+    }
   });
 
   sql += ` where ${idField} = $${cnt}`;

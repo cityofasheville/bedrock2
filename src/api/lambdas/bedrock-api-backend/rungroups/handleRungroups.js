@@ -25,6 +25,7 @@ async function handleRungroups(
   const name = 'run_group';
   const tableName = 'run_groups';
   const requiredFields = ['run_group_name', 'cron_string'];
+  const allFields = ['run_group_name', 'cron_string'];
 
   if (nParams === 2 && (pathElements[1] === null || pathElements[1].length === 0)) nParams = 1;
   if ('body' in event) {
@@ -65,6 +66,7 @@ async function handleRungroups(
         case 'POST':
           result = await addRungroup(
             connection,
+            allFields,
             body,
             idField,
             idValue,
@@ -77,6 +79,7 @@ async function handleRungroups(
         case 'PUT':
           result = await updateRungroup(
             connection,
+            allFields,
             body,
             idField,
             idValue,

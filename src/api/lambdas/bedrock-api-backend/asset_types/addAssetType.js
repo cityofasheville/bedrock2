@@ -5,6 +5,7 @@ const {
 
 async function addAssetType(
   connection,
+  allFields,
   body,
   idField,
   idValue,
@@ -27,7 +28,7 @@ async function addAssetType(
     clientInitiated = true;
     checkInfo(body, requiredFields, name, idValue, idField);
     await checkExistence(client, tableName, idField, idValue, name, shouldExist);
-    response.result = await addInfo(client, body, tableName, name);
+    response.result = await addInfo(client, allFields, body, tableName, name);
     await client.end();
   } catch (error) {
     if (clientInitiated) {

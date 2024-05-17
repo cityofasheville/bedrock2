@@ -25,6 +25,7 @@ async function handleAssetTypes(
   const name = 'asset type';
   const tableName = 'asset_types';
   const requiredFields = ['id', 'name'];
+  const allFields = ['id', 'name', 'parent'];
 
   if (nParams === 2 && (pathElements[1] === null || pathElements[1].length === 0)) nParams = 1;
   if ('body' in event) {
@@ -65,6 +66,7 @@ async function handleAssetTypes(
         case 'POST':
           result = await addAssetType(
             connection,
+            allFields,
             body,
             idField,
             idValue,
@@ -77,6 +79,7 @@ async function handleAssetTypes(
         case 'PUT':
           result = await updateAssetType(
             connection,
+            allFields,
             body,
             idField,
             idValue,

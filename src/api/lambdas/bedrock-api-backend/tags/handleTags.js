@@ -25,12 +25,12 @@ async function handleTags(
   const name = 'tag';
   const tableName = 'tags';
   const requiredFields = ['tag_name', 'display_name'];
+  const allFields = ['tag_name', 'display_name'];
 
   if (nParams === 2 && (pathElements[1] === null || pathElements[1].length === 0)) nParams = 1;
   if ('body' in event) {
     body = JSON.parse(event.body);
   }
-  console.log(pathElements);
   if (!(pathElements[1] == null)) {
     [, idValue] = pathElements;
   }
@@ -65,6 +65,7 @@ async function handleTags(
         case 'POST':
           result = await addTag(
             connection,
+            allFields,
             body,
             idField,
             idValue,
@@ -77,6 +78,7 @@ async function handleTags(
         case 'PUT':
           result = await updateTag(
             connection,
+            allFields,
             body,
             idField,
             idValue,

@@ -5,6 +5,7 @@ const {
 
 async function updateTag(
   connection,
+  allFields,
   body,
   idField,
   idValue,
