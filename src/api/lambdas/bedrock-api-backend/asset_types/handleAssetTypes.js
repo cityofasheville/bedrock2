@@ -19,7 +19,21 @@ async function handleAssetTypes(
     result: null,
   };
   let nParams = pathElements.length;
-  if (nParams == 2 && (pathElements[1] === null || pathElements[1].length == 0)) nParams = 1;
+  let body;
+  const idField = 'id';
+  let idValue;
+  const name = 'asset type';
+  const tableName = 'asset_types';
+  const requiredFields = ['id', 'name'];
+
+  if (nParams === 2 && (pathElements[1] === null || pathElements[1].length === 0)) nParams = 1;
+  if ('body' in event) {
+    body = JSON.parse(event.body);
+  }
+  console.log(pathElements);
+  if (!(pathElements[1] == null)) {
+    [, idValue] = pathElements;
+  }
 
   switch (nParams) {
     // GET asset_type
@@ -29,6 +43,9 @@ async function handleAssetTypes(
         pathElements,
         queryParams,
         connection,
+        idField,
+        name,
+        tableName,
       );
       break;
 
@@ -36,29 +53,47 @@ async function handleAssetTypes(
     case 2:
       switch (verb) {
         case 'GET':
-          result = await getAssetType(pathElements, queryParams, connection);
+          result = await getAssetType(
+            connection,
+            idField,
+            idValue,
+            name,
+            tableName,
+          );
           break;
 
         case 'POST':
           result = await addAssetType(
-            event.body,
-            pathElements,
-            queryParams,
             connection,
+            body,
+            idField,
+            idValue,
+            name,
+            tableName,
+            requiredFields,
           );
           break;
 
         case 'PUT':
           result = await updateAssetType(
-            event.body,
-            pathElements,
-            queryParams,
             connection,
+            body,
+            idField,
+            idValue,
+            name,
+            tableName,
+            requiredFields,
           );
           break;
 
         case 'DELETE':
-          result = deleteAssetType(pathElements, queryParams, connection);
+          result = deleteAssetType(
+            connection,
+            idField,
+            idValue,
+            name,
+            tableName,
+          );
           break;
 
         default:

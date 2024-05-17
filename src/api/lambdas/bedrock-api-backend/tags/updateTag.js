@@ -18,7 +18,7 @@ async function updateTag(
 
   const response = {
     error: false,
-    message: `Successfully updated tag ${idValue}`,
+    message: `Successfully updated ${name} ${idValue}`,
     result: null,
   };
 

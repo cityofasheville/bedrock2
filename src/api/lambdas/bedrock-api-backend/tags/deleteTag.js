@@ -16,7 +16,7 @@ async function deleteTag(
 
   const response = {
     error: false,
-    message: `Successfully deleted tag ${idValue}`,
+    message: `Successfully deleted ${name} ${idValue}`,
     result: null,
   };
 

@@ -44,7 +44,7 @@ async function getTagList(
     total = await getCount(whereClause, client, tableName, name);
     tagList.set('total', total);
     if (total === 0) {
-      response.message = 'No tags found.';
+      response.message = `No ${name}s found.`;
       response.result = Object.fromEntries(tagList.entries());
       return response;
     }

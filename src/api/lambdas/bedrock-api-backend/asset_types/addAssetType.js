@@ -3,13 +3,15 @@ const {
   newClient, checkInfo, checkExistence, addInfo,
 } = require('../utilities/utilities');
 
-async function addAssetType(requestBody, pathElements, queryParams, connection) {
-  const body = JSON.parse(requestBody);
-  const name = 'asset type';
-  const tableName = 'asset_types';
-  const idField = 'id';
-  const requiredFields = ['id', 'name'];
-  const idValue = pathElements[1];
+async function addAssetType(
+  connection,
+  body,
+  idField,
+  idValue,
+  name,
+  tableName,
+  requiredFields,
+) {
   const shouldExist = false;
   let client;
   let clientInitiated = false;
