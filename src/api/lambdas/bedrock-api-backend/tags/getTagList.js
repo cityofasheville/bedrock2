@@ -9,10 +9,15 @@ const {
   buildURL,
 } = require('../utilities/listUtilities');
 
-async function getTagList(domainName, pathElements, queryParams, connection) {
-  const name = 'tag';
-  const tableName = 'tags';
-  const idField = 'tag_name';
+async function getTagList(
+  domainName,
+  pathElements,
+  queryParams,
+  connection,
+  idField,
+  name,
+  tableName,
+) {
   let total;
   let res;
   let client;

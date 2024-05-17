@@ -3,11 +3,13 @@ const {
   newClient, checkExistence, deleteInfo,
 } = require('../utilities/utilities');
 
-async function deleteTag(pathElements, queryParams, connection) {
-  const name = 'tag';
-  const tableName = 'tags';
-  const idField = 'tag_name';
-  const idValue = pathElements[1];
+async function deleteTag(
+  connection,
+  idField,
+  idValue,
+  name,
+  tableName,
+) {
   const shouldExist = true;
   let client;
   let clientInitiated = false;

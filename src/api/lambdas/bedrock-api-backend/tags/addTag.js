@@ -3,13 +3,15 @@ const {
   newClient, checkInfo, checkExistence, addInfo,
 } = require('../utilities/utilities');
 
-async function addTag(requestBody, pathElements, queryParams, connection) {
-  const body = JSON.parse(requestBody);
-  const name = 'tag';
-  const tableName = 'tags';
-  const idField = 'tag_name';
-  const requiredFields = ['tag_name', 'display_name'];
-  const idValue = pathElements[1];
+async function addTag(
+  connection,
+  body,
+  idField,
+  idValue,
+  name,
+  tableName,
+  requiredFields,
+) {
   const shouldExist = false;
   let client;
   let clientInitiated = false;

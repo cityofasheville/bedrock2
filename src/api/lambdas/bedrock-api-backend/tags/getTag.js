@@ -1,11 +1,13 @@
 /* eslint-disable no-console */
 const { newClient, getInfo } = require('../utilities/utilities');
 
-async function getTag(pathElements, queryParams, connection) {
-  const name = 'tag';
-  const tableName = 'tags';
-  const idField = 'tag_name';
-  const idValue = pathElements[1];
+async function getTag(
+  connection,
+  idField,
+  idValue,
+  name,
+  tableName,
+) {
   let client;
   let clientInitiated = false;
 

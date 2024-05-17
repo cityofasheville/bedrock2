@@ -3,14 +3,16 @@ const {
   newClient, checkInfo, checkExistence, updateInfo,
 } = require('../utilities/utilities');
 
-async function updateRungroup(requestBody, pathElements, queryParams, connection) {
-  const body = JSON.parse(requestBody);
-  const name = 'run group';
-  const tableName = 'run_groups';
-  const idField = 'run_group_name';
-  const requiredFields = ['run_group_name', 'cron_string'];
+async function updateRungroup(
+  connection,
+  body,
+  idField,
+  idValue,
+  name,
+  tableName,
+  requiredFields,
+) {
   const shouldExist = true;
-  const idValue = pathElements[1];
   let client;
   let clientInitiated = false;
 

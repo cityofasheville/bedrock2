@@ -3,11 +3,13 @@ const {
   newClient, checkExistence, deleteInfo,
 } = require('../utilities/utilities');
 
-async function deleteRungroup(pathElements, queryParams, connection) {
-  const name = 'run group';
-  const tableName = 'run_groups';
-  const idField = 'run_group_name';
-  const idValue = pathElements[1];
+async function deleteRungroup(
+  connection,
+  idField,
+  idValue,
+  name,
+  tableName,
+) {
   const shouldExist = true;
   let client;
   let clientInitiated = false;

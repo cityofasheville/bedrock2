@@ -1,11 +1,13 @@
 /* eslint-disable no-console */
 const { newClient, getInfo } = require('../utilities/utilities');
 
-async function getRungroup(pathElements, queryParams, connection) {
-  const name = 'run group';
-  const tableName = 'run_groups';
-  const idField = 'run_group_name';
-  const idValue = pathElements[1];
+async function getRungroup(
+  connection,
+  idField,
+  idValue,
+  name,
+  tableName,
+) {
   let client;
   let clientInitiated = false;
 

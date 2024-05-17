@@ -9,10 +9,15 @@ const {
   buildURL,
 } = require('../utilities/listUtilities');
 
-async function getRungroupList(domainName, pathElements, queryParams, connection) {
-  const name = 'run group';
-  const tableName = 'run_groups';
-  const idField = 'run_group_name';
+async function getRungroupList(
+  domainName,
+  pathElements,
+  queryParams,
+  connection,
+  idField,
+  name,
+  tableName,
+) {
   let total;
   let res;
   let client;

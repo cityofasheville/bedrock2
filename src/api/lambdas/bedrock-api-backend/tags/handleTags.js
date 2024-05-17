@@ -19,7 +19,21 @@ async function handleTags(
     result: null,
   };
   let nParams = pathElements.length;
+  let body;
+  const idField = 'tag_name';
+  let idValue;
+  const name = 'tag';
+  const tableName = 'tags';
+  const requiredFields = ['tag_name', 'display_name'];
+
   if (nParams === 2 && (pathElements[1] === null || pathElements[1].length === 0)) nParams = 1;
+  if ('body' in event) {
+    body = JSON.parse(event.body);
+  }
+  console.log(pathElements);
+  if (!(pathElements[1] == null)) {
+    [, idValue] = pathElements;
+  }
 
   switch (nParams) {
     // GET tags
@@ -29,6 +43,9 @@ async function handleTags(
         pathElements,
         queryParams,
         connection,
+        idField,
+        name,
+        tableName,
       );
       break;
 
@@ -36,29 +53,47 @@ async function handleTags(
     case 2:
       switch (verb) {
         case 'GET':
-          result = await getTag(pathElements, queryParams, connection);
+          result = await getTag(
+            connection,
+            idField,
+            idValue,
+            name,
+            tableName,
+          );
           break;
 
         case 'POST':
           result = await addTag(
-            event.body,
-            pathElements,
-            queryParams,
             connection,
+            body,
+            idField,
+            idValue,
+            name,
+            tableName,
+            requiredFields,
           );
           break;
 
         case 'PUT':
           result = await updateTag(
-            event.body,
-            pathElements,
-            queryParams,
             connection,
+            body,
+            idField,
+            idValue,
+            name,
+            tableName,
+            requiredFields,
           );
           break;
 
         case 'DELETE':
-          result = deleteTag(pathElements, queryParams, connection);
+          result = deleteTag(
+            connection,
+            idField,
+            idValue,
+            name,
+            tableName,
+          );
           break;
 
         default:
