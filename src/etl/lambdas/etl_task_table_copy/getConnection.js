@@ -1,11 +1,11 @@
-const AWS = require('aws-sdk');
+import { SecretsManager } from 'aws-sdk';
 
 const region = 'us-east-1';
 let secret;
 
 function getConnection(secretName) {
   return new Promise((resolve, reject) => {
-    const client = new AWS.SecretsManager({
+    const client = new SecretsManager({
       region,
     });
     client.getSecretValue({ SecretId: secretName }, (err, data) => {
@@ -21,4 +21,4 @@ function getConnection(secretName) {
   });
 }
 
-module.exports = getConnection;
+export default getConnection;

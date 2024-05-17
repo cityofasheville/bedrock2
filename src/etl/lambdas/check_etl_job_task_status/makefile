@@ -36,7 +36,7 @@ local:
 
 clean:
 	rm -f *.instance
-	\rm -Rf build function.zip
+	\rm -Rf build function.zip __pycache__
 
 $(dirs):
 	$(MAKE) -C $@ $(MAKECMDGOALS)

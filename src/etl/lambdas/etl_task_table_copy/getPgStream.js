@@ -1,7 +1,8 @@
 /* eslint-disable no-console */
-const { Client } = require('pg');
-const copyTo = require('pg-copy-streams').to; // pipe from a table _TO_ stream
-const copyFrom = require('pg-copy-streams').from; // pipe to a table _FROM_ stream
+import pgpkg from 'pg';
+const { Client } = pgpkg;
+import { to as copyTo } from 'pg-copy-streams'; // pipe from a table _TO_ stream
+import { from as copyFrom } from 'pg-copy-streams'; // pipe to a table _FROM_ stream
 
 function getPgStream(location) {
   return new Promise((resolve, reject) => {
@@ -109,7 +110,7 @@ function getPgStream(location) {
   });
 }
 
-module.exports = getPgStream;
+export default getPgStream;
 
 /* parameter data structure
 location = {
