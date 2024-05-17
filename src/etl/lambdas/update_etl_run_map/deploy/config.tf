@@ -8,7 +8,7 @@ resource "aws_lambda_function" "update_etl_run_map-$$INSTANCE$$" {
     function_name   = "update_etl_run_map-$$INSTANCE$$"
     role            = data.terraform_remote_state.lambda_role.outputs.bedrock_lambda_role_arn
     handler         = "handler.lambda_handler"
-    runtime         = "python3.8"
+    runtime         = "python3.12"
     source_code_hash = filebase64sha256("../function.zip")
     tags = {
       "coa:application" = "bedrock"
