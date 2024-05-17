@@ -1,6 +1,6 @@
-const { getConnection } = require('bedrock_common');
-const pgSql = require('./pgSql');
-const ssSql = require('./ssSql');
+import { getConnection } from 'bedrock_common';
+import pgSql from './pgSql.js';
+import ssSql from './ssSql.js';
 
 function formatRes(code, result) {
   return {
@@ -11,7 +11,7 @@ function formatRes(code, result) {
   };
 }
 
-exports.lambda_handler = async function x(event, context) {
+export const lambda_handler = async function x(event, context) {
   const task = new Promise((resolve) => {
     try {
       const etl = event.ETLJob.etl_tasks[event.TaskIndex];

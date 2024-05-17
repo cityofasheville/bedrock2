@@ -1,1 +1,0 @@
-sam local invoke "SQL" -e sam_event.json

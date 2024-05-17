@@ -10,7 +10,7 @@ Also see [Managed Data Assets README](https://github.com/cityofasheville/managed
         {
             "type": "sql",
             "sql_string": "select * from foo",
-            "db": "datastore1",
+            "connection": "datastore1",
             "active": true
         }
     ]

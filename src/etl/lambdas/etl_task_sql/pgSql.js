@@ -1,5 +1,6 @@
-const { Client } = require('pg');
-const pgErrorCodes = require('./pgErrorCodes');
+import pgpkg from 'pg';
+const { Client } = pgpkg;
+import pgErrorCodes from './pgErrorCodes.js';
 
 async function pgSql(connection, sql) {
   try {
@@ -23,4 +24,4 @@ async function pgSql(connection, sql) {
   }
 }
 
-module.exports = pgSql;
+export default pgSql;

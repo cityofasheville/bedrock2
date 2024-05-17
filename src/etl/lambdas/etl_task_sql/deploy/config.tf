@@ -6,7 +6,6 @@ resource "aws_lambda_function" "etl_task_sql-$$INSTANCE$$" {
     description      = "Bedrock - ETL Task SQL" 
     filename        = "../function.zip"
     function_name   = "etl_task_sql-$$INSTANCE$$"
-    description     = "ETL Task SQL"
     role            = data.terraform_remote_state.lambda_role.outputs.bedrock_lambda_role_arn
     handler         = "handler.lambda_handler"
     runtime         = "nodejs20.x"

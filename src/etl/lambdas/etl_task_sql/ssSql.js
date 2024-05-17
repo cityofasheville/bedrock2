@@ -1,4 +1,5 @@
-const sql = require('mssql');
+import mssqlpkg from 'mssql';
+const { connect, query } = mssqlpkg;
 
 async function ssSql(connection, sqlString) {
   try {
@@ -25,12 +26,12 @@ async function ssSql(connection, sqlString) {
       config.domain = connection.domain;
     }
 
-    await sql.connect(config);
-    const result = await sql.query(sqlString);
+    await connect(config);
+    const result = await query(sqlString);
     return JSON.stringify(result).slice(0, 40);
   } catch (err) {
     throw (new Error('SQL Server error' + err));
   }
 }
 
-module.exports = ssSql;
+export default ssSql;

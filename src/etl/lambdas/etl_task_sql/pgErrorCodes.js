@@ -258,4 +258,4 @@ const pgErrorCodes = {
   XX001: 'data_corrupted',
   XX002: 'index_corrupted',
 };
-module.exports = pgErrorCodes;
+export default pgErrorCodes;
