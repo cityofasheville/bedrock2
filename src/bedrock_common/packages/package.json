@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Lambda Layer of common utility functions for Bedrock, including bedrock_common functions",
   "main": "bedrock_common.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
