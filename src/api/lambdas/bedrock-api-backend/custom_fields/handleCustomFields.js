@@ -19,7 +19,22 @@ async function handleCustomFields(
     result: null,
   };
   let nParams = pathElements.length;
-  if (nParams == 2 && (pathElements[1] === null || pathElements[1].length == 0)) nParams = 1;
+  let body;
+  const idField = 'id';
+  let idValue;
+  const name = 'custom_field';
+  const tableName = 'custom_fields';
+  const requiredFields = ['id', 'field_display', 'field_type', 'field_data'];
+  const allFields = ['id', 'field_display', 'field_type', 'field_data'];
+
+  if (nParams === 2 && (pathElements[1] === null || pathElements[1].length === 0)) nParams = 1;
+  if ('body' in event) {
+    body = JSON.parse(event.body);
+  }
+  console.log(pathElements);
+  if (!(pathElements[1] == null)) {
+    [, idValue] = pathElements;
+  }
 
   switch (nParams) {
     // GET custom_fields
@@ -29,6 +44,9 @@ async function handleCustomFields(
         pathElements,
         queryParams,
         connection,
+        idField,
+        name,
+        tableName,
       );
       break;
 
@@ -36,29 +54,49 @@ async function handleCustomFields(
     case 2:
       switch (verb) {
         case 'GET':
-          result = await getCustomField(pathElements, queryParams, connection);
+          result = await getCustomField(
+            connection,
+            idField,
+            idValue,
+            name,
+            tableName,
+          );
           break;
 
         case 'POST':
           result = await addCustomField(
-            event.body,
-            pathElements,
-            queryParams,
             connection,
+            allFields,
+            body,
+            idField,
+            idValue,
+            name,
+            tableName,
+            requiredFields,
           );
           break;
 
         case 'PUT':
           result = await updateCustomField(
-            event.body,
-            pathElements,
-            queryParams,
             connection,
+            allFields,
+            body,
+            idField,
+            idValue,
+            name,
+            tableName,
+            requiredFields,
           );
           break;
 
         case 'DELETE':
-          result = deleteCustomField(pathElements, queryParams, connection);
+          result = deleteCustomField(
+            connection,
+            idField,
+            idValue,
+            name,
+            tableName,
+          );
           break;
 
         default:

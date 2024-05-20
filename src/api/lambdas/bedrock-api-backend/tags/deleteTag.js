@@ -3,25 +3,27 @@ const {
   newClient, checkExistence, deleteInfo,
 } = require('../utilities/utilities');
 
-async function deleteTag(pathElements, queryParams, connection) {
-  const name = 'tag';
-  const tableName = 'tags';
-  const idField = 'tag_name';
-  const idValue = pathElements[1];
-  const tagShouldExist = true;
+async function deleteTag(
+  connection,
+  idField,
+  idValue,
+  name,
+  tableName,
+) {
+  const shouldExist = true;
   let client;
   let clientInitiated = false;
 
   const response = {
     error: false,
-    message: `Successfully deleted tag ${idValue}`,
+    message: `Successfully deleted ${name} ${idValue}`,
     result: null,
   };
 
   try {
     client = await newClient(connection);
     clientInitiated = true;
-    await checkExistence(client, tableName, idField, idValue, name, tagShouldExist);
+    await checkExistence(client, tableName, idField, idValue, name, shouldExist);
     await deleteInfo(client, tableName, idField, idValue, name);
     await client.end();
   } catch (error) {

@@ -9,10 +9,15 @@ const {
   buildURL,
 } = require('../utilities/listUtilities');
 
-async function getTagList(domainName, pathElements, queryParams, connection) {
-  const name = 'tag';
-  const tableName = 'tags';
-  const idField = 'tag_name';
+async function getTagList(
+  domainName,
+  pathElements,
+  queryParams,
+  connection,
+  idField,
+  name,
+  tableName,
+) {
   let total;
   let res;
   let client;
@@ -39,7 +44,7 @@ async function getTagList(domainName, pathElements, queryParams, connection) {
     total = await getCount(whereClause, client, tableName, name);
     tagList.set('total', total);
     if (total === 0) {
-      response.message = 'No tags found.';
+      response.message = `No ${name}s found.`;
       response.result = Object.fromEntries(tagList.entries());
       return response;
     }

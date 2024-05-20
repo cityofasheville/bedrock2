@@ -1,82 +1,40 @@
 /* eslint-disable no-console */
-const { Client } = require('pg');
-const pgErrorCodes = require('../pgErrorCodes');
+const {
+  newClient, checkExistence, deleteInfo,
+} = require('../utilities/utilities');
 
-async function newClient(connection) {
-  const client = new Client(connection);
-  try {
-    await client.connect();
-    return client;
-  } catch (error) {
-    throw new Error(`PG error connecting: ${pgErrorCodes[error.code]}`);
-  }
-}
-
-async function checkExistence(client, rungroupName) {
-  // Check that rungroup exists
-  const sql = 'SELECT * FROM bedrock.run_groups where run_group_name like $1';
-  let res;
-  try {
-    res = await client.query(sql, [rungroupName]);
-  } catch (error) {
-    throw new Error(`PG error getting rungroup for delete: ${
-      pgErrorCodes[error.code]
-    }`);
-  }
-
-  if (res.rowCount === 0) {
-    throw new Error('Rungroup not found');
-  }
-}
-
-async function baseDelete(client, rungroupName) {
-
-  try {
-    await client
-      .query('delete from run_groups where run_group_name = $1', [
-        rungroupName,
-      ]);
-  } catch (error) {
-    throw new Error(`PG error deleting rungroup cron_string: ${pgErrorCodes[error.code]}`);
-  }
-}
-
-async function deleteRungroup(pathElements, queryParams, connection) {
-  const rungroupName = pathElements[1];
+async function deleteRungroup(
+  connection,
+  idField,
+  idValue,
+  name,
+  tableName,
+) {
+  const shouldExist = true;
   let client;
+  let clientInitiated = false;
+
   const response = {
     error: false,
-    message: `Successfully deleted asset ${rungroupName}`,
+    message: `Successfully deleted ${name} ${idValue}`,
     result: null,
   };
 
   try {
     client = await newClient(connection);
-  } catch (error) {
-    response.error = true;
-    response.message = error.message;
-    return response;
-  }
-
-  try {
-    await checkExistence(client, rungroupName);
-  } catch (error) {
-    response.error = true;
-    response.message = error.message;
+    clientInitiated = true;
+    await checkExistence(client, tableName, idField, idValue, name, shouldExist);
+    await deleteInfo(client, tableName, idField, idValue, name);
     await client.end();
-    return response;
-  }
-
-  try {
-    await baseDelete(client, rungroupName);
   } catch (error) {
+    if (clientInitiated) {
+      await client.end();
+    }
     response.error = true;
     response.message = error.message;
-  } finally {
-    await client.end();
     return response;
   }
-
+  return response;
 }
 
 module.exports = deleteRungroup;

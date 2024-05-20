@@ -19,7 +19,22 @@ async function handleRungroups(
     result: null,
   };
   let nParams = pathElements.length;
-  if (nParams == 2 && (pathElements[1] === null || pathElements[1].length == 0)) nParams = 1;
+  let body;
+  const idField = 'run_group_name';
+  let idValue;
+  const name = 'run_group';
+  const tableName = 'run_groups';
+  const requiredFields = ['run_group_name', 'cron_string'];
+  const allFields = ['run_group_name', 'cron_string'];
+
+  if (nParams === 2 && (pathElements[1] === null || pathElements[1].length === 0)) nParams = 1;
+  if ('body' in event) {
+    body = JSON.parse(event.body);
+  }
+  console.log(pathElements);
+  if (!(pathElements[1] == null)) {
+    [, idValue] = pathElements;
+  }
 
   switch (nParams) {
     // GET rungroups
@@ -29,6 +44,9 @@ async function handleRungroups(
         pathElements,
         queryParams,
         connection,
+        idField,
+        name,
+        tableName,
       );
       break;
 
@@ -36,29 +54,49 @@ async function handleRungroups(
     case 2:
       switch (verb) {
         case 'GET':
-          result = await getRungroup(pathElements, queryParams, connection);
+          result = await getRungroup(
+            connection,
+            idField,
+            idValue,
+            name,
+            tableName,
+          );
           break;
 
         case 'POST':
           result = await addRungroup(
-            event.body,
-            pathElements,
-            queryParams,
             connection,
+            allFields,
+            body,
+            idField,
+            idValue,
+            name,
+            tableName,
+            requiredFields,
           );
           break;
 
         case 'PUT':
           result = await updateRungroup(
-            event.body,
-            pathElements,
-            queryParams,
             connection,
+            allFields,
+            body,
+            idField,
+            idValue,
+            name,
+            tableName,
+            requiredFields,
           );
           break;
 
         case 'DELETE':
-          result = deleteRungroup(pathElements, queryParams, connection);
+          result = deleteRungroup(
+            connection,
+            idField,
+            idValue,
+            name,
+            tableName,
+          );
           break;
 
         default:
