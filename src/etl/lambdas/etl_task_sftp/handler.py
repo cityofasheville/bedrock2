@@ -107,7 +107,8 @@ def lambda_handler(event, context):
                 'statusCode': 200,
                 'body': "Inactive: skipped"
             }
-        filename = fillDateTemplate(etl["filename"])
+        if "filename" in etl:
+            filename = fillDateTemplate(etl["filename"])
         s3 = boto3.client('s3')
         if "s3_connection" in etl.keys():
             s3_conn_name = etl['s3_connection']

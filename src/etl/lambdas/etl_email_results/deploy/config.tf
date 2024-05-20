@@ -3,6 +3,7 @@ provider "aws" {
 }
 
 resource "aws_lambda_function" "etl_email_results-$$INSTANCE$$" {
+    description      = "Bedrock - Email Results" 
     filename        = "../function.zip"
     function_name   = "etl_email_results-$$INSTANCE$$"
     role            = data.terraform_remote_state.lambda_role.outputs.bedrock_lambda_role_arn
@@ -23,7 +24,7 @@ resource "aws_lambda_function" "etl_email_results-$$INSTANCE$$" {
     environment {
       variables = {
           "EMAIL_RECIPIENT_JSON" = jsonencode(
-                ["gisadmins@ashevillenc.gov","jtwilson@ashevillenc.gov","ejackson@ashevillenc.gov"]
+                ["gisadmins@ashevillenc.gov","jtwilson@ashevillenc.gov"]
             )
           "EMAIL_SENDER"         = "asheville_notifications@ashevillenc.gov"
       }

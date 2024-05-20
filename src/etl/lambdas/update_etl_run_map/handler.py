@@ -1,8 +1,4 @@
 #!/usr/bin/env python3
-import boto3
-import os
-import json
-
 def update_run_map(state):
     newstate = {}
     newstate['success'] = state['success']

@@ -1,7 +1,7 @@
 include ../../../make_variables
 
 dirs = build
-.PHONY: $(dirs) init plan apply destroy prebuild
+.PHONY: $(dirs) init plan apply destroy prebuild local clean
 
 SRC_DIR := ./deploy
 DEST_DIR := ./build
@@ -41,6 +41,13 @@ plan: function.zip $(TF_TARGS) $(dirs)
 apply: function.zip $(TF_TARGS) $(dirs)
 apply-y: function.zip $(TF_TARGS) $(dirs)
 destroy: $(TF_TARGS) $(dirs)
+
+package:
+	rm -Rf ./package
+	pip3 install -r requirements.txt --target ./package  
+
+local: package
+	PYTHONPATH=./package python3 local.py
 
 clean:
 	rm -f *.instance

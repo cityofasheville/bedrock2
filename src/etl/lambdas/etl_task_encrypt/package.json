@@ -3,16 +3,15 @@
   "version": "1.0.0",
   "description": "",
   "main": "handler.js",
+  "type": "module",
   "scripts": {
-    "preinstall": "rm -fr ./.bedrock_common; mkdir .bedrock_common; cp -r ../../../bedrock_common/bedrock_common/* ./.bedrock_common"
+    "preinstall": "npm install ../../../bedrock_common/packages --install-links; npm install ../../../bedrock_common/bedrock_common --install-links"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "bedrock_common": "file:./.bedrock_common",
-    "@aws-sdk/client-s3": "^3.113.0",
-    "@aws-sdk/lib-storage": "^3.113.0",
-    "openpgp": "^5.3.0"
+    "bedrock_common": "file:../../../bedrock_common/bedrock_common",
+    "bedrock_packages": "file:../../../bedrock_common/packages"
   },
   "devDependencies": {
     "eslint": "^8.32.0",

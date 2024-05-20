@@ -3,12 +3,12 @@ provider "aws" {
 }
 
 resource "aws_lambda_function" "etl_task_file_copy-$$INSTANCE$$" {
+    description      = "Bedrock - Copies files, such as between S3, Google Drive, or FTP sites." 
     filename        = "../function.zip"
     function_name   = "etl_task_file_copy-$$INSTANCE$$"
-    description     = "Copies files, such as between S3, Google Drive, or FTP sites."
     role            = data.terraform_remote_state.lambda_role.outputs.bedrock_lambda_role_arn
     handler         = "handler.lambda_handler"
-    runtime         = "python3.10"
+    runtime         = "python3.12"
     source_code_hash = filebase64sha256("../function.zip")
     timeout         = 300
     tags = {

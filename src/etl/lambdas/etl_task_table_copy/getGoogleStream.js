@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
-const { google } = require('googleapis');
-const { Readable } = require('stream');
-const { stringify } = require('csv-stringify');
-const createGoogleWritable = require('./createGoogleWritable');
+import { google } from 'googleapis';
+import { Readable } from 'stream';
+import { stringify } from 'csv-stringify';
+import createGoogleWritable from './createGoogleWritable.js';
 
 function fixUnevenRows(range, values) {
   // Google just drops data if a field is empty at the end of the row (lame)
@@ -71,4 +71,4 @@ async function getGoogleStream(location) {
   return (0);
 }
 
-module.exports = getGoogleStream;
+export default getGoogleStream;

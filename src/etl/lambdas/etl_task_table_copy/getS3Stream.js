@@ -1,39 +1,40 @@
 /* eslint-disable no-console */
-const { S3Client, GetObjectCommand } = require('@aws-sdk/client-s3');
-const { Upload } = require('@aws-sdk/lib-storage');
-const stream = require('stream');
-const removeHeader = require('./removeHeader');
+import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
+import { Upload } from '@aws-sdk/lib-storage';
+import { PassThrough } from 'stream';
+import removeHeader from './removeHeader.js';
 
 const s3Region = 'us-east-1';
 
 function fillDateTemplate(template) {
   // Completes template with today's date in parts: YYYY, MM, DD,, HH, mm and/or SS
-  // eg. filename_${YYYY} returns filename_2022
-  // Warning! Dangerous eval in code, dont allow untrusted users.
+  let dateParts = {};
   const regex = /\$\{/g;
-  const templateString = template.replace(regex, '${this.');
+  const templateString = template.replace(regex, '${dateParts.');
   const today = new Date();
 
   const day = today.getUTCDate();
-  this.DD = (day > 9 ? '' : '0') + day;
+  dateParts.DD = (day > 9 ? '' : '0') + day;
 
   const month = today.getUTCMonth() + 1;
-  this.MM = (month > 9 ? '' : '0') + month;
+  dateParts.MM = (month > 9 ? '' : '0') + month;
 
-  this.YYYY = today.getUTCFullYear().toString();
-  // this.YY = YYYY.slice(2,)
+  dateParts.YYYY = today.getUTCFullYear().toString();
+  // dateParts.YY = YYYY.slice(2,)
 
   const hours = today.getUTCHours();
-  this.HH = (hours > 9 ? '' : '0') + hours;
+  dateParts.HH = (hours > 9 ? '' : '0') + hours;
 
   const mins = today.getUTCMinutes();
-  this.mm = (mins > 9 ? '' : '0') + mins;
+  dateParts.mm = (mins > 9 ? '' : '0') + mins;
 
   const secs = today.getUTCSeconds();
-  this.SS = (secs > 9 ? '' : '0') + secs;
+  dateParts.SS = (secs > 9 ? '' : '0') + secs;
 
-  // eslint-disable-next-line no-new-func
-  return new Function(`return \`${templateString}\`;`).call(this);
+  return template.replace('${YYYY}', dateParts.YYYY)
+    .replace('${MM}', dateParts.MM).replace('${DD}', dateParts.DD)
+    .replace('${HH}', dateParts.HH).replace('${mm}', dateParts.mm)
+    .replace('${SS}', dateParts.SS);
 }
 
 async function getS3Stream(location) {
@@ -52,7 +53,7 @@ async function getS3Stream(location) {
       }
       console.log('Copy from S3 Bucket: ', bucket, s3Key);
     } else if (location.fromto === 'target_location') {
-      s3stream = new stream.PassThrough();
+      s3stream = new PassThrough();
 
       const upload = new Upload({
         client: s3Client,
@@ -73,4 +74,4 @@ async function getS3Stream(location) {
   }
 }
 
-module.exports = getS3Stream;
+export default getS3Stream;

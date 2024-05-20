@@ -1,11 +1,11 @@
-const { pipeline } = require('node:stream/promises'); // nodejs 16+
-const { getConnection } = require('bedrock_common');
-const getPgStream = require('./getPgStream');
-const getSsStream = require('./getSsStream');
-const getS3Stream = require('./getS3Stream');
-const getGoogleStream = require('./getGoogleStream');
+import { pipeline } from 'node:stream/promises';
+import { getConnection } from 'bedrock_common';
+import getPgStream from './getPgStream.js';
+import getSsStream from './getSsStream.js';
+import getS3Stream from './getS3Stream.js';
+import getGoogleStream from './getGoogleStream.js';
 // eslint-disable-next-line no-unused-vars
-const streamDebug = require('./streamDebug');
+import streamDebug from './streamDebug.js';
 
 function returnError(err) {
   return {
@@ -25,7 +25,7 @@ function outputMsg(loc) {
   return `Copied ${loc.connection}`;
 }
 
-exports.lambda_handler = async function x(event, context) {
+export const lambda_handler = async function x(event, context) {
   const task = new Promise((resolve) => {
     try {
       const etl = event.ETLJob.etl_tasks[event.TaskIndex];
@@ -103,7 +103,6 @@ exports.lambda_handler = async function x(event, context) {
 
   // timeout task
   const timeleft = context.getRemainingTimeInMillis() - 300;
-  // const timeleft = 1000 * 60 * 15 - 1000 //SAM bug workaround
 
   const timeout = new Promise((resolve) => {
     setTimeout(() => resolve({ statusCode: 500, message: `Lambda timed out after ${Math.round(timeleft / 1000)} seconds` }), timeleft);

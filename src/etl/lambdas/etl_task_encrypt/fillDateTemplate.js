@@ -1,32 +1,35 @@
 function fillDateTemplate(template) {
   // Completes template with today's date in parts: YYYY, MM, DD,, HH, mm and/or SS
+  let dateParts = {};
   const regex = /\$\{/g;
-  const templateString = template.replace(regex, '${this.');
+  const templateString = template.replace(regex, '${dateParts.');
   const today = new Date();
 
   const day = today.getUTCDate();
-  this.DD = (day > 9 ? '' : '0') + day;
+  dateParts.DD = (day > 9 ? '' : '0') + day;
 
   const month = today.getUTCMonth() + 1;
-  this.MM = (month > 9 ? '' : '0') + month;
+  dateParts.MM = (month > 9 ? '' : '0') + month;
 
-  this.YYYY = today.getUTCFullYear().toString();
-  // this.YY = YYYY.slice(2,)
+  dateParts.YYYY = today.getUTCFullYear().toString();
+  // dateParts.YY = YYYY.slice(2,)
 
   const hours = today.getUTCHours();
-  this.HH = (hours > 9 ? '' : '0') + hours;
+  dateParts.HH = (hours > 9 ? '' : '0') + hours;
 
   const mins = today.getUTCMinutes();
-  this.mm = (mins > 9 ? '' : '0') + mins;
+  dateParts.mm = (mins > 9 ? '' : '0') + mins;
 
   const secs = today.getUTCSeconds();
-  this.SS = (secs > 9 ? '' : '0') + secs;
+  dateParts.SS = (secs > 9 ? '' : '0') + secs;
 
-  // eslint-disable-next-line no-new-func
-  return new Function(`return \`${templateString}\`;`).call(this);
+  return template.replace('${YYYY}', dateParts.YYYY)
+    .replace('${MM}', dateParts.MM).replace('${DD}', dateParts.DD)
+    .replace('${HH}', dateParts.HH).replace('${mm}', dateParts.mm)
+    .replace('${SS}', dateParts.SS);
 }
 
-module.exports = fillDateTemplate;
+export default fillDateTemplate;
 
 // Example Usage:
 // let template = "compsych_CityofAsheville_TEST_${YYYY}${MM}${DD}.csv"

@@ -1,8 +1,9 @@
 /* eslint-disable max-len */
 /* eslint-disable no-console */
-const sql = require('mssql');
-const { parse } = require('csv-parse');
-const { getPool } = require('./ssPools');
+import mssqlpkg from 'mssql';
+const { VarChar, Table } = mssqlpkg;
+import { parse } from 'csv-parse';
+import { getPool } from './ssPools.js';
 
 async function createSsWritable(location) {
   const tablename = `[${location.schemaname}].[${location.tablename}]`;
@@ -84,11 +85,11 @@ async function createSsWritable(location) {
     return new Promise((resolve, reject) => {
       try {
         // create a generic temp table with same number of cols as target.
-        const table = new sql.Table(tempTablename);
+        const table = new Table(tempTablename);
         table.create = true;
 
         for (let x = 0; x < numCols; x += 1) {
-          table.columns.add(`col${x}`, sql.VarChar(8000), { nullable: true });
+          table.columns.add(`col${x}`, VarChar(8000), { nullable: true });
         }
         tableArr.forEach((record) => {
           table.rows.add(...record);
@@ -159,4 +160,4 @@ async function createSsWritable(location) {
   return { promise, stream: SsStream };
 }
 
-module.exports = createSsWritable;
+export default createSsWritable;

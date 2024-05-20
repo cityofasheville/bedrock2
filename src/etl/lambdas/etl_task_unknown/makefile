@@ -1,7 +1,7 @@
 include ../../../make_variables
 
 dirs = build
-.PHONY: $(dirs) init plan apply destroy prebuild
+.PHONY: $(dirs) init plan apply destroy prebuild local clean
 
 SRC_DIR := ./deploy
 DEST_DIR := ./build
@@ -30,9 +30,12 @@ apply: function.zip $(TF_TARGS) $(dirs)
 apply-y: function.zip $(TF_TARGS) $(dirs)
 destroy: $(TF_TARGS) $(dirs)
 
+local:
+	python3 local.py
+
 clean:
 	rm -f *.instance
-	\rm -Rf build function.zip
+	\rm -Rf build function.zip __pycache__
 
 $(dirs):
 	$(MAKE) -C $@ $(MAKECMDGOALS)

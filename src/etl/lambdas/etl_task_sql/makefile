@@ -1,7 +1,7 @@
 include ../../../make_variables
 
 dirs = build
-.PHONY: $(dirs) init plan apply destroy prebuild
+.PHONY: $(dirs) init plan apply destroy prebuild local clean
 
 SRC_DIR := ./deploy
 DEST_DIR := ./build
@@ -31,9 +31,15 @@ apply: function.zip $(TF_TARGS) $(dirs)
 apply-y: function.zip $(TF_TARGS) $(dirs)
 destroy: $(TF_TARGS) $(dirs)
 
+node_modules:
+	npm install
+
+local: node_modules
+	node local.js
+	
 clean:
 	rm -f *.instance
-	\rm -Rf build function.zip
+	\rm -Rf build function.zip node_modules
 
 $(dirs):
 	$(MAKE) -C $@ $(MAKECMDGOALS)

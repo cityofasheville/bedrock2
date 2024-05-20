@@ -1,4 +1,4 @@
-const { Transform } = require('stream');
+import { Transform } from 'stream';
 
 const streamDebug = new Transform({
   transform(chunk, encoding, callback) {
@@ -10,4 +10,4 @@ const streamDebug = new Transform({
   },
 });
 
-module.exports = streamDebug;
+export default streamDebug;

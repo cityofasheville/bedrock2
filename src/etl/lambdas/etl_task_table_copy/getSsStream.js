@@ -1,14 +1,15 @@
 /* eslint-disable no-console */
-const sql = require('mssql');
-const { stringify } = require('csv-stringify');
-const MultiStream = require('multistream');
-const { getPool } = require('./ssPools');
-const createSsWritable = require('./createSsWritable');
+import mssqlpkg from 'mssql';
+const { on } = mssqlpkg;
+import { stringify } from 'csv-stringify';
+import MultiStream from 'multistream';
+import { getPool } from './ssPools.js';
+import createSsWritable from './createSsWritable.js';
 
 async function getSsStream(location) {
   if (location.fromto === 'source_location') {
     return new Promise((resolve, reject) => {
-      sql.on('error', (err) => {
+      on('error', (err) => {
         reject(err);
       });
       try {
@@ -128,4 +129,4 @@ async function getSsStream(location) {
   return (0);
 }
 
-module.exports = getSsStream;
+export default getSsStream;

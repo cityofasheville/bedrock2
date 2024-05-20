@@ -3,6 +3,7 @@ provider "aws" {
 }
 
 resource "aws_lambda_function" "etl_task_run_lambda-$$INSTANCE$$" {
+    description      = "Bedrock - ETL Task Run Lambda" 
     filename        = "../function.zip"
     function_name   = "etl_task_run_lambda-$$INSTANCE$$"
     role            = data.terraform_remote_state.lambda_role.outputs.bedrock_lambda_role_arn

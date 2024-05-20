@@ -1,4 +1,4 @@
-const { Transform } = require('stream');
+import { Transform } from 'stream';
 
 function removeHeader() {
   let buff = '';
@@ -19,4 +19,4 @@ function removeHeader() {
   });
 }
 
-module.exports = removeHeader;
+export default removeHeader;

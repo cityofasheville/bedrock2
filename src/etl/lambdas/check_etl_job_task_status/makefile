@@ -1,7 +1,7 @@
 include ../../../make_variables
 
 dirs = build
-.PHONY: $(dirs) init plan apply destroy prebuild
+.PHONY: $(dirs) init plan apply destroy prebuild local
 
 code_files = ./handler.py
 
@@ -36,7 +36,7 @@ local:
 
 clean:
 	rm -f *.instance
-	\rm -Rf build function.zip
+	\rm -Rf build function.zip __pycache__
 
 $(dirs):
 	$(MAKE) -C $@ $(MAKECMDGOALS)

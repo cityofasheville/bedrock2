@@ -1,8 +1,8 @@
 /* eslint-disable import/no-unresolved */
 /* eslint-disable no-console */
-const stream = require('stream');
-const { google } = require('googleapis');
-const { parse } = require('csv-parse/sync');
+import { Writable } from 'stream';
+import { google } from 'googleapis';
+import { parse } from 'csv-parse/sync';
 
 async function writeToSheet(location, theData, append = false) {
   const jwtClient = new google.auth.JWT(
@@ -39,10 +39,10 @@ async function writeToSheet(location, theData, append = false) {
   });
 }
 
-module.exports = async function createGoogleWritable(location) {
+export default async function createGoogleWritable(location) {
   let buff = '';
   const { append } = location;
-  const googleStream = new stream.Writable({
+  const googleStream = new Writable({
     write(chunk, encoding, done) {
       buff += chunk;
       done();

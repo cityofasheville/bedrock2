@@ -3,6 +3,7 @@ provider "aws" {
 }
 
 resource "aws_lambda_function" "check_etl_job_task_status-$$INSTANCE$$" {
+    description      = "Bedrock - Check ETL Job Task Status" 
     filename        = "../function.zip"
     function_name   = "check_etl_job_task_status-$$INSTANCE$$"
     role            = data.terraform_remote_state.lambda_role.outputs.bedrock_lambda_role_arn
@@ -15,7 +16,6 @@ resource "aws_lambda_function" "check_etl_job_task_status-$$INSTANCE$$" {
       "coa:owner"       = "jtwilson@ashevillenc.gov"
       "coa:owner-team"  = "dev"
     }
-
 }
 
 output "check_etl_job_task_status_arn" {

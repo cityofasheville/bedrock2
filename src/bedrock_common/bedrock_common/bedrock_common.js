@@ -1,7 +1,4 @@
-const {
-  SecretsManagerClient,
-  GetSecretValueCommand,
-} = require("@aws-sdk/client-secrets-manager");
+import { SecretsManagerClient, GetSecretValueCommand } from "@aws-sdk/client-secrets-manager";
 
 const region = 'us-east-1';
 let secret;
@@ -20,6 +17,7 @@ async function getConnection(secretName) {
       })
     );
   } catch (error) {
+    console.log(error);
     // For a list of exceptions thrown, see
     // https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
     throw error;
@@ -65,7 +63,7 @@ async function getDBConnection() {
   return connection;
 }
 
-module.exports = {
+export {
   getConnection,
   getDBConnection,
 };

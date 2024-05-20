@@ -1,9 +1,9 @@
 /* eslint-disable no-console */
-const openpgp = require('openpgp');
-const { S3Client, GetObjectCommand } = require('@aws-sdk/client-s3');
-const { Upload } = require('@aws-sdk/lib-storage');
-const { getConnection } = require('bedrock_common');
-const fillDateTemplate = require('./fillDateTemplate');
+import { readKey, encrypt, createMessage } from 'openpgp';
+import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
+import { Upload } from '@aws-sdk/lib-storage';
+import { getConnection } from 'bedrock_common';
+import fillDateTemplate from './fillDateTemplate.js';
 
 const s3Client = new S3Client({ region: 'us-east-1' });
 
@@ -16,7 +16,7 @@ function formatRes(code, result) {
   };
 }
 
-exports.lambda_handler = async function x(event) {
+export const lambda_handler = async function x(event) {
   try {
     const etl = event.ETLJob.etl_tasks[event.TaskIndex];
     if (!etl.active) { return (formatRes(200, 'Inactive: skipped')); }
@@ -37,9 +37,9 @@ exports.lambda_handler = async function x(event) {
     const { Body: readableStream } = await s3Client.send(downloadCommand);
 
     // encrypt
-    const publicKey = await openpgp.readKey({ armoredKey: pgpKey });
-    const encryptedStream = await openpgp.encrypt({
-      message: await openpgp.createMessage({ binary: readableStream }),
+    const publicKey = await readKey({ armoredKey: pgpKey });
+    const encryptedStream = await encrypt({
+      message: await createMessage({ binary: readableStream }),
       encryptionKeys: publicKey,
       config: { rejectPublicKeyAlgorithms: new Set([]) },
       // Needed for Delta Dental, whose key is ElGamal,
