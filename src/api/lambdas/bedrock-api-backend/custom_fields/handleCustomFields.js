@@ -24,7 +24,8 @@ async function handleCustomFields(
   let idValue;
   const name = 'custom_field';
   const tableName = 'custom_fields';
-  const requiredFields = ['id', 'field_display', 'field_types', 'field_data'];
+  const requiredFields = ['id', 'field_display', 'field_type', 'field_data'];
+  const allFields = ['id', 'field_display', 'field_type', 'field_data'];
 
   if (nParams === 2 && (pathElements[1] === null || pathElements[1].length === 0)) nParams = 1;
   if ('body' in event) {
@@ -65,6 +66,7 @@ async function handleCustomFields(
         case 'POST':
           result = await addCustomField(
             connection,
+            allFields,
             body,
             idField,
             idValue,
@@ -77,6 +79,7 @@ async function handleCustomFields(
         case 'PUT':
           result = await updateCustomField(
             connection,
+            allFields,
             body,
             idField,
             idValue,

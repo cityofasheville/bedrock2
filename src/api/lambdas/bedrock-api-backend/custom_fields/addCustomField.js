@@ -5,6 +5,7 @@ const {
 
 async function addCustomField(
   connection,
+  allFields,
   body,
   idField,
   idValue,
@@ -14,7 +15,6 @@ async function addCustomField(
 ) {
   const shouldExist = false;
   let client;
-  let clientInitiated = false;
 
   const response = {
     error: false,
@@ -31,15 +31,13 @@ async function addCustomField(
     return response;
   }
 
-  await client.query('BEGIN');
-
   try {
+    checkInfo(body, requiredFields, name, idValue, idField);
     await checkExistence(client, tableName, idField, idValue, name, shouldExist);
-    response.result = await addInfo(client, body, tableName, name);
-    await client.query('COMMIT');
+    response.result = await addInfo(client, allFields, body, tableName, idField, idValue, name);
+    console.log('finished first insert');
     await client.end();
   } catch (error) {
-    await client.query('ROLLBACK');
     await client.end();
     response.error = true;
     response.message = error.message;
@@ -47,27 +45,5 @@ async function addCustomField(
   }
   return response;
 }
-
-// module.exports = addTag;
-
- 
-
-
-//   try {
-//     await checkExistence(client, pathElements);
-//     response.result = await baseInsert(client, body);
-//     assetTypeInfo = await assetTypeInsert(client, body)
-//     response.result.asset_type_id = assetTypeInfo.asset_type_id
-//     response.result.required = assetTypeInfo.required
-//     await client.query('COMMIT');
-//   } catch (error) {
-//     await client.query('ROLLBACK');
-//     response.error = true;
-//     response.message = error.message;
-//   } finally {
-//     await client.end();
-//     return response;
-//   }
-// }
 
 module.exports = addCustomField;
