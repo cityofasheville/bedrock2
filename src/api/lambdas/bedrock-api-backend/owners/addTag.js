@@ -1,30 +1,34 @@
 /* eslint-disable no-console */
 import {
-  newClient, checkExistence, deleteInfo,
+  newClient, checkInfo, checkExistence, addInfo,
 } from '../utilities/utilities.js';
 
-async function deleteRungroup(
+async function addTag(
   connection,
+  allFields,
+  body,
   idField,
   idValue,
   name,
   tableName,
+  requiredFields,
 ) {
-  const shouldExist = true;
+  const shouldExist = false;
   let client;
   let clientInitiated = false;
 
   const response = {
     error: false,
-    message: `Successfully deleted ${name} ${idValue}`,
+    message: `Successfully added ${name} ${idValue}`,
     result: null,
   };
 
   try {
     client = await newClient(connection);
     clientInitiated = true;
+    checkInfo(body, requiredFields, name, idValue, idField);
     await checkExistence(client, tableName, idField, idValue, name, shouldExist);
-    await deleteInfo(client, tableName, idField, idValue, name);
+    response.result = await addInfo(client, allFields, body, tableName, name);
     await client.end();
   } catch (error) {
     if (clientInitiated) {
@@ -37,4 +41,4 @@ async function deleteRungroup(
   return response;
 }
 
-export default deleteRungroup;
+export default addTag;

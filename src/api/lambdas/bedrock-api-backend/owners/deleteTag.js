@@ -1,26 +1,30 @@
 /* eslint-disable no-console */
-import { newClient, getInfo } from '../utilities/utilities.js';
+import {
+  newClient, checkExistence, deleteInfo,
+} from '../utilities/utilities.js';
 
-async function getRungroup(
+async function deleteTag(
   connection,
   idField,
   idValue,
   name,
   tableName,
 ) {
+  const shouldExist = true;
   let client;
   let clientInitiated = false;
 
   const response = {
     error: false,
-    message: '',
+    message: `Successfully deleted ${name} ${idValue}`,
     result: null,
   };
 
   try {
     client = await newClient(connection);
     clientInitiated = true;
-    response.result = await getInfo(client, idField, idValue, name, tableName);
+    await checkExistence(client, tableName, idField, idValue, name, shouldExist);
+    await deleteInfo(client, tableName, idField, idValue, name);
     await client.end();
   } catch (error) {
     if (clientInitiated) {
@@ -33,4 +37,4 @@ async function getRungroup(
   return response;
 }
 
-export default getRungroup;
+export default deleteTag;

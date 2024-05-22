@@ -3,7 +3,7 @@ import {
   newClient, checkInfo, checkExistence, addInfo,
 } from '../utilities/utilities.js';
 
-async function addRungroup(
+async function addRunGroup(
   connection,
   allFields,
   body,
@@ -41,4 +41,4 @@ async function addRungroup(
   return response;
 }
 
-export default addRungroup;
+export default addRunGroup;

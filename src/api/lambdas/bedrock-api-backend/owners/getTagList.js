@@ -5,7 +5,7 @@ import {
 } from '../utilities/listUtilities.js';
 
 
-async function getRungroupList(
+async function getTagList(
   domainName,
   pathElements,
   queryParams,
@@ -18,15 +18,15 @@ async function getRungroupList(
   let res;
   let client;
   let clientInitiated = false;
-  const runGroupList = new Map();
+  const tagList = new Map();
   // setting items first makes the order of the properties in the final object better
-  runGroupList.set('items', '');
+  tagList.set('items', '');
   const count = buildCount(queryParams);
   const offset = buildOffset(queryParams);
   const whereClause = buildWhereClause(queryParams, idField);
 
-  runGroupList.set('count', count);
-  runGroupList.set('offset', offset);
+  tagList.set('count', count);
+  tagList.set('offset', offset);
 
   const response = {
     error: false,
@@ -38,16 +38,16 @@ async function getRungroupList(
     client = await newClient(connection);
     clientInitiated = true;
     total = await getCount(whereClause, client, tableName, name);
-    runGroupList.set('total', total);
+    tagList.set('total', total);
     if (total === 0) {
       response.message = `No ${name}s found.`;
-      response.result = Object.fromEntries(runGroupList.entries());
+      response.result = Object.fromEntries(tagList.entries());
       return response;
     }
     res = await getListInfo(offset, count, whereClause, client, idField, tableName, name);
-    runGroupList.set('items', res.rows);
-    runGroupList.set('url', buildURL(queryParams, domainName, res, offset, total, pathElements));
-    response.result = Object.fromEntries(runGroupList.entries());
+    tagList.set('items', res.rows);
+    tagList.set('url', buildURL(queryParams, domainName, res, offset, total, pathElements));
+    response.result = Object.fromEntries(tagList.entries());
     await client.end();
   } catch (error) {
     if (clientInitiated) {
@@ -59,4 +59,4 @@ async function getRungroupList(
   return response;
 }
 
-export default getRungroupList;
+export default getTagList;

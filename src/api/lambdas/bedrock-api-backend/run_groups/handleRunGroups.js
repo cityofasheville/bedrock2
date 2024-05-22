@@ -1,12 +1,12 @@
 /* eslint-disable no-console */
-import getRungroupList from './getRungroupList.js';
-import getRungroup from './getRungroup.js';
-import addRungroup from './addRungroup.js';
-import updateRungroup from './updateRungroup.js';
-import deleteRungroup from './deleteRungroup.js';
+import getRunGroupList from './getRunGroupList.js';
+import getRunGroup from './getRunGroup.js';
+import addRunGroup from './addRunGroup.js';
+import updateRunGroup from './updateRunGroup.js';
+import deleteRunGroup from './deleteRunGroup.js';
 
 // eslint-disable-next-line no-unused-vars
-async function handleRungroups(
+async function handleRunGroups(
   event,
   pathElements,
   queryParams,
@@ -34,37 +34,28 @@ async function handleRungroups(
   console.log(pathElements);
   if (!(pathElements[1] == null)) {
     [, idValue] = pathElements;
+  } else if (body) { // For POST requests, setting idValue here since it's not in the path
+    idValue = body[idField];
   }
 
   switch (nParams) {
-    // GET rungroups
+    // GET run_groups
     case 1:
-      result = await getRungroupList(
-        event.requestContext.domainName,
-        pathElements,
-        queryParams,
-        connection,
-        idField,
-        name,
-        tableName,
-      );
-      break;
-
-    // VERB rungroups/{rungroupname}
-    case 2:
       switch (verb) {
         case 'GET':
-          result = await getRungroup(
+          result = await getRunGroupList(
+            event.requestContext.domainName,
+            pathElements,
+            queryParams,
             connection,
             idField,
-            idValue,
             name,
             tableName,
           );
           break;
 
         case 'POST':
-          result = await addRungroup(
+          result = await addRunGroup(
             connection,
             allFields,
             body,
@@ -76,8 +67,27 @@ async function handleRungroups(
           );
           break;
 
+        default:
+          result.message = `handleRunGroups: unknown verb ${verb}`;
+          result.error = true;
+          break;
+      } break;
+
+    // VERB rungroups/{rungroupname}
+    case 2:
+      switch (verb) {
+        case 'GET':
+          result = await getRunGroup(
+            connection,
+            idField,
+            idValue,
+            name,
+            tableName,
+          );
+          break;
+
         case 'PUT':
-          result = await updateRungroup(
+          result = await updateRunGroup(
             connection,
             allFields,
             body,
@@ -90,7 +100,7 @@ async function handleRungroups(
           break;
 
         case 'DELETE':
-          result = deleteRungroup(
+          result = deleteRunGroup(
             connection,
             idField,
             idValue,
@@ -100,14 +110,14 @@ async function handleRungroups(
           break;
 
         default:
-          result.message = `handleRungroups: unknown verb ${verb}`;
+          result.message = `handleRunGroups: unknown verb ${verb}`;
           result.error = true;
           break;
       }
       break;
 
     default:
-      result.message = `Unknown rungroups endpoint: [${pathElements.join()}]`;
+      result.message = `Unknown runGroups endpoint: [${pathElements.join()}]`;
       result.error = true;
       break;
   }
@@ -118,4 +128,4 @@ async function handleRungroups(
   return result;
 }
 
-export default handleRungroups;
+export default handleRunGroups;
