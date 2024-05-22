@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-const { newClient, getInfo } = require('../utilities/utilities');
+import { newClient, getInfo } from '../utilities/utilities.js';
 
 async function getRungroup(
   connection,
@@ -33,4 +33,4 @@ async function getRungroup(
   return response;
 }
 
-module.exports = getRungroup;
+export default getRungroup;

@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "handler.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -10,7 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "bedrock_common": "file:../../../bedrock_common/bedrock_common_cjs",
+    "bedrock_common": "file:../../../bedrock_common/bedrock_common",
     "mssql": "^6.2.1",
     "pg": "^8.3.0"
   },

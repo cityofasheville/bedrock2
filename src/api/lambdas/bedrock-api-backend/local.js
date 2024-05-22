@@ -1,10 +1,9 @@
-// import { lambda_handler } from './handler.js';
-const lambda_handler = require('./handler.js').lambda_handler;
+import { lambda_handler } from './handler.js';
 let event = {
   requestContext: {
     http: {
       method: 'GET',
-      path: '/assets',
+      path: '/rungroups',
     },
   },
 };

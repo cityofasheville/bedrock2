@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-const pgErrorCodes = require('../pgErrorCodes');
+import pgErrorCodes from '../pgErrorCodes.js';
 
 function buildOffset(queryParams) {
   let offset = 0;
@@ -74,7 +74,7 @@ function buildURL(queryParams, domainName, res, offset, total, pathElements) {
   return url;
 }
 
-module.exports = {
+export {
   buildCount,
   buildOffset,
   buildWhereClause,

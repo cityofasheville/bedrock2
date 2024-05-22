@@ -1,4 +1,4 @@
-const pgErrorCodes = require('../pgErrorCodes');
+import pgErrorCodes from '../pgErrorCodes.js';
 
 async function getCustomFieldsInfo(client, asset_type) {
   let sqlQuery;
@@ -50,4 +50,4 @@ async function getCustomFieldsInfo(client, asset_type) {
   return customFields;
 }
 
-module.exports = getCustomFieldsInfo;
+export default getCustomFieldsInfo;

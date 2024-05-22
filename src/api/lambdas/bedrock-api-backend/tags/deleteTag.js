@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
-const {
+import {
   newClient, checkExistence, deleteInfo,
-} = require('../utilities/utilities');
+} from '../utilities/utilities.js';
 
 async function deleteTag(
   connection,
@@ -37,4 +37,4 @@ async function deleteTag(
   return response;
 }
 
-module.exports = deleteTag;
+export default deleteTag;

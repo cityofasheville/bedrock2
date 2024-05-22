@@ -1,5 +1,6 @@
-const { Client } = require('pg');
-const pgErrorCodes = require('../pgErrorCodes');
+import pgpkg from 'pg';
+const { Client } = pgpkg;
+import pgErrorCodes from '../pgErrorCodes.js';
 
 function checkParameters(queryParams) {
   const parameters = ['rungroup', 'tags', 'period', 'pattern', 'count', 'offset'];
@@ -266,4 +267,4 @@ async function getAssetList(domainName, pathElements, queryParams, connection) {
   }
 }
 
-module.exports = getAssetList;
+export default getAssetList;

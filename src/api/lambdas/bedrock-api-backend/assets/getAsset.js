@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
-const { Client } = require('pg');
-const pgErrorCodes = require('../pgErrorCodes');
+import pgpkg from 'pg';
+const { Client } = pgpkg;
+import pgErrorCodes from '../pgErrorCodes.js';
 
 async function newClient(connection) {
   const client = new Client(connection);
@@ -163,4 +164,4 @@ async function getAsset(pathElements, queryParams, connection) {
   }
  }
 
-module.exports = getAsset;
+export default getAsset;

@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-const { newClient, getInfo } = require('../utilities/utilities');
+import { newClient, getInfo } from '../utilities/utilities.js';
 
 async function getTag(
   connection,
@@ -33,4 +33,4 @@ async function getTag(
   return response;
 }
 
-module.exports = getTag;
+export default getTag;

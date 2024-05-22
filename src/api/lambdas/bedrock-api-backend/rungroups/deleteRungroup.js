@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
-const {
+import {
   newClient, checkExistence, deleteInfo,
-} = require('../utilities/utilities');
+} from '../utilities/utilities.js';
 
 async function deleteRungroup(
   connection,
@@ -37,4 +37,4 @@ async function deleteRungroup(
   return response;
 }
 
-module.exports = deleteRungroup;
+export default deleteRungroup;

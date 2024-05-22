@@ -1,7 +1,8 @@
 /* eslint-disable no-console */
-const { Client } = require('pg');
-const pgErrorCodes = require('../pgErrorCodes');
-const getCustomFieldsInfo = require('../common/getCustomFieldInfo');
+import pgpkg from 'pg';
+const { Client } = pgpkg;
+import pgErrorCodes from '../pgErrorCodes.js';
+import getCustomFieldsInfo from '../common/getCustomFieldInfo.js';
 
 async function newClient(connection) {
   const client = new Client(connection);
@@ -172,4 +173,4 @@ async function getReference(domainName, pathElements, queryParams, connection) {
   return result;
 }
 
-module.exports = getReference;
+export default getReference;
