@@ -12,7 +12,6 @@ async function deleteAssetType(
 ) {
   const shouldExist = true;
   let client;
-  let clientInitiated = false;
 
   const response = {
     error: false,
@@ -22,14 +21,22 @@ async function deleteAssetType(
 
   try {
     client = await newClient(connection);
-    clientInitiated = true;
+  } catch (error) {
+    response.error = true;
+    response.message = error.message;
+    return response;
+  }
+
+  try {
     await checkExistence(client, tableName, idField, idValue, name, shouldExist);
+    await client.query('BEGIN');
     await deleteInfo(client, tableName, idField, idValue, name);
+    await deleteInfo(client, 'asset_type_custom_fields', 'asset_type_id', idValue, name);
+    await client.query('COMMIT');
     await client.end();
   } catch (error) {
-    if (clientInitiated) {
-      await client.end();
-    }
+    await client.query('ROLLBACK');
+    await client.end();
     response.error = true;
     response.message = error.message;
     return response;
