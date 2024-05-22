@@ -5,7 +5,6 @@ import addCustomField from './addCustomField.js';
 import updateCustomField from './updateCustomField.js';
 import deleteCustomField from './deleteCustomField.js';
 
-// eslint-disable-next-line no-unused-vars
 async function handleCustomFields(
   event,
   pathElements,
@@ -34,30 +33,21 @@ async function handleCustomFields(
   console.log(pathElements);
   if (!(pathElements[1] == null)) {
     [, idValue] = pathElements;
+  } else if (body) { // For POST requests, setting idValue here since it's not in the path
+    idValue = body[idField];
   }
 
   switch (nParams) {
     // GET custom_fields
     case 1:
-      result = await getCustomFieldList(
-        event.requestContext.domainName,
-        pathElements,
-        queryParams,
-        connection,
-        idField,
-        name,
-        tableName,
-      );
-      break;
-
-    // VERB custom_fields/{id}
-    case 2:
       switch (verb) {
         case 'GET':
-          result = await getCustomField(
+          result = await getCustomFieldList(
+            event.requestContext.domainName,
+            pathElements,
+            queryParams,
             connection,
             idField,
-            idValue,
             name,
             tableName,
           );
@@ -73,6 +63,25 @@ async function handleCustomFields(
             name,
             tableName,
             requiredFields,
+          );
+          break;
+
+        default:
+          result.message = `handleCustomFields: unknown verb ${verb}`;
+          result.error = true;
+          break;
+      }
+      break;
+    // VERB custom_fields/{id}
+    case 2:
+      switch (verb) {
+        case 'GET':
+          result = await getCustomField(
+            connection,
+            idField,
+            idValue,
+            name,
+            tableName,
           );
           break;
 

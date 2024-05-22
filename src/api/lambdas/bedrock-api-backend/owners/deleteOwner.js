@@ -3,7 +3,7 @@ import {
   newClient, checkExistence, deleteInfo,
 } from '../utilities/utilities.js';
 
-async function deleteRungroup(
+async function deleteOwner(
   connection,
   idField,
   idValue,
@@ -37,4 +37,4 @@ async function deleteRungroup(
   return response;
 }
 
-export default deleteRungroup;
+export default deleteOwner;

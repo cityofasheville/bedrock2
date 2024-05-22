@@ -5,7 +5,7 @@ import {
 } from '../utilities/listUtilities.js';
 
 
-async function getRungroupList(
+async function getRunGroupList(
   domainName,
   pathElements,
   queryParams,
@@ -59,4 +59,4 @@ async function getRungroupList(
   return response;
 }
 
-export default getRungroupList;
+export default getRunGroupList;

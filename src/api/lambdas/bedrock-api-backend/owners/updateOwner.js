@@ -3,7 +3,7 @@ import {
   newClient, checkInfo, checkExistence, updateInfo,
 } from '../utilities/utilities.js';
 
-async function updateRungroup(
+async function updateOwner(
   connection,
   allFields,
   body,
@@ -41,4 +41,4 @@ async function updateRungroup(
   return response;
 }
 
-export default updateRungroup;
+export default updateOwner;

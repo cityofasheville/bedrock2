@@ -18,12 +18,25 @@ async function handleAssets(event, pathElements, queryParams, verb, connection) 
   switch (pathElements.length) {
     // GET assets
     case 1:
-      response = await getAssetList(
-        event.requestContext.domainName,
-        pathElements,
-        queryParams,
-        connection,
-      );
+      switch (verb) {
+        case 'GET':
+          response = await getAssetList(
+            event.requestContext.domainName,
+            pathElements,
+            queryParams,
+            connection,
+          );
+          break;
+
+        case 'POST':
+          response = await addAsset(event.body, connection);
+          break;
+
+        default:
+          response.message = `handleAssets: unknown verb ${verb}`;
+          response.error = true;
+          break;
+      }
       break;
 
     // VERB assets/{assetname}
@@ -31,10 +44,6 @@ async function handleAssets(event, pathElements, queryParams, verb, connection) 
       switch (verb) {
         case 'GET':
           response = await getAsset(pathElements, queryParams, connection);
-          break;
-
-        case 'POST':
-          response = await addAsset(event.body, pathElements, queryParams, connection);
           break;
 
         case 'PUT':

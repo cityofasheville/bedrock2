@@ -16,7 +16,7 @@ async function newClient(connection) {
   }
 }
 
-async function checkBaseInfo(client, body, pathElements) {
+async function checkBaseInfo(body) {
   // Make sure that we have all required base fields
   if (
     !('asset_name' in body)
@@ -30,12 +30,6 @@ async function checkBaseInfo(client, body, pathElements) {
     );
   }
 
-  if (pathElements[1] !== body.asset_name) {
-    throw new Error(
-      `Asset name ${pathElements[1]} in path does not match asset name ${body.asset_name} in body`,
-    );
-  }
-
   if ('etl_run_group' in body || 'etl_active' in body) {
     if (!('etl_run_group' in body && 'etl_active' in body)) {
       throw new Error(
@@ -45,13 +39,13 @@ async function checkBaseInfo(client, body, pathElements) {
   }
 }
 
-async function checkExistence(client, pathElements) {
+async function checkExistence(client, idValue) {
   let sql;
   let res;
 
   try {
     sql = 'SELECT * FROM bedrock.assets where asset_name like $1';
-    res = await client.query(sql, [pathElements[1]]);
+    res = await client.query(sql, [idValue]);
   } catch (error) {
     throw new Error(
       `PG error checking if asset already exists: ${pgErrorCodes[error.code]}`,
@@ -265,12 +259,13 @@ async function addTags(asset, body, client) {
   return body.tags;
 }
 
-async function addAsset(requestBody, pathElements, queryParams, connection) {
+async function addAsset(requestBody, connection) {
   const body = JSON.parse(requestBody);
   let customFields;
   let customValues;
   let asset;
   let client;
+  const idValue = body.asset_name;
 
   const response = {
     error: false,
@@ -279,7 +274,7 @@ async function addAsset(requestBody, pathElements, queryParams, connection) {
   };
 
   try {
-    client = await newClient(connection);    
+    client = await newClient(connection);
   } catch (error) {
     response.error = true;
     response.message = error.message;
@@ -289,27 +284,26 @@ async function addAsset(requestBody, pathElements, queryParams, connection) {
   await client.query('BEGIN');
 
   try {
-    await checkExistence(client, pathElements);
-    await checkBaseInfo(client, body, pathElements);
+    await checkExistence(client, idValue);
+    await checkBaseInfo(body);
     customFields = await getCustomFieldsInfo(client, body.asset_type);
     customValues = getCustomValues(body);
     checkCustomFieldsInfo(customValues, customFields);
     asset = await baseInsert(body, customFields, customValues, client);
-    asset.set('parents',  await addDependencies(asset, body, client));
-    let [run_group, active] = await addETL(asset, body, client);
-    asset.set('etl_run_group', run_group);
+    asset.set('parents', await addDependencies(asset, body, client));
+    const [runGroup, active] = await addETL(asset, body, client);
+    asset.set('etl_run_group', runGroup);
     asset.set('etl_active', active);
     asset.set('tags', await addTags(asset, body, client));
     await client.query('COMMIT');
+    await client.end();
     response.result = Object.fromEntries(asset.entries());
   } catch (error) {
     await client.query('ROLLBACK');
     response.error = true;
     response.message = error.message;
-  } finally {
-    await client.end();
-    return response;
   }
- }
+  return response;
+}
 
 export default addAsset;

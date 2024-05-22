@@ -1,9 +1,17 @@
 /* eslint-disable no-console */
+import { customAlphabet } from 'nanoid';
 import {
   newClient, checkInfo, checkExistence, addInfo,
 } from '../utilities/utilities.js';
 
-async function addRungroup(
+function generateId() {
+  const alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz';
+  const nanoid = customAlphabet(alphabet, 16);
+  const thisID = nanoid();
+  return thisID;
+}
+
+async function addOwner(
   connection,
   allFields,
   body,
@@ -16,6 +24,8 @@ async function addRungroup(
   const shouldExist = false;
   let client;
   let clientInitiated = false;
+  body.owner_id = generateId();
+  idValue = body.owner_id;
 
   const response = {
     error: false,
@@ -41,4 +51,4 @@ async function addRungroup(
   return response;
 }
 
-export default addRungroup;
+export default addOwner;

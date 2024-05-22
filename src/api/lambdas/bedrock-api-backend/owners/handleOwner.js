@@ -1,13 +1,11 @@
 /* eslint-disable no-console */
-import getAssetTypeList from './getAssetTypeList.js';
-import getAssetType from './getAssetType.js';
-import addAssetType from './addAssetType.js';
-import updateAssetType from './updateAssetType.js';
-import deleteAssetType from './deleteAssetType.js';
-/* eslint-disable no-console */
+import getOwnerList from './getOwnerList.js';
+import getOwner from './getOwner.js';
+import addOwner from './addOwner.js';
+import updateOwner from './updateOwner.js';
+import deleteOwner from './deleteOwner.js';
 
-// eslint-disable-next-line no-unused-vars
-async function handleAssetTypes(
+async function handleOwners(
   event,
   pathElements,
   queryParams,
@@ -21,31 +19,35 @@ async function handleAssetTypes(
   };
   let nParams = pathElements.length;
   let body;
-  const idField = 'id';
+  const idField = 'owner_id';
   let idValue;
-  const name = 'asset type';
-  const tableName = 'asset_types';
-  const requiredFields = ['id', 'name'];
-  const allFields = ['id', 'name', 'parent'];
-  const tableNameCustomFields = 'asset_type_custom_fields';
+  const name = 'owner';
+  const tableName = 'owners';
+  const requiredFields = ['owner_id', 'contact_name', 'contact_email'];
+  const allFields = ['owner_id', 'contact_name', 'contact_email', 'contact_phone', 'organization', 'department', 'division', 'notes'];
 
   if (nParams === 2 && (pathElements[1] === null || pathElements[1].length === 0)) nParams = 1;
   if ('body' in event) {
     body = JSON.parse(event.body);
   }
-  console.log(pathElements);
   if (!(pathElements[1] == null)) {
     [, idValue] = pathElements;
-  } else if (body) { // For POST requests, setting idValue here since it's not in the path
-    idValue = body[idField];
   }
+  // else if (body) { // For POST requests, setting idValue here since it's not in the path
+  //   idValue = body[idField];
+  // }
+
+  console.log(event);
+  console.log(JSON.stringify(event));
+  console.log(pathElements);
+  console.log(nParams);
 
   switch (nParams) {
-    // GET asset_type
+    // GET Owners
     case 1:
       switch (verb) {
         case 'GET':
-          result = await getAssetTypeList(
+          result = await getOwnerList(
             event.requestContext.domainName,
             pathElements,
             queryParams,
@@ -57,7 +59,7 @@ async function handleAssetTypes(
           break;
 
         case 'POST':
-          result = await addAssetType(
+          result = await addOwner(
             connection,
             allFields,
             body,
@@ -65,23 +67,20 @@ async function handleAssetTypes(
             idValue,
             name,
             tableName,
-            tableNameCustomFields,
             requiredFields,
           );
           break;
 
         default:
-          result.message = `Unknown asset types endpoint: [${pathElements.join()}]`;
+          result.message = `handleOwners: unknown verb ${verb}`;
           result.error = true;
           break;
-      }
-      break;
-
-    // VERB asset_type/{id}
+      } break;
+    // VERB Owners/{Owner_name}
     case 2:
       switch (verb) {
         case 'GET':
-          result = await getAssetType(
+          result = await getOwner(
             connection,
             idField,
             idValue,
@@ -91,7 +90,7 @@ async function handleAssetTypes(
           break;
 
         case 'PUT':
-          result = await updateAssetType(
+          result = await updateOwner(
             connection,
             allFields,
             body,
@@ -99,13 +98,12 @@ async function handleAssetTypes(
             idValue,
             name,
             tableName,
-            tableNameCustomFields,
             requiredFields,
           );
           break;
 
         case 'DELETE':
-          result = deleteAssetType(
+          result = deleteOwner(
             connection,
             idField,
             idValue,
@@ -115,14 +113,14 @@ async function handleAssetTypes(
           break;
 
         default:
-          result.message = `handleAssetType: unknown verb ${verb}`;
+          result.message = `handleOwners: unknown verb ${verb}`;
           result.error = true;
           break;
       }
       break;
 
     default:
-      result.message = `Unknown asset types endpoint: [${pathElements.join()}]`;
+      result.message = `Unknown owners endpoint: [${pathElements.join()}]`;
       result.error = true;
       break;
   }
@@ -133,4 +131,4 @@ async function handleAssetTypes(
   return result;
 }
 
-export default handleAssetTypes;
+export default handleOwners;

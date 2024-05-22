@@ -3,7 +3,7 @@ import {
   newClient, checkExistence, deleteInfo,
 } from '../utilities/utilities.js';
 
-async function deleteAssetType(
+async function deleteRunGroup(
   connection,
   idField,
   idValue,
@@ -12,6 +12,7 @@ async function deleteAssetType(
 ) {
   const shouldExist = true;
   let client;
+  let clientInitiated = false;
 
   const response = {
     error: false,
@@ -21,22 +22,14 @@ async function deleteAssetType(
 
   try {
     client = await newClient(connection);
-  } catch (error) {
-    response.error = true;
-    response.message = error.message;
-    return response;
-  }
-
-  try {
+    clientInitiated = true;
     await checkExistence(client, tableName, idField, idValue, name, shouldExist);
-    await client.query('BEGIN');
     await deleteInfo(client, tableName, idField, idValue, name);
-    await deleteInfo(client, 'asset_type_custom_fields', 'asset_type_id', idValue, name);
-    await client.query('COMMIT');
     await client.end();
   } catch (error) {
-    await client.query('ROLLBACK');
-    await client.end();
+    if (clientInitiated) {
+      await client.end();
+    }
     response.error = true;
     response.message = error.message;
     return response;
@@ -44,4 +37,4 @@ async function deleteAssetType(
   return response;
 }
 
-export default deleteAssetType;
+export default deleteRunGroup;

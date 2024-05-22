@@ -5,7 +5,6 @@ import addTag from './addTag.js';
 import updateTag from './updateTag.js';
 import deleteTag from './deleteTag.js';
 
-// eslint-disable-next-line no-unused-vars
 async function handleTags(
   event,
   pathElements,
@@ -33,30 +32,26 @@ async function handleTags(
   }
   if (!(pathElements[1] == null)) {
     [, idValue] = pathElements;
+  } else if (body) { // For POST requests, setting idValue here since it's not in the path
+    idValue = body[idField];
   }
+
+  console.log(event);
+  console.log(JSON.stringify(event));
+  console.log(pathElements);
+  console.log(nParams);
 
   switch (nParams) {
     // GET tags
     case 1:
-      result = await getTagList(
-        event.requestContext.domainName,
-        pathElements,
-        queryParams,
-        connection,
-        idField,
-        name,
-        tableName,
-      );
-      break;
-
-    // VERB tags/{tag_name}
-    case 2:
       switch (verb) {
         case 'GET':
-          result = await getTag(
+          result = await getTagList(
+            event.requestContext.domainName,
+            pathElements,
+            queryParams,
             connection,
             idField,
-            idValue,
             name,
             tableName,
           );
@@ -72,6 +67,24 @@ async function handleTags(
             name,
             tableName,
             requiredFields,
+          );
+          break;
+
+        default:
+          result.message = `handleTags: unknown verb ${verb}`;
+          result.error = true;
+          break;
+      } break;
+    // VERB tags/{tag_name}
+    case 2:
+      switch (verb) {
+        case 'GET':
+          result = await getTag(
+            connection,
+            idField,
+            idValue,
+            name,
+            tableName,
           );
           break;
 

@@ -174,6 +174,7 @@ export {
   newClient,
   checkInfo,
   checkExistence,
+  capitalizeFirstLetter,
   getInfo,
   addInfo,
   updateInfo,
