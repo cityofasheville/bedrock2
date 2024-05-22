@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { newClient, getInfo } from '../utilities/utilities.js';
 
-async function getTag(
+async function getOwner(
   connection,
   idField,
   idValue,
@@ -33,4 +33,4 @@ async function getTag(
   return response;
 }
 
-export default getTag;
+export default getOwner;

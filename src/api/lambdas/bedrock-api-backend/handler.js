@@ -9,6 +9,7 @@ import handleReference from './reference/handleReference.js';
 import handleAssetTypes from './asset_types/handleAssetTypes.js';
 import handleTags from './tags/handleTags.js';
 import handleCustomFields from './custom_fields/handleCustomFields.js';
+import handleOwners from './owners/handleOwner.js';
 
 // eslint-disable-next-line camelcase, import/prefer-default-export
 export async function lambda_handler(event) {
@@ -76,6 +77,15 @@ export async function lambda_handler(event) {
       } catch (e) {
         result.message = e;
         console.log('Error in handleTags ', e);
+      }
+      break;
+
+    case 'owners':
+      try {
+        result = await handleOwners(event, pathElements, queryParams || {}, verb, connection);
+      } catch (e) {
+        result.message = e;
+        console.log('Error in owners ', e);
       }
       break;
 

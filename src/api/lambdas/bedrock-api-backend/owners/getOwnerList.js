@@ -4,8 +4,7 @@ import {
   buildCount, buildOffset, buildWhereClause, getCount, getListInfo, buildURL,
 } from '../utilities/listUtilities.js';
 
-
-async function getTagList(
+async function getOwnerList(
   domainName,
   pathElements,
   queryParams,
@@ -18,15 +17,15 @@ async function getTagList(
   let res;
   let client;
   let clientInitiated = false;
-  const tagList = new Map();
+  const ownerList = new Map();
   // setting items first makes the order of the properties in the final object better
-  tagList.set('items', '');
+  ownerList.set('items', '');
   const count = buildCount(queryParams);
   const offset = buildOffset(queryParams);
   const whereClause = buildWhereClause(queryParams, idField);
 
-  tagList.set('count', count);
-  tagList.set('offset', offset);
+  ownerList.set('count', count);
+  ownerList.set('offset', offset);
 
   const response = {
     error: false,
@@ -38,16 +37,16 @@ async function getTagList(
     client = await newClient(connection);
     clientInitiated = true;
     total = await getCount(whereClause, client, tableName, name);
-    tagList.set('total', total);
+    ownerList.set('total', total);
     if (total === 0) {
       response.message = `No ${name}s found.`;
-      response.result = Object.fromEntries(tagList.entries());
+      response.result = Object.fromEntries(ownerList.entries());
       return response;
     }
     res = await getListInfo(offset, count, whereClause, client, idField, tableName, name);
-    tagList.set('items', res.rows);
-    tagList.set('url', buildURL(queryParams, domainName, res, offset, total, pathElements));
-    response.result = Object.fromEntries(tagList.entries());
+    ownerList.set('items', res.rows);
+    ownerList.set('url', buildURL(queryParams, domainName, res, offset, total, pathElements));
+    response.result = Object.fromEntries(ownerList.entries());
     await client.end();
   } catch (error) {
     if (clientInitiated) {
@@ -59,4 +58,4 @@ async function getTagList(
   return response;
 }
 
-export default getTagList;
+export default getOwnerList;

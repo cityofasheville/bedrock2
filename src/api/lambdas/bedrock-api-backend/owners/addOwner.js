@@ -1,9 +1,17 @@
 /* eslint-disable no-console */
+import { customAlphabet } from 'nanoid';
 import {
-  newClient, checkInfo, checkExistence, updateInfo,
+  newClient, checkInfo, checkExistence, addInfo,
 } from '../utilities/utilities.js';
 
-async function updateTag(
+function generateId() {
+  const alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz';
+  const nanoid = customAlphabet(alphabet, 16);
+  const thisID = nanoid();
+  return thisID;
+}
+
+async function addOwner(
   connection,
   allFields,
   body,
@@ -13,22 +21,24 @@ async function updateTag(
   tableName,
   requiredFields,
 ) {
-  const shouldExist = true;
+  const shouldExist = false;
   let client;
   let clientInitiated = false;
+  body.owner_id = generateId();
+  idValue = body.owner_id;
 
   const response = {
     error: false,
-    message: `Successfully updated ${name} ${idValue}`,
+    message: `Successfully added ${name} ${idValue}`,
     result: null,
   };
 
   try {
-    checkInfo(body, requiredFields, name, idValue, idField);
     client = await newClient(connection);
     clientInitiated = true;
+    checkInfo(body, requiredFields, name, idValue, idField);
     await checkExistence(client, tableName, idField, idValue, name, shouldExist);
-    response.result = await updateInfo(client, allFields, body, tableName, idField, idValue, name);
+    response.result = await addInfo(client, allFields, body, tableName, name);
     await client.end();
   } catch (error) {
     if (clientInitiated) {
@@ -41,4 +51,4 @@ async function updateTag(
   return response;
 }
 
-export default updateTag;
+export default addOwner;

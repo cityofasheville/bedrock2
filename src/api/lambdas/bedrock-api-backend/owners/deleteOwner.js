@@ -1,34 +1,30 @@
 /* eslint-disable no-console */
 import {
-  newClient, checkInfo, checkExistence, addInfo,
+  newClient, checkExistence, deleteInfo,
 } from '../utilities/utilities.js';
 
-async function addTag(
+async function deleteOwner(
   connection,
-  allFields,
-  body,
   idField,
   idValue,
   name,
   tableName,
-  requiredFields,
 ) {
-  const shouldExist = false;
+  const shouldExist = true;
   let client;
   let clientInitiated = false;
 
   const response = {
     error: false,
-    message: `Successfully added ${name} ${idValue}`,
+    message: `Successfully deleted ${name} ${idValue}`,
     result: null,
   };
 
   try {
     client = await newClient(connection);
     clientInitiated = true;
-    checkInfo(body, requiredFields, name, idValue, idField);
     await checkExistence(client, tableName, idField, idValue, name, shouldExist);
-    response.result = await addInfo(client, allFields, body, tableName, name);
+    await deleteInfo(client, tableName, idField, idValue, name);
     await client.end();
   } catch (error) {
     if (clientInitiated) {
@@ -41,4 +37,4 @@ async function addTag(
   return response;
 }
 
-export default addTag;
+export default deleteOwner;

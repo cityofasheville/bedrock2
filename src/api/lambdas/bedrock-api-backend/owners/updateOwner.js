@@ -1,14 +1,17 @@
 /* eslint-disable no-console */
 import {
-  newClient, checkExistence, deleteInfo,
+  newClient, checkInfo, checkExistence, updateInfo,
 } from '../utilities/utilities.js';
 
-async function deleteTag(
+async function updateOwner(
   connection,
+  allFields,
+  body,
   idField,
   idValue,
   name,
   tableName,
+  requiredFields,
 ) {
   const shouldExist = true;
   let client;
@@ -16,15 +19,16 @@ async function deleteTag(
 
   const response = {
     error: false,
-    message: `Successfully deleted ${name} ${idValue}`,
+    message: `Successfully updated ${name} ${idValue}`,
     result: null,
   };
 
   try {
+    checkInfo(body, requiredFields, name, idValue, idField);
     client = await newClient(connection);
     clientInitiated = true;
     await checkExistence(client, tableName, idField, idValue, name, shouldExist);
-    await deleteInfo(client, tableName, idField, idValue, name);
+    response.result = await updateInfo(client, allFields, body, tableName, idField, idValue, name);
     await client.end();
   } catch (error) {
     if (clientInitiated) {
@@ -37,4 +41,4 @@ async function deleteTag(
   return response;
 }
 
-export default deleteTag;
+export default updateOwner;
