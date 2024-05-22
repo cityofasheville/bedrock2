@@ -2,16 +2,16 @@
 // Disabling import/no-unresolved because the dependency as defined
 // in package.json only works in the build subdirectory.
 // eslint-disable-next-line import/no-unresolved
-const { getDBConnection } = require('bedrock_common');
-const handleAssets = require('./assets/handleAssets');
-const handleRungroups = require('./rungroups/handleRungroups');
-const handleReference = require('./reference/handleReference');
-const handleAssetTypes = require('./asset_types/handleAssetTypes');
-const handleTags = require('./tags/handleTags');
-const handleCustomFields = require('./custom_fields/handleCustomFields');
+import { getDBConnection } from 'bedrock_common';
+import handleAssets from './assets/handleAssets.js';
+import handleRungroups from './rungroups/handleRungroups.js';
+import handleReference from './reference/handleReference.js';
+import handleAssetTypes from './asset_types/handleAssetTypes.js';
+import handleTags from './tags/handleTags.js';
+import handleCustomFields from './custom_fields/handleCustomFields.js';
 
 // eslint-disable-next-line camelcase
-const lambda_handler = async function x(event) {
+export async function lambda_handler(event) {
   let result = {
     error: true,
     message: 'Unknown resource',
@@ -85,9 +85,4 @@ const lambda_handler = async function x(event) {
   }
 
   return result;
-};
-
-module.exports = {
-  // eslint-disable-next-line camelcase
-  lambda_handler,
 };

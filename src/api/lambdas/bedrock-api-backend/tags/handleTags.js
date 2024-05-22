@@ -1,9 +1,9 @@
 /* eslint-disable no-console */
-const getTagList = require('./getTagList');
-const getTag = require('./getTag');
-const addTag = require('./addTag');
-const updateTag = require('./updateTag');
-const deleteTag = require('./deleteTag');
+import getTagList from './getTagList.js';
+import getTag from './getTag.js';
+import addTag from './addTag.js';
+import updateTag from './updateTag.js';
+import deleteTag from './deleteTag.js';
 
 // eslint-disable-next-line no-unused-vars
 async function handleTags(
@@ -117,4 +117,4 @@ async function handleTags(
   return result;
 }
 
-module.exports = handleTags;
+export default handleTags;

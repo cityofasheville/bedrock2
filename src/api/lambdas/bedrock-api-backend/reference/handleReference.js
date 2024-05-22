@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-const getReference = require('./getReference');
+import getReference from './getReference.js';
 
 
 // eslint-disable-next-line no-unused-vars
@@ -37,4 +37,4 @@ async function handleReference(
     return result;
 }
 
-module.exports = handleReference;
+export default handleReference;

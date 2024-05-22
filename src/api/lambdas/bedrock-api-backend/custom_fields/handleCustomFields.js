@@ -1,9 +1,9 @@
 /* eslint-disable no-console */
-const getCustomFieldList = require('./getCustomFieldList');
-const getCustomField = require('./getCustomField');
-const addCustomField = require('./addCustomField');
-const updateCustomField = require('./updateCustomField');
-const deleteCustomField = require('./deleteCustomField');
+import getCustomFieldList from './getCustomFieldList.js';
+import getCustomField from './getCustomField.js';
+import addCustomField from './addCustomField.js';
+import updateCustomField from './updateCustomField.js';
+import deleteCustomField from './deleteCustomField.js';
 
 // eslint-disable-next-line no-unused-vars
 async function handleCustomFields(
@@ -118,4 +118,4 @@ async function handleCustomFields(
   return result;
 }
 
-module.exports = handleCustomFields;
+export default handleCustomFields;

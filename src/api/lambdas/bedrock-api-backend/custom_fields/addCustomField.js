@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
-const {
+import {
   newClient, checkInfo, checkExistence, addInfo,
-} = require('../utilities/utilities');
+} from '../utilities/utilities.js';
 
 async function addCustomField(
   connection,
@@ -46,4 +46,4 @@ async function addCustomField(
   return response;
 }
 
-module.exports = addCustomField;
+export default addCustomField;

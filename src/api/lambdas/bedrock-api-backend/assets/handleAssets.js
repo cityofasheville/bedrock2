@@ -1,11 +1,11 @@
 /* eslint-disable no-console */
-const getAssetList = require('./getAssetList');
-const getAsset = require('./getAsset');
-const getAllAssetRelations = require('./getAllAssetRelations');
-const addAsset = require('./addAsset');
-const updateAsset = require('./updateAsset');
-const deleteAsset = require('./deleteAsset');
-const getTasks = require('./getTasks');
+import getAssetList from './getAssetList.js';
+import getAsset from './getAsset.js';
+import getAllAssetRelations from './getAllAssetRelations.js';
+import addAsset from './addAsset.js';
+import updateAsset from './updateAsset.js';
+import deleteAsset from './deleteAsset.js';
+import getTasks from './getTasks.js';
 
 // eslint-disable-next-line no-unused-vars
 async function handleAssets(event, pathElements, queryParams, verb, connection) {
@@ -115,4 +115,4 @@ async function handleAssets(event, pathElements, queryParams, verb, connection) 
   return response;
 }
 
-module.exports = handleAssets;
+export default handleAssets;

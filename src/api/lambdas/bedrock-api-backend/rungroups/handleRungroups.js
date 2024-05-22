@@ -1,9 +1,9 @@
 /* eslint-disable no-console */
-const getRungroupList = require('./getRungroupList');
-const getRungroup = require('./getRungroup');
-const addRungroup = require('./addRungroup');
-const updateRungroup = require('./updateRungroup');
-const deleteRungroup = require('./deleteRungroup');
+import getRungroupList from './getRungroupList.js';
+import getRungroup from './getRungroup.js';
+import addRungroup from './addRungroup.js';
+import updateRungroup from './updateRungroup.js';
+import deleteRungroup from './deleteRungroup.js';
 
 // eslint-disable-next-line no-unused-vars
 async function handleRungroups(
@@ -118,4 +118,4 @@ async function handleRungroups(
   return result;
 }
 
-module.exports = handleRungroups;
+export default handleRungroups;

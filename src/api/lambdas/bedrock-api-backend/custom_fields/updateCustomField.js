@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
-const {
+import {
   newClient, checkInfo, checkExistence, updateInfo,
-} = require('../utilities/utilities');
+} from '../utilities/utilities.js';
 
 async function updateCustomField(
   connection,
@@ -41,4 +41,4 @@ async function updateCustomField(
   return response;
 }
 
-module.exports = updateCustomField;
+export default updateCustomField;

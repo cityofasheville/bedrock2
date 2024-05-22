@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
-const { Client } = require('pg');
-const pgErrorCodes = require('../pgErrorCodes');
+import pgpkg from 'pg';
+const { Client } = pgpkg;
+import pgErrorCodes from '../pgErrorCodes.js';
 
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -169,7 +170,7 @@ async function deleteInfo(client, tableName, idField, idValue, name) {
   }
 }
 
-module.exports = {
+export {
   newClient,
   checkInfo,
   checkExistence,

@@ -1,9 +1,9 @@
 /* eslint-disable no-console */
-const getAssetTypeList = require('./getAssetTypeList');
-const getAssetType = require('./getAssetType');
-const addAssetType = require('./addAssetType');
-const updateAssetType = require('./updateAssetType');
-const deleteAssetType = require('./deleteAssetType');
+import getAssetTypeList from './getAssetTypeList.js';
+import getAssetType from './getAssetType.js';
+import addAssetType from './addAssetType.js';
+import updateAssetType from './updateAssetType.js';
+import deleteAssetType from './deleteAssetType.js';
 
 // eslint-disable-next-line no-unused-vars
 async function handleAssetTypes(
@@ -118,4 +118,4 @@ async function handleAssetTypes(
   return result;
 }
 
-module.exports = handleAssetTypes;
+export default handleAssetTypes;

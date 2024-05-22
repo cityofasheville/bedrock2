@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
-const {
+import {
   newClient, checkInfo, checkExistence, addInfo,
-} = require('../utilities/utilities');
+} from '../utilities/utilities.js';
 
 async function addTag(
   connection,
@@ -41,4 +41,4 @@ async function addTag(
   return response;
 }
 
-module.exports = addTag;
+export default addTag;
