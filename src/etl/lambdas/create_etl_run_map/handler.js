@@ -23,10 +23,10 @@ function formatRes(code, result) {
 
 import pgErrorCodes from './pgErrorCodes.js';
 
-async function readEtlList(client, rungroups) {
+async function readEtlList(client, run_groups) {
   let etlList = [];
-  if (rungroups.length > 0) {
-    const rgString = rungroups.reduce((accumulator, currentValue) => {
+  if (run_groups.length > 0) {
+    const rgString = run_groups.reduce((accumulator, currentValue) => {
       const sep = (accumulator !== '') ? ', ' : '';
       return `${accumulator + sep}'${currentValue}'`;
     }, '');
@@ -212,11 +212,11 @@ async function readTasks(client, assetMap) {
   return assetMap;
 }
 
-async function getRungroups(client, debug) {
+async function getRunGroups(client, debug) {
   const sql = 'SELECT run_group_name, cron_string FROM bedrock.run_groups;';
   return client.query(sql)
     .then((res) => {
-      const rungroups = [];
+      const run_groups = [];
       for (let i = 0; i < res.rowCount; i += 1) {
         const cname = res.rows[i].run_group_name;
         const cstring = res.rows[i].cron_string;
@@ -228,11 +228,11 @@ async function getRungroups(client, debug) {
         const endPreviousTimeSlot = latestPreviousTimeMS + ms;
         // See if current time falls within TIME_INTERVAL following the latest run time
         if (endPreviousTimeSlot >= curTime.getTime()) {
-          rungroups.push(cname);
+          run_groups.push(cname);
         }
       }
-      if (debug) console.log('Selected rungroups: ', rungroups);
-      return rungroups;
+      if (debug) console.log('Selected run_groups: ', run_groups);
+      return run_groups;
     })
     .catch((err) => {
       const errmsg = pgErrorCodes[err.code];
@@ -251,11 +251,11 @@ const lambda_handler = async function x(event) {
         const errmsg = pgErrorCodes[err.code];
         throw new Error([`Postgres error: ${errmsg}`, err]);
       });
-    let rungroups = [event.rungroup];
-    if (event.rungroup === 'UseCronStrings') {
-      rungroups = await getRungroups(client, debug);
+    let run_groups = [event.run_group];
+    if (event.run_group === 'UseCronStrings') {
+      run_groups = await getRunGroups(client, debug);
     }
-    let assetMap = await readEtlList(client, rungroups);
+    let assetMap = await readEtlList(client, run_groups);
     assetMap = await readDependencies(client, assetMap);
     assetMap = await readTasks(client, assetMap);
 

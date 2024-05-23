@@ -3,6 +3,7 @@ provider "aws" {
 }
 
 resource "aws_lambda_function" "bedrock-api-backend-$$INSTANCE$$" {
+    description     = "Bedrock - API Backend"
     filename        = "../function.zip"
     function_name   = "bedrock-api-backend-$$INSTANCE$$"
     role            = data.terraform_remote_state.lambda_role.outputs.bedrock_lambda_role_arn

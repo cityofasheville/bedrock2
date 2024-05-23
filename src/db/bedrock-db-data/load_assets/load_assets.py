@@ -52,7 +52,6 @@ print('Truncated all tables')
 
 # Load the run groups
 sql = 'INSERT INTO bedrock.run_groups (run_group_name,	cron_string) VALUES '
-runGroups = []
 with open(os.path.join(data_directory,'run_groups.csv')) as ff:
   rdr = csv.reader(ff)
   
