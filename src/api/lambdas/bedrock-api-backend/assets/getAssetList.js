@@ -1,3 +1,4 @@
+/* eslint-disable import/extensions */
 import pgpkg from 'pg';
 const { Client } = pgpkg;
 import pgErrorCodes from '../pgErrorCodes.js';

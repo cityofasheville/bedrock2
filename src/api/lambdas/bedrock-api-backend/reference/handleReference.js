@@ -1,3 +1,5 @@
+/* eslint-disable import/extensions */
+/* eslint-disable import/extensions */
 /* eslint-disable no-console */
 import getReference from './getReference.js';
 

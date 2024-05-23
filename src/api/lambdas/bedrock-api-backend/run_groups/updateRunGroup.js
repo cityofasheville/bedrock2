@@ -1,3 +1,4 @@
+/* eslint-disable import/extensions */
 /* eslint-disable no-console */
 import {
   newClient, checkInfo, checkExistence, updateInfo,

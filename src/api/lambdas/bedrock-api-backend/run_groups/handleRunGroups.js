@@ -1,3 +1,4 @@
+/* eslint-disable import/extensions */
 /* eslint-disable no-console */
 import getRunGroupList from './getRunGroupList.js';
 import getRunGroup from './getRunGroup.js';

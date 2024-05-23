@@ -1,3 +1,4 @@
+/* eslint-disable import/extensions */
 /* eslint-disable no-console */
 import getAssetList from './getAssetList.js';
 import getAsset from './getAsset.js';

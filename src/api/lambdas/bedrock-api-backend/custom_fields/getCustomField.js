@@ -1,3 +1,4 @@
+/* eslint-disable import/extensions */
 /* eslint-disable no-console */
 import { newClient, getInfo } from '../utilities/utilities.js';
 
