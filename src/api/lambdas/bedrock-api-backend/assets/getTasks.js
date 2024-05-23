@@ -1,8 +1,9 @@
 /* eslint-disable import/extensions */
 /* eslint-disable no-console */
 import pgpkg from 'pg';
-const { Client } = pgpkg;
 import pgErrorCodes from '../pgErrorCodes.js';
+
+const { Client } = pgpkg;
 
 async function newClient(connection) {
   const client = new Client(connection);
@@ -26,7 +27,7 @@ async function readTasks(client, assetName) {
 }
 
 function formatTasks(res) {
-  let tempTasks = [];
+  const tempTasks = [];
   for (let i = 0; i < res.rowCount; i += 1) {
     tempTasks.push(
       {
@@ -68,7 +69,7 @@ async function getTasks(pathElements, queryParams, connection) {
     if (res.rowCount === 0) {
       response.message = 'No tasks found';
     } else {
-      tasks = formatTasks(res)
+      tasks = formatTasks(res);
       response.result = {
         items: tasks,
       };
@@ -79,9 +80,9 @@ async function getTasks(pathElements, queryParams, connection) {
     response.message = error.message;
     return response;
   } finally {
-    await client.end()
-    return response;
+    await client.end();
   }
+  return response;
 }
 
 export default getTasks;

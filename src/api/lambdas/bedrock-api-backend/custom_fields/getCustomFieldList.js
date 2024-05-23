@@ -5,7 +5,6 @@ import {
   buildCount, buildOffset, buildWhereClause, getCount, getListInfo, buildURL,
 } from '../utilities/listUtilities.js';
 
-
 async function getCustomFieldList(
   domainName,
   pathElements,

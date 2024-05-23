@@ -1,8 +1,9 @@
 /* eslint-disable import/extensions */
 /* eslint-disable no-console */
 import pgpkg from 'pg';
-const { Client } = pgpkg;
 import pgErrorCodes from '../pgErrorCodes.js';
+
+const { Client } = pgpkg;
 
 async function newClient(connection) {
   const client = new Client(connection);
@@ -145,8 +146,8 @@ async function getAllAssetRelations(pathElements, queryParams, connection) {
     return response;
   } finally {
     await client.end();
-    return response
   }
+  return response;
 }
 
 export default getAllAssetRelations;
