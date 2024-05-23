@@ -45,6 +45,8 @@ async function getAssetTypeList(
     message: '',
     result: { items: null },
   };
+  response.result.count = count;
+  response.result.offset = offset;
 
   try {
     client = await newClient(connection);
@@ -54,6 +56,7 @@ async function getAssetTypeList(
       response.message = `No ${name}s found.`;
       return response;
     }
+    response.result.total = total;
     res = await getListInfo(offset, count, whereClause, client, idField, tableName, name);
     response.result.items = res.rows;
     const resCustomFields = await getCustomFieldsInfo(client, name);
