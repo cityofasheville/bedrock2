@@ -1,7 +1,9 @@
+/* eslint-disable import/extensions */
 /* eslint-disable no-console */
 import pgpkg from 'pg';
-const { Client } = pgpkg;
 import pgErrorCodes from '../pgErrorCodes.js';
+
+const { Client } = pgpkg;
 
 async function newClient(connection) {
   const client = new Client(connection);
@@ -60,7 +62,7 @@ async function tagsDelete(client, assetName) {
   }
 }
 
-async function customFieldsDelete (client, assetName) {
+async function customFieldsDelete(client, assetName) {
   try {
     await client.query('delete from bedrock.custom_values where asset_name = $1', [assetName]);
   } catch (error) {
@@ -119,9 +121,8 @@ async function deleteAsset(pathElements, queryParams, connection) {
     response.message = error.message;
   } finally {
     await client.end();
-    return response;
   }
-
+  return response;
 }
 
 export default deleteAsset;

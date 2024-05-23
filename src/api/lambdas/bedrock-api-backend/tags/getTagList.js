@@ -1,9 +1,9 @@
+/* eslint-disable import/extensions */
 /* eslint-disable no-console */
 import { newClient } from '../utilities/utilities.js';
 import {
   buildCount, buildOffset, buildWhereClause, getCount, getListInfo, buildURL,
 } from '../utilities/listUtilities.js';
-
 
 async function getTagList(
   domainName,

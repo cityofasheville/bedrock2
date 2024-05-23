@@ -1,7 +1,9 @@
+/* eslint-disable import/extensions */
 /* eslint-disable no-console */
 import pgpkg from 'pg';
-const { Client } = pgpkg;
 import pgErrorCodes from '../pgErrorCodes.js';
+
+const { Client } = pgpkg;
 
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);

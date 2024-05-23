@@ -1,7 +1,9 @@
+/* eslint-disable import/extensions */
 /* eslint-disable no-console */
 import pgpkg from 'pg';
-const { Client } = pgpkg;
 import pgErrorCodes from '../pgErrorCodes.js';
+
+const { Client } = pgpkg;
 
 async function newClient(connection) {
   const client = new Client(connection);
@@ -52,21 +54,20 @@ async function addCustomFields(client, asset, requestedFields, fieldsOverride) {
         }
       }
     }
-
   }
   return Object.fromEntries(cv.entries());
 }
 
 async function addBaseFields(assetRows, requestedFields, available) {
-  let tempAsset = new Map()
+  const tempAsset = new Map();
   tempAsset.set('asset_name', assetRows[0].asset_name);
   tempAsset.set('asset_type', assetRows[0].asset_type);
-  
+
   for (let j = 0; j < requestedFields.length; j += 1) {
     const itm = requestedFields[j];
     if (available.includes(itm)) {
       if (itm === 'parents') {
-        let parents = [];
+        const parents = [];
         for (let i = 0; i < assetRows.length; i += 1) {
           if (assetRows[i].dependency !== null) {
             parents.push(assetRows[i].dependency);
@@ -159,9 +160,9 @@ async function getAsset(pathElements, queryParams, connection) {
     response.error = true;
     response.message = error.message;
   } finally {
-    await client.end()
-    return response;
+    await client.end();
   }
- }
+  return response;
+}
 
 export default getAsset;

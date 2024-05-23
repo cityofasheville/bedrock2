@@ -1,6 +1,8 @@
+/* eslint-disable import/extensions */
 import pgpkg from 'pg';
-const { Client } = pgpkg;
 import pgErrorCodes from '../pgErrorCodes.js';
+
+const { Client } = pgpkg;
 
 function checkParameters(queryParams) {
   const parameters = ['rungroup', 'tags', 'period', 'pattern', 'count', 'offset'];
@@ -36,7 +38,7 @@ function createSqlWhereClause(queryParams) {
     sqlParams: [],
   };
   if ('pattern' in queryParams) {
-    whereClause.whereClause = `where a.asset_name like $1`;
+    whereClause.whereClause = 'where a.asset_name like $1';
     whereClause.sqlParams.push(`%${queryParams.pattern}%`);
   }
   return whereClause;
@@ -54,7 +56,7 @@ async function getAssetCount(whereClause, client) {
 }
 
 async function readAssets(client, offset, count, whereClause) {
-  let sql = `
+  const sql = `
     SELECT a.*, e.run_group as etl_run_group, e.active as etl_active,
       c.connection_class FROM bedrock.assets a
     left join bedrock.etl e on a.asset_name = e.asset_name

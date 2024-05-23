@@ -1,9 +1,11 @@
+/* eslint-disable import/extensions */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-console */
 import pgpkg from 'pg';
-const { Client } = pgpkg;
 import pgErrorCodes from '../pgErrorCodes.js';
 import getCustomFieldsInfo from '../common/getCustomFieldInfo.js';
+
+const { Client } = pgpkg;
 
 async function newClient(connection) {
   const client = new Client(connection);
@@ -91,7 +93,7 @@ async function baseInsert(body, customFields, customValues, client) {
   ];
   sql = 'INSERT INTO assets (asset_name, description, location, active';
   let vals = ') VALUES($1, $2, $3, $4';
-  let fields = ['owner_id', 'notes', 'link', 'display_name', 'asset_type']
+  const fields = ['owner_id', 'notes', 'link', 'display_name', 'asset_type']
 
   for (let i = 0; i < fields.length; i += 1) {
     if (fields[i] in body) {
@@ -124,7 +126,8 @@ async function baseInsert(body, customFields, customValues, client) {
       if (fields[0] in body) {
         tempAsset.set(fields[0], body[fields[0]])
       }
-  }}
+    }
+  }
 
   // Now deal with custom fields
   const customOut = new Map();

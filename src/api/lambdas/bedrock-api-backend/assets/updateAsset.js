@@ -1,9 +1,11 @@
+/* eslint-disable import/extensions */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-console */
 import pgpkg from 'pg';
-const { Client } = pgpkg;
 import pgErrorCodes from '../pgErrorCodes.js';
 import getCustomFieldsInfo from '../common/getCustomFieldInfo.js';
+
+const { Client } = pgpkg;
 
 async function newClient(connection) {
   const client = new Client(connection);

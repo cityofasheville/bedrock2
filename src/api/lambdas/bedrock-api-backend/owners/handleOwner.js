@@ -1,3 +1,4 @@
+/* eslint-disable import/extensions */
 /* eslint-disable no-console */
 import getOwnerList from './getOwnerList.js';
 import getOwner from './getOwner.js';

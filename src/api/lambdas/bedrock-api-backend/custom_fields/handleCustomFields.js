@@ -1,3 +1,4 @@
+/* eslint-disable import/extensions */
 /* eslint-disable no-console */
 import getCustomFieldList from './getCustomFieldList.js';
 import getCustomField from './getCustomField.js';

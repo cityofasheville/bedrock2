@@ -1,3 +1,4 @@
+/* eslint-disable import/extensions */
 /* eslint-disable no-console */
 import getTagList from './getTagList.js';
 import getTag from './getTag.js';

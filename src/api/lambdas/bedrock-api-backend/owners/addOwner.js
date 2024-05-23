@@ -1,3 +1,5 @@
+/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable import/extensions */
 /* eslint-disable no-console */
 import { customAlphabet } from 'nanoid';
 import {

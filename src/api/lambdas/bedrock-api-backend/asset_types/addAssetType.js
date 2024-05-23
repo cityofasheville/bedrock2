@@ -1,3 +1,4 @@
+/* eslint-disable import/extensions */
 /* eslint-disable no-console */
 import {
   newClient, checkInfo, checkExistence, addInfo,
@@ -12,7 +13,7 @@ function checkCustomFields(body) {
   }
 }
 
-async function addCustomFieldsInfo(client, idValue, body, tableName, name) {
+async function addCustomFieldsInfo(client, idValue, body) {
   let res;
   const valueStrings = [];
   console.log(body.custom_fields);
@@ -24,8 +25,7 @@ async function addCustomFieldsInfo(client, idValue, body, tableName, name) {
   });
   const combinedValueString = valueStrings.join(', ');
   console.log(valueStrings);
-  console.log(`INSERT INTO bedrock.asset_type_custom_fields (asset_type_id, custom_field_id, required) VALUES ${combinedValueString}`,
-);
+  console.log(`INSERT INTO bedrock.asset_type_custom_fields (asset_type_id, custom_field_id, required) VALUES ${combinedValueString}`);
 
   try {
     res = await client
@@ -81,7 +81,7 @@ async function addAssetType(
   try {
     await client.query('BEGIN');
     await checkExistence(client, tableName, idField, idValue, name, shouldExist);
-    await addCustomFieldsInfo(client, idValue, body, tableName, name);
+    await addCustomFieldsInfo(client, idValue, body);
     response.result = await addInfo(client, allFields, body, tableName, name);
     await client.query('COMMIT');
     await client.end();
