@@ -3,7 +3,7 @@ let event = {
   requestContext: {
     http: {
       method: 'GET',
-      path: '/rungroups',
+      path: '/run_groups',
     },
   },
 };

@@ -2,7 +2,7 @@
 
 ##  run with this parameter
 
-{"rungroup": "daily"}
+{"run_group": "daily"}
 
 
 
