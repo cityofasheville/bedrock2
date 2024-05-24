@@ -1,0 +1,17 @@
+{
+  "asset_name": "permit_workflows.acc",
+  "display_name": "permit_workflows.acc",
+  "description": "Permit Workflow data",
+  "location": {
+    "tablename": "avl_dashboard_workflow_data",
+    "connection": "coa-acceladb/accela/mssqlgisadmin",
+    "schemaname": "dbo"
+  },
+  "asset_type": "data",
+  "owner_id": null,
+  "notes": null,
+  "link": null,
+  "active": true,
+  "depends": [],
+  "tags": []
+}
