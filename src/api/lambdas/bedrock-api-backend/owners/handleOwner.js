@@ -38,10 +38,10 @@ async function handleOwners(
   //   idValue = body[idField];
   // }
 
-  console.log(event);
-  console.log(JSON.stringify(event));
-  console.log(pathElements);
-  console.log(nParams);
+  // console.log(event);
+  // console.log(JSON.stringify(event));
+  // console.log(pathElements);
+  // console.log(nParams);
 
   switch (nParams) {
     // GET Owners
