@@ -34,14 +34,6 @@ async function handleOwners(
   if (!(pathElements[1] == null)) {
     [, idValue] = pathElements;
   }
-  // else if (body) { // For POST requests, setting idValue here since it's not in the path
-  //   idValue = body[idField];
-  // }
-
-  // console.log(event);
-  // console.log(JSON.stringify(event));
-  // console.log(pathElements);
-  // console.log(nParams);
 
   switch (nParams) {
     // GET Owners
