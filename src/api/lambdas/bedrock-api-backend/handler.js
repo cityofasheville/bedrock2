@@ -1,3 +1,4 @@
+/* eslint-disable import/extensions */
 /* eslint-disable no-console */
 // Disabling import/no-unresolved because the dependency as defined
 // in package.json only works in the build subdirectory.

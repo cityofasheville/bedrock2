@@ -30,6 +30,12 @@ function buildWhereClause(queryParams, idField) {
     whereClause.whereClause += `${where} ${idField} like $1`;
     whereClause.sqlParams.push(`%${queryParams.pattern}%`);
   }
+
+  if ('contact_name' in queryParams) {
+    whereClause.whereClause += `${where} contact_name ilike $1`;
+    const formattedString = queryParams.contact_name.replace(/_/g, ' ');
+    whereClause.sqlParams.push(`%${formattedString}%`);
+  }
   return whereClause;
 }
 
