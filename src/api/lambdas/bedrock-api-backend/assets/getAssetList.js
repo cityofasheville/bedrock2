@@ -83,7 +83,7 @@ async function addBaseFields(sqlResult, requestedFields, availableFields) {
   for (let i = 0; i < sqlResult.rowCount; i += 1) {
     const row = sqlResult.rows[i];
     const assetName = row.asset_name;
-    tempAssets.assetNames.push(`'${assetName}'`)
+    tempAssets.assetNames.push(`'${assetName}'`);
     const asset = new Map();
     tempAssets.assetMap.set(assetName, asset);
     asset.set('asset_name', row.asset_name);
@@ -105,7 +105,22 @@ async function addBaseFields(sqlResult, requestedFields, availableFields) {
   return tempAssets;
 }
 
-async function addCustomFields(client, assets, requestedFields, overrideFields) {
+async function addTags(client, assets) {
+  const sql = `
+  select * from bedrock.asset_tags
+  where asset_name in (${assets.assetNames.join()})
+`;
+  let sqlResult;
+  try {
+    sqlResult = await client.query(sql);
+  } catch (error) {
+    throw new Error(`PG error getting asset tags: ${pgErrorCodes[error.code]}`);
+  }
+
+  return sqlResult;
+}
+
+async function addCustomFields(client, assets) {
   const sql = `
     select asset_name, field_id, field_value from bedrock.custom_values
     where asset_name in (${assets.assetNames.join()})
@@ -199,7 +214,7 @@ async function getAssetList(domainName, pathElements, queryParams, connection) {
       count,
       total: 0,
       url: null,
-    }
+    },
   };
 
   try {
@@ -233,17 +248,26 @@ async function getAssetList(domainName, pathElements, queryParams, connection) {
     // Build the asset list
     assets = await addBaseFields(sqlResult, requestedFields, availableFields);
     // Add custom fields them to their respective assets
-    sqlResult = await addCustomFields(client, assets, requestedFields, overrideFields);
-    for (let i = 0; i < sqlResult.rowCount; i += 1) {
-      const row = sqlResult.rows[i];
+    const customFieldsResult = await addCustomFields(client, assets);
+    for (let i = 0; i < customFieldsResult.rowCount; i += 1) {
+      const row = customFieldsResult.rows[i];
       if (!overrideFields || requestedFields.includes(row.field_id)) {
         const cv = assets.assetMap.get(row.asset_name).get('custom_fields');
         cv.set(row.field_id, row.field_value);
       }
     }
 
+    const tagsResult = await addTags(client, assets);
+    for (let i = 0; i < tagsResult.rowCount; i += 1) {
+      const row = tagsResult.rows[i];
+      if (!overrideFields || requestedFields.includes('tags')) {
+        const innerMap = assets.assetMap.get(row.asset_name);
+        innerMap.get('tags').push(row.tag_name);
+      }
+    }
+
     // Now convert all the Map objects to ordinary objects
-    for (let [nm, asset] of assets.assetMap) {
+    for (const [nm, asset] of assets.assetMap) {
       asset.set('custom_fields', Object.fromEntries(asset.get('custom_fields').entries()));
     }
     if ('parents' in requestedFields) {
@@ -253,20 +277,30 @@ async function getAssetList(domainName, pathElements, queryParams, connection) {
         assets.assetMap.get(row.asset_name).get('parents').push(row.dependency);
       }
     }
-    
+
     // Now package up all the assets
-    for (let [assetName, asset] of assets.assetMap) {
+    for (const [assetName, asset] of assets.assetMap) {
       response.result.items.push(Object.fromEntries(asset.entries()));
     }
-    response.result.url = buildURL(queryParams, domainName, assets.count, offset, response.result.total, pathElements);
+    response.result.url = buildURL(
+      queryParams,
+      domainName,
+      assets.count,
+      offset,
+      response.result.total,
+      pathElements,
+    );
+    await client.end();
   } catch (error) {
     response.error = true;
     response.message = error.message;
     response.result = null;
-  } finally {
     await client.end();
     return response;
+  } finally {
+    await client.end();
   }
+  return response;
 }
 
 export default getAssetList;
