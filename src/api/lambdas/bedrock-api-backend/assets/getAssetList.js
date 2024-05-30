@@ -237,7 +237,7 @@ async function getAssetList(domainName, pathElements, queryParams, connection) {
 
     // Read the base fields
     const overrideFields = ('fields' in queryParams);
-    let sqlResult = await readAssets(client, offset, count, whereClause);
+    const sqlResult = await readAssets(client, offset, count, whereClause);
     let assets = {
       count: sqlResult.rowCount,
       assetNames: [],
@@ -270,8 +270,9 @@ async function getAssetList(domainName, pathElements, queryParams, connection) {
     for (const [nm, asset] of assets.assetMap) {
       asset.set('custom_fields', Object.fromEntries(asset.get('custom_fields').entries()));
     }
-    if ('parents' in requestedFields) {
-      await addDependencies(client, assets);
+
+    if (requestedFields.includes('parents')) {
+      const res = await addDependencies(client, assets);
       for (let i = 0; i < res.rowCount; i += 1) {
         const row = res.rows[i];
         assets.assetMap.get(row.asset_name).get('parents').push(row.dependency);
