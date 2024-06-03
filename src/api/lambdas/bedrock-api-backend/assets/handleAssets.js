@@ -7,6 +7,7 @@ import addAsset from './addAsset.js';
 import updateAsset from './updateAsset.js';
 import deleteAsset from './deleteAsset.js';
 import getTasks from './getTasks.js';
+import updateTasks from './updateTasks.js'
 
 // eslint-disable-next-line no-unused-vars
 async function handleAssets(event, pathElements, queryParams, verb, connection) {
@@ -68,8 +69,10 @@ async function handleAssets(event, pathElements, queryParams, verb, connection) 
       if (pathElements[2] === 'tasks') {
         if (verb === 'GET') {
           response = await getTasks(pathElements, queryParams, connection);
-        } else if (verb === 'DELETE') {
-          response.message = 'Delete all asset tasks not implemented';
+        } else if (verb === 'PUT') {
+          response = await updateTasks(pathElements, event, connection);
+        } else {
+          response.message = `${verb} all asset tasks not implemented`;
           response.error = true;
         }
       } else if (pathElements[2] === 'relations') {
