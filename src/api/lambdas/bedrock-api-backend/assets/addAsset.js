@@ -62,7 +62,7 @@ async function checkExistence(client, idValue) {
 function getCustomValues(body) {
   const customValues = new Map();
   if ('custom_fields' in body) {
-    for (val in body.custom_fields) {
+    for (const val in body.custom_fields) {
       customValues.set(val, body.custom_fields[val]);
     }
   }
