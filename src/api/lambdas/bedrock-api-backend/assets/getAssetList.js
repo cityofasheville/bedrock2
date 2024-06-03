@@ -107,7 +107,7 @@ async function addBaseFields(sqlResult, requestedFields, availableFields) {
 
 async function addTags(client, assets) {
   const sql = `
-  select * from bedrock.asset_tags
+  select * from bedrock.asset_tags a left join bedrock.tags b on a.tag_name = b.tag_name
   where asset_name in (${assets.assetNames.join()})
 `;
   let sqlResult;
@@ -116,7 +116,7 @@ async function addTags(client, assets) {
   } catch (error) {
     throw new Error(`PG error getting asset tags: ${pgErrorCodes[error.code]}`);
   }
-
+  console.log(sqlResult)
   return sqlResult;
 }
 
@@ -262,7 +262,7 @@ async function getAssetList(domainName, pathElements, queryParams, connection) {
       const row = tagsResult.rows[i];
       if (!overrideFields || requestedFields.includes('tags')) {
         const innerMap = assets.assetMap.get(row.asset_name);
-        innerMap.get('tags').push(row.tag_name);
+        innerMap.get('tags').push({ tag_name: row.tag_name, display_name: row.display_name });
       }
     }
 
