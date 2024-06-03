@@ -4,6 +4,19 @@
 import pgErrorCodes from '../pgErrorCodes.js';
 import { deleteInfo, newClient } from '../utilities/utilities.js';
 
+function checkInfo(body, requiredFields) {
+  console.log('entering checkInfo');
+  console.log(body);
+  // loop through requiredFields array and check that each one is in body
+  for (let i = 0; i < requiredFields.length; i += 1) {
+    body.forEach((obj) => {
+      if (!(requiredFields[i] in obj)) {
+        throw new Error(`One or more tasks lack required property ${requiredFields[i]}`);
+      }
+    });
+  }
+}
+
 async function addTasks(client, allFields, body) {
   let fieldsString = '(';
   let comma = '';
@@ -18,7 +31,7 @@ async function addTasks(client, allFields, body) {
   fieldsString += ')';
 
   for (const obj of body) {
-    let valuesFromBody = [];
+    const valuesFromBody = [];
     allFields.forEach((key) => {
       if (obj[key] || obj[key] === 0) {
         if (key === 'source' || key === 'target') {
@@ -57,9 +70,11 @@ async function updateTasks(pathElements, event, connection) {
   const name = 'asset tasks';
   const tableName = 'tasks';
   const allFields = ['asset_name', 'seq_number', 'description', 'type', 'active', 'source', 'target', 'configuration'];
+  const requiredFields = ['asset_name', 'seq_number', 'type', 'active'];
 
   try {
     client = await newClient(connection);
+    checkInfo(body, requiredFields);
   } catch (error) {
     response.error = true;
     response.message = error.message;
