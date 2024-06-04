@@ -1,5 +1,7 @@
 /* eslint-disable import/extensions */
 /* eslint-disable no-console */
+/* eslint-disable import/no-extraneous-dependencies */
+import { customAlphabet } from 'nanoid';
 import pgpkg from 'pg';
 import pgErrorCodes from '../pgErrorCodes.js';
 
@@ -55,6 +57,13 @@ async function checkExistence(client, tableName, idField, idValue, name, shouldE
   if (!shouldExist && (res.rowCount > 0)) {
     throw new Error(`${capitalizeFirstLetter(name)} like ${idValue} already exists`);
   }
+}
+
+function generateId() {
+  const alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz';
+  const nanoid = customAlphabet(alphabet, 16);
+  const thisID = nanoid();
+  return thisID;
 }
 
 async function getInfo(client, idField, idValue, name, tableName) {
@@ -181,4 +190,5 @@ export {
   addInfo,
   updateInfo,
   deleteInfo,
+  generateId,
 };

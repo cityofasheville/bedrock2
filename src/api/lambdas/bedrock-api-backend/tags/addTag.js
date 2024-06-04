@@ -1,7 +1,7 @@
 /* eslint-disable import/extensions */
 /* eslint-disable no-console */
 import {
-  newClient, checkInfo, checkExistence, addInfo,
+  newClient, checkInfo, checkExistence, addInfo, generateId,
 } from '../utilities/utilities.js';
 
 async function addTag(
@@ -9,7 +9,6 @@ async function addTag(
   allFields,
   body,
   idField,
-  idValue,
   name,
   tableName,
   requiredFields,
@@ -17,6 +16,11 @@ async function addTag(
   const shouldExist = false;
   let client;
   let clientInitiated = false;
+  const bodyWithID = {
+    ...body,
+    tag_name: generateId(),
+  };
+  const idValue = bodyWithID.tag_name;
 
   const response = {
     error: false,
@@ -27,9 +31,9 @@ async function addTag(
   try {
     client = await newClient(connection);
     clientInitiated = true;
-    checkInfo(body, requiredFields, name, idValue, idField);
+    checkInfo(bodyWithID, requiredFields, name, idValue, idField);
     await checkExistence(client, tableName, idField, idValue, name, shouldExist);
-    response.result = await addInfo(client, allFields, body, tableName, name);
+    response.result = await addInfo(client, allFields, bodyWithID, tableName, name);
     await client.end();
   } catch (error) {
     if (clientInitiated) {
