@@ -1,17 +1,9 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable import/extensions */
 /* eslint-disable no-console */
-import { customAlphabet } from 'nanoid';
 import {
-  newClient, checkInfo, checkExistence, addInfo,
+  newClient, checkInfo, checkExistence, addInfo, generateId,
 } from '../utilities/utilities.js';
-
-function generateId() {
-  const alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz';
-  const nanoid = customAlphabet(alphabet, 16);
-  const thisID = nanoid();
-  return thisID;
-}
 
 async function addOwner(
   connection,

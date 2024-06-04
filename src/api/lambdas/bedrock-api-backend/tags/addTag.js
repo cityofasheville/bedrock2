@@ -1,7 +1,7 @@
 /* eslint-disable import/extensions */
 /* eslint-disable no-console */
 import {
-  newClient, checkInfo, checkExistence, addInfo,
+  newClient, checkInfo, checkExistence, addInfo, generateId,
 } from '../utilities/utilities.js';
 
 async function addTag(
@@ -17,6 +17,8 @@ async function addTag(
   const shouldExist = false;
   let client;
   let clientInitiated = false;
+  body.tag_name = generateId();
+  idValue = body.tag_name;
 
   const response = {
     error: false,
