@@ -60,7 +60,6 @@ async function handleCustomFields(
             allFields,
             body,
             idField,
-            idValue,
             name,
             tableName,
             requiredFields,

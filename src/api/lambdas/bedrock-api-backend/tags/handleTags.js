@@ -64,7 +64,6 @@ async function handleTags(
             allFields,
             body,
             idField,
-            idValue,
             name,
             tableName,
             requiredFields,

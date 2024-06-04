@@ -9,7 +9,6 @@ async function addTag(
   allFields,
   body,
   idField,
-  idValue,
   name,
   tableName,
   requiredFields,
@@ -18,7 +17,7 @@ async function addTag(
   let client;
   let clientInitiated = false;
   body.tag_name = generateId();
-  idValue = body.tag_name;
+  const idValue = body.tag_name;
 
   const response = {
     error: false,

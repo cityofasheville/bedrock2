@@ -10,7 +10,6 @@ async function addOwner(
   allFields,
   body,
   idField,
-  idValue,
   name,
   tableName,
   requiredFields,
@@ -19,7 +18,7 @@ async function addOwner(
   let client;
   let clientInitiated = false;
   body.owner_id = generateId();
-  idValue = body.owner_id;
+  const idValue = body.owner_id;
 
   const response = {
     error: false,

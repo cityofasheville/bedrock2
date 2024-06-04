@@ -57,7 +57,6 @@ async function handleOwners(
             allFields,
             body,
             idField,
-            idValue,
             name,
             tableName,
             requiredFields,

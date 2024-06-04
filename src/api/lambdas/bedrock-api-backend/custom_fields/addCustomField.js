@@ -1,7 +1,7 @@
 /* eslint-disable import/extensions */
 /* eslint-disable no-console */
 import {
-  newClient, checkInfo, checkExistence, addInfo,
+  newClient, checkInfo, checkExistence, addInfo, generateId,
 } from '../utilities/utilities.js';
 
 async function addCustomField(
@@ -9,13 +9,14 @@ async function addCustomField(
   allFields,
   body,
   idField,
-  idValue,
   name,
   tableName,
   requiredFields,
 ) {
   const shouldExist = false;
   let client;
+  body.id = generateId();
+  const idValue = body.id;
 
   const response = {
     error: false,
