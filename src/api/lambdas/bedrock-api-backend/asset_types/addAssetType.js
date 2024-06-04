@@ -1,7 +1,7 @@
 /* eslint-disable import/extensions */
 /* eslint-disable no-console */
 import {
-  newClient, checkInfo, checkExistence, addInfo,
+  newClient, checkInfo, checkExistence, addInfo, generateId,
 } from '../utilities/utilities.js';
 import pgErrorCodes from '../pgErrorCodes.js';
 
@@ -48,7 +48,6 @@ async function addAssetType(
   allFields,
   body,
   idField,
-  idValue,
   name,
   tableName,
   tableNameCustomFields,
@@ -57,6 +56,8 @@ async function addAssetType(
   const shouldExist = false;
   let client;
   let clientInitiated = false;
+  body.id = generateId();
+  const idValue = body.id;
 
   const response = {
     error: false,

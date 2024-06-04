@@ -63,7 +63,6 @@ async function handleAssetTypes(
             allFields,
             body,
             idField,
-            idValue,
             name,
             tableName,
             tableNameCustomFields,
