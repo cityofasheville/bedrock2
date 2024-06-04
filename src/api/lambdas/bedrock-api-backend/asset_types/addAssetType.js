@@ -56,8 +56,11 @@ async function addAssetType(
   const shouldExist = false;
   let client;
   let clientInitiated = false;
-  body.id = generateId();
-  const idValue = body.id;
+  const bodyWithID = {
+    ...body,
+    id: generateId(),
+  };
+  const idValue = bodyWithID.id;
 
   const response = {
     error: false,
@@ -68,8 +71,8 @@ async function addAssetType(
   try {
     client = await newClient(connection);
     clientInitiated = true;
-    checkInfo(body, requiredFields, name, idValue, idField);
-    checkCustomFields(body);
+    checkInfo(bodyWithID, requiredFields, name, idValue, idField);
+    checkCustomFields(bodyWithID);
   } catch (error) {
     if (clientInitiated) {
       await client.end();
@@ -82,8 +85,8 @@ async function addAssetType(
   try {
     await client.query('BEGIN');
     await checkExistence(client, tableName, idField, idValue, name, shouldExist);
-    await addCustomFieldsInfo(client, idValue, body);
-    response.result = await addInfo(client, allFields, body, tableName, name);
+    await addCustomFieldsInfo(client, idValue, bodyWithID);
+    response.result = await addInfo(client, allFields, bodyWithID, tableName, name);
     await client.query('COMMIT');
     await client.end();
   } catch (error) {

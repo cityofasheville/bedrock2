@@ -17,8 +17,11 @@ async function addOwner(
   const shouldExist = false;
   let client;
   let clientInitiated = false;
-  body.owner_id = generateId();
-  const idValue = body.owner_id;
+  const bodyWithID = {
+    ...body,
+    owner_id: generateId(),
+  };
+  const idValue = bodyWithID.owner_id;
 
   const response = {
     error: false,
@@ -29,9 +32,9 @@ async function addOwner(
   try {
     client = await newClient(connection);
     clientInitiated = true;
-    checkInfo(body, requiredFields, name, idValue, idField);
+    checkInfo(bodyWithID, requiredFields, name, idValue, idField);
     await checkExistence(client, tableName, idField, idValue, name, shouldExist);
-    response.result = await addInfo(client, allFields, body, tableName, name);
+    response.result = await addInfo(client, allFields, bodyWithID, tableName, name);
     await client.end();
   } catch (error) {
     if (clientInitiated) {

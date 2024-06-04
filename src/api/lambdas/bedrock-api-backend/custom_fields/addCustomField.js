@@ -15,8 +15,11 @@ async function addCustomField(
 ) {
   const shouldExist = false;
   let client;
-  body.id = generateId();
-  const idValue = body.id;
+  const bodyWithID = {
+    ...body,
+    id: generateId(),
+  };
+  const idValue = bodyWithID.id;
 
   const response = {
     error: false,
@@ -26,7 +29,7 @@ async function addCustomField(
 
   try {
     client = await newClient(connection);
-    checkInfo(body, requiredFields, name, idValue, idField);
+    checkInfo(bodyWithID, requiredFields, name, idValue, idField);
   } catch (error) {
     response.error = true;
     response.message = error.message;
@@ -34,9 +37,9 @@ async function addCustomField(
   }
 
   try {
-    checkInfo(body, requiredFields, name, idValue, idField);
+    checkInfo(bodyWithID, requiredFields, name, idValue, idField);
     await checkExistence(client, tableName, idField, idValue, name, shouldExist);
-    response.result = await addInfo(client, allFields, body, tableName, idField, idValue, name);
+    response.result = await addInfo(client, allFields, bodyWithID, tableName, idField, idValue, name);
     console.log('finished first insert');
     await client.end();
   } catch (error) {
