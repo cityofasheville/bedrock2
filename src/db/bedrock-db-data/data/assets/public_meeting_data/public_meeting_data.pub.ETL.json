@@ -1,0 +1,17 @@
+{
+  "asset_name": "public_meeting_data.pub",
+  "run_group": "daily",
+  "active": true,
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "public_meeting_data.lib"
+      },
+      "target_location": {
+        "asset": "public_meeting_data.pub"
+      }
+    }
+  ]
+}
