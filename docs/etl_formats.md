@@ -129,7 +129,22 @@ Under data/, a subdir exists for each asset.
               __TARGET OPTIONS__
               <OPTIONAL> "append": true  (By default, data is overwritten in table. Set to true to append as new rows.)       
               <OPTIONAL> "append_serial": "fieldname"  (Adds an integer auto-numbering key field to target table. A serial field with this name must appear as the last field in the target table.)
+  - #### Database
+            "asset": "asset_name"
+              __SOURCE OPTIONS__
+              <OPTIONAL>: "tableheaders": true (include headers in data: this is mainly used for creating csv files)
+              <OPTIONAL> "sortasc": "fieldname",
+              <OPTIONAL> "sortdesc": "fieldname",
+              <OPTIONAL> "fixedwidth_noquotes": true,  (Tables converted to csv by default have strings with double quotes in the data quoted. For fixed width and XML files we don't want that)
+              <OPTIONAL> "crlf": true,                 (Tables converted to csv by default use record delimiters of LF. Set this true to use CRLF.)    
+              __TARGET OPTIONS__
+              <OPTIONAL> "append": true  (By default, data is overwritten in table. Set to true to append as new rows.)       
+              <OPTIONAL> "append_serial": "fieldname"  (Adds an integer auto-numbering key field to target table. A serial field with this name must appear as the last field in the target table.)
 
+  - #### CSV -S3
+            "asset": "asset_name"
+              __SOURCE OPTIONS__
+              <OPTIONAL>: "removeheaders": true (skip first row of csv file)
   - #### CSV -S3
             "asset": "asset_name"
               __SOURCE OPTIONS__
@@ -141,8 +156,34 @@ Under data/, a subdir exists for each asset.
               <OPTIONAL>: "append_asset_name": true (In the data an extra column is appended to each row with the name of the asset)
               __TARGET OPTIONS__
               <OPTIONAL> "append": true  (By default, data is overwritten in sheet. Set to true to append as new rows.)       
+  - #### Google Sheets
+            "asset": "asset_name"
+              __SOURCE OPTIONS__
+              <OPTIONAL>: "append_asset_name": true (In the data an extra column is appended to each row with the name of the asset)
+              __TARGET OPTIONS__
+              <OPTIONAL> "append": true  (By default, data is overwritten in sheet. Set to true to append as new rows.)       
 
 
+- ## File Copy
+  File copy can read and write from S3, Windows file share, and SFTP sites. Google Drive to be added.
+  All locations have the same three fields: connection, filename, and path. Connections include a type field to distinguish S3 from SFTP, etc.
+  The option "adjustdate" on a target or source changes the filename created in fillDateTemplate by that number of days. (-1 means yesterday)
+  ```
+      "tasks": [
+          {
+              "type": "file_copy",
+              "source_location": {
+                  "asset": "asset_name"
+                  <OPTIONAL>: "adjustdate": -1
+              },
+              "target_location": {
+                  "asset": "asset_name"
+                  <OPTIONAL>: "adjustdate": -1
+              },
+              "active": true
+          }
+      ]
+  ```
 - ## File Copy
   File copy can read and write from S3, Windows file share, and SFTP sites. Google Drive to be added.
   All locations have the same three fields: connection, filename, and path. Connections include a type field to distinguish S3 from SFTP, etc.
@@ -179,7 +220,39 @@ Under data/, a subdir exists for each asset.
         },
       ]
   ```
+- ## Encrypt
+  Takes files from S3, encrypts them and writes them back to the same dir on S3.
+  ```
+      "tasks": [
+        {
+          "type": "encrypt",
+          "s3_connection": "s3_data_files",
+          "path": "vendor/",
+          "encrypt_connection": "vendor_ftp",
+          "filename": "vendor_asheville_${YYYY}${MM}${DD}.csv",
+          "encrypted_filename": "vendor_asheville_${YYYY}${MM}${DD}.csv.pgp",
+          "active": true
+        },
+      ]
+  ```
 
+- ## SFTP
+  SFTP has mostly been superseded by file copy, which has more potential source and target destinations. It does include a few useful specialized FTP commands: list, delete, and getall
+  ```
+      "tasks": [
+        {
+          "type": "sftp",
+          "description": "Copy vendor S3 to FTP site",
+          "action": "put",
+          "s3_connection": "s3_data_files",
+          "path": "telestaff-import-person/",
+          "ftp_connection": "telestaff_ftp",
+          "ftp_path": "/PROD/import/ongoing.unprocessed/",
+          "filename": "vendor_asheville_${YYYY}${MM}${DD}.csv.pgp",
+          "active": true
+        }
+      ]
+  // sftp actions can be one of these: (always include "type": "sftp", and "active": true too)
 - ## SFTP
   SFTP has mostly been superseded by file copy, which has more potential source and target destinations. It does include a few useful specialized FTP commands: list, delete, and getall
   ```
@@ -251,8 +324,27 @@ Under data/, a subdir exists for each asset.
   ```
   Note: Running arbitrary code does mean that some Bedrock conventions can be bypassed. For example, normally an ETL job only creates one asset.
   If your Lambda creates more than one asset, the work around we have used is to create the ETL job on one of the assets, and have the other ones depend on it.
+  ```
+- ## Run Lambda
+  Called Lambda must return standard format: ```{statusCode: 200,body: {lambda_output: ""}}```
+  ```
+      "tasks": [
+          {
+              "type": "run_lambda",
+              "lambda_arn": "arn:aws:lambda:us-east-1:acct:function:functionname",
+              "otherparams: "params required by called lambda",
+              "active": true
+          }
+      ]
+  ```
+  Note: Running arbitrary code does mean that some Bedrock conventions can be bypassed. For example, normally an ETL job only creates one asset.
+  If your Lambda creates more than one asset, the work around we have used is to create the ETL job on one of the assets, and have the other ones depend on it.
 
 
+- ## Aggregate
+  Aggregate task type takes multiple Google Sheets with data in the same format on each sheet and writes it to a single table.
+  It requires a staging table (called temp_table, but not a temp table in database terms) for the data to be collected in before writing to the final destination.
+  Each source spreadsheet tab has its own asset, and they share the data_connection and data_range, and have their own spreadsheetid's and tab names.
 - ## Aggregate
   Aggregate task type takes multiple Google Sheets with data in the same format on each sheet and writes it to a single table.
   It requires a staging table (called temp_table, but not a temp table in database terms) for the data to be collected in before writing to the final destination.
