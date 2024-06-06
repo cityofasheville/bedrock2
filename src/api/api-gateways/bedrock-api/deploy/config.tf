@@ -8,6 +8,10 @@ resource "aws_apigatewayv2_api" "aws_apigatewayv2_api-$$INSTANCE$$" {
   target        = data.terraform_remote_state.bedrock_api_backend_lambda.outputs.bedrock-api-backend_arn
   cors_configuration {
     allow_origins = ["*"]
+    allow_headers     = ["*"]
+    allow_methods     = ["POST", "GET", "PUT", "OPTIONS"]
+    expose_headers    = ["*"]
+    max_age           = 300
   }
 }
 
