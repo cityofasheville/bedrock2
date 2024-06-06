@@ -1,0 +1,17 @@
+{
+  "asset_name": "acumen_staff.mun",
+  "display_name": "acumen_staff.mun",
+  "description": "Acumen Employee Info",
+  "location": {
+    "tablename": "Acumen_Employee_Info",
+    "connection": "munis/munprod/fme_jobs",
+    "schemaname": "avl"
+  },
+  "asset_type": "data",
+  "owner_id": null,
+  "notes": null,
+  "link": null,
+  "active": true,
+  "depends": [],
+  "tags": []
+}

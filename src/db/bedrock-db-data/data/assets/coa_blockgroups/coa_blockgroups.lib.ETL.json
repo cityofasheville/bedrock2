@@ -1,6 +1,6 @@
 {
   "asset_name": "coa_blockgroups.lib",
-  "run_group": "coa_blockgroups",
+  "run_group": "notactive",
   "active": true,
   "tasks": [
     {

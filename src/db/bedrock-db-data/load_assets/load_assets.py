@@ -55,7 +55,7 @@ sql = 'INSERT INTO bedrock.run_groups (run_group_name,	cron_string) VALUES '
 with open(os.path.join(data_directory,'run_groups.csv')) as ff:
   rdr = csv.reader(ff)
   
-  i = 0;
+  i = 0
   rows = list(rdr)
   nrows = len(rows)
   for row in rows:
@@ -72,7 +72,7 @@ tags = []
 with open(os.path.join(data_directory,'tags.csv')) as ff:
   rdr = csv.reader(ff)
   
-  i = 0;
+  i = 0
   rows = list(rdr)
   nrows = len(rows)
   for row in rows:
@@ -89,7 +89,7 @@ tags = []
 with open(os.path.join(data_directory,'connections.csv')) as ff:
   rdr = csv.reader(ff)
   
-  i = 0;
+  i = 0
   rows = list(rdr)
   nrows = len(rows)
   for row in rows:
@@ -105,7 +105,7 @@ sql = 'INSERT INTO bedrock.asset_types (id, name, parent) VALUES '
 with open(os.path.join(data_directory,'asset_types.csv')) as ff:
   rdr = csv.reader(ff)
   
-  i = 0;
+  i = 0
   rows = list(rdr)
   nrows = len(rows)
   for row in rows:
@@ -122,7 +122,7 @@ sql = 'INSERT INTO bedrock.custom_fields (id, field_display, field_type, field_d
 with open(os.path.join(data_directory,'custom_fields.csv')) as ff:
   rdr = csv.reader(ff)
   
-  i = 0;
+  i = 0
   rows = list(rdr)
   nrows = len(rows)
   for row in rows:
@@ -140,7 +140,7 @@ sql = 'INSERT INTO bedrock.asset_type_custom_fields (asset_type_id, custom_field
 with open(os.path.join(data_directory,'asset_type_custom_fields.csv')) as ff:
   rdr = csv.reader(ff)
   
-  i = 0;
+  i = 0
   rows = list(rdr)
   nrows = len(rows)
   for row in rows:
@@ -156,7 +156,7 @@ sql = 'INSERT INTO bedrock.owners (owner_id, contact_name, contact_email, contac
 with open(os.path.join(data_directory,'owners.csv')) as ff:
   rdr = csv.reader(ff)
   
-  i = 0;
+  i = 0
   rows = list(rdr)
   nrows = len(rows)
   for row in rows:

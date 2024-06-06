@@ -1,6 +1,6 @@
 {
   "asset_name": "nc_benchmarks.pub",
-  "run_group": "nc_benchmarks",
+  "run_group": "notactive",
   "active": true,
   "tasks": [
     {
