@@ -9,7 +9,7 @@ resource "aws_apigatewayv2_api" "aws_apigatewayv2_api-$$INSTANCE$$" {
   cors_configuration {
     allow_origins = ["*"]
     allow_headers     = ["*"]
-    allow_methods     = ["POST", "GET", "PUT", "OPTIONS"]
+    allow_methods     = ["POST", "GET", "PUT", "OPTIONS", "DELETE"]
     expose_headers    = ["*"]
     max_age           = 300
   }
