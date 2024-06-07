@@ -11,7 +11,7 @@ async function newClient(connection) {
     await client.connect();
     return client;
   } catch (error) {
-    throw new Error(`PG error connecting: ${pgErrorCodes[error.code]}`);
+    throw new Error(`PG error connecting: ${pgErrorCodes[error.code]||error.code}`);
   }
 }
 
@@ -26,8 +26,8 @@ async function readAsset(client, pathElements) {
   try {
     res = await client.query(sql, [pathElements[1]]);
   } catch (error) {
-    console.log(`PG error getting asset information: ${pgErrorCodes[error.code]}`);
-    throw new Error(`PG error getting asset information: ${pgErrorCodes[error.code]}`);
+    console.log(`PG error getting asset information: ${pgErrorCodes[error.code]||error.code}`);
+    throw new Error(`PG error getting asset information: ${pgErrorCodes[error.code]||error.code}`);
   }
   if (res.rowCount === 0) {
     throw new Error('Asset not found');
@@ -43,9 +43,9 @@ async function addCustomFields(client, asset, requestedFields, fieldsOverride) {
     try {
       res = await client.query(sql, [asset.get('asset_name')]);
     } catch (error) {
-      console.log(`PG error getting custom fields: ${pgErrorCodes[error.code]}`);
+      console.log(`PG error getting custom fields: ${pgErrorCodes[error.code]||error.code}`);
       throw new Error(
-        `PG error getting custom fields: ${pgErrorCodes[error.code]}`);
+        `PG error getting custom fields: ${pgErrorCodes[error.code]||error.code}`);
     }
     if (res.rowCount > 0) {
       for (let i = 0; i < res.rowCount; i += 1) {
@@ -93,8 +93,8 @@ async function addTags(client, pathElements) {
       pathElements[1],
     ])
     .catch((error) => {
-      console.log(`PG error getting asset_tags: ${pgErrorCodes[error.code]}`);
-      throw new Error(`PG error getting asset_tags: ${pgErrorCodes[error.code]}`);
+      console.log(`PG error getting asset_tags: ${pgErrorCodes[error.code]||error.code}`);
+      throw new Error(`PG error getting asset_tags: ${pgErrorCodes[error.code]||error.code}`);
     });
   await client.end();
   if (res.rowCount > 0) {

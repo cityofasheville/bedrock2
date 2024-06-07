@@ -28,7 +28,7 @@ async function getConnection(secretName) {
 // Get connection data for Bedrock database
 async function getDBConnection() {
   let connection = Promise.resolve({
-    host: process.env.BEDROCK_DB_HOST || 'localhost',
+    host: process.env.BEDROCK_DB_HOST.replace(/"/g,"") || 'localhost',
     port: 5432,
     user: process.env.BEDROCK_DB_USER || 'bedrock',
     password: process.env.BEDROCK_DB_PASSWORD || 'test-bedrock',

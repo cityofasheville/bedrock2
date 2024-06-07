@@ -12,7 +12,7 @@ async function newClient(connection) {
     await client.connect();
     return client;
   } catch (error) {
-    throw new Error(`PG error connecting: ${pgErrorCodes[error.code]}`);
+    throw new Error(`PG error connecting: ${pgErrorCodes[error.code]||error.code}`);
   }
 }
 
@@ -37,7 +37,7 @@ async function getInfo(client, info) {
       resultArray = res.rows;
     }
   } catch (error) {
-    throw new Error(`PG error getting ${info.table_name} information: ${pgErrorCodes[error.code]}`);
+    throw new Error(`PG error getting ${info.table_name} information: ${pgErrorCodes[error.code]||error.code}`);
   }
 
   return resultArray;
@@ -55,7 +55,7 @@ async function getTaskType(client) {
       resultArray.push(res.rows[i].task_type);
     }
   } catch (error) {
-    throw new Error(`PG error getting tasks information: ${pgErrorCodes[error.code]}`);
+    throw new Error(`PG error getting tasks information: ${pgErrorCodes[error.code]||error.code}`);
   }
 
   return resultArray;
@@ -73,7 +73,7 @@ async function getConnectionClass(client) {
       resultArray.push(res.rows[i].connection_class);
     }
   } catch (error) {
-    throw new Error(`PG error getting tasks information: ${pgErrorCodes[error.code]}`);
+    throw new Error(`PG error getting tasks information: ${pgErrorCodes[error.code]||error.code}`);
   }
 
   return resultArray;
@@ -95,7 +95,7 @@ async function getCustomFields(client) {
       resultMap.set(row.id, typeMap);
     });
   } catch (error) {
-    throw new Error(`PG error getting asset types: ${pgErrorCodes[error.code]}`);
+    throw new Error(`PG error getting asset types: ${pgErrorCodes[error.code]||error.code}`);
   }
   let type;
   for (type of types) {

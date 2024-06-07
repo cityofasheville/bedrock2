@@ -33,7 +33,7 @@ async function addCustomFieldsInfo(client, idValue, body) {
         `INSERT INTO bedrock.asset_type_custom_fields (asset_type_id, custom_field_id, required) VALUES ${combinedValueString}`,
       );
   } catch (error) {
-    throw new Error([`Postgres error: ${pgErrorCodes[error.code]}`, error]);
+    throw new Error([`Postgres error: ${pgErrorCodes[error.code]||error.code}`, error]);
   }
   console.log(res);
   // if (res.rowCount !== 1) {

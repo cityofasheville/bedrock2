@@ -46,7 +46,7 @@ async function getCount(whereClause, client, tableName, name) {
   try {
     res = await client.query(sql, whereClause.sqlParams);
   } catch (error) {
-    throw new Error(`PG error getting ${name} count: ${pgErrorCodes[error.code]}`);
+    throw new Error(`PG error getting ${name} count: ${pgErrorCodes[error.code]||error.code}`);
   }
   return Number(res.rows[0].count);
 }
@@ -60,7 +60,7 @@ async function getListInfo(offset, count, whereClause, client, idField, tableNam
   try {
     res = await client.query(sql, whereClause.sqlParams);
   } catch (error) {
-    throw new Error(`PG error getting ${name} base information: ${pgErrorCodes[error.code]}`);
+    throw new Error(`PG error getting ${name} base information: ${pgErrorCodes[error.code]||error.code}`);
   }
   return res;
 }

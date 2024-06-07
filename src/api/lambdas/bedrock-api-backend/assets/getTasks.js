@@ -9,7 +9,7 @@ async function newClient(connection) {
     await client.connect();
     return client;
   } catch (error) {
-    throw new Error(`PG error connecting: ${pgErrorCodes[error.code]}`);
+    throw new Error(`PG error connecting: ${pgErrorCodes[error.code]||error.code}`);
   }
 }
 
@@ -19,7 +19,7 @@ async function readTasks(client, assetName) {
   try {
     res = await client.query(sql, [assetName]);
   } catch (error) {
-    throw new Error(`PG error getting assets: ${pgErrorCodes[error.code]}`);
+    throw new Error(`PG error getting assets: ${pgErrorCodes[error.code]||error.code}`);
   }
   return res;
 }

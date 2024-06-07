@@ -17,7 +17,7 @@ async function newClient(connection) {
     await client.connect();
     return client;
   } catch (error) {
-    throw new Error(`PG error connecting: ${pgErrorCodes[error.code]}`);
+    throw new Error(`PG error connecting: ${pgErrorCodes[error.code]||error.code}`);
   }
 }
 
@@ -45,7 +45,7 @@ async function checkExistence(client, tableName, idField, idValue, name, shouldE
   try {
     res = await client.query(sql, [idValue]);
   } catch (error) {
-    throw new Error([`Postgres error: ${pgErrorCodes[error.code]}`, error]);
+    throw new Error([`Postgres error: ${pgErrorCodes[error.code]||error.code}`, error]);
   }
 
   // for some methods, the resource needs to exist (PUT),
@@ -74,7 +74,7 @@ async function getInfo(client, idField, idValue, name, tableName) {
   try {
     res = await client.query(sql, [idValue]);
   } catch (error) {
-    throw new Error([`Postgres error: ${pgErrorCodes[error.code]}`, error]);
+    throw new Error([`Postgres error: ${pgErrorCodes[error.code]||error.code}`, error]);
   }
 
   if (res.rowCount === 0) {
@@ -132,7 +132,7 @@ async function addInfo(client, allFields, body, tableName, name) {
         valuesFromBody,
       );
   } catch (error) {
-    throw new Error([`Postgres error: ${pgErrorCodes[error.code]}`, error]);
+    throw new Error([`Postgres error: ${pgErrorCodes[error.code]||error.code}`, error]);
   }
 
   if (res.rowCount !== 1) {
@@ -164,7 +164,7 @@ async function updateInfo(client, allFields, body, tableName, idField, idValue, 
   try {
     await client.query(sql, args);
   } catch (error) {
-    throw new Error(`PG error updating ${name}: ${pgErrorCodes[error.code]}`);
+    throw new Error(`PG error updating ${name}: ${pgErrorCodes[error.code]||error.code}`);
   }
 
   return body;
@@ -177,7 +177,7 @@ async function deleteInfo(client, tableName, idField, idValue, name) {
         idValue,
       ]);
   } catch (error) {
-    throw new Error(`PG error deleting ${name} ${idValue}: ${pgErrorCodes[error.code]}`);
+    throw new Error(`PG error deleting ${name} ${idValue}: ${pgErrorCodes[error.code]||error.code}`);
   }
 }
 

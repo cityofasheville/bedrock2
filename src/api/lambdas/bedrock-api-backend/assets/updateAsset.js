@@ -13,7 +13,7 @@ async function newClient(connection) {
     await client.connect();
     return client;
   } catch (error) {
-    throw new Error(`PG error connecting: ${pgErrorCodes[error.code]}`);
+    throw new Error(`PG error connecting: ${pgErrorCodes[error.code]||error.code}`);
   }
 }
 
@@ -29,7 +29,7 @@ async function checkExistence(client, assetName) {
   try {
     res = await client.query(sql, [assetName]);
   } catch (error) {
-    throw new Error(`PG error verifying that asset exists: ${pgErrorCodes[error.code]}`);
+    throw new Error(`PG error verifying that asset exists: ${pgErrorCodes[error.code]||error.code}`);
   }
 
   if (res.rowCount === 0) {
@@ -49,7 +49,7 @@ async function getCustomFields(client, asset_type, asset_name) {
     res = await client.query(sql, [asset_type]);
   } catch (error) {
     throw new Error(
-      `PG error getting custom fields: ${pgErrorCodes[error.code]}`,
+      `PG error getting custom fields: ${pgErrorCodes[error.code]||error.code}`,
     );
   }
 
@@ -61,7 +61,7 @@ async function getCustomFields(client, asset_type, asset_name) {
       res = await client.query(sql, [asset_name]);
     } catch (error) {
       throw new Error(
-        `PG error getting custom fields: ${pgErrorCodes[error.code]}`,
+        `PG error getting custom fields: ${pgErrorCodes[error.code]||error.code}`,
       );
     }
   
@@ -128,7 +128,7 @@ async function updateBase(assetName, body, customValues, client) {
   try {
     await client.query(sql, args);
   } catch (error) {
-    throw new Error(`PG error updating base asset: ${pgErrorCodes[error.code]}`);
+    throw new Error(`PG error updating base asset: ${pgErrorCodes[error.code]||error.code}`);
   }
 
   // Now see if there are any custom fields
@@ -141,7 +141,7 @@ async function updateBase(assetName, body, customValues, client) {
         currentCustomValues.set(row.field_id, row.field_value);
       }
     } catch (error) {
-      throw new Error(`Error reading current custom values: ${pgErrorCodes[error.code]}`);
+      throw new Error(`Error reading current custom values: ${pgErrorCodes[error.code]||error.code}`);
     }
     try {
       for (let [id, cval] of customValues) {
@@ -158,7 +158,7 @@ async function updateBase(assetName, body, customValues, client) {
         }
       }
     } catch (error) {
-        throw new Error(`Error updating custom value ${id}: ${pgErrorCodes[error.code]}`);
+        throw new Error(`Error updating custom value ${id}: ${pgErrorCodes[error.code]||error.code}`);
     }
     asset.set('custom_fields', Object.fromEntries(customValues.entries()));
   }
@@ -171,7 +171,7 @@ async function updateDependencies(assetName, body, client) {
   try {
     await client.query('DELETE FROM dependencies WHERE asset_name = $1', [assetName]);
   } catch (error) {
-    throw new Error(`PG error deleting dependencies for update: ${pgErrorCodes[error.code]}`);
+    throw new Error(`PG error deleting dependencies for update: ${pgErrorCodes[error.code]||error.code}`);
   }
   if (body.parents.length > 0) {
     for (let i = 0; i < body.parents.length; i += 1) {
@@ -182,7 +182,7 @@ async function updateDependencies(assetName, body, client) {
           [assetName, dependency],
         );
       } catch (error) {
-        throw new Error(`PG error updating dependencies: ${pgErrorCodes[error.code]}`);
+        throw new Error(`PG error updating dependencies: ${pgErrorCodes[error.code]||error.code}`);
       }
     }
   }
@@ -198,13 +198,13 @@ async function updateETL(assetName, asset, body, client) {
     try {
       await client.query('DELETE FROM etl where asset_name = $1', [assetName]);
     } catch (error) {
-      throw new Error(`PG error deleting from etl for update: ${pgErrorCodes[error.code]}`);
+      throw new Error(`PG error deleting from etl for update: ${pgErrorCodes[error.code]||error.code}`);
     }
 
     try {
       await client.query('DELETE FROM tasks where asset_name = $1', [assetName]);
     } catch (error) {
-      throw new Error(`PG error deleting from tasks for update: ${pgErrorCodes[error.code]}`);
+      throw new Error(`PG error deleting from tasks for update: ${pgErrorCodes[error.code]||error.code}`);
     }
   }
 
@@ -226,7 +226,7 @@ async function updateETL(assetName, asset, body, client) {
   try {
     await client.query(sql, args);
   } catch (error) {
-    throw new Error(`PG error updating etl: ${pgErrorCodes[error.code]}`);
+    throw new Error(`PG error updating etl: ${pgErrorCodes[error.code]||error.code}`);
   }
   return;
 }
@@ -259,7 +259,7 @@ async function updateTags(assetName, asset, body, client) {
     try {
       res = await client.query(sql, tags);
     } catch (error) {
-      throw new Error(`PG error reading tags for update: ${pgErrorCodes[error.code]}`);
+      throw new Error(`PG error reading tags for update: ${pgErrorCodes[error.code]||error.code}`);
     }
 
     if (res.rowCount !== tags.length) {
@@ -275,7 +275,7 @@ async function updateTags(assetName, asset, body, client) {
               [tags[i]],
             );
           } catch (error) {
-            throw new Error(`PG error adding tags to tag table for update: ${pgErrorCodes[error.code]}`);
+            throw new Error(`PG error adding tags to tag table for update: ${pgErrorCodes[error.code]||error.code}`);
           }
         }
       }
@@ -285,7 +285,7 @@ async function updateTags(assetName, asset, body, client) {
     try {
       await client.query('DELETE FROM bedrock.asset_tags where asset_name = $1', [assetName]);
     } catch (error) {
-      throw new Error(`PG error deleting tags for update: ${pgErrorCodes[error.code]}`);
+      throw new Error(`PG error deleting tags for update: ${pgErrorCodes[error.code]||error.code}`);
     }
 
     // And add the new ones back in
@@ -297,7 +297,7 @@ async function updateTags(assetName, asset, body, client) {
         );
       }
     } catch (error) {
-      throw new Error(`PG error inserting tags for update: ${pgErrorCodes[error.code]}`);
+      throw new Error(`PG error inserting tags for update: ${pgErrorCodes[error.code]||error.code}`);
     }
   }
   return tags;

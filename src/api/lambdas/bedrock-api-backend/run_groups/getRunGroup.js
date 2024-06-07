@@ -11,7 +11,7 @@ async function getAssetInfo(client, idValue, name) {
   try {
     res = await client.query(sql, [idValue]);
   } catch (error) {
-    throw new Error([`Postgres error: ${pgErrorCodes[error.code]}`, error]);
+    throw new Error([`Postgres error: ${pgErrorCodes[error.code]||error.code}`, error]);
   }
 
   if (res.rowCount === 0) {

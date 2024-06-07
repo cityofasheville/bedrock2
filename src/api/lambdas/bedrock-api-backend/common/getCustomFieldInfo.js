@@ -44,7 +44,7 @@ async function getCustomFieldsInfo(client, asset_type) {
     });
   } catch (error) {
     throw new Error(
-      `PG error getting asset type hierarchy for type ${asset_type}: ${pgErrorCodes[error.code]}`,
+      `PG error getting asset type hierarchy for type ${asset_type}: ${pgErrorCodes[error.code]||error.code}`,
     );
   } 
   return customFields;
