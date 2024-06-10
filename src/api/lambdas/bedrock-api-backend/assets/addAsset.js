@@ -14,7 +14,7 @@ async function newClient(connection) {
     await client.connect();
     return client;
   } catch (error) {
-    throw new Error(`PG error connecting: ${pgErrorCodes[error.code]}`);
+    throw new Error(`PG error connecting: ${pgErrorCodes[error.code]||error.code}`);
   }
 }
 
@@ -50,7 +50,7 @@ async function checkExistence(client, idValue) {
     res = await client.query(sql, [idValue]);
   } catch (error) {
     throw new Error(
-      `PG error checking if asset already exists: ${pgErrorCodes[error.code]}`,
+      `PG error checking if asset already exists: ${pgErrorCodes[error.code]||error.code}`,
     );
   }
 
@@ -109,7 +109,7 @@ async function baseInsert(body, customFields, customValues, client) {
     res = await client.query(sql, args);
   } catch (error) {
     throw new Error(
-      `PG error adding new base asset: ${pgErrorCodes[error.code]}`,
+      `PG error adding new base asset: ${pgErrorCodes[error.code]||error.code}`,
     );
   }
 
@@ -139,7 +139,7 @@ async function baseInsert(body, customFields, customValues, client) {
         res = await client.query(sql, args);
       }
       catch (error) {
-        throw new Error(`Error inserting custom value ${id}: ${pgErrorCodes[error.code]}`);
+        throw new Error(`Error inserting custom value ${id}: ${pgErrorCodes[error.code]||error.code}`);
       }
       customOut.set(id, customValues.get(id));
     }
@@ -161,7 +161,7 @@ async function addDependencies(asset, body, client) {
         );
       } catch (error) {
         throw new Error(
-          `PG error adding dependencies: ${pgErrorCodes[error.code]}`,
+          `PG error adding dependencies: ${pgErrorCodes[error.code]||error.code}`,
         );
       }
     }
@@ -178,7 +178,7 @@ async function addETL(asset, body, client) {
       );
     } catch (error) {
       throw new Error(
-        `PG error adding etl information: ${pgErrorCodes[error.code]}`,
+        `PG error adding etl information: ${pgErrorCodes[error.code]||error.code}`,
       );
     }
   }
@@ -220,7 +220,7 @@ async function addTags(asset, body, client) {
         res = await client.query(sql, tags);
       } catch (error) {
         throw new Error(
-          `PG error reading tags table: ${pgErrorCodes[error.code]}`,
+          `PG error reading tags table: ${pgErrorCodes[error.code]||error.code}`,
         );
       }
 
@@ -240,7 +240,7 @@ async function addTags(asset, body, client) {
           }
         } catch (error) {
           throw new Error(
-            `PG error adding to tags table: ${pgErrorCodes[error.code]}`,
+            `PG error adding to tags table: ${pgErrorCodes[error.code]||error.code}`,
           );
         }
       }
@@ -257,7 +257,7 @@ async function addTags(asset, body, client) {
     }
   } catch (error) {
     await client.query('ROLLBACK');
-    throw new Error(`PG error adding asset_tags: ${pgErrorCodes[error.code]}`);
+    throw new Error(`PG error adding asset_tags: ${pgErrorCodes[error.code]||error.code}`);
   }
   return body.tags;
 }

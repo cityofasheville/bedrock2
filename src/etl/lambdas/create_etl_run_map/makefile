@@ -35,7 +35,8 @@ node_modules:
 	npm install
 
 local: node_modules
-	node local.js
+	@export BEDROCK_DB_HOST=$(BEDROCK_DB_HOST);export BEDROCK_DB_USER=$(BEDROCK_DB_USER); \
+	export BEDROCK_DB_PASSWORD=$(BEDROCK_DB_PASSWORD);export BEDROCK_DB_NAME=$(BEDROCK_DB_NAME);node local.js
 
 clean:
 	rm -f *.instance

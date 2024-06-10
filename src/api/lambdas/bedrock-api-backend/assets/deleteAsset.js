@@ -11,7 +11,7 @@ async function newClient(connection) {
     await client.connect();
     return client;
   } catch (error) {
-    throw new Error(`PG error connecting: ${pgErrorCodes[error.code]}`);
+    throw new Error(`PG error connecting: ${pgErrorCodes[error.code]||error.code}`);
   }
 }
 
@@ -22,7 +22,7 @@ async function checkExistence(client, assetName) {
   try {
     res = await client.query(sql, [assetName]);
   } catch (error) {
-    throw new Error(`PG error getting asset for delete: ${pgErrorCodes[error.code]}`);
+    throw new Error(`PG error getting asset for delete: ${pgErrorCodes[error.code]||error.code}`);
   }
 
   if (res.rowCount < 1) {
@@ -34,7 +34,7 @@ async function taskDelete(client, assetName) {
   try {
     await client.query('delete from tasks where asset_name = $1', [assetName]);
   } catch (error) {
-    throw new Error(`PG error deleting asset tasks: ${pgErrorCodes[error.code]}`);
+    throw new Error(`PG error deleting asset tasks: ${pgErrorCodes[error.code]||error.code}`);
   }
 }
 
@@ -42,7 +42,7 @@ async function dependenciesDelete(client, assetName) {
   try {
     await client.query('delete from dependencies where asset_name = $1', [assetName]);
   } catch (error) {
-    throw new Error(`PG error deleting asset dependencies: ${pgErrorCodes[error.code]}`);
+    throw new Error(`PG error deleting asset dependencies: ${pgErrorCodes[error.code]||error.code}`);
   }
 }
 
@@ -50,7 +50,7 @@ async function etlDelete(client, assetName) {
   try {
     await client.query('delete from etl where asset_name = $1', [assetName]);
   } catch (error) {
-    throw new Error(`PG error deleting asset ETL: ${pgErrorCodes[error.code]}`);
+    throw new Error(`PG error deleting asset ETL: ${pgErrorCodes[error.code]||error.code}`);
   }
 }
 
@@ -58,7 +58,7 @@ async function tagsDelete(client, assetName) {
   try {
     await client.query('delete from bedrock.asset_tags where asset_name = $1', [assetName]);
   } catch (error) {
-    throw new Error(`PG error deleting asset tags: ${pgErrorCodes[error.code]}`);
+    throw new Error(`PG error deleting asset tags: ${pgErrorCodes[error.code]||error.code}`);
   }
 }
 
@@ -66,7 +66,7 @@ async function customFieldsDelete(client, assetName) {
   try {
     await client.query('delete from bedrock.custom_values where asset_name = $1', [assetName]);
   } catch (error) {
-    throw new Error(`PG error deleting asset custom values: ${pgErrorCodes[error.code]}`);
+    throw new Error(`PG error deleting asset custom values: ${pgErrorCodes[error.code]||error.code}`);
   }
 }
 
@@ -74,7 +74,7 @@ async function baseDelete(client, assetName) {
   try {
     await client.query('delete from assets where asset_name = $1;', [assetName]);
   } catch (error) {
-    throw new Error(`PG error deleting asset: ${pgErrorCodes[error.code]}`);
+    throw new Error(`PG error deleting asset: ${pgErrorCodes[error.code]||error.code}`);
   }
 }
 

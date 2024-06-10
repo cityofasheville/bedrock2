@@ -13,11 +13,14 @@ DB_SUBNET_GROUP_NAME =  "public-db-subnet-group"
 BEDROCK_SECURITY_GROUP_IDS = ["sg-076e12ba2a9012944"]
 BEDROCK_PRIVATE_SUBNETS = ["subnet-00e55df750014753d", "subnet-0c119b605ff498f3b"]
 
-# The next variable is the database host name built in the db directory,
-# e.g., bedrock-db-ej-test-0.cd9h9tveyb58.us-east-1.rds.amazonaws.com.
+# This section is for database connections.
 # If using the database built as part of this instance, you can copy from
 # ./db/make_variables (but do not include the :5432).
-BEDROCK_DB_HOST = ""
+# Leave these blank to use the hard-coded production database.
+BEDROCK_DB_HOST=
+BEDROCK_DB_USER=
+BEDROCK_DB_PASSWORD=
+BEDROCK_DB_NAME=
 
 # Do not edit or delete the next line
 reverse = $(if $(1),$(call reverse,$(wordlist 2,$(words $(1)),$(1)))) $(firstword $(1))

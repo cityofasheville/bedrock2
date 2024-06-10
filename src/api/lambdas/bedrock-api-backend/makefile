@@ -1,12 +1,13 @@
 include ../../../make_variables
 
 dirs = build
-.PHONY: $(dirs) init plan apply destroy prebuild
+.PHONY: $(dirs) init plan apply destroy prebuild local
 
 SRC_DIR := ./deploy
 DEST_DIR := ./build
 TFFILES := config.tf datablocks.tf backend.tf local.tfvars variables.tf makefile
-code_files = ./*.js ./*.json ./assets/*.js ./run_groups/*.js ./reference/*.js ./common/*.js ./tags/*.js ./custom_fields/*.js ./asset_types/*.js ./utilities/*.js ./owners/*.js
+code_files = ./*.js ./*.json ./assets/*.js ./run_groups/*.js ./reference/*.js ./common/*.js \
+./tags/*.js ./custom_fields/*.js ./asset_types/*.js ./utilities/*.js ./owners/*.js
 
 TF_TARGS := $(patsubst %,$(DEST_DIR)/%,$(TFFILES))
 
@@ -30,9 +31,16 @@ apply: function.zip $(TF_TARGS) $(dirs)
 apply-y: function.zip $(TF_TARGS) $(dirs)
 destroy: $(TF_TARGS) $(dirs)
 
+node_modules:
+	npm install
+
+local: node_modules
+	@export BEDROCK_DB_HOST=$(BEDROCK_DB_HOST);export BEDROCK_DB_USER=$(BEDROCK_DB_USER); \
+	export BEDROCK_DB_PASSWORD=$(BEDROCK_DB_PASSWORD);export BEDROCK_DB_NAME=$(BEDROCK_DB_NAME);node local.js
+	
 clean:
 	rm -f *.instance
-	\rm -Rf build function.zip
+	\rm -Rf build function.zip node_modules
 
 $(dirs):
 	$(MAKE) -C $@ $(MAKECMDGOALS)

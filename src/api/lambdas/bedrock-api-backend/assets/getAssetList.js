@@ -28,7 +28,7 @@ async function newClient(connection) {
     await client.connect();
     return client;
   } catch (error) {
-    throw new Error(`PG error connecting: ${pgErrorCodes[error.code]}`);
+    throw new Error(`PG error connecting: ${pgErrorCodes[error.code]||error.code}`);
   }
 }
 
@@ -50,7 +50,7 @@ async function getAssetCount(whereClause, client) {
   try {
     sqlResult = await client.query(sql, whereClause.sqlParams);
   } catch (error) {
-    throw new Error(`PG error getting asset count: ${pgErrorCodes[error.code]}`);
+    throw new Error(`PG error getting asset count: ${pgErrorCodes[error.code]||error.code}`);
   }
   return Number(sqlResult.rows[0].count);
 }
@@ -70,7 +70,7 @@ async function readAssets(client, offset, count, whereClause) {
   try {
     sqlResult = await client.query(sql, whereClause.sqlParams);
   } catch (error) {
-    throw new Error(`PG error getting asset base information: ${pgErrorCodes[error.code]}`);
+    throw new Error(`PG error getting asset base information: ${pgErrorCodes[error.code]||error.code}`);
   }
   return sqlResult;
 }
@@ -114,9 +114,8 @@ async function addTags(client, assets) {
   try {
     sqlResult = await client.query(sql);
   } catch (error) {
-    throw new Error(`PG error getting asset tags: ${pgErrorCodes[error.code]}`);
+    throw new Error(`PG error getting asset tags: ${pgErrorCodes[error.code]||error.code}`);
   }
-  console.log(sqlResult)
   return sqlResult;
 }
 
@@ -129,7 +128,7 @@ async function addCustomFields(client, assets) {
   try {
     sqlResult = await client.query(sql);
   } catch (error) {
-    throw new Error(`PG error getting asset custom values: ${pgErrorCodes[error.code]}`);
+    throw new Error(`PG error getting asset custom values: ${pgErrorCodes[error.code]||error.code}`);
   }
 
   return sqlResult;
@@ -145,7 +144,7 @@ async function addDependencies(client, assets) {
   try {
     res = await client.query(sql);
   } catch (error) {
-    throw new Error(`PG error getting asset dependencies: ${pgErrorCodes[error.code]}`);
+    throw new Error(`PG error getting asset dependencies: ${pgErrorCodes[error.code]||error.code}`);
   }
   return res;
 }
