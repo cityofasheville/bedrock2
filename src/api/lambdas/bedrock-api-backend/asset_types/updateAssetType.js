@@ -1,7 +1,7 @@
 /* eslint-disable import/extensions */
 /* eslint-disable no-console */
 import {
-  newClient, checkInfo, checkExistence, updateInfo, deleteInfo,
+  newClient, checkInfo, checkExistence, updateInfo, deleteInfo, addCustomFieldsInfo,
 } from '../utilities/utilities.js';
 import { addCustomFieldsInfo } from '../utilities/assetUtilities.js';
 
