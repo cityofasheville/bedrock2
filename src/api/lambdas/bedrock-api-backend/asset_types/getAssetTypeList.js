@@ -68,7 +68,7 @@ async function getAssetTypeList(
 
     // Populate customFieldsMap
     resCustomFields.forEach((item) => {
-      const { asset_type_custom_fields_id, asset_type_id, custom_field_id, required } = item;
+      const { asset_type_id, custom_field_id, required } = item;
       if (!customFieldsMap[asset_type_id]) {
         customFieldsMap[asset_type_id] = [];
       }
