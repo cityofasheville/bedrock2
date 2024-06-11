@@ -251,11 +251,16 @@ const lambda_handler = async function x(event) {
         const errmsg = pgErrorCodes[err.code];
         throw new Error([`Postgres error: ${errmsg}`, err]);
       });
-    let run_groups = [event.run_group];
+    let run_groups = [ event.run_group ];
     if (event.run_group === 'UseCronStrings') {
       run_groups = await getRunGroups(client, debug);
     }
-    let assetMap = await readEtlList(client, run_groups);
+    let assetMap = {};
+    if (event.one_asset) {
+      assetMap = { [event.one_asset]: { name: event.one_asset, run_group: event.run_group, depends: [], etl_tasks: [] } };
+    } else {
+      assetMap = await readEtlList(client, run_groups); 
+    }
     assetMap = await readDependencies(client, assetMap);
     assetMap = await readTasks(client, assetMap);
 
