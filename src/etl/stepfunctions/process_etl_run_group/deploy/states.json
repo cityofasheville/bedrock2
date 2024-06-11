@@ -10,6 +10,11 @@
           "Variable": "$.run_group",
           "IsPresent": true,
           "Next": "Init"
+        },
+        {
+          "Variable": "$.one_asset",
+          "IsPresent": true,
+          "Next": "Init"
         }
       ],
       "Default": "AddRunGroupFlag"
@@ -24,10 +29,6 @@
       "Comment": "Initialize the run map.",
       "Type": "Task",
       "Resource": "${create_etl_run_map_arn}",
-      "Parameters": {
-        "s3bucket": "managed-data-assets",
-        "run_group.$": "$.run_group"
-      },
       "ResultPath": "$",
       "Next": "Check200"
     },
