@@ -1,6 +1,6 @@
 include ../make_variables
 
-dirs = bedrock_common packages table_copy
+dirs = bedrock_common packages table_copy encrypt
 
 .PHONY: $(dirs) init plan apply destroy clean
 

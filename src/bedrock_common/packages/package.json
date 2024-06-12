@@ -11,11 +11,11 @@
     "@aws-sdk/client-lambda": "^3.431.0",
     "@aws-sdk/client-s3": "^3.431.0",
     "@aws-sdk/client-ses": "^3.451.0",
+    "@aws-sdk/client-sfn": "^3.592.0",
     "@aws-sdk/lib-storage": "^3.431.0",
     "aws-cron-parser": "^1.1.12",
-    "mssql": "^10.0.1",
+    "mssql": "^10.0.2",
     "nanoid": "^5.0.7",
-    "openpgp": "^5.10.2",
     "pg": "^8.11.3",
     "pug": "^3.0.2",
     "toposort": "^2.0.2"
