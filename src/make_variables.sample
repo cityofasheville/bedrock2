@@ -22,6 +22,9 @@ BEDROCK_DB_USER=
 BEDROCK_DB_PASSWORD=
 BEDROCK_DB_NAME=
 
+# This is used in the API. The value can be read from the output of creating the step function in Terraform.
+STATE_MACHINE_ARN = "arn:aws:xxx"
+
 # Do not edit or delete the next line
 reverse = $(if $(1),$(call reverse,$(wordlist 2,$(words $(1)),$(1)))) $(firstword $(1))
 
