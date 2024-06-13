@@ -7,7 +7,7 @@ SRC_DIR := ./deploy
 DEST_DIR := ./build
 TFFILES := config.tf datablocks.tf backend.tf local.tfvars variables.tf makefile
 code_files = ./*.js ./*.json ./assets/*.js ./run_groups/*.js ./reference/*.js ./common/*.js \
-./tags/*.js ./custom_fields/*.js ./asset_types/*.js ./utilities/*.js ./owners/*.js
+./tags/*.js ./custom_fields/*.js ./asset_types/*.js ./utilities/*.js ./owners/*.js ./execute_etl/*.js
 
 TF_TARGS := $(patsubst %,$(DEST_DIR)/%,$(TFFILES))
 
@@ -36,7 +36,7 @@ node_modules:
 
 local: node_modules
 	@export BEDROCK_DB_HOST=$(BEDROCK_DB_HOST);export BEDROCK_DB_USER=$(BEDROCK_DB_USER); \
-	export BEDROCK_DB_PASSWORD=$(BEDROCK_DB_PASSWORD);export BEDROCK_DB_NAME=$(BEDROCK_DB_NAME);node local.js
+	export BEDROCK_DB_PASSWORD=$(BEDROCK_DB_PASSWORD);export BEDROCK_DB_NAME=$(BEDROCK_DB_NAME);npm start
 	
 clean:
 	rm -f *.instance

@@ -15,46 +15,61 @@ resource "aws_iam_role" "bedrock-api-lambda-role-$$INSTANCE$$" {
     }
 }
 
-resource "aws_iam_policy" "secrets_manager_api_policy-$$INSTANCE$$" {
-  name        = "secrets_manager_api_policy-${var.instance}"
-  description = "Read secrets"
-  policy = templatefile("./policy_secrets_manager.json",{})
-}
-
-resource "aws_iam_policy" "invoke_lambda_api_policy-$$INSTANCE$$" {
-  name        = "invoke_lambda_api_policy-${var.instance}"
-  description = "Invoke another Lambda"
-  policy = templatefile("./policy_invoke_lambda.json",{})
-}
-
+# Basic
 resource "aws_iam_role_policy_attachment" "lambda_basic-$$INSTANCE$$" {
     role        = aws_iam_role.bedrock-api-lambda-role-$$INSTANCE$$.name
     policy_arn  = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
-resource "aws_iam_role_policy_attachment" "lambda_s3_access-$$INSTANCE$$" {
-    role        = aws_iam_role.bedrock-api-lambda-role-$$INSTANCE$$.name
-    policy_arn  = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+# Secrets Manager
+resource "aws_iam_policy" "secrets_manager_api_policy-$$INSTANCE$$" {
+  name        = "secrets_manager_api_policy-${var.instance}"
+  description = "Read secrets"
+  policy = templatefile("./policy_secrets_manager.json",{})
 }
-
-resource "aws_iam_role_policy_attachment" "lambda_ses_access-$$INSTANCE$$" {
-    role        = aws_iam_role.bedrock-api-lambda-role-$$INSTANCE$$.name
-    policy_arn  = "arn:aws:iam::aws:policy/AmazonSESFullAccess"
-}
-
-resource "aws_iam_role_policy_attachment" "lambda_vpc_access-$$INSTANCE$$" {
-    role        = aws_iam_role.bedrock-api-lambda-role-$$INSTANCE$$.name
-    policy_arn  = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
-}
-
 resource "aws_iam_role_policy_attachment" "secrets_manager-$$INSTANCE$$" {
     role        = aws_iam_role.bedrock-api-lambda-role-$$INSTANCE$$.name
     policy_arn  = aws_iam_policy.secrets_manager_api_policy-$$INSTANCE$$.arn
 }
 
+# Invoke another Lambda
+resource "aws_iam_policy" "invoke_lambda_api_policy-$$INSTANCE$$" {
+  name        = "invoke_lambda_api_policy-${var.instance}"
+  description = "Invoke another Lambda"
+  policy = templatefile("./policy_invoke_lambda.json",{})
+}
 resource "aws_iam_role_policy_attachment" "invoke_lambda_api_policy-$$INSTANCE$$" {
     role        = aws_iam_role.bedrock-api-lambda-role-$$INSTANCE$$.name
     policy_arn  = aws_iam_policy.invoke_lambda_api_policy-$$INSTANCE$$.arn
+}
+
+# S3
+resource "aws_iam_role_policy_attachment" "lambda_s3_access-$$INSTANCE$$" {
+    role        = aws_iam_role.bedrock-api-lambda-role-$$INSTANCE$$.name
+    policy_arn  = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+}
+
+# SES
+resource "aws_iam_role_policy_attachment" "lambda_ses_access-$$INSTANCE$$" {
+    role        = aws_iam_role.bedrock-api-lambda-role-$$INSTANCE$$.name
+    policy_arn  = "arn:aws:iam::aws:policy/AmazonSESFullAccess"
+}
+
+# VPC
+resource "aws_iam_role_policy_attachment" "lambda_vpc_access-$$INSTANCE$$" {
+    role        = aws_iam_role.bedrock-api-lambda-role-$$INSTANCE$$.name
+    policy_arn  = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
+}
+
+# Step Functions
+resource "aws_iam_policy" "step_functions_api_policy-$$INSTANCE$$" {
+  name        = "step_functions_api_policy-${var.instance}"
+  description = "Execute Step Functions"
+  policy = templatefile("./policy_step_functions.json",{})
+}
+resource "aws_iam_role_policy_attachment" "step_functions_api_policy-$$INSTANCE$$" {
+  role        = aws_iam_role.bedrock-api-lambda-role-$$INSTANCE$$.name
+  policy_arn  = aws_iam_policy.step_functions_api_policy-$$INSTANCE$$.arn
 }
 
 output "bedrock_lambda_role_arn" {

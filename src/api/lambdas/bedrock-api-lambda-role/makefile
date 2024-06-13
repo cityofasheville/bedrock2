@@ -6,7 +6,7 @@ dirs = build
 
 SRC_DIR := ./deploy
 DEST_DIR := ./build
-TFFILES := backend.tf config.tf local.tfvars variables.tf policy_invoke_lambda.json policy_role.json policy_secrets_manager.json makefile
+TFFILES := backend.tf config.tf local.tfvars variables.tf policy_invoke_lambda.json policy_role.json policy_secrets_manager.json policy_step_functions.json makefile
 
 TF_TARGS := $(patsubst %,$(DEST_DIR)/%,$(TFFILES))
 
