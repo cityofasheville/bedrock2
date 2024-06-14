@@ -36,7 +36,7 @@ async function handleExecuteETL(
       if (idValue === 'run_group') {
         // /execute_etl/run_group/{{run_group_name}}
         switch (verb) {
-          case 'GET':
+          case 'POST':
             result = await executeRunGroup(
               pathElements[2],
             );
@@ -50,7 +50,7 @@ async function handleExecuteETL(
       } else if (idValue === 'one_asset') {
         // /execute_etl/one_asset/{{asset_name}}
         switch (verb) {
-          case 'GET':
+          case 'POST':
             result = await executeOneAsset(
               pathElements[2],
             );
