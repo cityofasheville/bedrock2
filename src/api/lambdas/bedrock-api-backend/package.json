@@ -5,12 +5,14 @@
   "main": "handler.js",
   "type": "module",
   "scripts": {
-    "preinstall": "npm install ../../../bedrock_common/packages --install-links; npm install ../../../bedrock_common/bedrock_common --install-links"
+    "preinstall": "npm install ../../../bedrock_common/packages --install-links; npm install ../../../bedrock_common/bedrock_common --install-links",
+    "start": "nodemon ./local.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@aws-sdk/client-sfn": "^3.592.0",
     "bedrock_common": "file:../../../bedrock_common/bedrock_common",
     "bedrock_packages": "file:../../../bedrock_common/packages"
   },

@@ -11,6 +11,7 @@ import handleAssetTypes from './asset_types/handleAssetTypes.js';
 import handleTags from './tags/handleTags.js';
 import handleCustomFields from './custom_fields/handleCustomFields.js';
 import handleOwners from './owners/handleOwner.js';
+import handleExecuteETL from './execute_etl/handleExecuteETL.js';
 
 // eslint-disable-next-line camelcase, import/prefer-default-export
 export async function lambda_handler(event) {
@@ -90,6 +91,15 @@ export async function lambda_handler(event) {
       }
       break;
 
+    case 'execute_etl':
+      try {
+        result = await handleExecuteETL(event, pathElements, queryParams || {}, verb, connection);
+      } catch (e) {
+        result.message = e;
+        console.log('Error in execute_etl ', e);
+      }
+      break;
+      
     default:
       console.log('Unknown path ', pathElements[0]);
       break;

@@ -28,6 +28,7 @@ resource "aws_lambda_function" "bedrock-api-backend-$$INSTANCE$$" {
     environment {
       variables = {
         BEDROCK_DB_HOST = $$BEDROCK_DB_HOST$$
+        STATE_MACHINE_ARN = $$STATE_MACHINE_ARN$$
       }
     }
 }
