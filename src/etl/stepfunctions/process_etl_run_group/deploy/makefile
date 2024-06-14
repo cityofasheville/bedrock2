@@ -19,10 +19,12 @@ plan: terraform.tfvars $(config_files)
 .PHONY: apply
 apply: terraform.tfvars $(config_files)
 	terraform apply
+	echo STATE_MACHINE_ARN=`terraform output -json process_etl_run_group_arn` > ../state_machine_variables.generated
 
 .PHONY: apply-y
 apply-y: terraform.tfvars $(config_files)
 	terraform apply -auto-approve
+	echo STATE_MACHINE_ARN=`terraform output -json process_etl_run_group_arn` > ../state_machine_variables.generated
 
 .PHONY: destroy
 destroy: terraform.tfvars $(config_files)
