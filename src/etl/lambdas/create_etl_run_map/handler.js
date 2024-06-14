@@ -1,16 +1,22 @@
+/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable import/extensions */
+/* eslint-disable import/no-unresolved */
 /* eslint-disable camelcase */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-console */
-
 import pgpkg from 'pg';
-const { Client } = pgpkg;
 import acppkg from 'aws-cron-parser';
-const { parse, prev } = acppkg;
 import toposort from 'toposort';
+
 // Disabling import/no-unresolved because the dependency as defined
 // in package.json only works in the build subdirectory.
 // eslint-disable-next-line import/no-unresolved
 import { getDBConnection } from 'bedrock_common';
+
+import pgErrorCodes from './pgErrorCodes.js';
+
+const { Client } = pgpkg;
+const { parse, prev } = acppkg;
 
 const TIME_INTERVAL = 15; // Frequency - must match Eventbridge scheduler
 
@@ -20,8 +26,6 @@ function formatRes(code, result) {
     body: result,
   };
 }
-
-import pgErrorCodes from './pgErrorCodes.js';
 
 async function readEtlList(client, run_groups) {
   let etlList = [];
@@ -90,7 +94,7 @@ async function readDependencies(client, assetMap) {
 async function readLocationFromAsset(client, assetName) {
   // add asset_name into location json
   const sql = `SELECT location::jsonb || ('{"asset":"' || asset_name || '"}')::jsonb as location
-              FROM bedrock2.assets where asset_name = '${assetName}';`;
+              FROM bedrock.assets where asset_name = '${assetName}';`;
   // eslint-disable-next-line no-await-in-loop
   const res = await client.query(sql)
     .catch((err) => {
@@ -212,6 +216,7 @@ async function readTasks(client, assetMap) {
   return assetMap;
 }
 
+// Get Cron based run_group list
 async function getRunGroups(client, debug) {
   const sql = 'SELECT run_group_name, cron_string FROM bedrock.run_groups;';
   return client.query(sql)
@@ -240,9 +245,24 @@ async function getRunGroups(client, debug) {
     });
 }
 
+async function verifyAssetExists(client, assetName) {
+  const sql = `SELECT * FROM bedrock.etl where asset_name = '${assetName}';`;
+  return client.query(sql)
+    .then((res) => {
+      if (res.rowCount === 0) {
+        return false;
+      }
+      return true;
+    })
+    .catch((err) => {
+      const errmsg = pgErrorCodes[err.code];
+      throw new Error([`Postgres error: ${errmsg}`, err]);
+    });
+}
+
 // eslint-disable-next-line camelcase
 const lambda_handler = async function x(event) {
-  let debug = event.debug || false;
+  const debug = event.debug || false;
   try {
     const dbConnection = await getDBConnection();
     const client = new Client(dbConnection);
@@ -251,15 +271,22 @@ const lambda_handler = async function x(event) {
         const errmsg = pgErrorCodes[err.code];
         throw new Error([`Postgres error: ${errmsg}`, err]);
       });
-    let run_groups = [ event.run_group ];
+    let run_groups = [event.run_group];
     if (event.run_group === 'UseCronStrings') {
       run_groups = await getRunGroups(client, debug);
     }
     let assetMap = {};
     if (event.one_asset) {
-      assetMap = { [event.one_asset]: { name: event.one_asset, run_group: event.run_group, depends: [], etl_tasks: [] } };
+      const assetExists = await verifyAssetExists(client, event.one_asset);
+      if (assetExists) {
+        assetMap = {
+          [event.one_asset]: {
+            name: event.one_asset, run_group: event.run_group, depends: [], etl_tasks: [],
+          },
+        };
+      }
     } else {
-      assetMap = await readEtlList(client, run_groups); 
+      assetMap = await readEtlList(client, run_groups);
     }
     assetMap = await readDependencies(client, assetMap);
     assetMap = await readTasks(client, assetMap);
@@ -282,7 +309,6 @@ const lambda_handler = async function x(event) {
         }
       }
     });
-
     let runs = [];
     if (graph.length > 0) {
       const sorted = toposort(graph);
@@ -328,4 +354,5 @@ const lambda_handler = async function x(event) {
   }
 };
 
+// eslint-disable-next-line import/prefer-default-export
 export { lambda_handler };
