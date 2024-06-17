@@ -1,4 +1,5 @@
 make_variables
 make_variables.generated
 bedrock_network_variables.generated
+state_machine_variables.generated
 *.instance

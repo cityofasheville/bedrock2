@@ -45,12 +45,18 @@ make init
 make apply
 ```
 
-Now you may create the ETL and API infrastructure.
+Create the ETL infrastructure.
 
 ```sh
 cd ../etl
 make init
 make apply
+```
+
+The API depends on the make_variable value STATE_MACHINE_ARN which was exported in the previous step. It can be found in the generated file: `src/etl/stepfunctions/process_etl_run_group/state_machine_variables.generated`
+Copy that to the make_variables file and then run this to create the API:
+
+``` sh
 cd ../api
 make init
 make apply
