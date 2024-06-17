@@ -1,6 +1,6 @@
 {
   "asset_name": "public_meeting_data_categories.lib",
-  "run_group": "daily",
+  "run_group": "every15",
   "active": true,
   "tasks": [
     {
