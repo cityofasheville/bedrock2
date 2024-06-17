@@ -1,0 +1,19 @@
+{
+  "asset_name": "public_meeting_data.lib",
+  "display_name": "public_meeting_data.lib",
+  "description": "",
+  "location": {
+    "tablename": "public_meeting_data",
+    "connection": "pubrecdb1/mdastore1/dbadmin",
+    "schemaname": "internal"
+  },
+  "asset_type": "data",
+  "owner_id": null,
+  "notes": null,
+  "link": null,
+  "active": true,
+  "depends": [
+    "public_meeting_data.goog"
+  ],
+  "tags": []
+}

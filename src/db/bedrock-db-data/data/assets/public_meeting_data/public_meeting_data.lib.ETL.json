@@ -1,0 +1,28 @@
+{
+  "asset_name": "public_meeting_data.lib",
+  "run_group": "every15",
+  "active": true,
+  "tasks": [
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "public_meeting_data.goog"
+      },
+      "target_location": {
+        "asset": "public_meeting_data.lib"
+      }
+    },
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "public_meeting_data_archive.goog"
+      },
+      "target_location": {
+        "asset": "public_meeting_data.lib",
+        "append": true
+      }
+    }
+  ]
+}

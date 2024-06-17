@@ -1,0 +1,19 @@
+{
+  "asset_name": "public_meeting_data.goog",
+  "display_name": "public_meeting_data.goog",
+  "description": "",
+  "location": {
+    "tab": "ActiveMeetings",
+    "range": "A2:W",
+    "filename": "public_meeting_data",
+    "connection": "bedrock-googlesheets",
+    "spreadsheetid": "11sK5YUKLDIA5cjzrXu_EzP5_5q_X1HbTPIkKyppR2SM"
+  },
+  "asset_type": "data",
+  "owner_id": null,
+  "notes": null,
+  "link": null,
+  "active": true,
+  "depends": [],
+  "tags": []
+}

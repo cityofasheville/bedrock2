@@ -1,0 +1,19 @@
+{
+  "asset_name": "public_meeting_data_categories.pub",
+  "display_name": "public_meeting_data_categories.pub",
+  "description": "Meeting categories and contact info - Public DB to be accessed from website",
+  "location": {
+    "tablename": "public_meeting_data_categories",
+    "connection": "coa-publicdb1/coa_share/dbadmin",
+    "schemaname": "open"
+  },
+  "asset_type": "data",
+  "owner_id": null,
+  "notes": null,
+  "link": null,
+  "active": true,
+  "depends": [
+    "public_meeting_data_categories.lib"
+  ],
+  "tags": []
+}
