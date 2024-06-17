@@ -1,9 +1,9 @@
 {
-  "asset_name": "public_meeting_data.goog",
-  "display_name": "public_meeting_data.goog",
+  "asset_name": "public_meeting_data_archive.goog",
+  "display_name": "public_meeting_data_archive.goog",
   "description": "",
   "location": {
-    "tab": "ActiveMeetings",
+    "tab": "MeetingArchive",
     "range": "A2:W",
     "filename": "public_meeting_data",
     "connection": "bedrock-googlesheets",

@@ -1,11 +1,11 @@
 {
-  "asset_name": "public_meeting_data.goog",
-  "display_name": "public_meeting_data.goog",
+  "asset_name": "public_meeting_data_categories.goog",
+  "display_name": "public_meeting_data_categories.goog",
   "description": "",
   "location": {
-    "tab": "ActiveMeetings",
-    "range": "A2:W",
-    "filename": "public_meeting_data",
+    "tab": "CategoryValues",
+    "range": "A2:E",
+    "filename": "public_meeting_data_categories",
     "connection": "bedrock-googlesheets",
     "spreadsheetid": "11sK5YUKLDIA5cjzrXu_EzP5_5q_X1HbTPIkKyppR2SM"
   },

@@ -12,6 +12,17 @@
       "target_location": {
         "asset": "public_meeting_data.lib"
       }
+    },
+    {
+      "type": "table_copy",
+      "active": true,
+      "source_location": {
+        "asset": "public_meeting_data_archive.goog"
+      },
+      "target_location": {
+        "asset": "public_meeting_data.lib",
+        "append": true
+      }
     }
   ]
 }
