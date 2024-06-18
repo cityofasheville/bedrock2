@@ -10,7 +10,8 @@ const compiledFunction = compileFile(join(__dirname, '/email.pug'));
 function sendEmails(results) {
   const totalResults = results?.failure?.length + results?.success?.length + results?.skipped?.length;
   if (totalResults > 0) {
-    let emailAddrs = JSON.parse(process.env.EMAIL_RECIPIENT_JSON);
+    let emailRecip = [process.env.EMAIL_RECIPIENT];
+    let emailSender = process.env.EMAIL_SENDER;
     let htmlEmail, emailSubject;
       results.failure = results.failure.map(res => res.name);
       results.failure.sort();
@@ -25,7 +26,7 @@ function sendEmails(results) {
       let pugObj = {};
       pugObj.results = results;
       htmlEmail = compiledFunction(pugObj);
-      return ses_sendemail(emailAddrs, htmlEmail, emailSubject);
+      return ses_sendemail(emailRecip, emailSender, htmlEmail, emailSubject);
   }else{
     console.log('No email sent');
   }

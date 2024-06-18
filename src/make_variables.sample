@@ -2,7 +2,8 @@ INSTANCE = <UNIQUE INSTANCE STRING LIKE ej-test-0: lowercase alphanumeric charac
 region = "us-east-1"
 statebucket = "avl-tfstate-store"
 account = 518970837364
-email_recipients = "['dummy@ashevillenc.gov']"
+EMAIL_SENDER = "asheville_fake@ashevillenc.gov"
+EMAIL_RECIPIENT = "dummy@ashevillenc.gov"
 build_mode = std # Set to sam to build using SAM
 
 # The next four variables provide information on the VPC, subnets and security

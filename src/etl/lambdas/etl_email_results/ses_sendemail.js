@@ -2,7 +2,7 @@ import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
 const REGION = "us-east-1";
 const sesClient = new SESClient({ region: REGION });
 
-async function ses_sendemail(emailAddrs, htmlEmail, emailSubject) {
+async function ses_sendemail(emailAddrs, emailSender, htmlEmail, emailSubject) {
   let params = {
     Destination: {
       CcAddresses: [],
@@ -24,9 +24,9 @@ async function ses_sendemail(emailAddrs, htmlEmail, emailSubject) {
         Data: emailSubject
       },
     },
-    Source: process.env.EMAIL_SENDER,
+    Source: emailSender,
     ReplyToAddresses: [
-      process.env.EMAIL_SENDER,
+      emailSender,
     ],
   };
 
@@ -35,7 +35,7 @@ async function ses_sendemail(emailAddrs, htmlEmail, emailSubject) {
   try {
     return await sesClient.send(sendEmailCommand);
   } catch (e) {
-    console.error("Failed to send email.");
+    console.error("Failed to send email.", e);
     return e;
   }
 };

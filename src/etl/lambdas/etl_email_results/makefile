@@ -35,7 +35,7 @@ node_modules:
 	npm install
 
 local: node_modules
-	EMAIL_RECIPIENT_JSON="[\"jtwilson@ashevillenc.gov\"]" EMAIL_SENDER="asheville_notifications@ashevillenc.gov" node local.js
+	export EMAIL_RECIPIENT=$(EMAIL_RECIPIENT); export EMAIL_SENDER=$(EMAIL_SENDER); node local.js
 
 clean:
 	rm -f *.instance
