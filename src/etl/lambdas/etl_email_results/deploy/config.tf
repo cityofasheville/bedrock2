@@ -23,10 +23,8 @@ resource "aws_lambda_function" "etl_email_results-$$INSTANCE$$" {
     }
     environment {
       variables = {
-          "EMAIL_RECIPIENT_JSON" = jsonencode(
-                ["gisadmins@ashevillenc.gov","jtwilson@ashevillenc.gov"]
-            )
-          "EMAIL_SENDER"         = "asheville_notifications@ashevillenc.gov"
+          "EMAIL_RECIPIENT" = $$EMAIL_RECIPIENT$$
+          "EMAIL_SENDER"    = $$EMAIL_SENDER$$
       }
     }
 }
