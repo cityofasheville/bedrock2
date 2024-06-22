@@ -4,6 +4,7 @@ import pgpkg from 'pg';
 import pgErrorCodes from '../pgErrorCodes.js';
 import { calculateRequestedFields } from '../utilities/assetUtilities.js';
 import { newClient } from '../utilities/utilities.js';
+import { getCustomFieldsInfo } from '../utilities/assetUtilities.js';
 
 async function getAssetInfo(client, idValue) {
   let res;
@@ -41,6 +42,7 @@ async function getCustomFieldInfo(client, assetRows, idValue, requestedFields, o
         `PG error getting custom fields: ${pgErrorCodes[error.code]}`,
       );
     }
+    console.log(res);
     if (res.rowCount > 0) {
       for (let i = 0; i < res.rowCount; i += 1) {
         if (!overrideFields || requestedFields.includes(res.rows[i].field_name)) {
@@ -49,6 +51,8 @@ async function getCustomFieldInfo(client, assetRows, idValue, requestedFields, o
       }
     }
   }
+  console.log(cv);
+  console.log(Object.fromEntries(cv.entries()));
   return Object.fromEntries(cv.entries());
 }
 

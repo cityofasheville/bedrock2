@@ -41,7 +41,6 @@ async function getCustomFieldsInfo(client, asset_type) {
       const comma = i > 0 ? ',' : '';
       types = `${types}${comma} '${itm.asset_type_id}'`;
     });
-
     // Now get custom fields associated with any of the types
     // Field is required if any type in the hierarchy requires it
     sqlQuery = `
@@ -58,6 +57,7 @@ async function getCustomFieldsInfo(client, asset_type) {
     sqlResult.rows.forEach((itm) => {
       customFields.set(itm.custom_field_id, itm);
     });
+    console.log(sqlResult)
   } catch (error) {
     throw new Error(
       `PG error getting asset type hierarchy for type ${asset_type}: ${pgErrorCodes[error.code]}`,
@@ -102,7 +102,6 @@ async function addCustomFieldsInfo(body, client, customFields, customValues) {
     if (Object.keys(customValues).includes(id)) {
       sql = 'INSERT INTO bedrock2.custom_values (asset_id, custom_field_id, field_value) VALUES($1, $2, $3)';
       args = [body.asset_id, id, customValues[id]];
-
 
       try {
         res = await client.query(sql, args);

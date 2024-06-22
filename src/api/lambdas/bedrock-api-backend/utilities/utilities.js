@@ -177,27 +177,6 @@ async function deleteInfo(client, tableName, idField, idValue, name) {
   }
 }
 
-async function addCustomFieldsInfo(client, idValue, body, table) {
-  const valueStrings = [];
-
-  body.custom_fields.forEach((obj) => {
-    const customFieldId = Object.keys(obj);
-    const required = obj[customFieldId];
-    valueStrings.push(`('${idValue}', '${customFieldId}', ${required})`);
-  });
-  const combinedValueString = valueStrings.join(', ');
-  try {
-    await client
-      .query(
-        `INSERT INTO ${table} (asset_type_id, custom_field_id, required) VALUES ${combinedValueString}`,
-      );
-  } catch (error) {
-    throw new Error([`Postgres error: ${pgErrorCodes[error.code]}`, error]);
-  }
-
-  return body;
-}
-
 export {
   newClient,
   checkInfo,
@@ -208,5 +187,4 @@ export {
   updateInfo,
   deleteInfo,
   generateId,
-  addCustomFieldsInfo,
 };

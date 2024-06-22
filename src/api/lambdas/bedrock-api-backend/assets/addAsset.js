@@ -20,6 +20,7 @@ function checkETLInfo(body) {
 }
 
 async function baseInsert(body, customFields, customValues, client) {
+  console.log('beginning of base insert');
   // All is well - let's go ahead and add.
   let tempAsset = null;
   let sql;
@@ -76,6 +77,8 @@ async function addDependencies(body, client) {
   if ('parents' in body && body.parents.length > 0) {
     for (let i = 0; i < body.parents.length; i += 1) {
       const dependency = body.parents[i];
+      console.log(dependency);
+      console.log(body.asset_id);
       try {
         await client.query(
           'INSERT INTO bedrock2.dependencies (asset_id, dependent_asset_id) VALUES ($1, $2)',
@@ -190,6 +193,8 @@ async function addAsset(
     asset.set('parents', await addDependencies(bodyWithID, client));
     const [runGroup, active] = await addETL(bodyWithID, client);
     asset.set('etl_run_group', runGroup);
+    console.log('after rungnroup');
+
     asset.set('etl_active', active);
     asset.set('tags', await addTags(bodyWithID, client));
     await client.query('COMMIT');
