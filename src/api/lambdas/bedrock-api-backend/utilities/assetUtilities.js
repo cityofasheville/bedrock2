@@ -57,7 +57,6 @@ async function getCustomFieldsInfo(client, asset_type) {
     sqlResult.rows.forEach((itm) => {
       customFields.set(itm.custom_field_id, itm);
     });
-    console.log(sqlResult)
   } catch (error) {
     throw new Error(
       `PG error getting asset type hierarchy for type ${asset_type}: ${pgErrorCodes[error.code]}`,

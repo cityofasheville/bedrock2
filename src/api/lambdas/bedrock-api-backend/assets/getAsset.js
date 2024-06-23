@@ -4,7 +4,6 @@ import pgpkg from 'pg';
 import pgErrorCodes from '../pgErrorCodes.js';
 import { calculateRequestedFields } from '../utilities/assetUtilities.js';
 import { newClient } from '../utilities/utilities.js';
-import { getCustomFieldsInfo } from '../utilities/assetUtilities.js';
 
 async function getAssetInfo(client, idValue) {
   let res;

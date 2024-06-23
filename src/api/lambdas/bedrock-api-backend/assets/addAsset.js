@@ -77,8 +77,6 @@ async function addDependencies(body, client) {
   if ('parents' in body && body.parents.length > 0) {
     for (let i = 0; i < body.parents.length; i += 1) {
       const dependency = body.parents[i];
-      console.log(dependency);
-      console.log(body.asset_id);
       try {
         await client.query(
           'INSERT INTO bedrock2.dependencies (asset_id, dependent_asset_id) VALUES ($1, $2)',
