@@ -8,10 +8,10 @@ import { newClient } from '../utilities/utilities.js';
 async function getAssetInfo(client, idValue) {
   let res;
   const sql = `SELECT a.*, e.run_group_id, e.active as etl_active, d.dependent_asset_id, c.connection_class
-    FROM bedrock2.assets a
-    left join bedrock2.etl e on e.asset_id = a.asset_id
-    left join bedrock2.dependencies d on d.asset_id = a.asset_id
-    left join bedrock2.connections c on c.connection_id = a."location"->>'connection_id'
+    FROM bedrock.assets a
+    left join bedrock.etl e on e.asset_id = a.asset_id
+    left join bedrock.dependencies d on d.asset_id = a.asset_id
+    left join bedrock.connections c on c.connection_id = a."location"->>'connection_id'
     where a.asset_id like $1`;
   try {
     res = await client.query(sql, [idValue]);
@@ -32,7 +32,7 @@ async function getCustomFieldInfo(client, assetRows, idValue, requestedFields, o
   const cv = new Map();
   if (assetRows.asset_type !== null) {
     let res;
-    const sql = 'SELECT custom_field_id, field_value from bedrock2.custom_values where asset_id like $1';
+    const sql = 'SELECT custom_field_id, field_value from bedrock.custom_values where asset_id like $1';
     try {
       res = await client.query(sql, [idValue]);
     } catch (error) {
@@ -84,7 +84,7 @@ async function addBaseInfo(assetRows, requestedFields, available) {
 async function addAssetTags(client, idValue) {
   const tags = [];
   const res = await client
-    .query('SELECT * from bedrock2.asset_tags where asset_id like $1', [idValue])
+    .query('SELECT * from bedrock.asset_tags where asset_id like $1', [idValue])
     .catch((error) => {
       console.log(`PG error getting asset_tags: ${pgErrorCodes[error.code]||error.code}`);
       throw new Error(`PG error getting asset_tags: ${pgErrorCodes[error.code]||error.code}`);

@@ -16,7 +16,7 @@ async function newClient(connection) {
 
 async function readTasks(client, idValue) {
   let res;
-  const sql = 'SELECT * FROM bedrock2.tasks where asset_id like $1 order by seq_number asc';
+  const sql = 'SELECT * FROM bedrock.tasks where asset_id like $1 order by seq_number asc';
   try {
     res = await client.query(sql, [idValue]);
   } catch (error) {

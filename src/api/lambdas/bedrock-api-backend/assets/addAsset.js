@@ -32,7 +32,7 @@ async function baseInsert(body, customFields, customValues, client) {
     JSON.stringify(body.location),
     body.active,
   ];
-  sql = 'INSERT INTO bedrock2.assets (asset_id, asset_name, description, location, active';
+  sql = 'INSERT INTO bedrock.assets (asset_id, asset_name, description, location, active';
   let vals = ') VALUES($1, $2, $3, $4, $5';
   const fields = ['owner_id', 'notes', 'link', 'asset_type_id'];
   for (let i = 0; i < fields.length; i += 1) {
@@ -78,7 +78,7 @@ async function addDependencies(body, client) {
       const dependency = body.parents[i];
       try {
         await client.query(
-          'INSERT INTO bedrock2.dependencies (asset_id, dependent_asset_id) VALUES ($1, $2)',
+          'INSERT INTO bedrock.dependencies (asset_id, dependent_asset_id) VALUES ($1, $2)',
           [body.asset_id, dependency],
         );
       } catch (error) {
@@ -95,7 +95,7 @@ async function addETL(body, client) {
   if ('etl_run_group' in body && 'etl_active' in body) {
     try {
       await client.query(
-        'INSERT INTO bedrock2.etl (asset_id, run_group_id, active) VALUES ($1, $2, $3)',
+        'INSERT INTO bedrock.etl (asset_id, run_group_id, active) VALUES ($1, $2, $3)',
         [body.asset_id, body.etl_run_group, body.etl_active],
       );
     } catch (error) {
@@ -130,7 +130,7 @@ async function addTags(body, client) {
   try {
     for (let i = 0; i < tags.length; i += 1) {
       await client.query(
-        'INSERT INTO bedrock2.asset_tags (asset_id, tag_id) VALUES ($1, $2)',
+        'INSERT INTO bedrock.asset_tags (asset_id, tag_id) VALUES ($1, $2)',
         [body.asset_id, tags[i]],
       );
     }

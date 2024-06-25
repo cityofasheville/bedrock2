@@ -22,7 +22,7 @@ async function handleOwners(
   let body;
   const idField = 'owner_id';
   let idValue;
-  const name = 'owner';
+  const name = 'bedrock.owner';
   const tableName = 'owners';
   const requiredFields = ['owner_id', 'contact_name', 'contact_email'];
   const allFields = ['owner_id', 'contact_name', 'contact_email', 'contact_phone', 'organization', 'department', 'division', 'notes'];

@@ -3,7 +3,7 @@
 import {
   newClient, checkInfo, checkExistence, addInfo, generateId,
 } from '../utilities/utilities.js';
-import { addCustomFieldsInfo } from '../utilities/assetUtilities.js';
+import { addAssetTypeCustomFields } from '../utilities/utilities.js'
 
 function checkCustomFields(body) {
   if (body.custom_fields) {
@@ -55,8 +55,10 @@ async function addAssetType(
   try {
     await client.query('BEGIN');
     await checkExistence(client, tableName, idField, idValue, name, shouldExist);
-    await addCustomFieldsInfo(client, idValue, bodyWithID, tableNameCustomFields);
+    console.log('before addcustomfieldinfo');
+    // await addCustomFieldsInfo(client, idValue, bodyWithID, tableNameCustomFields);
     response.result = await addInfo(client, allFields, bodyWithID, tableName, name);
+    response.result.custom_fields = await addAssetTypeCustomFields(client, idValue, body);
     await client.query('COMMIT');
     await client.end();
   } catch (error) {

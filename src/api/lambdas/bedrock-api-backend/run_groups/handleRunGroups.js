@@ -24,7 +24,7 @@ async function handleRunGroups(
   const idField = 'run_group_id';
   let idValue;
   const name = 'run_group';
-  const tableName = 'bedrock2.run_groups';
+  const tableName = 'bedrock.run_groups';
   const requiredFields = ['run_group_id', 'run_group_name', 'cron_string'];
   const allFields = ['run_group_id', 'run_group_name', 'cron_string'];
 

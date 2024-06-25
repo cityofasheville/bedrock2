@@ -24,11 +24,11 @@ async function getCustomFieldsInfo(client, asset_type) {
     // Get the asset type hierarchy
     sqlQuery = `
       WITH RECURSIVE ancestors AS (
-        SELECT asset_type_id, parent, asset_type_name FROM bedrock2.asset_types
+        SELECT asset_type_id, parent, asset_type_name FROM bedrock.asset_types
         WHERE asset_type_id = $1
         UNION
           SELECT t.asset_type_id, t.parent, t.asset_type_name
-          FROM bedrock2.asset_types t
+          FROM bedrock.asset_types t
           INNER JOIN ancestors a ON a.parent = t.asset_type_id
       ) SELECT * FROM ancestors;
     `;
@@ -46,14 +46,15 @@ async function getCustomFieldsInfo(client, asset_type) {
     sqlQuery = `
       select custom_field_id, custom_field_name, field_type, bool_or(required) as required
       from (
-        select c.custom_field_id, c.custom_field_name, c.field_type, j.asset_type_id, j.required from bedrock2.custom_fields c
-        left outer join bedrock2.asset_type_custom_fields j
+        select c.custom_field_id, c.custom_field_name, c.field_type, j.asset_type_id, j.required from bedrock.custom_fields c
+        left outer join bedrock.asset_type_custom_fields j
         on c.custom_field_id = j.custom_field_id
         where j.asset_type_id in (${types})
       ) a
       group by custom_field_id, custom_field_name, field_type
     `;
     sqlResult = await client.query(sqlQuery, []);
+
     sqlResult.rows.forEach((itm) => {
       customFields.set(itm.custom_field_id, itm);
     });
@@ -99,7 +100,7 @@ async function addCustomFieldsInfo(body, client, customFields, customValues) {
 
   for (const [id, field] of customFields) {
     if (Object.keys(customValues).includes(id)) {
-      sql = 'INSERT INTO bedrock2.custom_values (asset_id, custom_field_id, field_value) VALUES($1, $2, $3)';
+      sql = 'INSERT INTO bedrock.custom_values (asset_id, custom_field_id, field_value) VALUES($1, $2, $3)';
       args = [body.asset_id, id, customValues[id]];
 
       try {
