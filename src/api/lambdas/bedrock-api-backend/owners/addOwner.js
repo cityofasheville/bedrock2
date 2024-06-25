@@ -21,6 +21,7 @@ async function addOwner(
   };
   bodyWithID[idField] = generateId();
   const idValue = bodyWithID[idField];
+  let clientInitiated = false;
 
   const response = {
     error: false,
