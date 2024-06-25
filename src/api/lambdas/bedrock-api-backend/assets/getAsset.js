@@ -41,7 +41,6 @@ async function getCustomFieldInfo(client, assetRows, idValue, requestedFields, o
         `PG error getting custom fields: ${pgErrorCodes[error.code]}`,
       );
     }
-    console.log(res);
     if (res.rowCount > 0) {
       for (let i = 0; i < res.rowCount; i += 1) {
         if (!overrideFields || requestedFields.includes(res.rows[i].field_name)) {
@@ -50,8 +49,6 @@ async function getCustomFieldInfo(client, assetRows, idValue, requestedFields, o
       }
     }
   }
-  console.log(cv);
-  console.log(Object.fromEntries(cv.entries()));
   return Object.fromEntries(cv.entries());
 }
 

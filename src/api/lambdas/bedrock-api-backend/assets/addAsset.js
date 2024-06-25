@@ -20,7 +20,6 @@ function checkETLInfo(body) {
 }
 
 async function baseInsert(body, customFields, customValues, client) {
-  console.log('beginning of base insert');
   // All is well - let's go ahead and add.
   let tempAsset = null;
   let sql;
@@ -191,8 +190,6 @@ async function addAsset(
     asset.set('parents', await addDependencies(bodyWithID, client));
     const [runGroup, active] = await addETL(bodyWithID, client);
     asset.set('etl_run_group', runGroup);
-    console.log('after rungnroup');
-
     asset.set('etl_active', active);
     asset.set('tags', await addTags(bodyWithID, client));
     await client.query('COMMIT');
