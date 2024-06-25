@@ -73,16 +73,10 @@ async function handleAssets(event, pathElements, queryParams, verb, connection) 
       switch (verb) {
         case 'GET':
           response = await getAsset(
-            pathElements,
             queryParams,
             connection,
-            idField,
             idValue,
-            name,
-            tableName,
-            requiredFields,
             allFields,
-            body,
           );
           break;
 

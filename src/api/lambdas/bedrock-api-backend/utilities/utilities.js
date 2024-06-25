@@ -12,9 +12,12 @@ function capitalizeFirstLetter(string) {
 }
 
 async function newClient(connection) {
+  console.log('in new client')
   const client = new Client(connection);
   try {
     await client.connect();
+    console.log('after client.connect')
+
     return client;
   } catch (error) {
     throw new Error(`PG error connecting: ${pgErrorCodes[error.code]||error.code}`);
