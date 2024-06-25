@@ -22,13 +22,13 @@ async function handleAssetTypes(
   };
   let nParams = pathElements.length;
   let body;
-  const idField = 'id';
+  const idField = 'asset_type_id';
   let idValue;
   const name = 'asset type';
-  const tableName = 'asset_types';
-  const requiredFields = ['id', 'name'];
-  const allFields = ['id', 'name', 'parent'];
-  const tableNameCustomFields = 'asset_type_custom_fields';
+  const tableName = 'bedrock2.asset_types';
+  const requiredFields = ['asset_type_id', 'asset_type_name'];
+  const allFields = ['asset_type_id', 'asset_type_name', 'parent'];
+  const tableNameCustomFields = 'bedrock2.asset_type_custom_fields';
 
   if (nParams === 2 && (pathElements[1] === null || pathElements[1].length === 0)) nParams = 1;
   if ('body' in event) {
@@ -54,6 +54,7 @@ async function handleAssetTypes(
             idField,
             name,
             tableName,
+            tableNameCustomFields,
           );
           break;
 
@@ -87,6 +88,7 @@ async function handleAssetTypes(
             idValue,
             name,
             tableName,
+            tableNameCustomFields,
           );
           break;
 
@@ -111,6 +113,7 @@ async function handleAssetTypes(
             idValue,
             name,
             tableName,
+            tableNameCustomFields,
           );
           break;
 

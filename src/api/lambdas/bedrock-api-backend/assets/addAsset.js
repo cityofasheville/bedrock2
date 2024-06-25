@@ -1,79 +1,19 @@
 /* eslint-disable import/extensions */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-console */
-import pgpkg from 'pg';
 import pgErrorCodes from '../pgErrorCodes.js';
-import getCustomFieldsInfo from '../common/getCustomFieldInfo.js';
+import {
+  getCustomFieldsInfo, addCustomFieldsInfo, getCustomValues, checkCustomFieldsInfo,
+} from '../utilities/assetUtilities.js';
+import {
+  newClient, checkInfo, checkExistence, generateId,
+} from '../utilities/utilities.js';
 
-const { Client } = pgpkg;
-
-async function newClient(connection) {
-  const client = new Client(connection);
-
-  try {
-    await client.connect();
-    return client;
-  } catch (error) {
-    throw new Error(`PG error connecting: ${pgErrorCodes[error.code]||error.code}`);
-  }
-}
-
-async function checkBaseInfo(body) {
-  // Make sure that we have all required base fields
-  if (
-    !('asset_name' in body)
-    || !('asset_type' in body)
-    || !('description' in body)
-    || !('location' in body)
-    || !('active' in body)
-  ) {
-    throw new Error(
-      'Asset lacks required property (asset_name, description, location, active)',
-    );
-  }
-
+function checkETLInfo(body) {
   if ('etl_run_group' in body || 'etl_active' in body) {
     if (!('etl_run_group' in body && 'etl_active' in body)) {
       throw new Error(
         'Addition of ETL information requires both etl_run_group and etl_active elements',
-      );
-    }
-  }
-}
-
-async function checkExistence(client, idValue) {
-  let sql;
-  let res;
-
-  try {
-    sql = 'SELECT * FROM bedrock.assets where asset_name like $1';
-    res = await client.query(sql, [idValue]);
-  } catch (error) {
-    throw new Error(
-      `PG error checking if asset already exists: ${pgErrorCodes[error.code]||error.code}`,
-    );
-  }
-
-  if (res.rowCount > 0) {
-    throw new Error('Asset already exists');
-  }
-}
-
-function getCustomValues(body) {
-  const customValues = new Map();
-  if ('custom_fields' in body) {
-    for (const val in body.custom_fields) {
-      customValues.set(val, body.custom_fields[val]);
-    }
-  }
-  return customValues;
-}
-
-function checkCustomFieldsInfo(customValues, customFields) {
-  for (let [id, field] of customFields) {
-    if (field.required && !(customValues.has(id))) {
-      throw new Error(
-        `Asset lacks required custom field ${field.field_display} (id=${id})`,
       );
     }
   }
@@ -84,24 +24,25 @@ async function baseInsert(body, customFields, customValues, client) {
   let tempAsset = null;
   let sql;
   let res;
-  let argnum = 5;
-  let args = [
+  let argnum = 6;
+  const args = [
+    body.asset_id,
     body.asset_name,
     body.description,
     JSON.stringify(body.location),
     body.active,
   ];
-  sql = 'INSERT INTO assets (asset_name, description, location, active';
-  let vals = ') VALUES($1, $2, $3, $4';
-  const fields = ['owner_id', 'notes', 'link', 'display_name', 'asset_type']
-
+  sql = 'INSERT INTO bedrock2.assets (asset_id, asset_name, description, location, active';
+  let vals = ') VALUES($1, $2, $3, $4, $5';
+  const fields = ['owner_id', 'notes', 'link', 'asset_type_id'];
   for (let i = 0; i < fields.length; i += 1) {
     if (fields[i] in body) {
       sql += `, ${fields[i]}`;
       vals += `, $${argnum}`;
       args.push(body[fields[i]]);
       argnum += 1;
-    }}
+    }
+  }
 
   sql += `${vals})`;
 
@@ -124,40 +65,21 @@ async function baseInsert(body, customFields, customValues, client) {
     ]);
     for (let i = 0; i < fields.length; i += 1) {
       if (fields[0] in body) {
-        tempAsset.set(fields[0], body[fields[0]])
+        tempAsset.set(fields[0], body[fields[0]]);
       }
     }
   }
-
-  // Now deal with custom fields
-  const customOut = new Map();
-  for (let [id, field] of customFields) {
-    if (customValues.has(id)) {
-      sql = 'INSERT INTO bedrock.custom_values (asset_name, field_id, field_value) VALUES($1, $2, $3)';
-      args = [body.asset_name, field.id, customValues.get(field.id)];
-      try {
-        res = await client.query(sql, args);
-      }
-      catch (error) {
-        throw new Error(`Error inserting custom value ${id}: ${pgErrorCodes[error.code]||error.code}`);
-      }
-      customOut.set(id, customValues.get(id));
-    }
-  }
-  tempAsset.set('custom_fields', Object.fromEntries(customOut.entries()));
   return tempAsset;
 }
 
-async function addDependencies(asset, body, client) {
-  let parents;
-
+async function addDependencies(body, client) {
   if ('parents' in body && body.parents.length > 0) {
     for (let i = 0; i < body.parents.length; i += 1) {
       const dependency = body.parents[i];
       try {
         await client.query(
-          'INSERT INTO dependencies (asset_name, dependency) VALUES ($1, $2)',
-          [body.asset_name, dependency],
+          'INSERT INTO bedrock2.dependencies (asset_id, dependent_asset_id) VALUES ($1, $2)',
+          [body.asset_id, dependency],
         );
       } catch (error) {
         throw new Error(
@@ -169,12 +91,12 @@ async function addDependencies(asset, body, client) {
   return body.parents;
 }
 
-async function addETL(asset, body, client) {
+async function addETL(body, client) {
   if ('etl_run_group' in body && 'etl_active' in body) {
     try {
       await client.query(
-        'INSERT INTO etl (asset_name, run_group, active) VALUES ($1, $2, $3)',
-        [body.asset_name, body.etl_run_group, body.etl_active],
+        'INSERT INTO bedrock2.etl (asset_id, run_group_id, active) VALUES ($1, $2, $3)',
+        [body.asset_id, body.etl_run_group, body.etl_active],
       );
     } catch (error) {
       throw new Error(
@@ -185,10 +107,8 @@ async function addETL(asset, body, client) {
   return [body.etl_run_group, body.etl_active];
 }
 
-async function addTags(asset, body, client) {
-  let sql;
-  let res;
-  let tags = [];
+async function addTags(body, client) {
+  const tags = [];
   let tmpTags = [];
 
   // Now add any tags
@@ -205,54 +125,13 @@ async function addTags(asset, body, client) {
         tags.push(tag); // Make sure they're cleaned up
       }
     }
-
-    // For now, just add any tags that aren't in the tags table
-    if (tags.length > 0) {
-      sql = 'SELECT tag_name from bedrock.tags where tag_name in (';
-      for (let i = 0, cnt = 1, comma = ''; i < tags.length; i += 1) {
-        sql += `${comma}$${cnt}`;
-        cnt += 1;
-        comma = ', ';
-      }
-      sql += ');';
-
-      try {
-        res = await client.query(sql, tags);
-      } catch (error) {
-        throw new Error(
-          `PG error reading tags table: ${pgErrorCodes[error.code]||error.code}`,
-        );
-      }
-
-      if (res.rowCount !== tags.length) {
-        const dbTags = [];
-        for (let i = 0; i < res.rowCount; i += 1) {
-          dbTags.push(res.rows[i].tag_name);
-        }
-
-        try {
-          for (let i = 0; i < tags.length; i += 1) {
-            if (!dbTags.includes(tags[i])) {
-              await client.query('INSERT INTO tags (tag_name) VALUES ($1)', [
-                tags[i],
-              ]);
-            }
-          }
-        } catch (error) {
-          throw new Error(
-            `PG error adding to tags table: ${pgErrorCodes[error.code]||error.code}`,
-          );
-        }
-      }
-    }
   }
-  // End of just adding any tags that aren't in the tags table for now
 
   try {
     for (let i = 0; i < tags.length; i += 1) {
-      res = await client.query(
-        'INSERT INTO bedrock.asset_tags (asset_name, tag_name) VALUES ($1, $2)',
-        [body.asset_name, tags[i]],
+      await client.query(
+        'INSERT INTO bedrock2.asset_tags (asset_id, tag_id) VALUES ($1, $2)',
+        [body.asset_id, tags[i]],
       );
     }
   } catch (error) {
@@ -262,13 +141,24 @@ async function addTags(asset, body, client) {
   return body.tags;
 }
 
-async function addAsset(requestBody, connection) {
-  const body = JSON.parse(requestBody);
+async function addAsset(
+  connection,
+  idField,
+  name,
+  tableName,
+  requiredFields,
+  body,
+) {
   let customFields;
   let customValues;
   let asset;
   let client;
-  const idValue = body.asset_name;
+  const shouldExist = false;
+  const bodyWithID = {
+    ...body,
+  };
+  bodyWithID[idField] = generateId();
+  const idValue = bodyWithID[idField];
 
   const response = {
     error: false,
@@ -287,19 +177,24 @@ async function addAsset(requestBody, connection) {
   await client.query('BEGIN');
 
   try {
-    await checkExistence(client, idValue);
-    await checkBaseInfo(body);
-    customFields = await getCustomFieldsInfo(client, body.asset_type);
-    customValues = getCustomValues(body);
-    checkCustomFieldsInfo(customValues, customFields);
-    asset = await baseInsert(body, customFields, customValues, client);
-    asset.set('parents', await addDependencies(asset, body, client));
-    const [runGroup, active] = await addETL(asset, body, client);
+    // await checkExistence(client, idValue);
+    checkExistence(client, tableName, idField, idValue, name, shouldExist);
+    checkInfo(bodyWithID, requiredFields, name, idValue, idField);
+    checkETLInfo(bodyWithID);
+    customFields = await getCustomFieldsInfo(client, bodyWithID.asset_type);
+    customValues = getCustomValues(bodyWithID);
+    checkCustomFieldsInfo(body, customFields);
+    asset = await baseInsert(bodyWithID, customFields, customValues, client);
+    const updatedCustomFields = await addCustomFieldsInfo(bodyWithID, client, customFields, customValues);
+    asset.set('custom_fields', Object.fromEntries(updatedCustomFields));
+    asset.set('parents', await addDependencies(bodyWithID, client));
+    const [runGroup, active] = await addETL(bodyWithID, client);
     asset.set('etl_run_group', runGroup);
     asset.set('etl_active', active);
-    asset.set('tags', await addTags(asset, body, client));
+    asset.set('tags', await addTags(bodyWithID, client));
     await client.query('COMMIT');
     await client.end();
+    asset.set('asset_id', bodyWithID[idField]);
     response.result = Object.fromEntries(asset.entries());
   } catch (error) {
     await client.query('ROLLBACK');

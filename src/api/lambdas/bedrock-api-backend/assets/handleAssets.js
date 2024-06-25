@@ -7,7 +7,7 @@ import addAsset from './addAsset.js';
 import updateAsset from './updateAsset.js';
 import deleteAsset from './deleteAsset.js';
 import getTasks from './getTasks.js';
-import updateTasks from './updateTasks.js'
+import updateTasks from './updateTasks.js';
 
 // eslint-disable-next-line no-unused-vars
 async function handleAssets(event, pathElements, queryParams, verb, connection) {
@@ -16,6 +16,25 @@ async function handleAssets(event, pathElements, queryParams, verb, connection) 
     message: '',
     result: null,
   };
+
+  let nParams = pathElements.length;
+  let body;
+  const idField = 'asset_id';
+  let idValue;
+  const name = 'asset';
+  const tableName = 'bedrock2.assets';
+  const requiredFields = ['asset_id', 'asset_name', 'description', 'location', 'active'];
+  const allFields = ['asset_id', 'asset_name', 'description', 'location', 'active', 'asset_type_id', 'connection_class', 'location', 'link', 'owner_id', 'tags', 'notes', 'parents', 'etl_run_group', 'etl_active', 'custom_fields'];
+
+  if (nParams === 2 && (pathElements[1] === null || pathElements[1].length === 0)) nParams = 1;
+  if ('body' in event) {
+    body = JSON.parse(event.body);
+  }
+  if (!(pathElements[1] == null)) {
+    [, idValue] = pathElements;
+  } else if (body) { // For POST requests, setting idValue here since it's not in the path
+    idValue = body[idField];
+  }
 
   switch (pathElements.length) {
     // GET assets
@@ -27,11 +46,19 @@ async function handleAssets(event, pathElements, queryParams, verb, connection) 
             pathElements,
             queryParams,
             connection,
+            tableName,
           );
           break;
 
         case 'POST':
-          response = await addAsset(event.body, connection);
+          response = await addAsset(
+            connection,
+            idField,
+            name,
+            tableName,
+            requiredFields,
+            body,
+          );
           break;
 
         default:
@@ -45,15 +72,43 @@ async function handleAssets(event, pathElements, queryParams, verb, connection) 
     case 2:
       switch (verb) {
         case 'GET':
-          response = await getAsset(pathElements, queryParams, connection);
+          response = await getAsset(
+            pathElements,
+            queryParams,
+            connection,
+            idField,
+            idValue,
+            name,
+            tableName,
+            requiredFields,
+            allFields,
+            body,
+          );
           break;
 
         case 'PUT':
-          response = await updateAsset(event.body, pathElements, queryParams, connection);
+          response = await updateAsset(
+            pathElements,
+            queryParams,
+            connection,
+            idField,
+            idValue,
+            name,
+            tableName,
+            requiredFields,
+            allFields,
+            body,
+          );
           break;
 
         case 'DELETE':
-          response = deleteAsset(pathElements, queryParams, connection);
+          response = deleteAsset(
+            connection,
+            idField,
+            idValue,
+            name,
+            tableName,
+          );
           break;
 
         default:
@@ -68,15 +123,25 @@ async function handleAssets(event, pathElements, queryParams, verb, connection) 
     case 3:
       if (pathElements[2] === 'tasks') {
         if (verb === 'GET') {
-          response = await getTasks(pathElements, queryParams, connection);
+          response = await getTasks(connection, idValue);
         } else if (verb === 'PUT') {
-          response = await updateTasks(pathElements, event, connection);
+          response = await updateTasks(
+            connection,
+            idField,
+            idValue,
+            name,
+            body,
+          );
         } else {
           response.message = `${verb} all asset tasks not implemented`;
           response.error = true;
         }
       } else if (pathElements[2] === 'relations') {
-        response = await getAllAssetRelations(pathElements, queryParams, connection);
+        response = await getAllAssetRelations(
+          connection,
+          idValue,
+          tableName,
+        );
       } else {
         response.message = `Unknown assets endpoint: [${pathElements.join()}]`;
         response.error = true;
@@ -93,11 +158,6 @@ async function handleAssets(event, pathElements, queryParams, verb, connection) 
         switch (verb) {
           case 'POST':
             response.message = 'Add asset task not implemented';
-            response.error = true;
-            break;
-
-          case 'PUT':
-            response.message = 'Update asset task not implemented';
             response.error = true;
             break;
 

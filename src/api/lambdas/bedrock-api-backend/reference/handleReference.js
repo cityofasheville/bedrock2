@@ -22,12 +22,7 @@ async function handleReference(
   switch (nParams) {
     // GET reference
     case 1:
-      result = await getReference(
-        event.requestContext.domainName,
-        pathElements,
-        queryParams,
-        connection,
-      );
+      result = await getReference(connection);
       break;
   }
   if (result.error) {

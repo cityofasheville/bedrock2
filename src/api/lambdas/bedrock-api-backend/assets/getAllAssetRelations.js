@@ -15,19 +15,19 @@ async function newClient(connection) {
   }
 }
 
-async function readAsset(client, assetName) {
+async function readAsset(client, idValue, tableName) {
   let res;
-  const sql = `SELECT a.asset_name 
-  FROM bedrock.assets a where a.asset_name like $1`;
+  const sql = `SELECT a.asset_id
+  FROM ${tableName} a where a.asset_id like $1`;
   try {
-    res = await client.query(sql, [assetName]);
+    res = await client.query(sql, [idValue]);
   } catch (error) {
     throw new Error(`PG error getting asset information: ${pgErrorCodes[error.code]||error.code}`);
   }
   return res;
 }
 
-async function readRelations(client, assetName) {
+async function readRelations(client, idValue) {
   let res;
   const relations = {
     ancestors: {
@@ -41,17 +41,17 @@ async function readRelations(client, assetName) {
   };
   let sql = `
         WITH RECURSIVE subdependencies AS (
-          SELECT asset_name, dependency FROM dependencies
-          WHERE asset_name = $1
+          SELECT asset_id, dependent_asset_id FROM bedrock2.dependencies
+          WHERE asset_id = $1
           UNION
-            SELECT d.asset_name, d.dependency
-            FROM dependencies d
-            INNER JOIN subdependencies s ON s.dependency = d.asset_name
+            SELECT d.asset_id, d.dependent_asset_id
+            FROM bedrock2.dependencies d
+            INNER JOIN subdependencies s ON s.dependent_asset_id = d.asset_id
         ) SELECT * FROM subdependencies;
       `;
   let check = {};
   try {
-    res = await client.query(sql, [assetName]);
+    res = await client.query(sql, [idValue]);
   } catch (error) {
     throw new Error(`PG error getting ancestor information: ${pgErrorCodes[error.code]||error.code}`);
   }
@@ -59,50 +59,53 @@ async function readRelations(client, assetName) {
   for (let i = 0; i < res.rowCount; i += 1) {
     relations.ancestors.items.push(
       {
-        asset_name: res.rows[i].asset_name,
-        parent: res.rows[i].dependency,
+        asset_id: res.rows[i].asset_id,
+        parent: res.rows[i].dependent_asset_id,
       },
     );
-    if (!(res.rows[i].dependency in check)) {
-      relations.ancestors.unique_items.push(res.rows[i].dependency);
-      check[res.rows[i].dependency] = true;
+    if (!(res.rows[i].dependent_asset_id in check)) {
+      relations.ancestors.unique_items.push(res.rows[i].dependent_asset_id);
+      check[res.rows[i].dependent_asset_id] = true;
     }
   }
 
   // Now the other direction
   sql = `
         WITH RECURSIVE subdependencies AS (
-          SELECT asset_name, dependency FROM dependencies
-          WHERE dependency = $1
+          SELECT asset_id, dependent_asset_id FROM bedrock2.dependencies
+          WHERE dependent_asset_id = $1
           UNION
-            SELECT d.asset_name, d.dependency
-            FROM dependencies d
-            INNER JOIN subdependencies s ON s.asset_name = d.dependency
+            SELECT d.asset_id, d.dependent_asset_id
+            FROM bedrock2.dependencies d
+            INNER JOIN subdependencies s ON s.asset_id = d.dependent_asset_id
         ) SELECT * FROM subdependencies;
       `;
   check = {};
   try {
-    res = await client.query(sql, [assetName]);
+    res = await client.query(sql, [idValue]);
   } catch (error) {
     throw new Error(`PG error getting descendent information: ${pgErrorCodes[error.code]||error.code}`);
   }
   for (let i = 0; i < res.rowCount; i += 1) {
     relations.descendants.items.push(
       {
-        asset_name: res.rows[i].asset_name,
-        parent: res.rows[i].dependency,
+        asset_id: res.rows[i].asset_id,
+        parent: res.rows[i].dependent_asset_id,
       },
     );
-    if (!(res.rows[i].asset_name in check)) {
-      relations.descendants.unique_items.push(res.rows[i].asset_name);
-      check[res.rows[i].asset_name] = true;
+    if (!(res.rows[i].asset_id in check)) {
+      relations.descendants.unique_items.push(res.rows[i].asset_id);
+      check[res.rows[i].asset_id] = true;
     }
   }
   return relations;
 }
 
-async function getAllAssetRelations(pathElements, queryParams, connection) {
-  const assetName = pathElements[1];
+async function getAllAssetRelations(
+  connection,
+  idValue,
+  tableName,
+) {
   let client;
   let relations;
   let res;
@@ -130,12 +133,12 @@ async function getAllAssetRelations(pathElements, queryParams, connection) {
   }
 
   try {
-    res = await readAsset(client, assetName);
+    res = await readAsset(client, idValue, tableName);
     if (res.rowCount === 0) {
       response.message = 'No assets found';
       return response;
     }
-    relations = await readRelations(client, assetName);
+    relations = await readRelations(client, idValue);
     response.result.ancestors.items = relations.ancestors.items;
     response.result.ancestors.unique_items = relations.ancestors.unique_items;
     response.result.descendants.items = relations.descendants.items;

@@ -16,12 +16,11 @@ async function addOwner(
 ) {
   const shouldExist = false;
   let client;
-  let clientInitiated = false;
   const bodyWithID = {
     ...body,
-    owner_id: generateId(),
   };
-  const idValue = bodyWithID.owner_id;
+  bodyWithID[idField] = generateId();
+  const idValue = bodyWithID[idField];
 
   const response = {
     error: false,

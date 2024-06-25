@@ -18,9 +18,9 @@ async function addTag(
   let clientInitiated = false;
   const bodyWithID = {
     ...body,
-    tag_name: generateId(),
   };
-  const idValue = bodyWithID.tag_name;
+  bodyWithID[idField] = generateId();
+  const idValue = bodyWithID[idField];
 
   const response = {
     error: false,

@@ -2,22 +2,11 @@
 /* eslint-disable no-console */
 import pgpkg from 'pg';
 import pgErrorCodes from '../pgErrorCodes.js';
-import getCustomFieldsInfo from '../common/getCustomFieldInfo.js';
-
-const { Client } = pgpkg;
-
-async function newClient(connection) {
-  const client = new Client(connection);
-  try {
-    await client.connect();
-    return client;
-  } catch (error) {
-    throw new Error(`PG error connecting: ${pgErrorCodes[error.code]||error.code}`);
-  }
-}
+import { getCustomFieldsInfo } from '../utilities/assetUtilities.js';
+import { newClient } from '../utilities/utilities.js';
 
 async function getInfo(client, info) {
-  let sql = `SELECT * FROM bedrock.${info.table_name}`;
+  let sql = `SELECT * FROM bedrock2.${info.table_name}`;
   let res;
   let resultArray = [];
 
@@ -80,7 +69,7 @@ async function getConnectionClass(client) {
 }
 
 async function getCustomFields(client) {
-  const sql = 'SELECT id, name FROM bedrock.asset_types';
+  const sql = 'SELECT asset_type_id, asset_type_name FROM bedrock2.asset_types';
   let res;
 
   const resultMap = new Map();
@@ -89,15 +78,16 @@ async function getCustomFields(client) {
   try {
     res = await client.query(sql, []);
     res.rows.forEach((row) => {
-      types.push(row.id);
+      types.push(row.asset_type_id);
       const typeMap = new Map();
-      typeMap.set('name', row.name);
-      resultMap.set(row.id, typeMap);
+      typeMap.set('asset_type_name', row.asset_type_name);
+      resultMap.set(row.asset_type_id, typeMap);
     });
   } catch (error) {
     throw new Error(`PG error getting asset types: ${pgErrorCodes[error.code]||error.code}`);
   }
   let type;
+  console.log(types)
   for (type of types) {
     const customFields = await getCustomFieldsInfo(client, type);
     const typeMap = resultMap.get(type);
@@ -111,7 +101,7 @@ async function getCustomFields(client) {
   return resultMap;
 }
 
-async function getReference(domainName, pathElements, queryParams, connection) {
+async function getReference(connection) {
   const result = {
     error: false,
     message: '',
@@ -123,10 +113,10 @@ async function getReference(domainName, pathElements, queryParams, connection) {
   // if you want to add info from a new another table, and need either a single column
   // or all the columns, just add it to this array
   const queryInfo = [
-    { table_name: 'run_groups', field_name: 'run_group_name' },
-    { table_name: 'tags', field_name: 'all' },
+    // { table_name: 'run_groups', field_name: 'run_group_id' },
+    // { table_name: 'tags', field_name: 'all' },
     { table_name: 'connections', field_name: 'all' },
-    { table_name: 'owners', field_name: 'all' },
+    // { table_name: 'owners', field_name: 'all' },
   ];
 
   // get a new client

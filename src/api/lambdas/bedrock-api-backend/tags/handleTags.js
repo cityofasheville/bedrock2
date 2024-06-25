@@ -20,12 +20,12 @@ async function handleTags(
   };
   let nParams = pathElements.length;
   let body;
-  const idField = 'tag_name';
+  const idField = 'tag_id';
   let idValue;
   const name = 'tag';
-  const tableName = 'tags';
-  const requiredFields = ['tag_name', 'display_name'];
-  const allFields = ['tag_name', 'display_name'];
+  const tableName = 'bedrock2.tags';
+  const requiredFields = ['tag_id', 'tag_name', 'display_name'];
+  const allFields = ['tag_id', 'tag_name', 'display_name'];
 
   if (nParams === 2 && (pathElements[1] === null || pathElements[1].length === 0)) nParams = 1;
   if ('body' in event) {
@@ -36,11 +36,6 @@ async function handleTags(
   } else if (body) { // For POST requests, setting idValue here since it's not in the path
     idValue = body[idField];
   }
-
-  console.log(event);
-  console.log(JSON.stringify(event));
-  console.log(pathElements);
-  console.log(nParams);
 
   switch (nParams) {
     // GET tags
