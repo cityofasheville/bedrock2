@@ -5,8 +5,6 @@ import pgErrorCodes from '../pgErrorCodes.js';
 import { deleteInfo, newClient } from '../utilities/utilities.js';
 
 function checkInfo(body, requiredFields) {
-  console.log('entering checkInfo');
-  console.log(body);
   // loop through requiredFields array and check that each one is in body
   for (let i = 0; i < requiredFields.length; i += 1) {
     body.forEach((obj) => {
@@ -56,7 +54,13 @@ async function addTasks(client, allFields, body) {
   return body;
 }
 
-async function updateTasks(pathElements, event, connection) {
+async function updateTasks(
+  connection,
+  idField,
+  idValue,
+  name,
+  body,
+) {
   const response = {
     error: false,
     message: '',
@@ -64,12 +68,8 @@ async function updateTasks(pathElements, event, connection) {
   };
   let client;
 
-  const body = JSON.parse(event.body);
-  const idField = 'asset_name';
-  const [, idValue] = pathElements;
-  const name = 'asset tasks';
-  const tableName = 'tasks';
-  const allFields = ['asset_name', 'seq_number', 'description', 'type', 'active', 'source', 'target', 'configuration'];
+  const tableName = 'bedrock2.tasks';
+  const allFields = ['task_id', 'asset_id', 'seq_number', 'description', 'type', 'active', 'source', 'target', 'configuration'];
   const requiredFields = ['asset_name', 'seq_number', 'type', 'active'];
 
   try {

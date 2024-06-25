@@ -40,7 +40,7 @@ function buildWhereClause(queryParams, idField) {
 }
 
 async function getCount(whereClause, client, tableName, name) {
-  const sql = `SELECT count(*) FROM bedrock.${tableName}  ${whereClause.whereClause}`;
+  const sql = `SELECT count(*) FROM ${tableName}  ${whereClause.whereClause}`;
   let res;
 
   try {
@@ -52,7 +52,7 @@ async function getCount(whereClause, client, tableName, name) {
 }
 
 async function getListInfo(offset, count, whereClause, client, idField, tableName, name) {
-  let sql = `SELECT * FROM bedrock.${tableName} ${whereClause.whereClause}`;
+  let sql = `SELECT * FROM ${tableName} ${whereClause.whereClause}`;
   sql += ` order by ${idField} asc`;
   sql += ` offset ${offset} limit ${count} `;
   let res;

@@ -2,89 +2,41 @@
 /* eslint-disable no-console */
 import pgpkg from 'pg';
 import pgErrorCodes from '../pgErrorCodes.js';
+import { newClient, checkExistence, deleteInfo } from '../utilities/utilities.js';
 
-const { Client } = pgpkg;
-
-async function newClient(connection) {
-  const client = new Client(connection);
+async function handleDelete(tableNames, client, idField, idValue, name) {
   try {
-    await client.connect();
-    return client;
+    const promises = tableNames.map(async (table) => {
+      // Perform asynchronous operation for each item
+      const data = await deleteInfo(client, table, idField, idValue, name);
+      return data;
+    });
+
+    // Wait for all promises to resolve concurrently
+    const results = await Promise.all(promises);
+
+    // Process the results
+    console.log(results);
   } catch (error) {
-    throw new Error(`PG error connecting: ${pgErrorCodes[error.code]||error.code}`);
+    // Handle any errors that occurred during the asynchronous operations
+    console.error('Error fetching data:', error);
   }
 }
 
-async function checkExistence(client, assetName) {
-  // Check that asset exists
-  let res;
-  const sql = 'SELECT * FROM bedrock.assets where asset_name like $1';
-  try {
-    res = await client.query(sql, [assetName]);
-  } catch (error) {
-    throw new Error(`PG error getting asset for delete: ${pgErrorCodes[error.code]||error.code}`);
-  }
-
-  if (res.rowCount < 1) {
-    throw new Error('Asset does not exist');
-  }
-}
-
-async function taskDelete(client, assetName) {
-  try {
-    await client.query('delete from tasks where asset_name = $1', [assetName]);
-  } catch (error) {
-    throw new Error(`PG error deleting asset tasks: ${pgErrorCodes[error.code]||error.code}`);
-  }
-}
-
-async function dependenciesDelete(client, assetName) {
-  try {
-    await client.query('delete from dependencies where asset_name = $1', [assetName]);
-  } catch (error) {
-    throw new Error(`PG error deleting asset dependencies: ${pgErrorCodes[error.code]||error.code}`);
-  }
-}
-
-async function etlDelete(client, assetName) {
-  try {
-    await client.query('delete from etl where asset_name = $1', [assetName]);
-  } catch (error) {
-    throw new Error(`PG error deleting asset ETL: ${pgErrorCodes[error.code]||error.code}`);
-  }
-}
-
-async function tagsDelete(client, assetName) {
-  try {
-    await client.query('delete from bedrock.asset_tags where asset_name = $1', [assetName]);
-  } catch (error) {
-    throw new Error(`PG error deleting asset tags: ${pgErrorCodes[error.code]||error.code}`);
-  }
-}
-
-async function customFieldsDelete(client, assetName) {
-  try {
-    await client.query('delete from bedrock.custom_values where asset_name = $1', [assetName]);
-  } catch (error) {
-    throw new Error(`PG error deleting asset custom values: ${pgErrorCodes[error.code]||error.code}`);
-  }
-}
-
-async function baseDelete(client, assetName) {
-  try {
-    await client.query('delete from assets where asset_name = $1;', [assetName]);
-  } catch (error) {
-    throw new Error(`PG error deleting asset: ${pgErrorCodes[error.code]||error.code}`);
-  }
-}
-
-async function deleteAsset(pathElements, queryParams, connection) {
-  const assetName = pathElements[1];
+async function deleteAsset(
+  connection,
+  idField,
+  idValue,
+  name,
+  tableName,
+) {
   let client;
-  // no need for building a map object to send to the requester, as we only return the asset name. 
-  const response= {
+  const shouldExist = true;
+  const tableNames = ['bedrock2.assets', 'bedrock2.custom_values', 'bedrock2.asset_tags', 'bedrock2.etl', 'bedrock2.dependencies', 'bedrock2.tasks'];
+  // no need for building a map object to send to the requester, as we only return the asset name.
+  const response = {
     error: false,
-    message: `Successfully deleted asset ${assetName}`,
+    message: `Successfully deleted asset ${idValue}`,
     result: null,
   };
 
@@ -97,7 +49,7 @@ async function deleteAsset(pathElements, queryParams, connection) {
   }
 
   try {
-    await checkExistence(client, assetName);
+    await checkExistence(client, tableName, idField, idValue, name, shouldExist);
   } catch (error) {
     await client.end();
     response.error = true;
@@ -108,12 +60,7 @@ async function deleteAsset(pathElements, queryParams, connection) {
   await client.query('BEGIN');
 
   try {
-    await taskDelete(client, assetName);
-    await dependenciesDelete(client, assetName);
-    await etlDelete(client, assetName);
-    await tagsDelete(client, assetName);
-    await customFieldsDelete(client, assetName);
-    await baseDelete(client, assetName);
+    handleDelete(tableNames, client, idField, idValue, name);
     await client.query('COMMIT');
   } catch (error) {
     await client.query('ROLLBACK');

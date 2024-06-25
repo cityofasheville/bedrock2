@@ -6,7 +6,7 @@ import pgErrorCodes from '../pgErrorCodes.js';
 async function getAssetInfo(client, idValue, name) {
   // Querying database to get information. Function can be used multiple times per method
   // if we need information from multiple tables
-  const sql = 'SELECT a.*, b.display_name FROM bedrock.etl a left join bedrock.assets b on a.asset_name = b.asset_name where run_group like $1';
+  const sql = 'SELECT a.*, b.asset_name FROM bedrock2.etl a left join bedrock2.assets b on a.asset_id = b.asset_id where run_group_id like $1';
   let res;
   try {
     res = await client.query(sql, [idValue]);
@@ -14,9 +14,6 @@ async function getAssetInfo(client, idValue, name) {
     throw new Error([`Postgres error: ${pgErrorCodes[error.code]||error.code}`, error]);
   }
 
-  if (res.rowCount === 0) {
-    throw new Error(`Asset information for ${name} not found`);
-  }
   return res;
 }
 

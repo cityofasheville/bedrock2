@@ -6,10 +6,10 @@ import {
 } from '../utilities/listUtilities.js';
 import pgErrorCodes from '../pgErrorCodes.js';
 
-async function getCustomFieldsInfo(client, name) {
+async function getCustomFieldsInfoList(client, name, table) {
   // Querying database to get information. Function can be used multiple times per method
   // if we need information from multiple tables
-  const sql = 'SELECT * FROM bedrock.asset_type_custom_fields';
+  const sql = `SELECT * FROM ${table}`;
   let res;
   try {
     res = await client.query(sql);
@@ -32,6 +32,7 @@ async function getAssetTypeList(
   idField,
   name,
   tableName,
+  tableNameCustomFields,
 ) {
   let total;
   let res;
@@ -60,7 +61,7 @@ async function getAssetTypeList(
     response.result.total = total;
     res = await getListInfo(offset, count, whereClause, client, idField, tableName, name);
     response.result.items = res.rows;
-    const resCustomFields = await getCustomFieldsInfo(client, name);
+    const resCustomFields = await getCustomFieldsInfoList(client, name, tableNameCustomFields);
     response.result.url = buildURL(queryParams, domainName, res, offset, total, pathElements);
 
     const customFieldsMap = {};
@@ -76,11 +77,10 @@ async function getAssetTypeList(
 
     // Add custom_fields property to firstArray
     response.result.items.forEach((item) => {
-      const { id } = item;
-      item.custom_fields = customFieldsMap[id] || [];
+      const { asset_type_id } = item;
+      item.custom_fields = customFieldsMap[asset_type_id] || [];
     });
 
-    console.log(response.result.items);
     await client.end();
   } catch (error) {
     if (clientInitiated) {

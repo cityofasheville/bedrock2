@@ -20,12 +20,12 @@ async function handleCustomFields(
   };
   let nParams = pathElements.length;
   let body;
-  const idField = 'id';
+  const idField = 'custom_field_id';
   let idValue;
-  const name = 'custom_field';
-  const tableName = 'custom_fields';
-  const requiredFields = ['id', 'field_display', 'field_type', 'field_data'];
-  const allFields = ['id', 'field_display', 'field_type', 'field_data'];
+  const name = 'custom_fields';
+  const tableName = 'bedrock2.custom_fields';
+  const requiredFields = ['custom_field_id', 'custom_field_name', 'field_type', 'field_data'];
+  const allFields = ['custom_field_id', 'custom_field_name', 'field_type', 'field_data'];
 
   if (nParams === 2 && (pathElements[1] === null || pathElements[1].length === 0)) nParams = 1;
   if ('body' in event) {

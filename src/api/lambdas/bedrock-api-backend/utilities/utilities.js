@@ -22,7 +22,6 @@ async function newClient(connection) {
 }
 
 function checkInfo(body, requiredFields, name, idValue, idField) {
-  console.log('entering checkInfo');
   // loop through requiredFields array and check that each one is in body
   for (let i = 0; i < requiredFields.length; i += 1) {
     const field = requiredFields[i];
@@ -32,15 +31,13 @@ function checkInfo(body, requiredFields, name, idValue, idField) {
   }
 
   if (idValue !== body[idField]) {
-    console.log(idValue);
-    console.log(body[idField]);
     throw new Error(`${idValue} in path does not match ${body[idField]} in body`);
   }
 }
 
 async function checkExistence(client, tableName, idField, idValue, name, shouldExist) {
   // query the database to make sure resource exists
-  const sql = `SELECT * FROM bedrock.${tableName} where ${idField} like $1`;
+  const sql = `SELECT * FROM ${tableName} where ${idField} like $1`;
   let res;
   try {
     res = await client.query(sql, [idValue]);
@@ -69,7 +66,7 @@ function generateId() {
 async function getInfo(client, idField, idValue, name, tableName) {
   // Querying database to get information. Function can be used multiple times per method
   // if we need information from multiple tables
-  const sql = `SELECT * FROM bedrock.${tableName} where ${idField} like $1`;
+  const sql = `SELECT * FROM ${tableName} where ${idField} like $1`;
   let res;
   try {
     res = await client.query(sql, [idValue]);
@@ -93,7 +90,6 @@ async function addInfo(client, allFields, body, tableName, name) {
   // This is just a bunch of string manipulation.
   // It creates a string of the column names/fields like '(tag_name, display_name)'
   Object.keys(body).forEach((key) => {
-    console.log(key);
     if (allFields.includes(key)) {
       fieldsString += comma;
       fieldsString += key;
@@ -128,7 +124,7 @@ async function addInfo(client, allFields, body, tableName, name) {
   try {
     res = await client
       .query(
-        `INSERT INTO bedrock.${tableName} ${fieldsString} VALUES${valueString}`,
+        `INSERT INTO ${tableName} ${fieldsString} VALUES${valueString}`,
         valuesFromBody,
       );
   } catch (error) {
@@ -173,7 +169,7 @@ async function updateInfo(client, allFields, body, tableName, idField, idValue, 
 async function deleteInfo(client, tableName, idField, idValue, name) {
   try {
     await client
-      .query(`delete from bedrock.${tableName} where ${idField} = $1`, [
+      .query(`delete from ${tableName} where ${idField} = $1`, [
         idValue,
       ]);
   } catch (error) {

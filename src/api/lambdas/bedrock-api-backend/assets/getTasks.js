@@ -1,7 +1,8 @@
 /* eslint-disable no-console */
 import pgpkg from 'pg';
-const { Client } = pgpkg;
 import pgErrorCodes from '../pgErrorCodes.js';
+
+const { Client } = pgpkg;
 
 async function newClient(connection) {
   const client = new Client(connection);
@@ -13,11 +14,11 @@ async function newClient(connection) {
   }
 }
 
-async function readTasks(client, assetName) {
+async function readTasks(client, idValue) {
   let res;
-  const sql = 'SELECT * FROM bedrock.tasks where asset_name like $1 order by seq_number asc';
+  const sql = 'SELECT * FROM bedrock2.tasks where asset_id like $1 order by seq_number asc';
   try {
-    res = await client.query(sql, [assetName]);
+    res = await client.query(sql, [idValue]);
   } catch (error) {
     throw new Error(`PG error getting assets: ${pgErrorCodes[error.code]||error.code}`);
   }
@@ -25,7 +26,7 @@ async function readTasks(client, assetName) {
 }
 
 function formatTasks(res) {
-  let tempTasks = [];
+  const tempTasks = [];
   for (let i = 0; i < res.rowCount; i += 1) {
     tempTasks.push(
       {
@@ -43,7 +44,7 @@ function formatTasks(res) {
   return tempTasks;
 }
 
-async function getTasks(pathElements, queryParams, connection) {
+async function getTasks(connection, idValue) {
   const response = {
     error: false,
     message: '',
@@ -52,7 +53,6 @@ async function getTasks(pathElements, queryParams, connection) {
   let client;
   let res;
   let tasks = [];
-  const assetName = pathElements[1];
 
   try {
     client = await newClient(connection);
@@ -63,11 +63,11 @@ async function getTasks(pathElements, queryParams, connection) {
   }
 
   try {
-    res = await readTasks(client, assetName);
+    res = await readTasks(client, idValue);
     if (res.rowCount === 0) {
       response.message = 'No tasks found';
     } else {
-      tasks = formatTasks(res)
+      tasks = formatTasks(res);
       response.result = {
         items: tasks,
       };
@@ -78,9 +78,9 @@ async function getTasks(pathElements, queryParams, connection) {
     response.message = error.message;
     return response;
   } finally {
-    await client.end()
-    return response;
+    await client.end();
   }
+  return response;
 }
 
 export default getTasks;
