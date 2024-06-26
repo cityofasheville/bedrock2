@@ -59,8 +59,8 @@ async function readAssets(client, offset, count, whereClause, tableName) {
   const sql = `
     SELECT a.*, e.run_group_id as etl_run_group, e.active as etl_active,
       c.connection_class FROM ${tableName} a
-    left join bedrock2.etl e on a.asset_id = e.asset_id
-    left join bedrock2.connections c
+    left join bedrock.etl e on a.asset_id = e.asset_id
+    left join bedrock.connections c
       on c.connection_id = a."location"->>'connection_id'
     ${whereClause.whereClause}
     order by a.asset_name asc
@@ -108,7 +108,7 @@ async function addBaseFields(sqlResult, requestedFields, availableFields) {
 
 async function addTags(client, assets) {
   const sql = `
-  select * from bedrock2.asset_tags a left join bedrock2.tags b on a.tag_id = b.tag_id
+  select * from bedrock.asset_tags a left join bedrock.tags b on a.tag_id = b.tag_id
   where asset_id in (${assets.assetIds.join()})
 `;
   let sqlResult;
@@ -122,7 +122,7 @@ async function addTags(client, assets) {
 
 async function addCustomFields(client, assets) {
   const sql = `
-    select asset_id, custom_field_id, field_value from bedrock2.custom_values
+    select asset_id, custom_field_id, field_value from bedrock.custom_values
     where asset_id in (${assets.assetIds.join()})
   `;
   let sqlResult;
@@ -138,7 +138,7 @@ async function addCustomFields(client, assets) {
 async function addDependencies(client, assets) {
   let res;
   const sql = `
-    select asset_id, dependent_asset_id from bedrock2.dependencies
+    select asset_id, dependent_asset_id from bedrock.dependencies
     where asset_id in (${assets.assetIds.join()})
   `;
 

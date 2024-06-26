@@ -22,7 +22,7 @@ async function handleAssets(event, pathElements, queryParams, verb, connection) 
   const idField = 'asset_id';
   let idValue;
   const name = 'asset';
-  const tableName = 'bedrock2.assets';
+  const tableName = 'bedrock.assets';
   const requiredFields = ['asset_id', 'asset_name', 'description', 'location', 'active'];
   const allFields = ['asset_id', 'asset_name', 'description', 'location', 'active', 'asset_type_id', 'connection_class', 'location', 'link', 'owner_id', 'tags', 'notes', 'parents', 'etl_run_group', 'etl_active', 'custom_fields'];
 
@@ -73,16 +73,10 @@ async function handleAssets(event, pathElements, queryParams, verb, connection) 
       switch (verb) {
         case 'GET':
           response = await getAsset(
-            pathElements,
             queryParams,
             connection,
-            idField,
             idValue,
-            name,
-            tableName,
-            requiredFields,
             allFields,
-            body,
           );
           break;
 

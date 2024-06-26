@@ -41,11 +41,11 @@ async function readRelations(client, idValue) {
   };
   let sql = `
         WITH RECURSIVE subdependencies AS (
-          SELECT asset_id, dependent_asset_id FROM bedrock2.dependencies
+          SELECT asset_id, dependent_asset_id FROM bedrock.dependencies
           WHERE asset_id = $1
           UNION
             SELECT d.asset_id, d.dependent_asset_id
-            FROM bedrock2.dependencies d
+            FROM bedrock.dependencies d
             INNER JOIN subdependencies s ON s.dependent_asset_id = d.asset_id
         ) SELECT * FROM subdependencies;
       `;
@@ -72,11 +72,11 @@ async function readRelations(client, idValue) {
   // Now the other direction
   sql = `
         WITH RECURSIVE subdependencies AS (
-          SELECT asset_id, dependent_asset_id FROM bedrock2.dependencies
+          SELECT asset_id, dependent_asset_id FROM bedrock.dependencies
           WHERE dependent_asset_id = $1
           UNION
             SELECT d.asset_id, d.dependent_asset_id
-            FROM bedrock2.dependencies d
+            FROM bedrock.dependencies d
             INNER JOIN subdependencies s ON s.asset_id = d.dependent_asset_id
         ) SELECT * FROM subdependencies;
       `;

@@ -23,9 +23,9 @@ async function handleOwners(
   const idField = 'owner_id';
   let idValue;
   const name = 'owner';
-  const tableName = 'owners';
-  const requiredFields = ['owner_id', 'contact_name', 'contact_email'];
-  const allFields = ['owner_id', 'contact_name', 'contact_email', 'contact_phone', 'organization', 'department', 'division', 'notes'];
+  const tableName = 'bedrock.owners';
+  const requiredFields = ['owner_id', 'owner_name', 'owner_email'];
+  const allFields = ['owner_id', 'owner_name', 'owner_email', 'owner_phone', 'organization', 'department', 'division', 'notes'];
 
   if (nParams === 2 && (pathElements[1] === null || pathElements[1].length === 0)) nParams = 1;
   if ('body' in event) {

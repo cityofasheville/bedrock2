@@ -23,7 +23,7 @@ async function handleTags(
   const idField = 'tag_id';
   let idValue;
   const name = 'tag';
-  const tableName = 'bedrock2.tags';
+  const tableName = 'bedrock.tags';
   const requiredFields = ['tag_id', 'tag_name', 'display_name'];
   const allFields = ['tag_id', 'tag_name', 'display_name'];
 

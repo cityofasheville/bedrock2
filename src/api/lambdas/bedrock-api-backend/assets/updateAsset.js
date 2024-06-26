@@ -11,12 +11,12 @@ import {
 import getAsset from './getAsset.js';
 
 async function checkExistence(client, idValue) {
-  const sql = 'SELECT * FROM bedrock2.assets where asset_id like $1';
+  const sql = 'SELECT * FROM bedrock.assets where asset_id like $1';
   let res;
   try {
     res = await client.query(sql, [idValue]);
   } catch (error) {
-    throw new Error(`PG error verifying that asset exists: ${pgErrorCodes[error.code]||error.code}`);
+    throw new Error(`PG error verifying that asset exists: ${pgErrorCodes[error.code] || error.code}`);
   }
 
   if (res.rowCount === 0) {
@@ -28,9 +28,9 @@ async function updateDependencies(client, idField, idValue, name, body) {
   // Now add any dependencies, always replacing existing with new
 
   try {
-    await deleteInfo(client, 'bedrock2.dependencies', idField, idValue, name);
+    await deleteInfo(client, 'bedrock.dependencies', idField, idValue, name);
   } catch (error) {
-    throw new Error(`PG error deleting dependencies for update: ${pgErrorCodes[error.code]||error.code}`);
+    throw new Error(`PG error deleting dependencies for update: ${pgErrorCodes[error.code] || error.code}`);
   }
   if (body.parents.length > 0) {
     for (let i = 0; i < body.parents.length; i += 1) {
@@ -41,7 +41,7 @@ async function updateDependencies(client, idField, idValue, name, body) {
           [idValue, dependency],
         );
       } catch (error) {
-        throw new Error(`PG error updating dependencies: ${pgErrorCodes[error.code]||error.code}`);
+        throw new Error(`PG error updating dependencies: ${pgErrorCodes[error.code] || error.code}`);
       }
     }
   }
@@ -67,7 +67,7 @@ async function updateTags(idValue, idField, body, client, name) {
 
   // For now, just add any tags that aren't in the tags table
   if (tags.length > 0) {
-    sql = 'SELECT tag_id from bedrock2.tags where tag_id in (';
+    sql = 'SELECT tag_id from bedrock.tags where tag_id in (';
     cnt = 1;
     for (let i = 0, comma = ''; i < tags.length; i += 1, comma = ', ', cnt += 1) {
       sql += `${comma}$${cnt}`;
@@ -76,7 +76,7 @@ async function updateTags(idValue, idField, body, client, name) {
     try {
       res = await client.query(sql, tags);
     } catch (error) {
-      throw new Error(`PG error reading tags for update: ${pgErrorCodes[error.code]||error.code}`);
+      throw new Error(`PG error reading tags for update: ${pgErrorCodes[error.code] || error.code}`);
     }
 
     if (res.rowCount !== tags.length) {
@@ -88,11 +88,11 @@ async function updateTags(idValue, idField, body, client, name) {
         if (!dbTags.includes(tags[i])) {
           try {
             await client.query(
-              'INSERT INTO bedrock2.tags (tag_id) VALUES ($1)',
+              'INSERT INTO bedrock.tags (tag_id) VALUES ($1)',
               [tags[i]],
             );
           } catch (error) {
-            throw new Error(`PG error adding tags to tag table for update: ${pgErrorCodes[error.code]||error.code}`);
+            throw new Error(`PG error adding tags to tag table for update: ${pgErrorCodes[error.code] || error.code}`);
           }
         }
       }
@@ -100,21 +100,21 @@ async function updateTags(idValue, idField, body, client, name) {
 
     // Now delete any existing tags
     try {
-      await deleteInfo(client, 'bedrock2.asset_tags', idField, idValue, name);
+      await deleteInfo(client, 'bedrock.asset_tags', idField, idValue, name);
     } catch (error) {
-      throw new Error(`PG error deleting tags for update: ${pgErrorCodes[error.code]||error.code}`);
+      throw new Error(`PG error deleting tags for update: ${pgErrorCodes[error.code] || error.code}`);
     }
 
     // And add the new ones back in
     try {
       for (let i = 0; i < tags.length; i += 1) {
         res = await client.query(
-          'INSERT INTO bedrock2.asset_tags (asset_id, tag_id) VALUES ($1, $2)',
+          'INSERT INTO bedrock.asset_tags (asset_id, tag_id) VALUES ($1, $2)',
           [body.asset_name, tags[i]],
         );
       }
     } catch (error) {
-      throw new Error(`PG error inserting tags for update: ${pgErrorCodes[error.code]||error.code}`);
+      throw new Error(`PG error inserting tags for update: ${pgErrorCodes[error.code] || error.code}`);
     }
   }
   return tags;
@@ -163,7 +163,7 @@ async function updateAsset(
       customFields = await getCustomFieldsInfo(client, body.asset_type);
       customValues = getCustomValues(body);
       checkCustomFieldsInfo(body, customFields);
-      await deleteInfo(client, 'bedrock2.custom_values', idField, idValue, name);
+      await deleteInfo(client, 'bedrock.custom_values', idField, idValue, name);
       await addCustomFieldsInfo(body, client, customFields, customValues);
     }
     if ('parents' in body) {
@@ -174,16 +174,10 @@ async function updateAsset(
     }
     await client.query('COMMIT');
     response.result = await getAsset(
-      pathElements,
       queryParams,
       connection,
-      idField,
       idValue,
-      name,
-      tableName,
-      requiredFields,
       allFields,
-      body,
     );
   } catch (error) {
     await client.query('ROLLBACK');

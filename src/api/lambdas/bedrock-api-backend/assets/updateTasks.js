@@ -68,7 +68,7 @@ async function updateTasks(
   };
   let client;
 
-  const tableName = 'bedrock2.tasks';
+  const tableName = 'bedrock.tasks';
   const allFields = ['task_id', 'asset_id', 'seq_number', 'description', 'type', 'active', 'source', 'target', 'configuration'];
   const requiredFields = ['asset_name', 'seq_number', 'type', 'active'];
 

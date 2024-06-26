@@ -6,7 +6,7 @@ import { getCustomFieldsInfo } from '../utilities/assetUtilities.js';
 import { newClient } from '../utilities/utilities.js';
 
 async function getInfo(client, info) {
-  let sql = `SELECT * FROM bedrock2.${info.table_name}`;
+  let sql = `SELECT * FROM bedrock.${info.table_name}`;
   let res;
   let resultArray = [];
 
@@ -69,7 +69,7 @@ async function getConnectionClass(client) {
 }
 
 async function getCustomFields(client) {
-  const sql = 'SELECT asset_type_id, asset_type_name FROM bedrock2.asset_types';
+  const sql = 'SELECT asset_type_id, asset_type_name FROM bedrock.asset_types';
   let res;
 
   const resultMap = new Map();

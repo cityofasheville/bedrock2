@@ -3,7 +3,7 @@
 import {
   newClient, checkInfo, checkExistence, updateInfo, deleteInfo,
 } from '../utilities/utilities.js';
-import { addCustomFieldsInfo } from '../utilities/assetUtilities.js';
+import { addAssetTypeCustomFields } from '../utilities/utilities.js'
 
 async function updateAssetType(
   connection,
@@ -44,7 +44,7 @@ async function updateAssetType(
     await client.query('BEGIN');
     response.result = await updateInfo(client, allFields, body, tableName, idField, idValue, name);
     await deleteInfo(client, tableNameCustomFields, 'asset_type_id', idValue, name);
-    await addCustomFieldsInfo(client, idValue, body, tableNameCustomFields, name);
+    await addAssetTypeCustomFields(client, idValue, body);
     await client.query('COMMIT');
 
     await client.end();
