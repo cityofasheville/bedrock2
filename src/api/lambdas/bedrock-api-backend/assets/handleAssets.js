@@ -117,7 +117,7 @@ async function handleAssets(event, pathElements, queryParams, verb, connection) 
     case 3:
       if (pathElements[2] === 'tasks') {
         if (verb === 'GET') {
-          response = await getTasks(connection, idValue);
+          response = await getTasks(connection, idValue, idField, name);
         } else if (verb === 'PUT') {
           response = await updateTasks(
             connection,

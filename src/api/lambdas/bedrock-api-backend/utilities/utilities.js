@@ -76,6 +76,8 @@ async function getInfo(client, idField, idValue, name, tableName) {
   } catch (error) {
     throw new Error([`Postgres error: ${pgErrorCodes[error.code]||error.code}`, error]);
   }
+  console.log(res)
+  console.log(res.rows[0])
 
   if (res.rowCount === 0) {
     throw new Error(`${capitalizeFirstLetter(name)} not found`);
@@ -149,10 +151,14 @@ async function updateInfo(client, allFields, body, tableName, idField, idValue, 
 
   // Creating a string like 'tag_name = $1, display_name = 2$' etc
   // and adding the actual value to the args array
-  Object.keys(body).forEach((key) => {
+  Object.keys(body.run_group).forEach((key) => {
     if (allFields.includes(key)) {
+      if (key == 'asset_id') {
+        sql += `${comma} ${key} = $${cnt}`;
+        args.push(idValue);
+      }
       sql += `${comma} ${key} = $${cnt}`;
-      args.push(body[key]);
+      args.push(body.run_group[key]);
       cnt += 1;
       comma = ',';
     }
@@ -160,6 +166,9 @@ async function updateInfo(client, allFields, body, tableName, idField, idValue, 
 
   sql += ` where ${idField} = $${cnt}`;
   args.push(idValue);
+
+  console.log(sql)
+  console.log(args)
   try {
     await client.query(sql, args);
   } catch (error) {

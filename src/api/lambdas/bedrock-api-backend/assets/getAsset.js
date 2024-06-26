@@ -52,7 +52,7 @@ async function getCustomFieldInfo(client, assetRows, idValue, requestedFields, o
   return Object.fromEntries(cv.entries());
 }
 
-async function addBaseInfo(assetRows, requestedFields, available) {
+async function getBaseInfo(assetRows, requestedFields, available) {
   const tempAsset = new Map();
   tempAsset.set('asset_name', assetRows[0].asset_name);
   tempAsset.set('asset_type', assetRows[0].asset_type_id);
@@ -81,7 +81,7 @@ async function addBaseInfo(assetRows, requestedFields, available) {
   return tempAsset;
 }
 
-async function addAssetTags(client, idValue) {
+async function getAssetTags(client, idValue) {
   const tags = [];
   const res = await client
     .query('SELECT * from bedrock.asset_tags where asset_id like $1', [idValue])
@@ -131,14 +131,14 @@ async function getAsset(
     const assetRows = await getAssetInfo(client, idValue);
     console.log('after getAssetInfo')
 
-    asset = await addBaseInfo(assetRows, requestedFields, allFields);
+    asset = await getBaseInfo(assetRows, requestedFields, allFields);
     console.log('after Baseinfo')
 
     asset.set('custom_fields', await getCustomFieldInfo(client, assetRows, idValue, requestedFields, overrideFields));
     console.log('after custom fields')
 
     if (requestedFields.includes('tags')) {
-      asset.set('tags', await addAssetTags(client, idValue));
+      asset.set('tags', await getAssetTags(client, idValue));
       console.log('after tags')
 
     }

@@ -2,12 +2,12 @@
 /* eslint-disable import/extensions */
 /* eslint-disable no-console */
 import pgErrorCodes from '../pgErrorCodes.js';
-import { deleteInfo, newClient } from '../utilities/utilities.js';
+import { deleteInfo, generateId, newClient, updateInfo } from '../utilities/utilities.js';
 
 function checkInfo(body, requiredFields) {
   // loop through requiredFields array and check that each one is in body
   for (let i = 0; i < requiredFields.length; i += 1) {
-    body.forEach((obj) => {
+    body.items.forEach((obj) => {
       if (!(requiredFields[i] in obj)) {
         throw new Error(`One or more tasks lack required property ${requiredFields[i]}`);
       }
@@ -28,7 +28,7 @@ async function addTasks(client, allFields, body) {
   });
   fieldsString += ')';
 
-  for (const obj of body) {
+  for (const obj of body.items) {
     const valuesFromBody = [];
     allFields.forEach((key) => {
       if (obj[key] || obj[key] === 0) {
@@ -36,16 +36,23 @@ async function addTasks(client, allFields, body) {
           valuesFromBody.push(JSON.stringify(obj[key]));
           // valuesFromBody.push(obj[key]);
         } else {
+          if (key == 'task_id') {
+            valuesFromBody.push(generateId())
+          } else {
           valuesFromBody.push(obj[key]);
-        }
+          }}
       } else {
         valuesFromBody.push(null);
       }
     });
 
+    console.log(fieldsString)
+      console.log(valuesFromBody)
+    
+
     try {
       await client
-        .query(`INSERT INTO bedrock.tasks ${fieldsString} VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`, valuesFromBody);
+        .query(`INSERT INTO bedrock.tasks ${fieldsString} VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`, valuesFromBody);
     } catch (error) {
       throw new Error([`Postgres error: ${pgErrorCodes[error.code]||error.code}`, error]);
     }
@@ -70,7 +77,7 @@ async function updateTasks(
 
   const tableName = 'bedrock.tasks';
   const allFields = ['task_id', 'asset_id', 'seq_number', 'description', 'type', 'active', 'source', 'target', 'configuration'];
-  const requiredFields = ['asset_name', 'seq_number', 'type', 'active'];
+  const requiredFields = ['asset_id', 'seq_number', 'type', 'active'];
 
   try {
     client = await newClient(connection);
@@ -85,6 +92,8 @@ async function updateTasks(
     await client.query('BEGIN');
     await deleteInfo(client, tableName, idField, idValue, name);
     await addTasks(client, allFields, body);
+    console.log('past addtasks')
+    await updateInfo(client, ['asset_id', 'run_group_id', 'active'], body, 'bedrock.etl', idField, idValue, name)
     await client.query('COMMIT');
     response.result = body;
   } catch (error) {
