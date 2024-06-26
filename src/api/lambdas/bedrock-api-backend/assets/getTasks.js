@@ -68,7 +68,6 @@ async function getTasks(connection, idValue, idField, name) {
   try {
     res = await readTasks(client, idValue);
     runGroup = await getInfo(client, idField, idValue, name, 'bedrock.etl')
-    console.log(runGroup)
     if (res.rowCount === 0) {
       response.message = 'No tasks found';
     } else {

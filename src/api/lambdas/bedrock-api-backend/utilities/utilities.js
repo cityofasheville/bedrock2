@@ -12,11 +12,9 @@ function capitalizeFirstLetter(string) {
 }
 
 async function newClient(connection) {
-  console.log('in new client')
   const client = new Client(connection);
   try {
     await client.connect();
-    console.log('after client.connect')
 
     return client;
   } catch (error) {
@@ -76,8 +74,6 @@ async function getInfo(client, idField, idValue, name, tableName) {
   } catch (error) {
     throw new Error([`Postgres error: ${pgErrorCodes[error.code]||error.code}`, error]);
   }
-  console.log(res)
-  console.log(res.rows[0])
 
   if (res.rowCount === 0) {
     throw new Error(`${capitalizeFirstLetter(name)} not found`);
@@ -167,8 +163,6 @@ async function updateInfo(client, allFields, body, tableName, idField, idValue, 
   sql += ` where ${idField} = $${cnt}`;
   args.push(idValue);
 
-  console.log(sql)
-  console.log(args)
   try {
     await client.query(sql, args);
   } catch (error) {
@@ -192,7 +186,6 @@ async function deleteInfo(client, tableName, idField, idValue, name) {
 async function addAssetTypeCustomFields(client, idValue, body) {
   let res;
   const valueStrings = [];
-  console.log(body.custom_fields);
 
   body.custom_fields.forEach((obj) => {
     const customFieldId = Object.keys(obj);
@@ -200,9 +193,6 @@ async function addAssetTypeCustomFields(client, idValue, body) {
     valueStrings.push(`('${idValue}', '${customFieldId}', ${required})`);
   });
   const combinedValueString = valueStrings.join(', ');
-  console.log(valueStrings);
-  console.log(`INSERT INTO bedrock.asset_type_custom_fields (asset_type_id, custom_field_id, required) VALUES ${combinedValueString}`,
-);
 
   try {
     res = await client
@@ -212,11 +202,7 @@ async function addAssetTypeCustomFields(client, idValue, body) {
   } catch (error) {
     throw new Error([`Postgres error: ${pgErrorCodes[error.code]}`, error]);
   }
-  console.log(res);
-  // if (res.rowCount !== 1) {
-  //   throw new Error(`Unknown error inserting new ${name}`);
-  // }
-  console.log('end of customfieldsadding');
+
   return body.custom_fields;
 }
 

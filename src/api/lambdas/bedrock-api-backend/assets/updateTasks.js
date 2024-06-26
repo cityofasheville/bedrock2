@@ -46,10 +46,6 @@ async function addTasks(client, allFields, body) {
       }
     });
 
-    console.log(fieldsString)
-      console.log(valuesFromBody)
-    
-
     try {
       await client
         .query(`INSERT INTO bedrock.tasks ${fieldsString} VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`, valuesFromBody);
@@ -92,7 +88,6 @@ async function updateTasks(
     await client.query('BEGIN');
     await deleteInfo(client, tableName, idField, idValue, name);
     await addTasks(client, allFields, body);
-    console.log('past addtasks')
     await updateInfo(client, ['asset_id', 'run_group_id', 'active'], body, 'bedrock.etl', idField, idValue, name)
     await client.query('COMMIT');
     response.result = body;
