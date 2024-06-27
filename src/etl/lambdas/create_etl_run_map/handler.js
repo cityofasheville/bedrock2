@@ -34,7 +34,7 @@ async function readEtlList(client, run_groups) {
       const sep = (accumulator !== '') ? ', ' : '';
       return `${accumulator + sep}'${currentValue}'`;
     }, '');
-    const sql = `SELECT * FROM bedrock.etl where run_group in (${rgString}) and active = true;`;
+    const sql = `SELECT * FROM ${process.env.BEDROCK_DB_SCHEMA}.etl where run_group in (${rgString}) and active = true;`;
     const res = await client.query(sql)
       .catch((err) => {
         const errmsg = pgErrorCodes[err.code];
@@ -61,7 +61,7 @@ async function readDependencies(client, assetMap) {
   const arr = Object.entries(assetMap);
   for (let i = 0; i < arr.length; i += 1) {
     const asset = arr[i][1];
-    const sql = `SELECT * FROM bedrock.dependencies where asset_name = '${arr[i][0]}';`;
+    const sql = `SELECT * FROM ${process.env.BEDROCK_DB_SCHEMA}.dependencies where asset_name = '${arr[i][0]}';`;
     // eslint-disable-next-line no-await-in-loop
     const res = await client.query(sql)
       .catch((err) => {
@@ -72,7 +72,7 @@ async function readDependencies(client, assetMap) {
       const d = res.rows[j].dependency;
       if (d[0] === '#') { // Aggregate Dependancy. Look up list of dependencies in tags
         const aggrDependency = d.slice(1);
-        const aggrSql = `SELECT asset_name FROM bedrock.asset_tags where tag_name = '${aggrDependency}';`;
+        const aggrSql = `SELECT asset_name FROM ${process.env.BEDROCK_DB_SCHEMA}.asset_tags where tag_name = '${aggrDependency}';`;
         // eslint-disable-next-line no-await-in-loop
         const aggrRes = await client.query(aggrSql)
           .catch((err) => {
@@ -94,7 +94,7 @@ async function readDependencies(client, assetMap) {
 async function readLocationFromAsset(client, assetName) {
   // add asset_name into location json
   const sql = `SELECT location::jsonb || ('{"asset":"' || asset_name || '"}')::jsonb as location
-              FROM bedrock.assets where asset_name = '${assetName}';`;
+              FROM ${process.env.BEDROCK_DB_SCHEMA}.assets where asset_name = '${assetName}';`;
   // eslint-disable-next-line no-await-in-loop
   const res = await client.query(sql)
     .catch((err) => {
@@ -112,8 +112,8 @@ async function readAggregateData(client, tempLocation, location, taskSource) {
   const { aggregate, data_range, data_connection } = taskSource;
   const sql = `
   select a.asset_name, location->>'spreadsheetid' spreadsheetid, 
-  location->>'tab' tab from bedrock.assets a
-  inner join bedrock.asset_tags using (asset_name)
+  location->>'tab' tab from ${process.env.BEDROCK_DB_SCHEMA}.assets a
+  inner join ${process.env.BEDROCK_DB_SCHEMA}.asset_tags using (asset_name)
   where tag_name = '${aggregate}' and active = true;
   `;
   // process.stdout.write(sql);
@@ -167,7 +167,7 @@ async function readTasks(client, assetMap) {
   for (let i = 0; i < arr.length; i += 1) {
     const assetName = arr[i][0];
     const asset = arr[i][1];
-    const sql = `SELECT * FROM bedrock.tasks where asset_name = '${assetName}' order by seq_number;`;
+    const sql = `SELECT * FROM ${process.env.BEDROCK_DB_SCHEMA}.tasks where asset_name = '${assetName}' order by seq_number;`;
 
     // eslint-disable-next-line no-await-in-loop
     const res = await client.query(sql)
@@ -218,7 +218,7 @@ async function readTasks(client, assetMap) {
 
 // Get Cron based run_group list
 async function getRunGroups(client, debug) {
-  const sql = 'SELECT run_group_name, cron_string FROM bedrock.run_groups;';
+  const sql = `SELECT run_group_name, cron_string FROM ${process.env.BEDROCK_DB_SCHEMA}.run_groups;`;
   return client.query(sql)
     .then((res) => {
       const run_groups = [];
@@ -246,7 +246,7 @@ async function getRunGroups(client, debug) {
 }
 
 async function verifyAssetExists(client, assetName) {
-  const sql = `SELECT * FROM bedrock.etl where asset_name = '${assetName}';`;
+  const sql = `SELECT * FROM ${process.env.BEDROCK_DB_SCHEMA}.etl where asset_name = '${assetName}';`;
   return client.query(sql)
     .then((res) => {
       if (res.rowCount === 0) {

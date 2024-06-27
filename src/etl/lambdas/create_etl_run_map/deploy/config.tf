@@ -28,6 +28,7 @@ resource "aws_lambda_function" "create_etl_run_map-$$INSTANCE$$" {
     environment {
       variables = {
         BEDROCK_DB_HOST = $$BEDROCK_DB_HOST$$
+        BEDROCK_DB_SCHEMA = $$BEDROCK_DB_SCHEMA$$
       }
     }
 }
