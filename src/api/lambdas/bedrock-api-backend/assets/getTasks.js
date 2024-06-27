@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import pgpkg from 'pg';
 import pgErrorCodes from '../pgErrorCodes.js';
+import { getInfo } from '../utilities/utilities.js';
 
 const { Client } = pgpkg;
 
@@ -30,7 +31,8 @@ function formatTasks(res) {
   for (let i = 0; i < res.rowCount; i += 1) {
     tempTasks.push(
       {
-        asset_name: res.rows[i].asset_name,
+        task_id: res.rows[i].task_id,
+        asset_id: res.rows[i].asset_id,
         seq_number: res.rows[i].seq_number,
         description: res.rows[i].description,
         type: res.rows[i].type,
@@ -44,7 +46,7 @@ function formatTasks(res) {
   return tempTasks;
 }
 
-async function getTasks(connection, idValue) {
+async function getTasks(connection, idValue, idField, name) {
   const response = {
     error: false,
     message: '',
@@ -53,6 +55,7 @@ async function getTasks(connection, idValue) {
   let client;
   let res;
   let tasks = [];
+  let runGroup;
 
   try {
     client = await newClient(connection);
@@ -64,12 +67,14 @@ async function getTasks(connection, idValue) {
 
   try {
     res = await readTasks(client, idValue);
+    runGroup = await getInfo(client, idField, idValue, name, 'bedrock.etl')
     if (res.rowCount === 0) {
       response.message = 'No tasks found';
     } else {
       tasks = formatTasks(res);
       response.result = {
         items: tasks,
+        run_group: {run_group_id: runGroup.run_group_id, active: runGroup.active}
       };
     }
   } catch (error) {
