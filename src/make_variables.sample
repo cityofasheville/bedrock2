@@ -23,6 +23,9 @@ BEDROCK_DB_USER=
 BEDROCK_DB_PASSWORD=
 BEDROCK_DB_NAME=
 
+# Unlike the other DB variables, always include a schema name.
+BEDROCK_DB_SCHEMA="bedrock"
+
 # This is used in the API. The value can be read from 
 # src/etl/stepfunctions/process_etl_run_group/state_machine_variables.generated 
 # after creating the step function.
