@@ -3,7 +3,7 @@
   "display_name": "pr_cigna_feed_2.mun",
   "description": "",
   "location": {
-    "tablename": "PR_CIGNA_Feed_2023",
+    "tablename": "PR_CIGNA_Feed_2024",
     "connection": "munis/munprod/fme_jobs",
     "schemaname": "avl"
   },

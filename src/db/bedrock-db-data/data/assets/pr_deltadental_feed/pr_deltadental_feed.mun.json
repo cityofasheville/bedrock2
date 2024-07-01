@@ -3,7 +3,7 @@
   "display_name": "pr_deltadental_feed.mun",
   "description": "",
   "location": {
-    "tablename": "PR_DeltaDental_Feed_2023",
+    "tablename": "PR_DeltaDental_Feed_2024",
     "connection": "munis/munprod/fme_jobs",
     "schemaname": "avl"
   },

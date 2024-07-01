@@ -3,7 +3,7 @@
   "display_name": "pr_allstate_feed.mun",
   "description": "",
   "location": {
-    "tablename": "PR_ALLSTATE_Feed",
+    "tablename": "PR_ALLSTATE_Feed_2024",
     "connection": "munis/munprod/fme_jobs",
     "schemaname": "avl"
   },

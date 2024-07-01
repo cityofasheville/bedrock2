@@ -3,7 +3,7 @@
   "display_name": "pr_arag_feed.mun",
   "description": "",
   "location": {
-    "tablename": "PR_ARAG_Feed",
+    "tablename": "PR_ARAG_Feed_2024",
     "connection": "munis/munprod/fme_jobs",
     "schemaname": "avl"
   },

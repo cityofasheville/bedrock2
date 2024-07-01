@@ -3,7 +3,7 @@
   "display_name": "pr_aetna_feed.mun",
   "description": "",
   "location": {
-    "tablename": "PR_AETNA_Feed_2023",
+    "tablename": "PR_AETNA_Feed_2024",
     "connection": "munis/munprod/fme_jobs",
     "schemaname": "avl"
   },
