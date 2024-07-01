@@ -1,22 +1,16 @@
-/* eslint-disable import/no-extraneous-dependencies */
-/* eslint-disable import/extensions */
-/* eslint-disable import/no-unresolved */
 /* eslint-disable camelcase */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-console */
-import pgpkg from 'pg';
-import acppkg from 'aws-cron-parser';
-import toposort from 'toposort';
 
+import pgpkg from 'pg';
+const { Client } = pgpkg;
+import acppkg from 'aws-cron-parser';
+const { parse, prev } = acppkg;
+import toposort from 'toposort';
 // Disabling import/no-unresolved because the dependency as defined
 // in package.json only works in the build subdirectory.
 // eslint-disable-next-line import/no-unresolved
 import { getDBConnection } from 'bedrock_common';
-
-import pgErrorCodes from './pgErrorCodes.js';
-
-const { Client } = pgpkg;
-const { parse, prev } = acppkg;
 
 const TIME_INTERVAL = 15; // Frequency - must match Eventbridge scheduler
 
@@ -27,6 +21,8 @@ function formatRes(code, result) {
   };
 }
 
+import pgErrorCodes from './pgErrorCodes.js';
+
 async function readEtlList(client, run_groups) {
   let etlList = [];
   if (run_groups.length > 0) {
@@ -34,7 +30,7 @@ async function readEtlList(client, run_groups) {
       const sep = (accumulator !== '') ? ', ' : '';
       return `${accumulator + sep}'${currentValue}'`;
     }, '');
-    const sql = `SELECT * FROM ${process.env.BEDROCK_DB_SCHEMA}.etl where run_group in (${rgString}) and active = true;`;
+    const sql = `SELECT * FROM ${process.env.BEDROCK_DB_SCHEMA}.etl_view where run_group_name in (${rgString}) and active = true;`;
     const res = await client.query(sql)
       .catch((err) => {
         const errmsg = pgErrorCodes[err.code];
@@ -49,7 +45,7 @@ async function readEtlList(client, run_groups) {
     const asset = arr[i];
     assetMap[asset.asset_name] = {
       name: asset.asset_name,
-      run_group: asset.run_group,
+      run_group: asset.run_group_name,
       depends: [],
       etl_tasks: [],
     };
@@ -61,7 +57,7 @@ async function readDependencies(client, assetMap) {
   const arr = Object.entries(assetMap);
   for (let i = 0; i < arr.length; i += 1) {
     const asset = arr[i][1];
-    const sql = `SELECT * FROM ${process.env.BEDROCK_DB_SCHEMA}.dependencies where asset_name = '${arr[i][0]}';`;
+    const sql = `SELECT * FROM ${process.env.BEDROCK_DB_SCHEMA}.dependency_view where asset_name = '${arr[i][0]}';`;
     // eslint-disable-next-line no-await-in-loop
     const res = await client.query(sql)
       .catch((err) => {
@@ -72,7 +68,7 @@ async function readDependencies(client, assetMap) {
       const d = res.rows[j].dependency;
       if (d[0] === '#') { // Aggregate Dependancy. Look up list of dependencies in tags
         const aggrDependency = d.slice(1);
-        const aggrSql = `SELECT asset_name FROM ${process.env.BEDROCK_DB_SCHEMA}.asset_tags where tag_name = '${aggrDependency}';`;
+        const aggrSql = `SELECT asset_name FROM ${process.env.BEDROCK_DB_SCHEMA}.asset_tag_view where tag_name = '${aggrDependency}';`;
         // eslint-disable-next-line no-await-in-loop
         const aggrRes = await client.query(aggrSql)
           .catch((err) => {
@@ -112,8 +108,7 @@ async function readAggregateData(client, tempLocation, location, taskSource) {
   const { aggregate, data_range, data_connection } = taskSource;
   const sql = `
   select a.asset_name, location->>'spreadsheetid' spreadsheetid, 
-  location->>'tab' tab from ${process.env.BEDROCK_DB_SCHEMA}.assets a
-  inner join ${process.env.BEDROCK_DB_SCHEMA}.asset_tags using (asset_name)
+  location->>'tab' tab from ${process.env.BEDROCK_DB_SCHEMA}.asset_tag_view using (asset_name)
   where tag_name = '${aggregate}' and active = true;
   `;
   // process.stdout.write(sql);
@@ -167,7 +162,7 @@ async function readTasks(client, assetMap) {
   for (let i = 0; i < arr.length; i += 1) {
     const assetName = arr[i][0];
     const asset = arr[i][1];
-    const sql = `SELECT * FROM ${process.env.BEDROCK_DB_SCHEMA}.tasks where asset_name = '${assetName}' order by seq_number;`;
+    const sql = `SELECT * FROM ${process.env.BEDROCK_DB_SCHEMA}.task_view where asset_name = '${assetName}' order by seq_number;`;
 
     // eslint-disable-next-line no-await-in-loop
     const res = await client.query(sql)
@@ -262,7 +257,7 @@ async function verifyAssetExists(client, assetName) {
 
 // eslint-disable-next-line camelcase
 const lambda_handler = async function x(event) {
-  const debug = event.debug || false;
+  let debug = event.debug || false;
   try {
     const dbConnection = await getDBConnection();
     const client = new Client(dbConnection);
@@ -309,6 +304,7 @@ const lambda_handler = async function x(event) {
         }
       }
     });
+
     let runs = [];
     if (graph.length > 0) {
       const sorted = toposort(graph);
@@ -354,5 +350,4 @@ const lambda_handler = async function x(event) {
   }
 };
 
-// eslint-disable-next-line import/prefer-default-export
 export { lambda_handler };
