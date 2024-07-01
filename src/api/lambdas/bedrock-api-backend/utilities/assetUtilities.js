@@ -34,7 +34,6 @@ async function getCustomFieldsInfo(client, asset_type) {
     `;
     sqlResult = await client.query(sqlQuery, [asset_type]);
     if (sqlResult.rowCount < 1) {
-      console.log(`Asset type ${asset_type} not found`);
       throw new Error(`Asset type ${asset_type} not found`);
     }
     sqlResult.rows.forEach((itm, i) => {
@@ -54,6 +53,7 @@ async function getCustomFieldsInfo(client, asset_type) {
       group by custom_field_id, custom_field_name, field_type
     `;
     sqlResult = await client.query(sqlQuery, []);
+
 
     sqlResult.rows.forEach((itm) => {
       customFields.set(itm.custom_field_id, itm);
@@ -78,11 +78,7 @@ function getCustomValues(body) {
 }
 
 function checkCustomFieldsInfo(body, customFields) {
-  console.log('CUSTOMFIEEEELDS')
-  console.log(customFields)
-  console.log(Object.entries(customFields))
 for (const [key, value] of customFields) {
-    console.log(value.required)
     if (value.required) {
       const customFieldId = value.custom_field_id;
       if (!body.custom_fields.hasOwnProperty(customFieldId)) {
