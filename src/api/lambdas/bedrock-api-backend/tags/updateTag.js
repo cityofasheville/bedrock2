@@ -29,7 +29,9 @@ async function updateTag(
     client = await newClient(connection);
     clientInitiated = true;
     await checkExistence(client, tableName, idField, idValue, name, shouldExist);
+    console.log('before updateInfo')
     response.result = await updateInfo(client, allFields, body, tableName, idField, idValue, name);
+    console.log('after updateInfo')
     await client.end();
   } catch (error) {
     if (clientInitiated) {

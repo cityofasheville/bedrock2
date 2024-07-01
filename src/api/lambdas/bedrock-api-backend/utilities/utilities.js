@@ -140,6 +140,7 @@ async function addInfo(client, allFields, body, tableName, name) {
 }
 
 async function updateInfo(client, allFields, body, tableName, idField, idValue, name) {
+  console.log('inside')
   let cnt = 1;
   const args = [];
   let sql = `UPDATE ${tableName} SET `;
@@ -147,27 +148,33 @@ async function updateInfo(client, allFields, body, tableName, idField, idValue, 
 
   // Creating a string like 'tag_name = $1, display_name = 2$' etc
   // and adding the actual value to the args array
-  Object.keys(body.run_group).forEach((key) => {
+  Object.keys(body).forEach((key) => {
+    console.log('inside forEach')
+
     if (allFields.includes(key)) {
-      if (key == 'asset_id') {
+      console.log('inside includes')
+
+      if (allFields.includes(key)) {
         sql += `${comma} ${key} = $${cnt}`;
-        args.push(idValue);
+        args.push(body[key]);
+        cnt += 1;
+        comma = ',';
       }
-      sql += `${comma} ${key} = $${cnt}`;
-      args.push(body.run_group[key]);
-      cnt += 1;
-      comma = ',';
-    }
-  });
+  }});
 
   sql += ` where ${idField} = $${cnt}`;
   args.push(idValue);
+
+  console.log(sql)
+  console.log(args)
 
   try {
     await client.query(sql, args);
   } catch (error) {
     throw new Error(`PG error updating ${name}: ${pgErrorCodes[error.code]||error.code}`);
   }
+
+  console.log('after query')
 
   return body;
 }
