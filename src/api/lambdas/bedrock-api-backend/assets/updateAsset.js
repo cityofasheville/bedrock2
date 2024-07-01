@@ -87,10 +87,8 @@ async function updateTags(idValue, idField, body, client, name) {
     }
 
     // And add the new ones back in
-    console.log(tags)
     try {
       for (let i = 0; i < tags.length; i += 1) {
-        console.log(tags[i])
 
         res = await client.query(
           'INSERT INTO bedrock.asset_tags (asset_id, tag_id) VALUES ($1, $2)',
@@ -143,21 +141,12 @@ async function updateAsset(
   try {
     await checkExistence(client, idValue);
     await updateInfo(client, baseFields, body, tableName, idField, idValue, name);
-    console.log('after UpdateInfo')
     if (assetType) {
       customFields = await getCustomFieldsInfo(client, body.asset_type);
-      console.log('after getCustomFieldsInfo')
       customValues = getCustomValues(body);
-      console.log('after getCustomValues')
       checkCustomFieldsInfo(body, customFields);
-      console.log('after checkcFinfo')
-
       await deleteInfo(client, 'bedrock.custom_values', idField, idValue, name);
-      console.log('after deleteinfo')
-
       await addCustomFieldsInfo(body, client, customFields, customValues);
-      console.log('after addcustomfieldsinfo')
-
     }
     if ('parents' in body) {
       await updateDependencies(client, idField, idValue, name, body);
