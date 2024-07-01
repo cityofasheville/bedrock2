@@ -2,7 +2,7 @@
 /* eslint-disable import/extensions */
 /* eslint-disable no-console */
 import pgErrorCodes from '../pgErrorCodes.js';
-import { deleteInfo, generateId, newClient, updateInfo } from '../utilities/utilities.js';
+import { deleteInfo, generateId, newClient } from '../utilities/utilities.js';
 
 function checkInfo(body, requiredFields) {
   // loop through requiredFields array and check that each one is in body
@@ -13,6 +13,46 @@ function checkInfo(body, requiredFields) {
       }
     });
   }
+}
+
+async function updateETLInfo(client, allFields, body, tableName, idField, idValue, name) {
+  console.log('inside')
+  let cnt = 1;
+  const args = [];
+  let sql = `UPDATE ${tableName} SET `;
+  let comma = '';
+
+  // Creating a string like 'tag_name = $1, display_name = 2$' etc
+  // and adding the actual value to the args array
+  Object.keys(body.run_group).forEach((key) => {
+    console.log('inside forEach')
+
+    if (allFields.includes(key)) {
+      console.log('inside includes')
+
+      if (key == 'asset_id') {
+        sql += `${comma} ${key} = $${cnt}`;
+        args.push(idValue);
+      }
+      sql += `${comma} ${key} = $${cnt}`;
+      args.push(body.run_group[key]);
+      cnt += 1;
+      comma = ',';
+    }
+  });
+
+  sql += ` where ${idField} = $${cnt}`;
+  args.push(idValue);
+
+  try {
+    await client.query(sql, args);
+  } catch (error) {
+    throw new Error(`PG error updating ${name}: ${pgErrorCodes[error.code]||error.code}`);
+  }
+
+  console.log('after query')
+
+  return body;
 }
 
 async function addTasks(client, allFields, body) {
@@ -88,7 +128,7 @@ async function updateTasks(
     await client.query('BEGIN');
     await deleteInfo(client, tableName, idField, idValue, name);
     await addTasks(client, allFields, body);
-    await updateInfo(client, ['asset_id', 'run_group_id', 'active'], body, 'bedrock.etl', idField, idValue, name)
+    await updateETLInfo(client, ['asset_id', 'run_group_id', 'active'], body, 'bedrock.etl', idField, idValue, name)
     await client.query('COMMIT');
     response.result = body;
   } catch (error) {

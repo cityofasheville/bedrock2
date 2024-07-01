@@ -147,18 +147,15 @@ async function updateInfo(client, allFields, body, tableName, idField, idValue, 
 
   // Creating a string like 'tag_name = $1, display_name = 2$' etc
   // and adding the actual value to the args array
-  Object.keys(body.run_group).forEach((key) => {
+  Object.keys(body).forEach((key) => {
     if (allFields.includes(key)) {
-      if (key == 'asset_id') {
+      if (allFields.includes(key)) {
         sql += `${comma} ${key} = $${cnt}`;
-        args.push(idValue);
+        args.push(body[key]);
+        cnt += 1;
+        comma = ',';
       }
-      sql += `${comma} ${key} = $${cnt}`;
-      args.push(body.run_group[key]);
-      cnt += 1;
-      comma = ',';
-    }
-  });
+  }});
 
   sql += ` where ${idField} = $${cnt}`;
   args.push(idValue);

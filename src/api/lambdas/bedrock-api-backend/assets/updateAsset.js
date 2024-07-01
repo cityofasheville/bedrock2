@@ -37,7 +37,7 @@ async function updateDependencies(client, idField, idValue, name, body) {
       const dependency = body.parents[i];
       try {
         await client.query(
-          'INSERT INTO dependencies (asset_name, dependency) VALUES ($1, $2)',
+          'INSERT INTO dependencies (asset_id, dependent_asset_id) VALUES ($1, $2)',
           [idValue, dependency],
         );
       } catch (error) {
@@ -79,25 +79,6 @@ async function updateTags(idValue, idField, body, client, name) {
       throw new Error(`PG error reading tags for update: ${pgErrorCodes[error.code] || error.code}`);
     }
 
-    if (res.rowCount !== tags.length) {
-      const dbTags = [];
-      for (let i = 0; i < res.rowCount; i += 1) {
-        dbTags.push(res.rows[i].tag_name);
-      }
-      for (let i = 0; i < tags.length; i += 1) {
-        if (!dbTags.includes(tags[i])) {
-          try {
-            await client.query(
-              'INSERT INTO bedrock.tags (tag_id) VALUES ($1)',
-              [tags[i]],
-            );
-          } catch (error) {
-            throw new Error(`PG error adding tags to tag table for update: ${pgErrorCodes[error.code] || error.code}`);
-          }
-        }
-      }
-    }
-
     // Now delete any existing tags
     try {
       await deleteInfo(client, 'bedrock.asset_tags', idField, idValue, name);
@@ -108,9 +89,10 @@ async function updateTags(idValue, idField, body, client, name) {
     // And add the new ones back in
     try {
       for (let i = 0; i < tags.length; i += 1) {
+
         res = await client.query(
           'INSERT INTO bedrock.asset_tags (asset_id, tag_id) VALUES ($1, $2)',
-          [body.asset_name, tags[i]],
+          [body.asset_id, tags[i]],
         );
       }
     } catch (error) {
@@ -136,7 +118,7 @@ async function updateAsset(
   let customFields;
   let customValues;
   let client;
-  const baseFields = ['asset_id', 'asset_name', 'description', 'location', 'active', 'asset_type_id', 'location', 'link', 'notes'];
+  const baseFields = ['asset_id', 'asset_name', 'description', 'location', 'active', 'owner_id', 'asset_type_id', 'location', 'link', 'notes'];
   const assetType = body.asset_type;
 
   const response = {
