@@ -1,13 +1,13 @@
 {
+  "asset_id": "60ae36a3c4a454b7a0ae",
   "asset_name": "permit_comments.acc",
-  "display_name": "permit_comments.acc",
   "description": "Permit comments data",
   "location": {
     "tablename": "permit_comments",
-    "connection": "coa-acceladb/accela/mssqlgisadmin",
-    "schemaname": "amd"
+    "schemaname": "amd",
+    "connection_id": "7e231e26044ec20638fe"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,

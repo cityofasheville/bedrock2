@@ -1,27 +1,40 @@
 {
   "asset_name": "maintenance_responsibilities.lib",
-  "run_group": "daily",
+  "asset_id": "5d3d4977e28791093076",
+  "run_group_id": "7d27de8121bfc20e543b",
   "active": true,
   "tasks": [
     {
+      "task_id": "7ca681962dedb71ea9be",
+      "asset_id": "5d3d4977e28791093076",
+      "seq_number": 0,
+      "description": null,
       "type": "aggregate",
       "active": true,
-      "source_location": {
+      "source": {
         "aggregate": "maintenance_responsibilities",
         "data_range": "A3:B",
         "temp_table": "maintenance_responsibilities_temp.lib",
         "append_tab_name": true,
         "data_connection": "bedrock-googlesheets"
       },
-      "target_location": {
+      "target": {
         "asset": "maintenance_responsibilities.lib"
-      }
+      },
+      "configuration": null
     },
     {
+      "task_id": "9db85c1c6c8e851074a0",
+      "asset_id": "5d3d4977e28791093076",
+      "seq_number": 1,
+      "description": null,
       "type": "sql",
       "active": true,
-      "connection": "pubrecdb1/mdastore1/dbadmin",
-      "sql_string": "delete from internal.maintenance_responsibilities where maintenance_need is null or maintenance_responsibility = 'N/A';"
+      "source": null,
+      "target": {
+        "connection": "pubrecdb1/mdastore1/dbadmin"
+      },
+      "configuration": "delete from internal.maintenance_responsibilities where maintenance_need is null or maintenance_responsibility = 'N/A';"
     }
   ]
 }

@@ -1,19 +1,19 @@
 {
+  "asset_id": "f03c230df72c74bafebd",
   "asset_name": "permits.lib",
-  "display_name": "permits.lib",
   "description": "Permits data",
   "location": {
     "tablename": "permits",
-    "connection": "pubrecdb1/mdastore1/dbadmin",
-    "schemaname": "internal"
+    "schemaname": "internal",
+    "connection_id": "7349e0b0fbf697f353d5"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,
   "active": true,
   "depends": [
-    "permits.acc"
+    "a1bbb4f502e96e784742"
   ],
   "tags": []
 }

@@ -1,29 +1,40 @@
 {
   "asset_name": "abi_outreach_vendors.goog",
-  "run_group": "daily",
+  "asset_id": "f27fdcd91c914b007346",
+  "run_group_id": "7d27de8121bfc20e543b",
   "active": true,
   "tasks": [
     {
+      "task_id": "bdbc7db4868a83328b7b",
+      "asset_id": "f27fdcd91c914b007346",
+      "seq_number": 0,
+      "description": null,
       "type": "table_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "mwbe_vendors_by_commodity.mun"
       },
-      "target_location": {
+      "target": {
         "asset": "abi_outreach_vendors.goog",
         "append": false
-      }
+      },
+      "configuration": null
     },
     {
+      "task_id": "ac384104890070e481f8",
+      "asset_id": "f27fdcd91c914b007346",
+      "seq_number": 1,
+      "description": null,
       "type": "table_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "abi_potential_vendors.goog"
       },
-      "target_location": {
+      "target": {
         "asset": "abi_outreach_vendors.goog",
         "append": true
-      }
+      },
+      "configuration": null
     }
   ]
 }

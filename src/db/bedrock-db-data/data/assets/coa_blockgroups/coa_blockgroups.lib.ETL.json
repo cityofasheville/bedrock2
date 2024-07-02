@@ -1,17 +1,23 @@
 {
   "asset_name": "coa_blockgroups.lib",
-  "run_group": "notactive",
+  "asset_id": "1d5b39fcb685e87884ae",
+  "run_group_id": "31f3e605601e7f9cb938",
   "active": true,
   "tasks": [
     {
+      "task_id": "6fc5f34d953a51e8df75",
+      "asset_id": "1d5b39fcb685e87884ae",
+      "seq_number": 0,
+      "description": null,
       "type": "table_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "coa_blockgroups.wh"
       },
-      "target_location": {
+      "target": {
         "asset": "coa_blockgroups.lib"
-      }
+      },
+      "configuration": null
     }
   ]
 }

@@ -1,18 +1,24 @@
 {
   "asset_name": "everbridge.cust.s3",
-  "run_group": "daily",
+  "asset_id": "48bd581cb880247b2113",
+  "run_group_id": "7d27de8121bfc20e543b",
   "active": true,
   "tasks": [
     {
+      "task_id": "c3682396e085521412a0",
+      "asset_id": "48bd581cb880247b2113",
+      "seq_number": 0,
+      "description": null,
       "type": "table_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "ub_water_customers_everbridge.mun",
         "tableheaders": true
       },
-      "target_location": {
+      "target": {
         "asset": "everbridge.cust.s3"
-      }
+      },
+      "configuration": null
     }
   ]
 }

@@ -1,19 +1,19 @@
 {
+  "asset_id": "3d014e18d43d20173907",
   "asset_name": "coa_climate_justice_by_address.lib",
-  "display_name": "coa_climate_justice_by_address.lib",
   "description": "",
   "location": {
     "tablename": "coa_climate_justice_by_address",
-    "connection": "pubrecdb1/mdastore1/dbadmin",
-    "schemaname": "internal"
+    "schemaname": "internal",
+    "connection_id": "7349e0b0fbf697f353d5"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,
   "active": true,
   "depends": [
-    "coa_climate_justice_index.lib"
+    "fae685ead9f2930e327f"
   ],
   "tags": []
 }

@@ -1,18 +1,24 @@
 {
   "asset_name": "vxsmart_payments.s3",
-  "run_group": "daily",
+  "asset_id": "40645ea1ccb1cce98f2f",
+  "run_group_id": "7d27de8121bfc20e543b",
   "active": true,
   "tasks": [
     {
+      "task_id": "9348d7deb9d90343aaa9",
+      "asset_id": "40645ea1ccb1cce98f2f",
+      "seq_number": 0,
+      "description": null,
       "type": "table_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "vxsmart_payments.mun",
         "tableheaders": true
       },
-      "target_location": {
+      "target": {
         "asset": "vxsmart_payments.s3"
-      }
+      },
+      "configuration": null
     }
   ]
 }

@@ -1,19 +1,19 @@
 {
+  "asset_id": "8ecbb8d53d724a5c2266",
   "asset_name": "capital_projects_master_categories.lib",
-  "display_name": "capital_projects_master_categories.lib",
   "description": "Capital Projects Category List",
   "location": {
     "tablename": "capital_projects_master_categories",
-    "connection": "pubrecdb1/mdastore1/dbadmin",
-    "schemaname": "internal"
+    "schemaname": "internal",
+    "connection_id": "7349e0b0fbf697f353d5"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,
   "active": true,
   "depends": [
-    "capital_projects_master_categories.goog"
+    "90f3c735a503690edc13"
   ],
   "tags": []
 }

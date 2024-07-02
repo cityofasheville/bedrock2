@@ -1,13 +1,13 @@
 {
+  "asset_id": "6c1357b35f037612c227",
   "asset_name": "ad_info.mun",
-  "display_name": "ad_info.mun",
   "description": "Active Directory info",
   "location": {
     "tablename": "ad_info",
-    "connection": "munis/munprod/fme_jobs",
-    "schemaname": "amd"
+    "schemaname": "amd",
+    "connection_id": "4fd66815213adfbd20be"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,

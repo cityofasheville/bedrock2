@@ -1,19 +1,19 @@
 {
+  "asset_id": "4d09556b25fe10429861",
   "asset_name": "public_meeting_data_categories.lib",
-  "display_name": "public_meeting_data_categories.lib",
   "description": "",
   "location": {
     "tablename": "public_meeting_data_categories",
-    "connection": "pubrecdb1/mdastore1/dbadmin",
-    "schemaname": "internal"
+    "schemaname": "internal",
+    "connection_id": "7349e0b0fbf697f353d5"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,
   "active": true,
   "depends": [
-    "public_meeting_data_categories.goog"
+    "cd3fa436967694eaa714"
   ],
   "tags": []
 }

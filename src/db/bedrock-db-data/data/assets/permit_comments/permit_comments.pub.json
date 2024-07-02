@@ -1,19 +1,19 @@
 {
+  "asset_id": "365bd0696c297bdfedd2",
   "asset_name": "permit_comments.pub",
-  "display_name": "permit_comments.pub",
   "description": "Permit comments data",
   "location": {
     "tablename": "permit_comments",
-    "connection": "coa-publicdb1/coa_share/dbadmin",
-    "schemaname": "bc"
+    "schemaname": "bc",
+    "connection_id": "1be46a78a9eefb0ceb5a"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,
   "active": true,
   "depends": [
-    "permit_comments.lib"
+    "6844a1df28d8b789d294"
   ],
   "tags": []
 }

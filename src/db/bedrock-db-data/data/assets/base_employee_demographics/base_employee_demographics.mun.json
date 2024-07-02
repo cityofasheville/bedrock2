@@ -1,13 +1,13 @@
 {
+  "asset_id": "b5dc562271df428c50fb",
   "asset_name": "base_employee_demographics.mun",
-  "display_name": "base_employee_demographics.mun",
   "description": "Standard Employee - demographic data",
   "location": {
     "tablename": "base_employee_demographics",
-    "connection": "munis/munprod/fme_jobs",
-    "schemaname": "avl_bdv"
+    "schemaname": "avl_bdv",
+    "connection_id": "4fd66815213adfbd20be"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,

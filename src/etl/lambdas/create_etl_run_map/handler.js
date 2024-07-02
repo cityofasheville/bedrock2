@@ -241,7 +241,7 @@ async function getRunGroups(client, debug) {
 }
 
 async function verifyAssetExists(client, assetName) {
-  const sql = `SELECT * FROM ${process.env.BEDROCK_DB_SCHEMA}.etl where asset_name = '${assetName}';`;
+  const sql = `SELECT * FROM ${process.env.BEDROCK_DB_SCHEMA}.etl_view where asset_name = '${assetName}';`;
   return client.query(sql)
     .then((res) => {
       if (res.rowCount === 0) {

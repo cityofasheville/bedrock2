@@ -1,13 +1,13 @@
 {
+  "asset_id": "5b4491d7e8700e90227f",
   "asset_name": "buncombe_tax_inspections.acc",
-  "display_name": "buncombe_tax_inspections.acc",
   "description": "",
   "location": {
     "tablename": "BUNCOMBE_TAX_INSPECTIONS",
-    "connection": "coa-acceladb/accela/mssqlgisadmin",
-    "schemaname": "dbo"
+    "schemaname": "dbo",
+    "connection_id": "7e231e26044ec20638fe"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,

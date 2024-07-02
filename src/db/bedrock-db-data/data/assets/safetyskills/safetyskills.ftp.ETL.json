@@ -1,17 +1,23 @@
 {
   "asset_name": "safetyskills.ftp",
-  "run_group": "safetyskills",
+  "asset_id": "16423cc644e30ab05ec3",
+  "run_group_id": "24ef7af934002b1592a8",
   "active": true,
   "tasks": [
     {
+      "task_id": "95e8ba17a615b438a54b",
+      "asset_id": "16423cc644e30ab05ec3",
+      "seq_number": 0,
+      "description": null,
       "type": "file_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "safetyskills.s3"
       },
-      "target_location": {
+      "target": {
         "asset": "safetyskills.ftp"
-      }
+      },
+      "configuration": null
     }
   ]
 }

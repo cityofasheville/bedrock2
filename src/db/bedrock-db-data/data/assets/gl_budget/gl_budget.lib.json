@@ -1,19 +1,19 @@
 {
+  "asset_id": "4b3ff7a90a2cc46169be",
   "asset_name": "gl_budget.lib",
-  "display_name": "gl_budget.lib",
   "description": "Master budget table",
   "location": {
     "tablename": "gl_budget",
-    "connection": "pubrecdb1/mdastore1/dbadmin",
-    "schemaname": "internal"
+    "schemaname": "internal",
+    "connection_id": "7349e0b0fbf697f353d5"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,
   "active": true,
   "depends": [
-    "gl_budget.mun"
+    "8cfc5d3a561aa935085e"
   ],
   "tags": []
 }

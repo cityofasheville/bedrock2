@@ -1,17 +1,23 @@
 {
   "asset_name": "maintenance_buildings.lib",
-  "run_group": "daily",
+  "asset_id": "bb81e864ace09f46034d",
+  "run_group_id": "7d27de8121bfc20e543b",
   "active": true,
   "tasks": [
     {
+      "task_id": "a9c41b4e6103e0613b32",
+      "asset_id": "bb81e864ace09f46034d",
+      "seq_number": 0,
+      "description": null,
       "type": "table_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "maintenance_buildings.goog"
       },
-      "target_location": {
+      "target": {
         "asset": "maintenance_buildings.lib"
-      }
+      },
+      "configuration": null
     }
   ]
 }

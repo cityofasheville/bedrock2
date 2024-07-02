@@ -1,19 +1,36 @@
 {
+  "asset_id": "5d3d4977e28791093076",
   "asset_name": "maintenance_responsibilities.lib",
-  "display_name": "maintenance_responsibilities.lib",
   "description": "City Property Maintenance Responsibilities",
   "location": {
     "tablename": "maintenance_responsibilities",
-    "connection": "pubrecdb1/mdastore1/dbadmin",
-    "schemaname": "internal"
+    "schemaname": "internal",
+    "connection_id": "7349e0b0fbf697f353d5"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,
   "active": true,
   "depends": [
-    "#maintenance_responsibilities"
+    "a1ccf02d130629383027",
+    "1f324f46a36deba4be11",
+    "ff9c031f04f40b212db4",
+    "f9e1b47e48d99f84d602",
+    "6a35fe1b1f18ae0ad542",
+    "dcddfe77e153006a31f6",
+    "474d96cbfbf91c620431",
+    "3e15b8cf9239597e2b08",
+    "1b454f495c38677ba831",
+    "fd617c88998eadf5457c",
+    "ac4d8f39071dccf184fe",
+    "ee90233003d7b094c8f4",
+    "b6f5852877030e81ff0d",
+    "d834a2cde4f044f157ec",
+    "10a4b11d444f87c28e80",
+    "0e11b103210d91906f16",
+    "a3871758679de81d1f77",
+    "35f8328599d6ad339248"
   ],
   "tags": []
 }

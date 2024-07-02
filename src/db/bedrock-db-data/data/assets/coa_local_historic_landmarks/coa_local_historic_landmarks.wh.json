@@ -1,13 +1,13 @@
 {
+  "asset_id": "6d2d69ddd1d85283dbbf",
   "asset_name": "coa_local_historic_landmarks.wh",
-  "display_name": "coa_local_historic_landmarks.wh",
   "description": "coa_local_historic_landmarks",
   "location": {
     "tablename": "coa_local_historic_landmarks",
-    "connection": "gis-warehouse/coagiswarehouse/coagis",
-    "schemaname": "coagis"
+    "schemaname": "coagis",
+    "connection_id": "6c807020a396e33e50ae"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,

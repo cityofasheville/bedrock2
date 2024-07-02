@@ -1,17 +1,23 @@
 {
   "asset_name": "gl_budget.lib",
-  "run_group": "daily",
+  "asset_id": "4b3ff7a90a2cc46169be",
+  "run_group_id": "7d27de8121bfc20e543b",
   "active": true,
   "tasks": [
     {
+      "task_id": "2149a6c342a9bef5b5a3",
+      "asset_id": "4b3ff7a90a2cc46169be",
+      "seq_number": 0,
+      "description": null,
       "type": "table_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "gl_budget.mun"
       },
-      "target_location": {
+      "target": {
         "asset": "gl_budget.lib"
-      }
+      },
+      "configuration": null
     }
   ]
 }

@@ -1,19 +1,19 @@
 {
+  "asset_id": "445d9a8240802aac6177",
   "asset_name": "permit_owners.pub",
-  "display_name": "permit_owners.pub",
   "description": "Owners associated with permits",
   "location": {
     "tablename": "permit_owners",
-    "connection": "coa-publicdb1/coa_share/dbadmin",
-    "schemaname": "bc"
+    "schemaname": "bc",
+    "connection_id": "1be46a78a9eefb0ceb5a"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,
   "active": true,
   "depends": [
-    "permit_owners.lib"
+    "9c807ffbc8bcda0b8092"
   ],
   "tags": []
 }

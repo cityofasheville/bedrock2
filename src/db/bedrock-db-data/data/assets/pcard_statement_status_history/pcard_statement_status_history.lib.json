@@ -1,19 +1,19 @@
 {
+  "asset_id": "1af118f10af1067dd8f4",
   "asset_name": "pcard_statement_status_history.lib",
-  "display_name": "pcard_statement_status_history.lib",
   "description": "PCard transactions and status",
   "location": {
     "tablename": "pcard_statement_status_history",
-    "connection": "pubrecdb1/mdastore1/dbadmin",
-    "schemaname": "internal"
+    "schemaname": "internal",
+    "connection_id": "7349e0b0fbf697f353d5"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,
   "active": true,
   "depends": [
-    "pcard_statement_status_history.mun"
+    "965cf96a827a2104901f"
   ],
   "tags": []
 }

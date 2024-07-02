@@ -1,17 +1,23 @@
 {
   "asset_name": "coa_computer_assets.goog",
-  "run_group": "daily",
+  "asset_id": "347522cdd6403e442fc0",
+  "run_group_id": "7d27de8121bfc20e543b",
   "active": true,
   "tasks": [
     {
+      "task_id": "58ba6e9ddb74365cc42b",
+      "asset_id": "347522cdd6403e442fc0",
+      "seq_number": 0,
+      "description": null,
       "type": "table_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "coa_computer_assets.lib"
       },
-      "target_location": {
+      "target": {
         "asset": "coa_computer_assets.goog"
-      }
+      },
+      "configuration": null
     }
   ]
 }

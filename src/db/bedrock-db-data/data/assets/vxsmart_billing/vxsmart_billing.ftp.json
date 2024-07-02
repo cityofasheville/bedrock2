@@ -1,19 +1,19 @@
 {
+  "asset_id": "76941d9faef0031cb037",
   "asset_name": "vxsmart_billing.ftp",
-  "display_name": "vxsmart_billing.ftp",
   "description": "Uploaded Billing data to vxsmart_billing",
   "location": {
     "path": "/uploads/",
     "filename": "billinginfo_${YYYY}${MM}${DD}.csv",
-    "connection": "vxsmart_ftp"
+    "connection_id": "97f8c32fd131dbfda484"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,
   "active": true,
   "depends": [
-    "vxsmart_billing.s3"
+    "fda03f8007e006520343"
   ],
   "tags": []
 }

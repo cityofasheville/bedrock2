@@ -1,19 +1,19 @@
 {
+  "asset_id": "2c4d7c1b8899f013f56a",
   "asset_name": "business_resources.pub",
-  "display_name": "business_resources.pub",
   "description": "Planning and Development Business Resources-Public DB to be accessed from website",
   "location": {
     "tablename": "business_resources",
-    "connection": "coa-publicdb1/coa_share/dbadmin",
-    "schemaname": "open"
+    "schemaname": "open",
+    "connection_id": "1be46a78a9eefb0ceb5a"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,
   "active": true,
   "depends": [
-    "business_resources.lib"
+    "b2a1c741f95d25db9d9c"
   ],
   "tags": []
 }

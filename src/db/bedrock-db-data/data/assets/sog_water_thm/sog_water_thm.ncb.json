@@ -1,19 +1,19 @@
 {
+  "asset_id": "b884cc2ab485c19efba9",
   "asset_name": "sog_water_thm.ncb",
-  "display_name": "sog_water_thm.ncb",
   "description": "Water SOG Benchmark: water_thm",
   "location": {
     "tab": "water_thm",
-    "connection": "bedrock-googlesheets",
+    "connection_id": "71313d9908d4a9716405",
     "spreadsheetid": "1m2xD4JyH4BEBey_ybsEgrvYopsl0PjWNmY_PEv3l6D4"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,
   "active": true,
   "depends": [],
   "tags": [
-    "nc_benchmarks"
+    "8ab8c16ef0d7f814d9ef"
   ]
 }

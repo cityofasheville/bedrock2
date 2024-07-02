@@ -1,19 +1,19 @@
 {
+  "asset_id": "61dcd8650a89da84b1bb",
   "asset_name": "base_employee_position.lib",
-  "display_name": "base_employee_position.lib",
   "description": "Standard Employee Work fields: dept/supv/etc.",
   "location": {
     "tablename": "base_employee_position",
-    "connection": "pubrecdb1/mdastore1/dbadmin",
-    "schemaname": "standard"
+    "schemaname": "standard",
+    "connection_id": "7349e0b0fbf697f353d5"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,
   "active": true,
   "depends": [
-    "base_employee_position_temp.lib"
+    "6b502153d40d996ad6c6"
   ],
   "tags": []
 }

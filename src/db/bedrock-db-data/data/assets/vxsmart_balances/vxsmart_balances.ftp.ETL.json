@@ -1,17 +1,23 @@
 {
   "asset_name": "vxsmart_balances.ftp",
-  "run_group": "vxsmart_balances",
+  "asset_id": "6934f22943c37f0fbef8",
+  "run_group_id": "4b7a0c106ec6c649bf81",
   "active": true,
   "tasks": [
     {
+      "task_id": "b0167f471b49803b6fd1",
+      "asset_id": "6934f22943c37f0fbef8",
+      "seq_number": 0,
+      "description": null,
       "type": "file_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "vxsmart_balances.s3"
       },
-      "target_location": {
+      "target": {
         "asset": "vxsmart_balances.ftp"
-      }
+      },
+      "configuration": null
     }
   ]
 }

@@ -1,19 +1,19 @@
 {
+  "asset_id": "d0af444d608d31e5ea77",
   "asset_name": "aip.s3",
-  "display_name": "aip.s3",
   "description": "",
   "location": {
     "path": "aip/",
     "filename": "CityofAsheville5871_To_InfoArmor_FULL_${YYYY}${MM}${DD}.txt",
-    "connection": "s3_data_files"
+    "connection_id": "f76aca18599f85f097b2"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,
   "active": true,
   "depends": [
-    "pr_allstate_feed.mun"
+    "7c69f9e5ad4ef1b0d485"
   ],
   "tags": []
 }

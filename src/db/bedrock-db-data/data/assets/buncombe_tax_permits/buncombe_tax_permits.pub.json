@@ -1,19 +1,19 @@
 {
+  "asset_id": "9335471ac83ddfc983b0",
   "asset_name": "buncombe_tax_permits.pub",
-  "display_name": "buncombe_tax_permits.pub",
   "description": "",
   "location": {
     "tablename": "buncombe_tax_permits",
-    "connection": "coa-publicdb1/coa_share/dbadmin",
-    "schemaname": "bc"
+    "schemaname": "bc",
+    "connection_id": "1be46a78a9eefb0ceb5a"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,
   "active": true,
   "depends": [
-    "buncombe_tax_permits.lib"
+    "00310209c5ca78bcd409"
   ],
   "tags": []
 }

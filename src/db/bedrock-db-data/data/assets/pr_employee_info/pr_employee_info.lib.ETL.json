@@ -1,23 +1,36 @@
 {
   "asset_name": "pr_employee_info.lib",
-  "run_group": "daily",
+  "asset_id": "fbf956c5028eab0cc56f",
+  "run_group_id": "7d27de8121bfc20e543b",
   "active": true,
   "tasks": [
     {
+      "task_id": "0271c45d4b9f1a59d318",
+      "asset_id": "fbf956c5028eab0cc56f",
+      "seq_number": 0,
+      "description": null,
       "type": "table_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "pr_employee_info.mun"
       },
-      "target_location": {
+      "target": {
         "asset": "pr_employee_info.lib"
-      }
+      },
+      "configuration": null
     },
     {
+      "task_id": "d6aacf0352af120ceacc",
+      "asset_id": "fbf956c5028eab0cc56f",
+      "seq_number": 1,
+      "description": null,
       "type": "sql",
       "active": true,
-      "connection": "pubrecdb1/mdastore1/dbadmin",
-      "sql_string": "insert into internal.pr_employee_info (emp_id, active, employee, emp_email, ft_status, \"position\", dept_id, department, div_id, division, sup_id, supervisor, sup_email, hire_date_last)\nvalues (\n\t99999, 'A', 'BPT TESTUSER1', 'bpt_testuser1@ashevillenc.gov', 'FT', 'SYSTEMS ANALYST 1', '05', 'Information Technology', '054', 'IT Gis Appl Services', 8177, 'RICHARD A BARLEY', 'rbarley@ashevillenc.gov', '2016-08-15'\n), (\n\t99998, 'A', 'BPT TESTUSER2', 'bpt_testuser2@ashevillenc.gov', 'FT', 'SYSTEMS ANALYST 1', '05', 'Information Technology', '054', 'IT Gis Appl Services', 6507, 'ERIC JACKSON', 'ejackson@ashevillenc.gov', '2016-08-15'\n);\n"
+      "source": null,
+      "target": {
+        "connection": "pubrecdb1/mdastore1/dbadmin"
+      },
+      "configuration": "insert into internal.pr_employee_info (emp_id, active, employee, emp_email, ft_status, \"position\", dept_id, department, div_id, division, sup_id, supervisor, sup_email, hire_date_last)\nvalues (\n\t99999, 'A', 'BPT TESTUSER1', 'bpt_testuser1@ashevillenc.gov', 'FT', 'SYSTEMS ANALYST 1', '05', 'Information Technology', '054', 'IT Gis Appl Services', 8177, 'RICHARD A BARLEY', 'rbarley@ashevillenc.gov', '2016-08-15'\n), (\n\t99998, 'A', 'BPT TESTUSER2', 'bpt_testuser2@ashevillenc.gov', 'FT', 'SYSTEMS ANALYST 1', '05', 'Information Technology', '054', 'IT Gis Appl Services', 6507, 'ERIC JACKSON', 'ejackson@ashevillenc.gov', '2016-08-15'\n);\n"
     }
   ]
 }

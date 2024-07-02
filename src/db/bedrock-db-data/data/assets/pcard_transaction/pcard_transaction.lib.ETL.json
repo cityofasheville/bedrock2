@@ -1,17 +1,23 @@
 {
   "asset_name": "pcard_transaction.lib",
-  "run_group": "daily",
+  "asset_id": "fd74dca6c6ae836705a3",
+  "run_group_id": "7d27de8121bfc20e543b",
   "active": true,
   "tasks": [
     {
+      "task_id": "ebfe0cd6ee69c736e250",
+      "asset_id": "fd74dca6c6ae836705a3",
+      "seq_number": 0,
+      "description": null,
       "type": "table_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "pcard_transaction.mun"
       },
-      "target_location": {
+      "target": {
         "asset": "pcard_transaction.lib"
-      }
+      },
+      "configuration": null
     }
   ]
 }

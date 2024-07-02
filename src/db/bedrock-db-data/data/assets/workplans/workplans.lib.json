@@ -1,19 +1,19 @@
 {
+  "asset_id": "d28ba42517f77fc35960",
   "asset_name": "workplans.lib",
-  "display_name": "workplans.lib",
   "description": "Organizational Work Plan",
   "location": {
     "tablename": "workplans",
-    "connection": "pubrecdb1/mdastore1/dbadmin",
-    "schemaname": "internal"
+    "schemaname": "internal",
+    "connection_id": "7349e0b0fbf697f353d5"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,
   "active": true,
   "depends": [
-    "workplans.goog"
+    "b4f131130dad7373c23f"
   ],
   "tags": []
 }

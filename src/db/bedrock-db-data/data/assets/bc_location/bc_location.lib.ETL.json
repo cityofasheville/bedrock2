@@ -1,23 +1,36 @@
 {
   "asset_name": "bc_location.lib",
-  "run_group": "daily",
+  "asset_id": "629012fcdbd1ed5ab621",
+  "run_group_id": "7d27de8121bfc20e543b",
   "active": true,
   "tasks": [
     {
+      "task_id": "01b626329c120ee6b286",
+      "asset_id": "629012fcdbd1ed5ab621",
+      "seq_number": 0,
+      "description": null,
       "type": "table_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "bc_location.wh"
       },
-      "target_location": {
+      "target": {
         "asset": "bc_location.lib"
-      }
+      },
+      "configuration": null
     },
     {
+      "task_id": "2d1c1c1f76374a100bcc",
+      "asset_id": "629012fcdbd1ed5ab621",
+      "seq_number": 1,
+      "description": null,
       "type": "sql",
       "active": true,
-      "connection": "pubrecdb1/mdastore1/dbadmin",
-      "sql_string": "begin transaction;\nCREATE temporary TABLE bc_location_dupes (\ndupe_obj_id int4 NOT NULL,\nCONSTRAINT bc_location_dupes_pk PRIMARY KEY (dupe_obj_id)\n);\ninsert into bc_location_dupes\nselect objectid from internal.bc_location loc\nleft join (\nSELECT min(objectid) as dupe_obj_id\nFROM internal.bc_location\ngroup by location_id\n) mins\non loc.objectid = mins.dupe_obj_id\nwhere dupe_obj_id is null\nand loc.objectid is not null;\ndelete from internal.bc_location loc\nusing bc_location_dupes dup\nwhere loc.objectid = dup.dupe_obj_id;\ncommit;\n"
+      "source": null,
+      "target": {
+        "connection": "pubrecdb1/mdastore1/dbadmin"
+      },
+      "configuration": "begin transaction;\nCREATE temporary TABLE bc_location_dupes (\ndupe_obj_id int4 NOT NULL,\nCONSTRAINT bc_location_dupes_pk PRIMARY KEY (dupe_obj_id)\n);\ninsert into bc_location_dupes\nselect objectid from internal.bc_location loc\nleft join (\nSELECT min(objectid) as dupe_obj_id\nFROM internal.bc_location\ngroup by location_id\n) mins\non loc.objectid = mins.dupe_obj_id\nwhere dupe_obj_id is null\nand loc.objectid is not null;\ndelete from internal.bc_location loc\nusing bc_location_dupes dup\nwhere loc.objectid = dup.dupe_obj_id;\ncommit;\n"
     }
   ]
 }

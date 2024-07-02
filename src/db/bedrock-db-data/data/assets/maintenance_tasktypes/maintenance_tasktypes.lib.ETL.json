@@ -1,23 +1,36 @@
 {
   "asset_name": "maintenance_tasktypes.lib",
-  "run_group": "daily",
+  "asset_id": "e8f3ac66b51c0350aefd",
+  "run_group_id": "7d27de8121bfc20e543b",
   "active": true,
   "tasks": [
     {
+      "task_id": "1f3d988e3b7f702b717b",
+      "asset_id": "e8f3ac66b51c0350aefd",
+      "seq_number": 0,
+      "description": null,
       "type": "table_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "maintenance_tasktypes.goog"
       },
-      "target_location": {
+      "target": {
         "asset": "maintenance_tasktypes.lib"
-      }
+      },
+      "configuration": null
     },
     {
+      "task_id": "59851870bdc00ddd562c",
+      "asset_id": "e8f3ac66b51c0350aefd",
+      "seq_number": 1,
+      "description": null,
       "type": "sql",
       "active": true,
-      "connection": "pubrecdb1/mdastore1/dbadmin",
-      "sql_string": "DELETE from internal.maintenance_tasktypes where task_type is null;"
+      "source": null,
+      "target": {
+        "connection": "pubrecdb1/mdastore1/dbadmin"
+      },
+      "configuration": "DELETE from internal.maintenance_tasktypes where task_type is null;"
     }
   ]
 }

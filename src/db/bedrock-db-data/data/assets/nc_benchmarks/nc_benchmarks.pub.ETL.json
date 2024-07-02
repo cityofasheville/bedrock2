@@ -1,17 +1,23 @@
 {
   "asset_name": "nc_benchmarks.pub",
-  "run_group": "notactive",
+  "asset_id": "b3c96861828981eeb98b",
+  "run_group_id": "31f3e605601e7f9cb938",
   "active": true,
   "tasks": [
     {
+      "task_id": "fc57a38eaa03da5b4acf",
+      "asset_id": "b3c96861828981eeb98b",
+      "seq_number": 0,
+      "description": null,
       "type": "table_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "nc_benchmarks.lib"
       },
-      "target_location": {
+      "target": {
         "asset": "nc_benchmarks.pub"
-      }
+      },
+      "configuration": null
     }
   ]
 }

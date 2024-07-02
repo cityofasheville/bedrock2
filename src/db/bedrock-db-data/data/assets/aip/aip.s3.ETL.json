@@ -1,18 +1,24 @@
 {
   "asset_name": "aip.s3",
-  "run_group": "aip",
+  "asset_id": "d0af444d608d31e5ea77",
+  "run_group_id": "4b677faf52f7aa0c01c0",
   "active": true,
   "tasks": [
     {
+      "task_id": "df96451879139da32748",
+      "asset_id": "d0af444d608d31e5ea77",
+      "seq_number": 0,
+      "description": null,
       "type": "table_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "pr_allstate_feed.mun",
         "tableheaders": true
       },
-      "target_location": {
+      "target": {
         "asset": "aip.s3"
-      }
+      },
+      "configuration": null
     }
   ]
 }

@@ -1,27 +1,38 @@
 {
   "asset_name": "paymentus_cif.ftp",
-  "run_group": "paymentus_cif",
+  "asset_id": "71f8b07263139ea35564",
+  "run_group_id": "0448eee03e392b161025",
   "active": true,
   "tasks": [
     {
+      "task_id": "ea8ad36a7864b9d6d793",
+      "asset_id": "71f8b07263139ea35564",
+      "seq_number": 0,
+      "description": null,
       "type": "file_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "paymentus_cif.s3"
       },
-      "target_location": {
+      "target": {
         "asset": "paymentus_cif.ftp"
-      }
+      },
+      "configuration": null
     },
     {
+      "task_id": "e2aeae158eecac6a7f48",
+      "asset_id": "71f8b07263139ea35564",
+      "seq_number": 1,
+      "description": null,
       "type": "file_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "paymentus_cif.ctl.s3"
       },
-      "target_location": {
+      "target": {
         "asset": "paymentus_cif.ctl.ftp"
-      }
+      },
+      "configuration": null
     }
   ]
 }

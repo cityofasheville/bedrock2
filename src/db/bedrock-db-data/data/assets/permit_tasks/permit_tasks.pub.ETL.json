@@ -1,17 +1,23 @@
 {
   "asset_name": "permit_tasks.pub",
-  "run_group": "daily",
+  "asset_id": "52edaf4cbddc981bd854",
+  "run_group_id": "7d27de8121bfc20e543b",
   "active": true,
   "tasks": [
     {
+      "task_id": "1b0c7fc4c64395aab71b",
+      "asset_id": "52edaf4cbddc981bd854",
+      "seq_number": 0,
+      "description": null,
       "type": "table_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "permit_tasks.lib"
       },
-      "target_location": {
+      "target": {
         "asset": "permit_tasks.pub"
-      }
+      },
+      "configuration": null
     }
   ]
 }

@@ -1,27 +1,38 @@
 {
   "asset_name": "paymentus_payment_history.s3",
-  "run_group": "paymentus_payment_history",
+  "asset_id": "24891ef54f24bbd0da13",
+  "run_group_id": "d232dae77b602a562484",
   "active": true,
   "tasks": [
     {
+      "task_id": "4425470569e6fa1fc960",
+      "asset_id": "24891ef54f24bbd0da13",
+      "seq_number": 0,
+      "description": null,
       "type": "table_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "paymentus_payment_history.mun"
       },
-      "target_location": {
+      "target": {
         "asset": "paymentus_payment_history.s3"
-      }
+      },
+      "configuration": null
     },
     {
+      "task_id": "82a2de0c3ee1db934c9d",
+      "asset_id": "24891ef54f24bbd0da13",
+      "seq_number": 1,
+      "description": null,
       "type": "table_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "paymentus.empty_control_file.lib"
       },
-      "target_location": {
+      "target": {
         "asset": "paymentus_payment_history.ctl.s3"
-      }
+      },
+      "configuration": null
     }
   ]
 }

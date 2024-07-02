@@ -1,24 +1,37 @@
 {
   "asset_name": "paymentus_paper_suppression.mun",
-  "run_group": "paymentus_paper_suppression",
+  "asset_id": "8273f1b804d212f8ebd3",
+  "run_group_id": "8731f420f6ebb86a5dc2",
   "active": true,
   "tasks": [
     {
+      "task_id": "6b6c90c128230cb925e0",
+      "asset_id": "8273f1b804d212f8ebd3",
+      "seq_number": 0,
+      "description": null,
       "type": "table_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "paymentus_paper_suppression.s3",
         "removeheaders": true
       },
-      "target_location": {
+      "target": {
         "asset": "paymentus_paper_suppression.mun"
-      }
+      },
+      "configuration": null
     },
     {
+      "task_id": "92a53c1ac8a5cea7345d",
+      "asset_id": "8273f1b804d212f8ebd3",
+      "seq_number": 1,
+      "description": null,
       "type": "sql",
       "active": true,
-      "connection": "munis/munprod/fme_jobs",
-      "sql_string": "execute avl.Paymentus_Paper_Suppression;"
+      "source": null,
+      "target": {
+        "connection": "munis/munprod/fme_jobs"
+      },
+      "configuration": "execute avl.Paymentus_Paper_Suppression;"
     }
   ]
 }

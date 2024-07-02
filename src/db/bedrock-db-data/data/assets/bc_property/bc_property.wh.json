@@ -1,13 +1,13 @@
 {
+  "asset_id": "e966e245516ef0716444",
   "asset_name": "bc_property.wh",
-  "display_name": "bc_property.wh",
   "description": "Property table from County",
   "location": {
     "tablename": "bc_property",
-    "connection": "gis-warehouse/coagiswarehouse/coagis",
-    "schemaname": "coagis"
+    "schemaname": "coagis",
+    "connection_id": "6c807020a396e33e50ae"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,

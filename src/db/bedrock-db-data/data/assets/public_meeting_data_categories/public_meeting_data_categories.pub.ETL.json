@@ -1,17 +1,23 @@
 {
   "asset_name": "public_meeting_data_categories.pub",
-  "run_group": "every15",
+  "asset_id": "b6da74169621ef3ea38f",
+  "run_group_id": "e7bbb83d385013e19927",
   "active": true,
   "tasks": [
     {
+      "task_id": "4ada77e0b3f24a481c11",
+      "asset_id": "b6da74169621ef3ea38f",
+      "seq_number": 0,
+      "description": null,
       "type": "table_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "public_meeting_data_categories.lib"
       },
-      "target_location": {
+      "target": {
         "asset": "public_meeting_data_categories.pub"
-      }
+      },
+      "configuration": null
     }
   ]
 }

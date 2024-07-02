@@ -1,13 +1,13 @@
 {
+  "asset_id": "a8d232ec9cc84965dd69",
   "asset_name": "permit_owners.acc",
-  "display_name": "permit_owners.acc",
   "description": "Owners associated with permits",
   "location": {
     "tablename": "permit_owners",
-    "connection": "coa-acceladb/accela/mssqlgisadmin",
-    "schemaname": "amd"
+    "schemaname": "amd",
+    "connection_id": "7e231e26044ec20638fe"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,

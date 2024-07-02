@@ -1,0 +1,23 @@
+{
+  "name": "loadfiles",
+  "version": "1.0.0",
+  "description": "",
+  "main": "loadfiles.js",
+  "type": "module",
+  "scripts": {
+    "preinstall": "npm install ../../../bedrock_common/table_copy --install-links; npm install ../../../bedrock_common/bedrock_common --install-links"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bedrock_common": "file:../../../bedrock_common/bedrock_common",
+    "bedrock_packages": "file:../../../bedrock_common/table_copy",
+    "bedrock_table_copy": "file:../../../bedrock_common/table_copy"
+  },
+  "devDependencies": {
+    "eslint": "^8.40.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.27.5"
+  }
+}

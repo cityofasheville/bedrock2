@@ -1,13 +1,13 @@
 {
+  "asset_id": "1d7fc5a748a75e7297be",
   "asset_name": "fire_pr_accrual_hours_balances.lib",
-  "display_name": "fire_pr_accrual_hours_balances.lib",
   "description": "",
   "location": {
     "tablename": "fire_pr_accrual_hours_balances",
-    "connection": "pubrecdb1/mdastore1/dbadmin",
-    "schemaname": "bc"
+    "schemaname": "bc",
+    "connection_id": "7349e0b0fbf697f353d5"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,

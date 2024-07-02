@@ -1,13 +1,21 @@
 {
   "asset_name": "base_employee_sensitive_snapshots.lib",
-  "run_group": "monthly",
+  "asset_id": "2d31038a91ccdb2b5bde",
+  "run_group_id": "4f143fa15d318bc83016",
   "active": true,
   "tasks": [
     {
+      "task_id": "d40a17d3790c494af7de",
+      "asset_id": "2d31038a91ccdb2b5bde",
+      "seq_number": 0,
+      "description": null,
       "type": "sql",
       "active": true,
-      "connection": "pubrecdb1/mdastore1/dbadmin",
-      "sql_string": "INSERT INTO standard.base_employee_sensitive_snapshots\n(date_entered, employee_id, active, \"sensitive\", first_name, last_name, legal_first_name, \nlegal_middle_name, legal_last_name, legal_name_suffix, primary_email, alt_email, division_id, division, \ndepartment_id, department, position_name, ft_status, exempt_group, hire_date_original, hire_date_last, termination_date_last,\nannual_base_pay,\nsupervisor_id, supervisor_name, supervisor_email, is_supervisor, supervisee_count, phone_desk, phone_cell, \nad_username, ad_memberships, race_asian, race_black, race_native, race_pacific, race_white, ethnicity_hispanic, \ngender, age, age_at_hire, age_at_termination)\nselect current_date as date_entered, employee_id, active, \"sensitive\", first_name, last_name, \nlegal_first_name, legal_middle_name, legal_last_name, legal_name_suffix, primary_email, alt_email, \ndivision_id, division, department_id, department, position_name, ft_status, exempt_group, hire_date_original, \nhire_date_last, termination_date_last, annual_base_pay, supervisor_id, supervisor_name, supervisor_email, is_supervisor, \nsupervisee_count, phone_desk, phone_cell, ad_username, ad_memberships, race_asian, race_black, race_native, \nrace_pacific, race_white, ethnicity_hispanic, gender, age, age_at_hire, age_at_termination\nFROM standard.employee_sensitive;"
+      "source": null,
+      "target": {
+        "connection": "pubrecdb1/mdastore1/dbadmin"
+      },
+      "configuration": "INSERT INTO standard.base_employee_sensitive_snapshots\n(date_entered, employee_id, active, \"sensitive\", first_name, last_name, legal_first_name, \nlegal_middle_name, legal_last_name, legal_name_suffix, primary_email, alt_email, division_id, division, \ndepartment_id, department, position_name, ft_status, exempt_group, hire_date_original, hire_date_last, termination_date_last,\nannual_base_pay,\nsupervisor_id, supervisor_name, supervisor_email, is_supervisor, supervisee_count, phone_desk, phone_cell, \nad_username, ad_memberships, race_asian, race_black, race_native, race_pacific, race_white, ethnicity_hispanic, \ngender, age, age_at_hire, age_at_termination)\nselect current_date as date_entered, employee_id, active, \"sensitive\", first_name, last_name, \nlegal_first_name, legal_middle_name, legal_last_name, legal_name_suffix, primary_email, alt_email, \ndivision_id, division, department_id, department, position_name, ft_status, exempt_group, hire_date_original, \nhire_date_last, termination_date_last, annual_base_pay, supervisor_id, supervisor_name, supervisor_email, is_supervisor, \nsupervisee_count, phone_desk, phone_cell, ad_username, ad_memberships, race_asian, race_black, race_native, \nrace_pacific, race_white, ethnicity_hispanic, gender, age, age_at_hire, age_at_termination\nFROM standard.employee_sensitive;"
     }
   ]
 }

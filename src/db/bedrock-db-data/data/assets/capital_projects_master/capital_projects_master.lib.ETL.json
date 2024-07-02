@@ -1,18 +1,24 @@
 {
   "asset_name": "capital_projects_master.lib",
-  "run_group": "daily",
+  "asset_id": "fbe311c7478e3313c34d",
+  "run_group_id": "7d27de8121bfc20e543b",
   "active": true,
   "tasks": [
     {
+      "task_id": "ad565fb1aefc59c51908",
+      "asset_id": "fbe311c7478e3313c34d",
+      "seq_number": 0,
+      "description": null,
       "type": "table_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "capital_projects_master.goog"
       },
-      "target_location": {
+      "target": {
         "asset": "capital_projects_master.lib",
         "append_serial": "objectid"
-      }
+      },
+      "configuration": null
     }
   ]
 }

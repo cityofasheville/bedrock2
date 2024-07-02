@@ -1,17 +1,23 @@
 {
   "asset_name": "workforce_development.lib",
-  "run_group": "daily",
+  "asset_id": "ddec461d0fbb796dd4a9",
+  "run_group_id": "7d27de8121bfc20e543b",
   "active": true,
   "tasks": [
     {
+      "task_id": "ab3ecc354d33cc0d9f90",
+      "asset_id": "ddec461d0fbb796dd4a9",
+      "seq_number": 0,
+      "description": null,
       "type": "table_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "workforce_development.goog"
       },
-      "target_location": {
+      "target": {
         "asset": "workforce_development.lib"
-      }
+      },
+      "configuration": null
     }
   ]
 }

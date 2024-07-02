@@ -1,27 +1,38 @@
 {
   "asset_name": "paymentus_cif.s3",
-  "run_group": "paymentus_cif",
+  "asset_id": "28c994d704e9afbc2eb7",
+  "run_group_id": "0448eee03e392b161025",
   "active": true,
   "tasks": [
     {
+      "task_id": "f9b4bac2b45429c3f906",
+      "asset_id": "28c994d704e9afbc2eb7",
+      "seq_number": 0,
+      "description": null,
       "type": "table_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "paymentus_cif.mun"
       },
-      "target_location": {
+      "target": {
         "asset": "paymentus_cif.s3"
-      }
+      },
+      "configuration": null
     },
     {
+      "task_id": "1201bc48ecc9211812e9",
+      "asset_id": "28c994d704e9afbc2eb7",
+      "seq_number": 1,
+      "description": null,
       "type": "table_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "paymentus.empty_control_file.lib"
       },
-      "target_location": {
+      "target": {
         "asset": "paymentus_cif.ctl.s3"
-      }
+      },
+      "configuration": null
     }
   ]
 }

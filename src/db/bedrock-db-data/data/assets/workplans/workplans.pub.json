@@ -1,19 +1,19 @@
 {
+  "asset_id": "173ca8ae0a22f3d97ebb",
   "asset_name": "workplans.pub",
-  "display_name": "workplans.pub",
   "description": "Organizational Work Plan",
   "location": {
     "tablename": "workplans",
-    "connection": "coa-publicdb1/coa_share/dbadmin",
-    "schemaname": "open"
+    "schemaname": "open",
+    "connection_id": "1be46a78a9eefb0ceb5a"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,
   "active": true,
   "depends": [
-    "workplans.lib"
+    "d28ba42517f77fc35960"
   ],
   "tags": []
 }

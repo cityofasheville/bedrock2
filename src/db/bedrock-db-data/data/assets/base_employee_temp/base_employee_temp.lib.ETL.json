@@ -1,17 +1,23 @@
 {
   "asset_name": "base_employee_temp.lib",
-  "run_group": "daily",
+  "asset_id": "af5bcd41af50486cb045",
+  "run_group_id": "7d27de8121bfc20e543b",
   "active": true,
   "tasks": [
     {
+      "task_id": "a9bedad1305e1581154c",
+      "asset_id": "af5bcd41af50486cb045",
+      "seq_number": 0,
+      "description": null,
       "type": "table_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "base_employee.mun"
       },
-      "target_location": {
+      "target": {
         "asset": "base_employee_temp.lib"
-      }
+      },
+      "configuration": null
     }
   ]
 }

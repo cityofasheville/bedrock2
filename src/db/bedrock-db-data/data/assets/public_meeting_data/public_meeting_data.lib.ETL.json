@@ -1,28 +1,39 @@
 {
   "asset_name": "public_meeting_data.lib",
-  "run_group": "every15",
+  "asset_id": "2256f2df3b0e4b5d3204",
+  "run_group_id": "e7bbb83d385013e19927",
   "active": true,
   "tasks": [
     {
+      "task_id": "4c86b94879fdac71c82d",
+      "asset_id": "2256f2df3b0e4b5d3204",
+      "seq_number": 0,
+      "description": null,
       "type": "table_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "public_meeting_data.goog"
       },
-      "target_location": {
+      "target": {
         "asset": "public_meeting_data.lib"
-      }
+      },
+      "configuration": null
     },
     {
+      "task_id": "d1515ac51534c9a451f5",
+      "asset_id": "2256f2df3b0e4b5d3204",
+      "seq_number": 1,
+      "description": null,
       "type": "table_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "public_meeting_data_archive.goog"
       },
-      "target_location": {
+      "target": {
         "asset": "public_meeting_data.lib",
         "append": true
-      }
+      },
+      "configuration": null
     }
   ]
 }

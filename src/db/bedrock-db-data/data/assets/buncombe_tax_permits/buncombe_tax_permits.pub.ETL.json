@@ -1,17 +1,23 @@
 {
   "asset_name": "buncombe_tax_permits.pub",
-  "run_group": "daily",
+  "asset_id": "9335471ac83ddfc983b0",
+  "run_group_id": "7d27de8121bfc20e543b",
   "active": true,
   "tasks": [
     {
+      "task_id": "337f3dc7e38b887e9d91",
+      "asset_id": "9335471ac83ddfc983b0",
+      "seq_number": 0,
+      "description": null,
       "type": "table_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "buncombe_tax_permits.lib"
       },
-      "target_location": {
+      "target": {
         "asset": "buncombe_tax_permits.pub"
-      }
+      },
+      "configuration": null
     }
   ]
 }

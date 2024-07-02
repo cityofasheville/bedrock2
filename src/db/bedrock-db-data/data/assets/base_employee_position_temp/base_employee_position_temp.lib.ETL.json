@@ -1,17 +1,23 @@
 {
   "asset_name": "base_employee_position_temp.lib",
-  "run_group": "daily",
+  "asset_id": "6b502153d40d996ad6c6",
+  "run_group_id": "7d27de8121bfc20e543b",
   "active": true,
   "tasks": [
     {
+      "task_id": "e0fe99b9f5dc765d4707",
+      "asset_id": "6b502153d40d996ad6c6",
+      "seq_number": 0,
+      "description": null,
       "type": "table_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "base_employee_position.mun"
       },
-      "target_location": {
+      "target": {
         "asset": "base_employee_position_temp.lib"
-      }
+      },
+      "configuration": null
     }
   ]
 }

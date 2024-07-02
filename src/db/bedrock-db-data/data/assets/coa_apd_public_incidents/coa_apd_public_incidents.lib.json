@@ -1,19 +1,19 @@
 {
+  "asset_id": "2ad58b1862a860f23d8c",
   "asset_name": "coa_apd_public_incidents.lib",
-  "display_name": "coa_apd_public_incidents.lib",
   "description": "",
   "location": {
     "tablename": "coa_apd_public_incidents",
-    "connection": "pubrecdb1/mdastore1/dbadmin",
-    "schemaname": "internal"
+    "schemaname": "internal",
+    "connection_id": "7349e0b0fbf697f353d5"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,
   "active": true,
   "depends": [
-    "coa_apd_public_incidents.wh"
+    "9065d7024579e1c72457"
   ],
   "tags": []
 }

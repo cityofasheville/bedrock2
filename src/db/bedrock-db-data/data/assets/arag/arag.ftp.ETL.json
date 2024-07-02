@@ -1,17 +1,23 @@
 {
   "asset_name": "arag.ftp",
-  "run_group": "arag",
+  "asset_id": "9e513300e30142eb8e5e",
+  "run_group_id": "232cc0f83321d5bb89ca",
   "active": true,
   "tasks": [
     {
+      "task_id": "febfbbb6b896c7493afb",
+      "asset_id": "9e513300e30142eb8e5e",
+      "seq_number": 0,
+      "description": null,
       "type": "file_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "arag.encrypted.s3"
       },
-      "target_location": {
+      "target": {
         "asset": "arag.ftp"
-      }
+      },
+      "configuration": null
     }
   ]
 }

@@ -1,17 +1,23 @@
 {
   "asset_name": "inspections.pub",
-  "run_group": "daily",
+  "asset_id": "9cc74a82b6c3798ada3a",
+  "run_group_id": "7d27de8121bfc20e543b",
   "active": true,
   "tasks": [
     {
+      "task_id": "91e8408bd812a518e8d5",
+      "asset_id": "9cc74a82b6c3798ada3a",
+      "seq_number": 0,
+      "description": null,
       "type": "table_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "inspections.lib"
       },
-      "target_location": {
+      "target": {
         "asset": "inspections.pub"
-      }
+      },
+      "configuration": null
     }
   ]
 }

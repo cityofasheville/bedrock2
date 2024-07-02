@@ -1,17 +1,23 @@
 {
   "asset_name": "dsd_first_review_sla.lib",
-  "run_group": "daily",
+  "asset_id": "34075041d6a8a0c0c134",
+  "run_group_id": "7d27de8121bfc20e543b",
   "active": true,
   "tasks": [
     {
+      "task_id": "648cdcc8f945f4535dc1",
+      "asset_id": "34075041d6a8a0c0c134",
+      "seq_number": 0,
+      "description": null,
       "type": "table_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "dsd_first_review_sla.acc"
       },
-      "target_location": {
+      "target": {
         "asset": "dsd_first_review_sla.lib"
-      }
+      },
+      "configuration": null
     }
   ]
 }

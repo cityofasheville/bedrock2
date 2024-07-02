@@ -1,13 +1,13 @@
 {
+  "asset_id": "11c0da8fa2c8d5ddca02",
   "asset_name": "gl_master.mun",
-  "display_name": "gl_master.mun",
   "description": "Master general ledger history",
   "location": {
     "tablename": "gl_master",
-    "connection": "munis/munprod/fme_jobs",
-    "schemaname": "amd"
+    "schemaname": "amd",
+    "connection_id": "4fd66815213adfbd20be"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,

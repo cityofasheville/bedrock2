@@ -1,13 +1,13 @@
 {
+  "asset_id": "95ea11baa7abcf0b4d28",
   "asset_name": "inspections.acc",
-  "display_name": "inspections.acc",
   "description": "",
   "location": {
     "tablename": "inspections",
-    "connection": "coa-acceladb/accela/mssqlgisadmin",
-    "schemaname": "amd"
+    "schemaname": "amd",
+    "connection_id": "7e231e26044ec20638fe"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,

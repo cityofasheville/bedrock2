@@ -1,19 +1,19 @@
 {
+  "asset_id": "67fc5c232a95fbcd6801",
   "asset_name": "iran_divestment_restricted_companies.lib",
-  "display_name": "iran_divestment_restricted_companies.lib",
   "description": "Iranian Companies we are forbidden to work with",
   "location": {
     "tablename": "iran_divestment_restricted_companies",
-    "connection": "pubrecdb1/mdastore1/dbadmin",
-    "schemaname": "internal"
+    "schemaname": "internal",
+    "connection_id": "7349e0b0fbf697f353d5"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,
   "active": true,
   "depends": [
-    "iran_divestment_companies.goog"
+    "4a344a27a8e7bc3c8880"
   ],
   "tags": []
 }

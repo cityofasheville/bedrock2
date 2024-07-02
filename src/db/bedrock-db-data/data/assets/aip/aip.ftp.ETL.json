@@ -1,17 +1,23 @@
 {
   "asset_name": "aip.ftp",
-  "run_group": "aip",
+  "asset_id": "b6171223322a98a24f57",
+  "run_group_id": "4b677faf52f7aa0c01c0",
   "active": true,
   "tasks": [
     {
+      "task_id": "18e5a229bdf5267684a5",
+      "asset_id": "b6171223322a98a24f57",
+      "seq_number": 0,
+      "description": null,
       "type": "file_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "aip.encrypted.s3"
       },
-      "target_location": {
+      "target": {
         "asset": "aip.ftp"
-      }
+      },
+      "configuration": null
     }
   ]
 }

@@ -1,19 +1,19 @@
 {
+  "asset_id": "f59df4320892f1b4b898",
   "asset_name": "training_boards.lib",
-  "display_name": "training_boards.lib",
   "description": "Training records for board and commission members",
   "location": {
     "tablename": "training_boards",
-    "connection": "pubrecdb1/mdastore1/dbadmin",
-    "schemaname": "internal"
+    "schemaname": "internal",
+    "connection_id": "7349e0b0fbf697f353d5"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,
   "active": true,
   "depends": [
-    "boards+commission_member_training.goog"
+    "8151ae93ce5cc80d93bd"
   ],
   "tags": []
 }

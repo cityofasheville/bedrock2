@@ -1,17 +1,23 @@
 {
   "asset_name": "everbridge.cust.ftp",
-  "run_group": "daily",
+  "asset_id": "5cd7aded575457b9c28b",
+  "run_group_id": "7d27de8121bfc20e543b",
   "active": true,
   "tasks": [
     {
+      "task_id": "72451ebb6a1e7ea81d13",
+      "asset_id": "5cd7aded575457b9c28b",
+      "seq_number": 0,
+      "description": null,
       "type": "file_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "everbridge.cust.s3"
       },
-      "target_location": {
+      "target": {
         "asset": "everbridge.cust.ftp"
-      }
+      },
+      "configuration": null
     }
   ]
 }

@@ -1,17 +1,23 @@
 {
   "asset_name": "aclara.ftp",
-  "run_group": "aclara",
+  "asset_id": "37bd47b12b6df817558a",
+  "run_group_id": "3451e774606408ed7f94",
   "active": true,
   "tasks": [
     {
+      "task_id": "04c497187e8925376fba",
+      "asset_id": "37bd47b12b6df817558a",
+      "seq_number": 0,
+      "description": null,
       "type": "file_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "aclara.s3"
       },
-      "target_location": {
+      "target": {
         "asset": "aclara.ftp"
-      }
+      },
+      "configuration": null
     }
   ]
 }
