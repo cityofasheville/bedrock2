@@ -27,7 +27,7 @@ BEDROCK_DB_NAME=
 BEDROCK_DB_SCHEMA="bedrock"
 
 # This is used in the API. The value can be read from 
-# src/etl/stepfunctions/process_etl_run_group/state_machine_variables.generated 
+# src/etl/state_machine_variables.generated 
 # after creating the step function.
 STATE_MACHINE_ARN = "arn:aws:xxx"
 
