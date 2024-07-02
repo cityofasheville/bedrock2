@@ -53,7 +53,7 @@ async function getCustomFieldsInfo(client, asset_type) {
       group by custom_field_id, custom_field_name, field_type
     `;
     sqlResult = await client.query(sqlQuery, []);
-
+      console.log(sqlResult)
 
     sqlResult.rows.forEach((itm) => {
       customFields.set(itm.custom_field_id, itm);
