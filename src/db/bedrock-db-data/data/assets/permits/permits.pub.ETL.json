@@ -1,17 +1,23 @@
 {
   "asset_name": "permits.pub",
-  "run_group": "daily",
+  "asset_id": "fc42c3238f1ac039f27e",
+  "run_group_id": "7d27de8121bfc20e543b",
   "active": true,
   "tasks": [
     {
+      "task_id": "49707b9b82a8bab2b427",
+      "asset_id": "fc42c3238f1ac039f27e",
+      "seq_number": 0,
+      "description": null,
       "type": "table_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "permits.lib"
       },
-      "target_location": {
+      "target": {
         "asset": "permits.pub"
-      }
+      },
+      "configuration": null
     }
   ]
 }

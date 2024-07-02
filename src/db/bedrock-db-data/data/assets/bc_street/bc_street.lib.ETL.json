@@ -1,17 +1,23 @@
 {
   "asset_name": "bc_street.lib",
-  "run_group": "daily",
+  "asset_id": "d88f7d833b10bd33f5a9",
+  "run_group_id": "7d27de8121bfc20e543b",
   "active": true,
   "tasks": [
     {
+      "task_id": "042f0d2355ee4a0aafc8",
+      "asset_id": "d88f7d833b10bd33f5a9",
+      "seq_number": 0,
+      "description": null,
       "type": "table_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "bc_street.wh"
       },
-      "target_location": {
+      "target": {
         "asset": "bc_street.lib"
-      }
+      },
+      "configuration": null
     }
   ]
 }

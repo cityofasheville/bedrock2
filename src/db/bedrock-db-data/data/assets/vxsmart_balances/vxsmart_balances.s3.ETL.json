@@ -1,18 +1,24 @@
 {
   "asset_name": "vxsmart_balances.s3",
-  "run_group": "vxsmart_balances",
+  "asset_id": "43be01804b4919ecf9e0",
+  "run_group_id": "4b7a0c106ec6c649bf81",
   "active": true,
   "tasks": [
     {
+      "task_id": "66669ffa6c162cd08d36",
+      "asset_id": "43be01804b4919ecf9e0",
+      "seq_number": 0,
+      "description": null,
       "type": "table_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "vxsmart_balances.mun",
         "tableheaders": true
       },
-      "target_location": {
+      "target": {
         "asset": "vxsmart_balances.s3"
-      }
+      },
+      "configuration": null
     }
   ]
 }

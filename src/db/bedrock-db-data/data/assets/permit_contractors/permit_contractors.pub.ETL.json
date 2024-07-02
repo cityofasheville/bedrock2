@@ -1,17 +1,23 @@
 {
   "asset_name": "permit_contractors.pub",
-  "run_group": "daily",
+  "asset_id": "5336f246fd3791627ba8",
+  "run_group_id": "7d27de8121bfc20e543b",
   "active": true,
   "tasks": [
     {
+      "task_id": "89aa1965b4f66427760a",
+      "asset_id": "5336f246fd3791627ba8",
+      "seq_number": 0,
+      "description": null,
       "type": "table_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "permit_contractors.lib"
       },
-      "target_location": {
+      "target": {
         "asset": "permit_contractors.pub"
-      }
+      },
+      "configuration": null
     }
   ]
 }

@@ -1,19 +1,19 @@
 {
+  "asset_id": "026d14961688108783c3",
   "asset_name": "coa_districts_zoning.lib",
-  "display_name": "coa_districts_zoning.lib",
   "description": "Asheville zoning districts",
   "location": {
     "tablename": "coa_districts_zoning",
-    "connection": "pubrecdb1/mdastore1/dbadmin",
-    "schemaname": "internal"
+    "schemaname": "internal",
+    "connection_id": "7349e0b0fbf697f353d5"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,
   "active": true,
   "depends": [
-    "coa_districts_zoning.wh"
+    "ba8afdecef24784c8733"
   ],
   "tags": []
 }

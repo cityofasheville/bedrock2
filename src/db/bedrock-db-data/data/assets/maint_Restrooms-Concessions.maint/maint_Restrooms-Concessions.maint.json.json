@@ -1,19 +1,19 @@
 {
+  "asset_id": "35f8328599d6ad339248",
   "asset_name": "maint_Restrooms-Concessions.maint.json",
-  "display_name": "maint_Restrooms-Concessions.maint.json",
   "description": "Maintenance Responsibilities: Restrooms-Concessions",
   "location": {
     "tab": "Restrooms/Concessions",
-    "connection": "bedrock-googlesheets",
+    "connection_id": "71313d9908d4a9716405",
     "spreadsheetid": "16rZUoAlISFIAmvcnSMHmhaE0qObj2OMpHQX3ddRoEwg"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,
   "active": true,
   "depends": [],
   "tags": [
-    "maintenance_responsibilities"
+    "5d10be5aa1728f452b44"
   ]
 }

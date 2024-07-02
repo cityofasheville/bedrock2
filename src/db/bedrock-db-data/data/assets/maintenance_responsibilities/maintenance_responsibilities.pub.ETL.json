@@ -1,17 +1,23 @@
 {
   "asset_name": "maintenance_responsibilities.pub",
-  "run_group": "daily",
+  "asset_id": "3d86867d15cf5a1325c2",
+  "run_group_id": "7d27de8121bfc20e543b",
   "active": true,
   "tasks": [
     {
+      "task_id": "11c2c7eb38bf8379dd90",
+      "asset_id": "3d86867d15cf5a1325c2",
+      "seq_number": 0,
+      "description": null,
       "type": "table_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "maintenance_responsibilities.lib"
       },
-      "target_location": {
+      "target": {
         "asset": "maintenance_responsibilities.pub"
-      }
+      },
+      "configuration": null
     }
   ]
 }

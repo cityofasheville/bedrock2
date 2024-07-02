@@ -1,17 +1,23 @@
 {
   "asset_name": "ad_info.lib",
-  "run_group": "daily",
+  "asset_id": "46377fb6749aeab04e7f",
+  "run_group_id": "7d27de8121bfc20e543b",
   "active": true,
   "tasks": [
     {
+      "task_id": "ea29ad0f90fdd7ea0851",
+      "asset_id": "46377fb6749aeab04e7f",
+      "seq_number": 0,
+      "description": null,
       "type": "table_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "ad_info.mun"
       },
-      "target_location": {
+      "target": {
         "asset": "ad_info.lib"
-      }
+      },
+      "configuration": null
     }
   ]
 }

@@ -1,13 +1,13 @@
 {
+  "asset_id": "82cf2094f031572b211e",
   "asset_name": "coa_street_maintenance.wh",
-  "display_name": "coa_street_maintenance.wh",
   "description": "Street Maintenance",
   "location": {
     "tablename": "coa_street_maintenance",
-    "connection": "gis-warehouse/coagiswarehouse/coagis",
-    "schemaname": "coagis"
+    "schemaname": "coagis",
+    "connection_id": "6c807020a396e33e50ae"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,

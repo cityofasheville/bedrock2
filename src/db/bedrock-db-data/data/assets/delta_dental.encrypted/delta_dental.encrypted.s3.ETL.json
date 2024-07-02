@@ -1,16 +1,27 @@
 {
   "asset_name": "delta_dental.encrypted.s3",
-  "run_group": "delta_dental",
+  "asset_id": "716f3a6c6a0201625d92",
+  "run_group_id": "03b7bc9a70fbeb7c7364",
   "active": true,
   "tasks": [
     {
+      "task_id": "2b0e4c72dfa8760b75f0",
+      "asset_id": "716f3a6c6a0201625d92",
+      "seq_number": 0,
+      "description": null,
       "type": "encrypt",
       "active": true,
-      "path": "delta_dental/",
-      "filename": "deltadental_asheville_${YYYY}${MM}${DD}.txt",
-      "s3_connection": "s3_data_files",
-      "encrypt_connection": "delta_dental_ftp",
-      "encrypted_filename": "deltadental_asheville_${YYYY}${MM}${DD}.txt.asc"
+      "source": null,
+      "target": {
+        "path": "delta_dental/",
+        "type": "encrypt",
+        "active": true,
+        "filename": "deltadental_asheville_${YYYY}${MM}${DD}.txt",
+        "s3_connection": "s3_data_files",
+        "encrypt_connection": "delta_dental_ftp",
+        "encrypted_filename": "deltadental_asheville_${YYYY}${MM}${DD}.txt.asc"
+      },
+      "configuration": null
     }
   ]
 }

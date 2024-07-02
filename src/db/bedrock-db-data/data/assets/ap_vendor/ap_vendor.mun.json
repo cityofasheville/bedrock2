@@ -1,13 +1,13 @@
 {
+  "asset_id": "bd3d8c4f0b6e1659fd04",
   "asset_name": "ap_vendor.mun",
-  "display_name": "ap_vendor.mun",
   "description": "",
   "location": {
     "tablename": "ap_vendor",
-    "connection": "munis/munprod/fme_jobs",
-    "schemaname": "dbo"
+    "schemaname": "dbo",
+    "connection_id": "4fd66815213adfbd20be"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,

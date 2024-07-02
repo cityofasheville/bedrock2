@@ -1,19 +1,19 @@
 {
+  "asset_id": "dbc7b9e607bb3ed7b4fa",
   "asset_name": "vxsmart_account.ftp",
-  "display_name": "vxsmart_account.ftp",
   "description": "Uploaded Account data to vxsmart_account",
   "location": {
     "path": "/uploads/",
     "filename": "acctinfo_${YYYY}${MM}${DD}.csv",
-    "connection": "vxsmart_ftp"
+    "connection_id": "97f8c32fd131dbfda484"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,
   "active": true,
   "depends": [
-    "vxsmart_account.s3"
+    "abb08d4bdc379a32b519"
   ],
   "tags": []
 }

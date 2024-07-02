@@ -1,19 +1,19 @@
 {
+  "asset_id": "fbe311c7478e3313c34d",
   "asset_name": "capital_projects_master.lib",
-  "display_name": "capital_projects_master.lib",
   "description": "Capital Projects General Project Information",
   "location": {
     "tablename": "capital_projects_master",
-    "connection": "pubrecdb1/mdastore1/dbadmin",
-    "schemaname": "internal"
+    "schemaname": "internal",
+    "connection_id": "7349e0b0fbf697f353d5"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,
   "active": true,
   "depends": [
-    "capital_projects_master.goog"
+    "fa1f8e7b8e02402d68b4"
   ],
   "tags": []
 }

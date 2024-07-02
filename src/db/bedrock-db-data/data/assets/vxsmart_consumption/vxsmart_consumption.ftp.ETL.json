@@ -1,17 +1,23 @@
 {
   "asset_name": "vxsmart_consumption.ftp",
-  "run_group": "daily",
+  "asset_id": "9d329bdbaf77f652e9a8",
+  "run_group_id": "7d27de8121bfc20e543b",
   "active": true,
   "tasks": [
     {
+      "task_id": "5f646962df9f77b09285",
+      "asset_id": "9d329bdbaf77f652e9a8",
+      "seq_number": 0,
+      "description": null,
       "type": "file_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "vxsmart_consumption.s3"
       },
-      "target_location": {
+      "target": {
         "asset": "vxsmart_consumption.ftp"
-      }
+      },
+      "configuration": null
     }
   ]
 }

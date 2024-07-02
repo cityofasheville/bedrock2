@@ -1,13 +1,24 @@
 {
   "asset_name": "bike_counters.lib",
-  "run_group": "daily",
+  "asset_id": "bce775193c676553dcf1",
+  "run_group_id": "7d27de8121bfc20e543b",
   "active": true,
   "tasks": [
     {
+      "task_id": "5c44e4001125b8698a71",
+      "asset_id": "bce775193c676553dcf1",
+      "seq_number": 0,
+      "description": "Pull yesterday's Eco-Visio data from API using ecovisio Lambda",
       "type": "run_lambda",
       "active": true,
-      "lambda_arn": "arn:aws:lambda:us-east-1:518970837364:function:ecovisio",
-      "description": "Pull yesterday's Eco-Visio data from API using ecovisio Lambda"
+      "source": null,
+      "target": {
+        "type": "run_lambda",
+        "active": true,
+        "lambda_arn": "arn:aws:lambda:us-east-1:518970837364:function:ecovisio",
+        "description": "Pull yesterday's Eco-Visio data from API using ecovisio Lambda"
+      },
+      "configuration": null
     }
   ]
 }

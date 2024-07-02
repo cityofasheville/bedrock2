@@ -1,20 +1,20 @@
 {
+  "asset_id": "d8637092e8668d8267ca",
   "asset_name": "notification_permits.lib",
-  "display_name": "notification_permits.note",
   "description": "Recent Permits to be sent in Notification Emails-view",
   "location": {
     "tablename": "notification_permits",
-    "connection": "pubrecdb1/mdastore1/dbadmin",
-    "schemaname": "internal"
+    "schemaname": "internal",
+    "connection_id": "7349e0b0fbf697f353d5"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,
   "active": true,
   "depends": [
-    "permits.lib",
-    "coa_bc_address_master.lib"
+    "105e9dc2dde2d0a924e5",
+    "f03c230df72c74bafebd"
   ],
   "tags": []
 }

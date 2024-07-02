@@ -1,13 +1,13 @@
 {
+  "asset_id": "e1f368567bd2ed473021",
   "asset_name": "coa_asheville_neighborhoods.wh",
-  "display_name": "coa_asheville_neighborhoods.wh",
   "description": "",
   "location": {
     "tablename": "coa_asheville_neighborhoods",
-    "connection": "gis-warehouse/coagiswarehouse/coagis",
-    "schemaname": "coagis"
+    "schemaname": "coagis",
+    "connection_id": "6c807020a396e33e50ae"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,

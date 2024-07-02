@@ -1,17 +1,23 @@
 {
   "asset_name": "iran_divestment_restricted_companies.lib",
-  "run_group": "daily",
+  "asset_id": "67fc5c232a95fbcd6801",
+  "run_group_id": "7d27de8121bfc20e543b",
   "active": true,
   "tasks": [
     {
+      "task_id": "fd2dda3c9ec8e2663ae1",
+      "asset_id": "67fc5c232a95fbcd6801",
+      "seq_number": 0,
+      "description": null,
       "type": "table_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "iran_divestment_companies.goog"
       },
-      "target_location": {
+      "target": {
         "asset": "iran_divestment_restricted_companies.lib"
-      }
+      },
+      "configuration": null
     }
   ]
 }

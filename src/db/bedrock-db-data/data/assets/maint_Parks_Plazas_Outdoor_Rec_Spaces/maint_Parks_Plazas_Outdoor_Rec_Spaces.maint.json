@@ -1,19 +1,19 @@
 {
+  "asset_id": "fd617c88998eadf5457c",
   "asset_name": "maint_Parks_Plazas_Outdoor_Rec_Spaces.maint",
-  "display_name": "maint_Parks_Plazas_Outdoor_Rec_Spaces.maint",
   "description": "Maintenance Responsibilities: Parks/Plazas/Outdoor Rec Spaces",
   "location": {
     "tab": "Parks/Plazas/Outdoor Rec Spaces",
-    "connection": "bedrock-googlesheets",
+    "connection_id": "71313d9908d4a9716405",
     "spreadsheetid": "16rZUoAlISFIAmvcnSMHmhaE0qObj2OMpHQX3ddRoEwg"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,
   "active": true,
   "depends": [],
   "tags": [
-    "maintenance_responsibilities"
+    "5d10be5aa1728f452b44"
   ]
 }

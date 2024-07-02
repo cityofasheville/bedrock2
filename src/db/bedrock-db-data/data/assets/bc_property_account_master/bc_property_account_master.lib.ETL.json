@@ -1,17 +1,23 @@
 {
   "asset_name": "bc_property_account_master.lib",
-  "run_group": "daily",
+  "asset_id": "dd4daabe91a735435188",
+  "run_group_id": "7d27de8121bfc20e543b",
   "active": true,
   "tasks": [
     {
+      "task_id": "7b3789ecf8219ac2108b",
+      "asset_id": "dd4daabe91a735435188",
+      "seq_number": 0,
+      "description": null,
       "type": "table_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "bc_property_account_master.wh"
       },
-      "target_location": {
+      "target": {
         "asset": "bc_property_account_master.lib"
-      }
+      },
+      "configuration": null
     }
   ]
 }

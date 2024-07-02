@@ -1,17 +1,23 @@
 {
   "asset_name": "aetna.s3",
-  "run_group": "aetna",
+  "asset_id": "59d7bc2592dcb515939b",
+  "run_group_id": "d6bb3d7acc3753e66a74",
   "active": true,
   "tasks": [
     {
+      "task_id": "659f9b15b4f11ac86f5c",
+      "asset_id": "59d7bc2592dcb515939b",
+      "seq_number": 0,
+      "description": null,
       "type": "table_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "pr_aetna_feed.mun"
       },
-      "target_location": {
+      "target": {
         "asset": "aetna.s3"
-      }
+      },
+      "configuration": null
     }
   ]
 }

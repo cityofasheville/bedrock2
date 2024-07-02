@@ -1,17 +1,23 @@
 {
   "asset_name": "bc_civicaddress_table.lib",
-  "run_group": "daily",
+  "asset_id": "f35b8fee887b546e29bd",
+  "run_group_id": "7d27de8121bfc20e543b",
   "active": true,
   "tasks": [
     {
+      "task_id": "aaff6ab8ad19fdb7c81d",
+      "asset_id": "f35b8fee887b546e29bd",
+      "seq_number": 0,
+      "description": null,
       "type": "table_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "bc_civicaddress_table.wh"
       },
-      "target_location": {
+      "target": {
         "asset": "bc_civicaddress_table.lib"
-      }
+      },
+      "configuration": null
     }
   ]
 }

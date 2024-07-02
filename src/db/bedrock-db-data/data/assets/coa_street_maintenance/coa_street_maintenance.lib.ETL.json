@@ -1,17 +1,23 @@
 {
   "asset_name": "coa_street_maintenance.lib",
-  "run_group": "daily",
+  "asset_id": "4e1065f46b594be498c8",
+  "run_group_id": "7d27de8121bfc20e543b",
   "active": true,
   "tasks": [
     {
+      "task_id": "86f29a966c8fb803738b",
+      "asset_id": "4e1065f46b594be498c8",
+      "seq_number": 0,
+      "description": null,
       "type": "table_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "coa_street_maintenance.wh"
       },
-      "target_location": {
+      "target": {
         "asset": "coa_street_maintenance.lib"
-      }
+      },
+      "configuration": null
     }
   ]
 }

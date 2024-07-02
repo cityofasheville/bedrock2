@@ -1,19 +1,25 @@
 {
   "asset_name": "delta_dental.s3",
-  "run_group": "delta_dental",
+  "asset_id": "77e95637e3a8463a8c42",
+  "run_group_id": "03b7bc9a70fbeb7c7364",
   "active": true,
   "tasks": [
     {
+      "task_id": "80cfb5653d6b49d454ce",
+      "asset_id": "77e95637e3a8463a8c42",
+      "seq_number": 0,
+      "description": null,
       "type": "table_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "pr_deltadental_feed.mun",
         "tableheaders": false,
         "fixedwidth_noquotes": true
       },
-      "target_location": {
+      "target": {
         "asset": "delta_dental.s3"
-      }
+      },
+      "configuration": null
     }
   ]
 }

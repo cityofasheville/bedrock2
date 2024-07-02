@@ -1,19 +1,19 @@
 {
+  "asset_id": "0da7e81df330384e879e",
   "asset_name": "coa_cip_project_lines.lib",
-  "display_name": "coa_cip_project_lines.lib",
   "description": "",
   "location": {
     "tablename": "coa_cip_project_lines",
-    "connection": "pubrecdb1/mdastore1/dbadmin",
-    "schemaname": "internal"
+    "schemaname": "internal",
+    "connection_id": "7349e0b0fbf697f353d5"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,
   "active": true,
   "depends": [
-    "coa_cip_project_lines.wh"
+    "5ea59b72240671ad8406"
   ],
   "tags": []
 }

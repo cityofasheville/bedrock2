@@ -1,17 +1,23 @@
 {
   "asset_name": "coa_national_register_properties.lib",
-  "run_group": "daily",
+  "asset_id": "d7d3ec84f7c57b65290d",
+  "run_group_id": "7d27de8121bfc20e543b",
   "active": true,
   "tasks": [
     {
+      "task_id": "3fc43954253199366ab0",
+      "asset_id": "d7d3ec84f7c57b65290d",
+      "seq_number": 0,
+      "description": null,
       "type": "table_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "coa_national_register_properties.wh"
       },
-      "target_location": {
+      "target": {
         "asset": "coa_national_register_properties.lib"
-      }
+      },
+      "configuration": null
     }
   ]
 }

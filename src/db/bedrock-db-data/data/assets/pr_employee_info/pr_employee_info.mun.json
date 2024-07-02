@@ -1,13 +1,13 @@
 {
+  "asset_id": "56fd6f5588336702db0e",
   "asset_name": "pr_employee_info.mun",
-  "display_name": "pr_employee_info.mun",
   "description": "Basic information for employees",
   "location": {
     "tablename": "pr_employee_info",
-    "connection": "munis/munprod/fme_jobs",
-    "schemaname": "amd"
+    "schemaname": "amd",
+    "connection_id": "4fd66815213adfbd20be"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,

@@ -1,13 +1,13 @@
 {
+  "asset_id": "d9d8bc4b6e32341154ed",
   "asset_name": "permit_custom_fields.acc",
-  "display_name": "permit_custom_fields.acc",
   "description": "Permit custom fields data ADD THIS depends BACK!!!! \"permits\"",
   "location": {
     "tablename": "permit_custom_fields",
-    "connection": "coa-acceladb/accela/mssqlgisadmin",
-    "schemaname": "amd"
+    "schemaname": "amd",
+    "connection_id": "7e231e26044ec20638fe"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,

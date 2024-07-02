@@ -1,19 +1,19 @@
 {
+  "asset_id": "55e712cde018c9fe01b7",
   "asset_name": "paymentus_cif.ctl.ftp",
-  "display_name": "paymentus_cif.ctl.ftp",
   "description": "paymentus_cif control file",
   "location": {
     "path": "/input/",
     "filename": "CIF${YYYY}${MM}${DD}.ctl",
-    "connection": "paymentus_ftp"
+    "connection_id": "e3cbbaec6eecf70bbd89"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,
   "active": true,
   "depends": [
-    "paymentus_cif.ctl.s3"
+    "51a24da73d5cc2a3cdce"
   ],
   "tags": []
 }

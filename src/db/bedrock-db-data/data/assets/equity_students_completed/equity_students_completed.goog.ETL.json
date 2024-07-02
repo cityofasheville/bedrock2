@@ -1,17 +1,23 @@
 {
   "asset_name": "equity_students_completed.goog",
-  "run_group": "daily",
+  "asset_id": "72a77d483dd188ad9f45",
+  "run_group_id": "7d27de8121bfc20e543b",
   "active": true,
   "tasks": [
     {
+      "task_id": "348ac557d0829cda030f",
+      "asset_id": "72a77d483dd188ad9f45",
+      "seq_number": 0,
+      "description": null,
       "type": "table_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "equity_students_completed.lib"
       },
-      "target_location": {
+      "target": {
         "asset": "equity_students_completed.goog"
-      }
+      },
+      "configuration": null
     }
   ]
 }

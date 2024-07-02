@@ -1,13 +1,13 @@
 {
+  "asset_id": "9f74b9a2591b7f0ec7e5",
   "asset_name": "pr_employee_info_safety.mun",
-  "display_name": "pr_employee_info_safety.mun",
   "description": "",
   "location": {
     "tablename": "pr_employee_info_safety",
-    "connection": "munis/munprod/fme_jobs",
-    "schemaname": "amd"
+    "schemaname": "amd",
+    "connection_id": "4fd66815213adfbd20be"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,

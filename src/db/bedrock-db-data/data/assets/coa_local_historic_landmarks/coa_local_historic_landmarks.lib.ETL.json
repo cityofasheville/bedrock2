@@ -1,17 +1,23 @@
 {
   "asset_name": "coa_local_historic_landmarks.lib",
-  "run_group": "daily",
+  "asset_id": "131ae15cbd95157108d4",
+  "run_group_id": "7d27de8121bfc20e543b",
   "active": true,
   "tasks": [
     {
+      "task_id": "805b37ad49d591ab89af",
+      "asset_id": "131ae15cbd95157108d4",
+      "seq_number": 0,
+      "description": null,
       "type": "table_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "coa_local_historic_landmarks.wh"
       },
-      "target_location": {
+      "target": {
         "asset": "coa_local_historic_landmarks.lib"
-      }
+      },
+      "configuration": null
     }
   ]
 }

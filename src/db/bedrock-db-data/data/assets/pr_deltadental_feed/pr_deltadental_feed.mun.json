@@ -1,13 +1,13 @@
 {
+  "asset_id": "b0623d26d9a857ee5064",
   "asset_name": "pr_deltadental_feed.mun",
-  "display_name": "pr_deltadental_feed.mun",
   "description": "",
   "location": {
     "tablename": "PR_DeltaDental_Feed_2024",
-    "connection": "munis/munprod/fme_jobs",
-    "schemaname": "avl"
+    "schemaname": "avl",
+    "connection_id": "4fd66815213adfbd20be"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,

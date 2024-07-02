@@ -1,19 +1,19 @@
 {
+  "asset_id": "7fca6a6f68c6e948bcbb",
   "asset_name": "permit_contacts.lib",
-  "display_name": "permit_contacts.lib",
   "description": "Contacts associated with permits",
   "location": {
     "tablename": "permit_contacts",
-    "connection": "pubrecdb1/mdastore1/dbadmin",
-    "schemaname": "internal"
+    "schemaname": "internal",
+    "connection_id": "7349e0b0fbf697f353d5"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,
   "active": true,
   "depends": [
-    "permit_contacts.acc"
+    "154523fe9bfd82498a73"
   ],
   "tags": []
 }

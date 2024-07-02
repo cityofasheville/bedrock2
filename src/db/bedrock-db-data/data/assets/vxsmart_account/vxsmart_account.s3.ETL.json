@@ -1,18 +1,24 @@
 {
   "asset_name": "vxsmart_account.s3",
-  "run_group": "daily",
+  "asset_id": "abb08d4bdc379a32b519",
+  "run_group_id": "7d27de8121bfc20e543b",
   "active": true,
   "tasks": [
     {
+      "task_id": "e01872218583393baaba",
+      "asset_id": "abb08d4bdc379a32b519",
+      "seq_number": 0,
+      "description": null,
       "type": "table_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "vxsmart_account.mun",
         "tableheaders": true
       },
-      "target_location": {
+      "target": {
         "asset": "vxsmart_account.s3"
-      }
+      },
+      "configuration": null
     }
   ]
 }

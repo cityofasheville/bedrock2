@@ -1,19 +1,19 @@
 {
+  "asset_id": "bce775193c676553dcf1",
   "asset_name": "bike_counters.lib",
-  "display_name": "bike_counters.lib",
   "description": "",
   "location": {
     "tablename": "counters",
-    "connection": "pubrecdb1/mdastore1/dbadmin",
-    "schemaname": "bike_counter"
+    "schemaname": "bike_counter",
+    "connection_id": "7349e0b0fbf697f353d5"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,
   "active": true,
   "depends": [
-    "eco_visio.api"
+    "ae23ea3b2a268a347e31"
   ],
   "tags": []
 }

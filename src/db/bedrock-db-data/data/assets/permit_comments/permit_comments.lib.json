@@ -1,19 +1,19 @@
 {
+  "asset_id": "6844a1df28d8b789d294",
   "asset_name": "permit_comments.lib",
-  "display_name": "permit_comments.lib",
   "description": "Permit comments data",
   "location": {
     "tablename": "permit_comments",
-    "connection": "pubrecdb1/mdastore1/dbadmin",
-    "schemaname": "internal"
+    "schemaname": "internal",
+    "connection_id": "7349e0b0fbf697f353d5"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,
   "active": true,
   "depends": [
-    "permit_comments.acc"
+    "60ae36a3c4a454b7a0ae"
   ],
   "tags": []
 }

@@ -1,18 +1,24 @@
 {
   "asset_name": "everbridge.emp.s3",
-  "run_group": "daily",
+  "asset_id": "353605165dfa09955e76",
+  "run_group_id": "7d27de8121bfc20e543b",
   "active": true,
   "tasks": [
     {
+      "task_id": "8d39d7dfd447b59fa3d9",
+      "asset_id": "353605165dfa09955e76",
+      "seq_number": 0,
+      "description": null,
       "type": "table_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "pr_city_employees_everbridge.mun",
         "tableheaders": true
       },
-      "target_location": {
+      "target": {
         "asset": "everbridge.emp.s3"
-      }
+      },
+      "configuration": null
     }
   ]
 }

@@ -1,19 +1,19 @@
 {
+  "asset_id": "e67b9a4820425357e87a",
   "asset_name": "everbridge.emp.ftp",
-  "display_name": "everbridge.emp.ftp",
   "description": "",
   "location": {
     "path": "/replace/",
     "filename": "avl.PR_City_Employees_Everbridge.csv",
-    "connection": "everbridge_emp_ftp"
+    "connection_id": "33ee5dde84e35da8d77a"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,
   "active": true,
   "depends": [
-    "everbridge.emp.s3"
+    "353605165dfa09955e76"
   ],
   "tags": []
 }

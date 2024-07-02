@@ -1,19 +1,19 @@
 {
+  "asset_id": "d0232455f2b3e2faa728",
   "asset_name": "public_meeting_data.pub",
-  "display_name": "public_meeting_data.pub",
   "description": "public_meeting_data-Public DB to be accessed from website",
   "location": {
     "tablename": "public_meeting_data",
-    "connection": "coa-publicdb1/coa_share/dbadmin",
-    "schemaname": "open"
+    "schemaname": "open",
+    "connection_id": "1be46a78a9eefb0ceb5a"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,
   "active": true,
   "depends": [
-    "public_meeting_data.lib"
+    "2256f2df3b0e4b5d3204"
   ],
   "tags": []
 }

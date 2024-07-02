@@ -1,29 +1,29 @@
 {
+  "asset_id": "105e9dc2dde2d0a924e5",
   "asset_name": "coa_bc_address_master.lib",
-  "display_name": "Master Address Table",
   "description": "Master address table",
   "location": {
     "loctype": "db",
     "tablename": "coa_bc_address_mastery",
-    "connection": "pubrecdb1/mdastore1/dbadmin",
-    "schemaname": "internal"
+    "schemaname": "internal",
+    "connection_id": "7349e0b0fbf697f353d5"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": "14",
   "notes": "Try this now.\nBut also this!",
   "link": null,
   "active": true,
   "depends": [
-    "bc_location.lib",
-    "bc_property.lib",
-    "coa_active_jurisdictions.lib",
-    "coa_districts_public_works.lib",
-    "coa_districts_water.lib",
-    "coa_districts_zoning.lib",
-    "bc_property_account_master.lib",
-    "coa_zip_code.lib",
-    "bc_civicaddress_table.lib",
-    "bc_property_pinnum_formatted_owner_names.lib"
+    "3518c966b77a523f033b",
+    "642a63b671fa3cafbf76",
+    "5881b2432c8971e33d2b",
+    "384068b152f72b8f7904",
+    "026d14961688108783c3",
+    "80f955cfbf49e0609385",
+    "dd4daabe91a735435188",
+    "629012fcdbd1ed5ab621",
+    "f35b8fee887b546e29bd",
+    "63213d50b24e34fef3d8"
   ],
   "tags": []
 }

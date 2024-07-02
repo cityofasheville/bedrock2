@@ -1,19 +1,19 @@
 {
+  "asset_id": "0185367aa52c18b84347",
   "asset_name": "training_students.lib",
-  "display_name": "training_students.lib",
   "description": "Student registrations for training classes",
   "location": {
     "tablename": "training_students",
-    "connection": "pubrecdb1/mdastore1/dbadmin",
-    "schemaname": "internal"
+    "schemaname": "internal",
+    "connection_id": "7349e0b0fbf697f353d5"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,
   "active": true,
   "depends": [
-    "training_students.mun"
+    "59741aab9fb96caf3192"
   ],
   "tags": []
 }

@@ -1,19 +1,19 @@
 {
+  "asset_id": "6eb0df696b9cdc2d3dd3",
   "asset_name": "permit_review_times.lib",
-  "display_name": "permit_review_times.lib",
   "description": "Count days to review permits",
   "location": {
     "tablename": "permit_review_times",
-    "connection": "pubrecdb1/mdastore1/dbadmin",
-    "schemaname": "internal"
+    "schemaname": "internal",
+    "connection_id": "7349e0b0fbf697f353d5"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,
   "active": true,
   "depends": [
-    "permit_review_times.acc"
+    "cf2dd2c22207ab6381ea"
   ],
   "tags": []
 }

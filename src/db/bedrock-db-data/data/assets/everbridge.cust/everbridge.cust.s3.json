@@ -1,19 +1,19 @@
 {
+  "asset_id": "48bd581cb880247b2113",
   "asset_name": "everbridge.cust.s3",
-  "display_name": "everbridge.cust.s3",
   "description": "",
   "location": {
     "path": "everbridge/",
     "filename": "avl.UB_Water_Customers_Everbridge.csv",
-    "connection": "s3_data_files"
+    "connection_id": "f76aca18599f85f097b2"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,
   "active": true,
   "depends": [
-    "ub_water_customers_everbridge.mun"
+    "3b66f45be884990244e3"
   ],
   "tags": []
 }

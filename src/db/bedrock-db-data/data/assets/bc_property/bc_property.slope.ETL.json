@@ -1,17 +1,23 @@
 {
   "asset_name": "bc_property.slope",
-  "run_group": "daily",
+  "asset_id": "f3cb971c49efeda7dbb7",
+  "run_group_id": "7d27de8121bfc20e543b",
   "active": true,
   "tasks": [
     {
+      "task_id": "42d04508d99cf899ef87",
+      "asset_id": "f3cb971c49efeda7dbb7",
+      "seq_number": 0,
+      "description": null,
       "type": "table_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "bc_property.wh"
       },
-      "target_location": {
+      "target": {
         "asset": "bc_property.slope"
-      }
+      },
+      "configuration": null
     }
   ]
 }

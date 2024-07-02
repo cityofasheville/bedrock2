@@ -1,17 +1,23 @@
 {
   "asset_name": "permit_contacts.lib",
-  "run_group": "daily",
+  "asset_id": "7fca6a6f68c6e948bcbb",
+  "run_group_id": "7d27de8121bfc20e543b",
   "active": true,
   "tasks": [
     {
+      "task_id": "bc73f3f71504fda372c4",
+      "asset_id": "7fca6a6f68c6e948bcbb",
+      "seq_number": 0,
+      "description": null,
       "type": "table_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "permit_contacts.acc"
       },
-      "target_location": {
+      "target": {
         "asset": "permit_contacts.lib"
-      }
+      },
+      "configuration": null
     }
   ]
 }

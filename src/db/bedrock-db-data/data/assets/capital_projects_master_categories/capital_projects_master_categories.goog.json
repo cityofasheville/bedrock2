@@ -1,15 +1,15 @@
 {
+  "asset_id": "90f3c735a503690edc13",
   "asset_name": "capital_projects_master_categories.goog",
-  "display_name": "capital_projects_master_categories.goog",
   "description": "Capital Projects Category List",
   "location": {
     "tab": "Categories",
     "range": "A2:B",
     "filename": "Capital Projects Master",
-    "connection": "bedrock-googlesheets",
+    "connection_id": "71313d9908d4a9716405",
     "spreadsheetid": "1IepJrSjqbGK7UcTmFHqknNUD6Iyx6-3_zpj6qHprBgY"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,

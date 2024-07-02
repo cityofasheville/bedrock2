@@ -1,21 +1,27 @@
 {
   "asset_name": "nc_benchmarks.lib",
-  "run_group": "notactive",
+  "asset_id": "b78764dc2e000842b926",
+  "run_group_id": "31f3e605601e7f9cb938",
   "active": true,
   "tasks": [
     {
+      "task_id": "48dbec32e065f24b154f",
+      "asset_id": "b78764dc2e000842b926",
+      "seq_number": 0,
+      "description": null,
       "type": "aggregate",
       "active": true,
-      "source_location": {
+      "source": {
         "aggregate": "nc_benchmarks",
         "data_range": "A2:E",
         "temp_table": "nc_benchmarks_temp.lib",
         "data_connection": "bedrock-googlesheets",
         "append_asset_name": true
       },
-      "target_location": {
+      "target": {
         "asset": "nc_benchmarks.lib"
-      }
+      },
+      "configuration": null
     }
   ]
 }

@@ -1,19 +1,19 @@
 {
+  "asset_id": "6b502153d40d996ad6c6",
   "asset_name": "base_employee_position_temp.lib",
-  "display_name": "base_employee_position_temp.lib",
   "description": "",
   "location": {
     "tablename": "base_employee_position_temp",
-    "connection": "pubrecdb1/mdastore1/dbadmin",
-    "schemaname": "temp"
+    "schemaname": "temp",
+    "connection_id": "7349e0b0fbf697f353d5"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,
   "active": true,
   "depends": [
-    "base_employee_position.mun"
+    "5a244a1752f46b855568"
   ],
   "tags": []
 }

@@ -1,27 +1,38 @@
 {
   "asset_name": "paymentus_suspended_accounts.s3",
-  "run_group": "paymentus_suspended_accounts",
+  "asset_id": "3db1c8d0d8dab24febd7",
+  "run_group_id": "a48c5c6f78eb301ab0a9",
   "active": true,
   "tasks": [
     {
+      "task_id": "66ff02ac0cd40928c952",
+      "asset_id": "3db1c8d0d8dab24febd7",
+      "seq_number": 0,
+      "description": null,
       "type": "table_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "paymentus_suspended_accounts.mun"
       },
-      "target_location": {
+      "target": {
         "asset": "paymentus_suspended_accounts.s3"
-      }
+      },
+      "configuration": null
     },
     {
+      "task_id": "848112316b28baf64992",
+      "asset_id": "3db1c8d0d8dab24febd7",
+      "seq_number": 1,
+      "description": null,
       "type": "table_copy",
       "active": true,
-      "source_location": {
+      "source": {
         "asset": "paymentus.empty_control_file.lib"
       },
-      "target_location": {
+      "target": {
         "asset": "paymentus_suspended_accounts.ctl.s3"
-      }
+      },
+      "configuration": null
     }
   ]
 }

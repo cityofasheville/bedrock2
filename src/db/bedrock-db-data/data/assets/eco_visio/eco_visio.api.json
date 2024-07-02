@@ -1,11 +1,11 @@
 {
+  "asset_id": "ae23ea3b2a268a347e31",
   "asset_name": "eco_visio.api",
-  "display_name": "eco_visio.api",
   "description": "Eco-Visio (bike counters) API",
   "location": {
-    "connection": "eco_visio_api"
+    "connection_id": "029afe79f1171dec1ce1"
   },
-  "asset_type": "data",
+  "asset_type_id": "6145ff5349087fc33784",
   "owner_id": null,
   "notes": null,
   "link": null,

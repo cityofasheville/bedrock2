@@ -14,8 +14,8 @@ DROP TABLE IF EXISTS bedrock.connections cascade;
 DROP TYPE IF EXISTS bedrock.connections_classes;
 DROP TABLE IF EXISTS bedrock.owners;
 DROP SCHEMA IF EXISTS bedrock;
--- DROP ROLE IF EXISTS bedrock_user;
 
+-- DROP ROLE IF EXISTS bedrock_user;
 -- CREATE ROLE bedrock_user WITH 
 -- 	NOSUPERUSER
 -- 	NOCREATEDB
@@ -54,7 +54,7 @@ CREATE TABLE bedrock.connections (
 	connection_id text PRIMARY KEY,
   connection_name text NOT NULL,
   secret_name text NOT NULL,
-  connection_class text NULL,  -- Refers back to old enum to make fill script work
+  connection_class text NULL,  -- After updates, we may want to change this back to TYPE bedrock.connections_classes
   CONSTRAINT connection_name_key UNIQUE (connection_name)
 );
 --
@@ -192,7 +192,7 @@ CREATE TABLE bedrock.tasks (
 	asset_id text NOT NULL,
 	seq_number int2 NOT NULL,
 	description text NULL,
-	"type" text NOT NULL, -- Refers back to old enum to make fill script work
+	"type" text NOT NULL, -- After updates, we may want to change this back to TYPE bedrock.task_types
 	active bool NOT NULL,
 	"source" jsonb NULL,
 	target jsonb NULL,

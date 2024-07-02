@@ -3,16 +3,16 @@
   "version": "1.0.0",
   "description": "",
   "main": "loadfiles.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "preinstall": "npm install ../../../bedrock_common/packages --install-links; npm install ../../../bedrock_common/bedrock_common --install-links"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "bedrock_common": "file:../../../bedrock_common/bedrock_common",
-    "pg": "^8.10.0",
-    "toposort": "^2.0.2"
+    "bedrock_packages": "file:../../../bedrock_common/packages"
   },
   "devDependencies": {
     "eslint": "^8.40.0",
