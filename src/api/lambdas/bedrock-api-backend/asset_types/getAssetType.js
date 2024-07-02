@@ -1,27 +1,7 @@
 /* eslint-disable import/extensions */
 /* eslint-disable no-console */
-import { newClient, getInfo } from '../utilities/utilities.js';
+import { newClient, getInfo, formatCustomFields, getAncestorCustomFieldsInfo, getBaseCustomFieldsInfo } from '../utilities/utilities.js';
 import pgErrorCodes from '../pgErrorCodes.js';
-
-function formatCustomFields(arr) {
-  return arr.map((item) => ({
-    [item.custom_field_id]: item.required,
-  }));
-}
-
-async function getCustomFieldsInfo(client, idField, idValue, name, tableName) {
-  // Querying database to get information. Function can be used multiple times per method
-  // if we need information from multiple tables
-  const sql = `SELECT * FROM ${tableName} where ${idField} like $1`;
-  let res;
-  try {
-    res = await client.query(sql, [idValue]);
-  } catch (error) {
-    throw new Error([`Postgres error: ${pgErrorCodes[error.code]}`, error]);
-  }
-
-  return res.rows;
-}
 
 async function getAssetType(
   connection,
@@ -40,12 +20,14 @@ async function getAssetType(
     result: null,
   };
 
+
   try {
     client = await newClient(connection);
     clientInitiated = true;
     response.result = await getInfo(client, idField, idValue, name, tableName);
-    const customFieldsResponse = await getCustomFieldsInfo(client, idField, idValue, name, tableNameCustomFields);
-    response.result.custom_fields = formatCustomFields(customFieldsResponse);
+    const customFieldsResponse = await getBaseCustomFieldsInfo(client, idField, idValue, name, tableNameCustomFields);
+    const ancestorCustomFields = await getAncestorCustomFieldsInfo(client, idValue)
+    response.result.custom_fields = formatCustomFields(customFieldsResponse, ancestorCustomFields);
     await client.end();
   } catch (error) {
     if (clientInitiated) {

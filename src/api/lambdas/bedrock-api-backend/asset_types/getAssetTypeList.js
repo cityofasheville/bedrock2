@@ -1,6 +1,6 @@
 /* eslint-disable import/extensions */
 /* eslint-disable no-console */
-import { newClient, capitalizeFirstLetter } from '../utilities/utilities.js';
+import { newClient, capitalizeFirstLetter, getBaseCustomFieldsInfo, getAncestorCustomFieldsInfo, formatCustomFields } from '../utilities/utilities.js';
 import {
   buildCount, buildOffset, buildWhereClause, getCount, getListInfo, buildURL,
 } from '../utilities/listUtilities.js';
@@ -64,23 +64,14 @@ async function getAssetTypeList(
     const resCustomFields = await getCustomFieldsInfoList(client, name, tableNameCustomFields);
     response.result.url = buildURL(queryParams, domainName, res, offset, total, pathElements);
 
-    const customFieldsMap = {};
-
-    // Populate customFieldsMap
-    resCustomFields.forEach((item) => {
-      const { asset_type_id, custom_field_id, required } = item;
-      if (!customFieldsMap[asset_type_id]) {
-        customFieldsMap[asset_type_id] = [];
-      }
-      customFieldsMap[asset_type_id].push({ [custom_field_id]: required });
-    });
-
-    // Add custom_fields property to firstArray
-    response.result.items.forEach((item) => {
-      const { asset_type_id } = item;
-      item.custom_fields = customFieldsMap[asset_type_id] || [];
-    });
-
+    for (const item of response.result.items) {
+      // const { asset_type_id, custom_field_id, required } = item;
+      const asset_type_id = item.asset_type_id
+      const customFieldsResponse = await getBaseCustomFieldsInfo(client, idField, asset_type_id, name, tableNameCustomFields);
+      const ancestorCustomFields = await getAncestorCustomFieldsInfo(client, asset_type_id);
+      item.custom_fields = formatCustomFields(customFieldsResponse, ancestorCustomFields) || {};
+    }
+    
     await client.end();
   } catch (error) {
     if (clientInitiated) {
