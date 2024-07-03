@@ -181,6 +181,7 @@ function buildURL(queryParams, domainName, rowsReadCount, offset, total, pathEle
 async function getAssetList(domainName, pathElements, queryParams, connection, tableName) {
   const availableFields = [
     'asset_id',
+    'asset_type_id',
     'asset_name',
     'description',
     'connection_class',
