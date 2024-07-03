@@ -23,3 +23,4 @@
 "d20969f7f49372aeca99","Wex SFTP Site","wex_ftp","file"
 "6c807020a396e33e50ae","GIS Warehouse","gis-warehouse/coagiswarehouse/coagis","db"
 "97f8c32fd131dbfda484","VXSmart SFTP Site","vxsmart_ftp","file"
+"ea9ba77f306b385eef1b","Notification DB","pubrecdb1/notifications/dbadmin","db"
