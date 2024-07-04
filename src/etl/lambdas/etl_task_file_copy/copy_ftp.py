@@ -4,22 +4,17 @@ import io
 import time 
 
 def get_ftp(location):
-    print(location)
     try:
         sftp = connectToFTP(location["connection_data"])
         file_to_get = location["tempfile"]
         source_file = location["filename"]
         if source_file.startswith("/"):
-            print('Match a pattern: ', source_file)
             pat = source_file[1:-1]
-            print('Here it is: ', pat)
             rengine = re.compile(pat)
-            print('It is a REGEXP ', pat)
             files = sftp.listdir_attr(location["path"]);
             lf = []
             for f in files:
                 if (re.fullmatch(rengine, f.filename)):
-                    print('Append ', f.filename)
                     lf.append({"name": f.filename, "time": time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(f.st_atime))})
             sort = "time"
             reverse = True
@@ -33,8 +28,7 @@ def get_ftp(location):
 
             source_file = lf[0]["name"]
 
-        print('Now the source file is ', source_file)
-        print(' and the target is ', file_to_get)
+
         sftp.get(location["path"] + source_file, file_to_get)
 
         print('Downloaded from FTP: ' + source_file)

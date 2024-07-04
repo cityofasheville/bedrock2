@@ -55,7 +55,6 @@ def lambda_handler(event, context):
         ]
 
         for loc in locations:
-            print('Do a loc = ', loc)
             location = etl[loc["name"]]
             dateadjustment = location.get('adjustdate', 0)
             loc["connection_data"] = getConnection(location["connection"])
@@ -68,9 +67,7 @@ def lambda_handler(event, context):
             loc["connection"] = location["connection"]
             loc["config"] = {}
             if ("config" in location):
-                print("CONFIG!")
                 loc["config"] = location["config"]
-            print("Configuration is ", loc["config"])
 
         source_location = locations[0]
         if source_location["connection_data"]["type"] == "s3":
