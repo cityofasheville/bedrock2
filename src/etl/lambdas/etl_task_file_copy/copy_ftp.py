@@ -11,27 +11,39 @@ def get_ftp(location):
         if source_file.startswith("/"):
             pat = source_file[1:-1]
             rengine = re.compile(pat)
-            files = sftp.listdir_attr(location["path"]);
-            lf = []
-            for f in files:
-                if (re.fullmatch(rengine, f.filename)):
-                    lf.append({"name": f.filename, "time": time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(f.st_atime))})
+
             sort = "time"
             reverse = True
-            if ("config" in location):
+            max_age = 60000 # Default to 1000 days
+            if "config" in location:
                 config = location["config"]
-                if ("sort" in config and config["sort"] == "name"):
+                if "sort" in config and config["sort"] == "name":
                     sort = "name"
-                if ("pick" in config and (config["pick"] == 0 or config["pick"] == "first")):
+                if "pick" in config and (config["pick"] == 0 or config["pick"] == "first"):
                     reverse = False
-            lf.sort(key=lambda x: x[sort], reverse=reverse)
+                if "max_age" in config:
+                    max_age = 1 * config["max_age"]
 
-            source_file = lf[0]["name"]
+            files = sftp.listdir_attr(location["path"]);
+            lf = []
+            cur = time.time()
+            for f in files:
+                keep = ((cur - f.st_mtime)/(60 * 60)) < max_age
+                if re.fullmatch(rengine, f.filename) and keep:
+                    lf.append({"name": f.filename, "time": time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(f.st_mtime))})
 
+            if len(lf) > 0:
+                lf.sort(key=lambda x: x[sort], reverse=reverse)
+                source_file = lf[0]["name"]
+            else:
+                source_file = None
 
-        sftp.get(location["path"] + source_file, file_to_get)
+        if not source_file:
+            print('No recent source file matching pattern found')
+        else:
+            sftp.get(location["path"] + source_file, file_to_get)
+            print('Downloaded from FTP: ' + source_file)
 
-        print('Downloaded from FTP: ' + source_file)
         sftp.close() 
     except BaseException as err:
         raise Exception("Get FTP Error: " + str(err))
