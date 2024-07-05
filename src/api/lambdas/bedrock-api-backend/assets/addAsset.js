@@ -181,7 +181,7 @@ async function addAsset(
     checkExistence(client, tableName, idField, idValue, name, shouldExist);
     checkInfo(bodyWithID, requiredFields, name, idValue, idField);
     checkETLInfo(bodyWithID);
-    customFields = await getCustomFieldsInfo(client, bodyWithID.asset_type);
+    customFields = await getCustomFieldsInfo(client, bodyWithID.asset_type_id);
     customValues = getCustomValues(bodyWithID);
     checkCustomFieldsInfo(body, customFields);
     asset = await baseInsert(bodyWithID, customFields, customValues, client);
