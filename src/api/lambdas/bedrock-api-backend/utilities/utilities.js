@@ -185,8 +185,8 @@ async function addAssetTypeCustomFields(client, idValue, body) {
   const valueStrings = [];
 
   body.custom_fields.forEach((obj) => {
-    const customFieldId = Object.keys(obj);
-    const required = obj[customFieldId];
+    const customFieldId = obj.custom_field_id;
+    const required = obj.required;
     valueStrings.push(`('${idValue}', '${customFieldId}', ${required})`);
   });
   const combinedValueString = valueStrings.join(', ');

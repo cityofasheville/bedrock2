@@ -5,6 +5,7 @@ import getAssetType from './getAssetType.js';
 import addAssetType from './addAssetType.js';
 import updateAssetType from './updateAssetType.js';
 import deleteAssetType from './deleteAssetType.js';
+import getRichCustomFields from './getRichCustomFields.js'
 /* eslint-disable no-console */
 
 // eslint-disable-next-line no-unused-vars
@@ -121,6 +122,19 @@ async function handleAssetTypes(
           result.message = `handleAssetType: unknown verb ${verb}`;
           result.error = true;
           break;
+      }
+
+      case 3:
+      if (pathElements[2] === 'custom_fields') {
+        if (verb === 'GET') {
+          result = await getRichCustomFields(
+            connection,
+            idField,
+            idValue,
+            name,
+            tableNameCustomFields,
+          )
+        }
       }
       break;
 

@@ -67,6 +67,7 @@ async function getCustomFieldsInfo(client, asset_type) {
       `PG error getting asset type hierarchy for type ${asset_type}: ${pgErrorCodes[error.code]}`,
     );
   }
+
   return customFields;
 }
 
