@@ -55,7 +55,6 @@ async function addAssetType(
   try {
     await client.query('BEGIN');
     await checkExistence(client, tableName, idField, idValue, name, shouldExist);
-    console.log('before addcustomfieldinfo');
     response.result = await addInfo(client, allFields, bodyWithID, tableName, name);
     response.result.custom_fields = await addAssetTypeCustomFields(client, idValue, body);
     await client.query('COMMIT');

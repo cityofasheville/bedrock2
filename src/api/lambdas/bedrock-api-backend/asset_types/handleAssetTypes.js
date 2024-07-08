@@ -129,14 +129,10 @@ async function handleAssetTypes(
         if (verb === 'GET') {
           result = await getRichCustomFields(
             connection,
-            allFields,
-            body,
             idField,
             idValue,
             name,
-            tableName,
             tableNameCustomFields,
-            requiredFields
           )
         }
       }

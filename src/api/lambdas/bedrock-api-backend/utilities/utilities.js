@@ -190,8 +190,6 @@ async function addAssetTypeCustomFields(client, idValue, body) {
     valueStrings.push(`('${idValue}', '${customFieldId}', ${required})`);
   });
   const combinedValueString = valueStrings.join(', ');
-  console.log('valuestrings:')
-  console.log(valueStrings)
 
   try {
     res = await client
