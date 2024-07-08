@@ -198,7 +198,7 @@ async function writeOther(client, data_directory, tablename) {
 
 ////////////////////////////////////////////
 
-let data_directory = '../data';
+let data_directory = `../../../../${process.env.data_directory}`;
 let assets_directory = data_directory + '/assets/';
 // create or clear assets dir
 if (existsSync(assets_directory)) {
