@@ -3,7 +3,7 @@
 /* eslint-disable no-console */
 import pgpkg from 'pg';
 const { Client } = pgpkg;
-import { existsSync, mkdirSync, readFileSync, readdirSync } from 'fs';
+import { existsSync, readFileSync, readdirSync } from 'fs';
 
 import { getDBConnection } from 'bedrock_common';
 import { parse } from 'csv-parse/sync';
@@ -140,7 +140,7 @@ async function readAssetFiles(client, assets_directory) {
 
 ////////////////////////////////////////////
 
-let data_directory = '../data';
+let data_directory = `../../../../${process.env.data_directory}`;
 let assets_directory = data_directory + '/assets/';
 
 console.log('Connect to the DB');

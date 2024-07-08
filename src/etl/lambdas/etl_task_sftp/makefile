@@ -1,7 +1,7 @@
 include ../../../make_variables
 
 dirs = build
-.PHONY: $(dirs) init plan apply destroy prebuild local clean
+.PHONY: $(dirs) init plan apply destroy prebuild package local clean
 
 SRC_DIR := ./deploy
 DEST_DIR := ./build
