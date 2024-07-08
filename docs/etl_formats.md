@@ -29,7 +29,7 @@ Under data/, a subdir exists for each asset.
 }
 ```
 
-    - "depends" is an array of other asset_id which must be created before this asset can be created.
+```"depends"``` is an array of other asset_id which must be created before this asset can be created.
 
   - ## Connection Classes
     - Depending on the type of asset, there can be different required fields in 'locations':
