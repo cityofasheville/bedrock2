@@ -89,8 +89,13 @@ async function readDependencies(client, assetMap) {
 
 async function readLocationFromAsset(client, assetName) {
   // add asset_name into location json
-  const sql = `SELECT location::jsonb || ('{"asset":"' || asset_name || '"}')::jsonb as location
-              FROM ${process.env.BEDROCK_DB_SCHEMA}.assets where asset_name = '${assetName}';`;
+  const sql = `   select assets.location || 
+   jsonb_build_object('connection', secret_name) || 
+   jsonb_build_object('asset', asset_name) as location
+   FROM ${process.env.BEDROCK_DB_SCHEMA}.assets
+   inner join ${process.env.BEDROCK_DB_SCHEMA}.connections conn
+   on location->>'connection_id' = conn.connection_id 
+   where asset_name = '${assetName}';`;
   // eslint-disable-next-line no-await-in-loop
   const res = await client.query(sql)
     .catch((err) => {
@@ -108,7 +113,8 @@ async function readAggregateData(client, tempLocation, location, taskSource) {
   const { aggregate, data_range, data_connection } = taskSource;
   const sql = `
   select a.asset_name, location->>'spreadsheetid' spreadsheetid, 
-  location->>'tab' tab from ${process.env.BEDROCK_DB_SCHEMA}.asset_tag_view using (asset_name)
+  location->>'tab' tab from ${process.env.BEDROCK_DB_SCHEMA}.assets a  
+  join ${process.env.BEDROCK_DB_SCHEMA}.asset_tag_view using (asset_id)
   where tag_name = '${aggregate}' and active = true;
   `;
   // process.stdout.write(sql);
