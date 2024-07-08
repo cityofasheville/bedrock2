@@ -4,7 +4,7 @@ Under data/, a subdir exists for each asset.
 
 # Asset File
 - The **Asset** json file is shaped like this:
-    ```
+```
 {
   "asset_id": "37bd47b12b6df817558a",
   "asset_name": "asset name",
@@ -189,7 +189,7 @@ Under data/, a subdir exists for each asset.
           }
       ]
   ```
-The optional ```config``` member pertains only to an ```sftp``` source connection. For that case, if the ```filename``` parameter is enclosed in forward slashes (```/```), the name is interpreted as a regex expression that any file to be downloaded must match. The ```sort```, ```pick```, and ```max_age``` parameters in ```config``` select a final single file for download, as follows:
+The optional ```config``` member pertains only to an ```sftp``` source connection. For that case, if the ```filename``` parameter is enclosed in forward slashes (```/```), the name is interpreted as a regex expression that any file to be downloaded must match. The ```sort```, ```pick```, and ```max_age``` parameters in ```config``` then select a final single file for download, as follows:
  - if ```max_age``` is greater than 0, it represents a maxiumum allowed age for files in hours (default is 60,000),
  - ```sort``` may be set to ```time``` or ```name``` (default is ```time```) and determines how the resulting list of files is sorted before applying the ```pick``` paramer,
  - ```pick``` can be ```first`` or 0 to pick the first value in the list, ```last``` or -1 to pick the last (default is -1) .
