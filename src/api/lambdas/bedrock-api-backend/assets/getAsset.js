@@ -7,9 +7,8 @@ import { newClient } from '../utilities/utilities.js';
 
 async function getAssetInfo(client, idValue) {
   let res;
-  const sql = `SELECT a.*, e.run_group_id, e.active as etl_active, d.dependent_asset_id, c.connection_class
+  const sql = `SELECT a.*, d.dependent_asset_id, c.connection_class
     FROM bedrock.assets a
-    left join bedrock.etl e on e.asset_id = a.asset_id
     left join bedrock.dependencies d on d.asset_id = a.asset_id
     left join bedrock.connections c on c.connection_id = a."location"->>'connection_id'
     where a.asset_id like $1`;
@@ -30,7 +29,7 @@ async function getCustomFieldInfo(client, assetRows, idValue, requestedFields, o
   // the custom_values table, while the other builds a list of needed customfields based on
   // asset type.
   const cv = new Map();
-  if (assetRows.asset_type !== null) {
+  if (assetRows.asset_type_id !== null) {
     let res;
     const sql = 'SELECT custom_field_id, field_value from bedrock.custom_values where asset_id like $1';
     try {
@@ -55,7 +54,7 @@ async function getCustomFieldInfo(client, assetRows, idValue, requestedFields, o
 async function getBaseInfo(assetRows, requestedFields, available) {
   const tempAsset = new Map();
   tempAsset.set('asset_name', assetRows[0].asset_name);
-  tempAsset.set('asset_type', assetRows[0].asset_type_id);
+  tempAsset.set('asset_type_id', assetRows[0].asset_type_id);
   tempAsset.set('asset_id', assetRows[0].asset_id);
 
   for (let j = 0; j < requestedFields.length; j += 1) {
@@ -69,8 +68,6 @@ async function getBaseInfo(assetRows, requestedFields, available) {
           }
         }
         tempAsset.set('parents', parents);
-      } else if (itm === 'etl_run_group') {
-        tempAsset.set('etl_run_group', assetRows[0].run_group);
       } else if (itm === 'tags') {
         tempAsset.set('tags', []);
       } else {

@@ -5,13 +5,11 @@ import pgErrorCodes from '../pgErrorCodes.js';
 const { Client } = pgpkg;
 
 function checkParameters(queryParams) {
-  const parameters = ['rungroup', 'tags', 'period', 'pattern', 'count', 'offset'];
+  const parameters = ['tags', 'period', 'pattern', 'count', 'offset'];
   let message = '';
 
   Object.keys(queryParams).forEach((key) => {
-    if (key === 'rungroup') {
-      message += 'Query parameter rungroup not yet implemented.';
-    } else if (key === 'tags') {
+    if (key === 'tags') {
       message += 'Query parameter tags not yet implemented.';
     } else if (key === 'period') {
       message += 'Query parameter period not yet implemented.';
@@ -57,9 +55,7 @@ async function getAssetCount(whereClause, client, tableName) {
 
 async function readAssets(client, offset, count, whereClause, tableName) {
   const sql = `
-    SELECT a.*, e.run_group_id as etl_run_group, e.active as etl_active,
-      c.connection_class FROM ${tableName} a
-    left join bedrock.etl e on a.asset_id = e.asset_id
+    SELECT a.*, c.connection_class FROM ${tableName} a
     left join bedrock.connections c
       on c.connection_id = a."location"->>'connection_id'
     ${whereClause.whereClause}
@@ -88,7 +84,7 @@ async function addBaseFields(sqlResult, requestedFields, availableFields) {
     tempAssets.assetMap.set(assetId, asset);
     asset.set('asset_id', row.asset_id);
     asset.set('asset_name', row.asset_name);
-    asset.set('asset_type', row.asset_type);
+    asset.set('asset_type_id', row.asset_type_id);
     asset.set('custom_fields', new Map());
     for (let j = 0; j < requestedFields.length; j += 1) {
       const itm = requestedFields[j];
@@ -157,10 +153,6 @@ function buildURL(queryParams, domainName, rowsReadCount, offset, total, pathEle
     qParams += `${qPrefix}pattern=${queryParams.pattern}`;
     qPrefix = '&';
   }
-  if ('rungroups' in queryParams) {
-    qParams += `${qPrefix}rungroups=${queryParams.rungroups}`;
-    qPrefix = '&';
-  }
   if ('period' in queryParams) {
     qParams += `${qPrefix}period=${queryParams.period}`;
     qPrefix = '&';
@@ -192,8 +184,6 @@ async function getAssetList(domainName, pathElements, queryParams, connection, t
     'notes',
     'tags',
     'parents',
-    'etl_run_group',
-    'etl_active',
   ];
   // Use fields from the query if they're present, otherwise use all available
   let requestedFields = null;

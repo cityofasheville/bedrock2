@@ -9,16 +9,6 @@ import {
   newClient, checkInfo, checkExistence, generateId,
 } from '../utilities/utilities.js';
 
-function checkETLInfo(body) {
-  if ('etl_run_group' in body || 'etl_active' in body) {
-    if (!('etl_run_group' in body && 'etl_active' in body)) {
-      throw new Error(
-        'Addition of ETL information requires both etl_run_group and etl_active elements',
-      );
-    }
-  }
-}
-
 async function baseInsert(body, customFields, customValues, client) {
   // All is well - let's go ahead and add.
   let tempAsset = null;
@@ -62,6 +52,7 @@ async function baseInsert(body, customFields, customValues, client) {
       ['description', body.description],
       ['location', body.location],
       ['active', body.active],
+      ['asset_type_id', body.asset_type_id],
     ]);
     for (let i = 0; i < fields.length; i += 1) {
       if (fields[0] in body) {
@@ -89,22 +80,6 @@ async function addDependencies(body, client) {
     }
   }
   return body.parents;
-}
-
-async function addETL(body, client) {
-  if ('etl_run_group' in body && 'etl_active' in body) {
-    try {
-      await client.query(
-        'INSERT INTO bedrock.etl (asset_id, run_group_id, active) VALUES ($1, $2, $3)',
-        [body.asset_id, body.etl_run_group, body.etl_active],
-      );
-    } catch (error) {
-      throw new Error(
-        `PG error adding etl information: ${pgErrorCodes[error.code]||error.code}`,
-      );
-    }
-  }
-  return [body.etl_run_group, body.etl_active];
 }
 
 async function addTags(body, client) {
@@ -180,7 +155,6 @@ async function addAsset(
     // await checkExistence(client, idValue);
     checkExistence(client, tableName, idField, idValue, name, shouldExist);
     checkInfo(bodyWithID, requiredFields, name, idValue, idField);
-    checkETLInfo(bodyWithID);
     customFields = await getCustomFieldsInfo(client, bodyWithID.asset_type_id);
     customValues = getCustomValues(bodyWithID);
     checkCustomFieldsInfo(body, customFields);
@@ -188,9 +162,6 @@ async function addAsset(
     const updatedCustomFields = await addCustomFieldsInfo(bodyWithID, client, customFields, customValues);
     asset.set('custom_fields', Object.fromEntries(updatedCustomFields));
     asset.set('parents', await addDependencies(bodyWithID, client));
-    const [runGroup, active] = await addETL(bodyWithID, client);
-    asset.set('etl_run_group', runGroup);
-    asset.set('etl_active', active);
     asset.set('tags', await addTags(bodyWithID, client));
     await client.query('COMMIT');
     await client.end();
