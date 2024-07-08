@@ -32,7 +32,7 @@ async function deleteAsset(
 ) {
   let client;
   const shouldExist = true;
-  const tableNames = ['bedrock.assets', 'bedrock.custom_values', 'bedrock.asset_tags', 'bedrock.etl', 'bedrock.dependencies', 'bedrock.tasks'];
+  const tableNames = ['bedrock.assets', 'bedrock.custom_values', 'bedrock.asset_tags', 'bedrock.dependencies', 'bedrock.tasks'];
   // no need for building a map object to send to the requester, as we only return the asset name.
   const response = {
     error: false,

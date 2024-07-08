@@ -119,7 +119,7 @@ async function updateAsset(
   let customValues;
   let client;
   const baseFields = ['asset_id', 'asset_name', 'description', 'location', 'active', 'owner_id', 'asset_type_id', 'location', 'link', 'notes'];
-  const assetType = body.asset_type;
+  const assetType = body.asset_type_id;
 
   const response = {
     error: false,
@@ -142,7 +142,7 @@ async function updateAsset(
     await checkExistence(client, idValue);
     await updateInfo(client, baseFields, body, tableName, idField, idValue, name);
     if (assetType) {
-      customFields = await getCustomFieldsInfo(client, body.asset_type);
+      customFields = await getCustomFieldsInfo(client, body.asset_type_id);
       customValues = getCustomValues(body);
       checkCustomFieldsInfo(body, customFields);
       await deleteInfo(client, 'bedrock.custom_values', idField, idValue, name);
@@ -155,12 +155,13 @@ async function updateAsset(
       await updateTags(idValue, idField, body, client, name);
     }
     await client.query('COMMIT');
-    response.result = await getAsset(
+    const responseInfo = await getAsset(
       queryParams,
       connection,
       idValue,
       allFields,
     );
+    response.result = responseInfo.result;
   } catch (error) {
     await client.query('ROLLBACK');
     await client.end();
