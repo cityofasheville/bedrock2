@@ -4,7 +4,6 @@ import { newClient, getInfo, getBaseCustomFieldsInfo } from '../utilities/utilit
 
 function simpleFormatCustomFields(customFieldsResponse) {
   let formattedCustomFields = [];
-  console.log(customFieldsResponse)
 
   customFieldsResponse.forEach((value, key) => {
     formattedCustomFields.push({
