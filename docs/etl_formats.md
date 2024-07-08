@@ -27,7 +27,7 @@ Under data/, a subdir exists for each asset.
   ],
   "tags": []
 }
-    ```
+```
 
     - "depends" is an array of other asset_id which must be created before this asset can be created.
 
