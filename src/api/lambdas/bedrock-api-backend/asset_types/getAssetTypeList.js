@@ -1,11 +1,9 @@
 /* eslint-disable import/extensions */
 /* eslint-disable no-console */
-import { newClient, getBaseCustomFieldsInfo, getAncestorCustomFieldsInfo, formatCustomFields } from '../utilities/utilities.js';
+import { newClient, getBaseCustomFieldsInfo } from '../utilities/utilities.js';
 import {
   buildCount, buildOffset, buildWhereClause, getCount, getListInfo, buildURL,
 } from '../utilities/listUtilities.js';
-import pgErrorCodes from '../pgErrorCodes.js';
-
 
 async function getAssetTypeList(
   domainName,
@@ -49,8 +47,7 @@ async function getAssetTypeList(
     for (const item of response.result.items) {
       const asset_type_id = item.asset_type_id
       const customFieldsResponse = await getBaseCustomFieldsInfo(client, idField, asset_type_id, name, tableNameCustomFields);
-      const ancestorCustomFields = await getAncestorCustomFieldsInfo(client, asset_type_id);
-      item.custom_fields = formatCustomFields(customFieldsResponse, ancestorCustomFields) || {};
+      item.custom_fields = Object.fromEntries(customFieldsResponse) || {};
     }
     
     await client.end();

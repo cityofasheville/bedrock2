@@ -1,6 +1,6 @@
 /* eslint-disable import/extensions */
 /* eslint-disable no-console */
-import { newClient, capitalizeFirstLetter, getBaseCustomFieldsInfo, getAncestorCustomFieldsInfo, formatCustomFields } from '../utilities/utilities.js';
+import { newClient, getBaseCustomFieldsInfo, } from '../utilities/utilities.js';
 
 async function getRichCustomFields(
   connection,
@@ -22,8 +22,7 @@ async function getRichCustomFields(
     client = await newClient(connection);
     clientInitiated = true;
     const customFieldsResponse = await getBaseCustomFieldsInfo(client, idField, idValue, name, tableNameCustomFields);
-    const ancestorCustomFields = await getAncestorCustomFieldsInfo(client, idValue);
-    response.result.items = formatCustomFields(customFieldsResponse, ancestorCustomFields) || {};
+    response.result.items = Object.fromEntries(customFieldsResponse) || {};
     await client.end();
   } catch (error) {
     if (clientInitiated) {
