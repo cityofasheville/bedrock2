@@ -14,10 +14,13 @@ async function deleteCustomField(
   const shouldExist = true;
   let client;
   let clientInitiated = false;
+  // We're only deleting the relationships between CFs and asset_types, not the actual CFs. 
+  // which is why we're using a different table name.
+  const linkingTableName = 'bedrock.asset_type_custom_fields'
 
   const response = {
     error: false,
-    message: `Successfully deleted ${name} ${idValue}`,
+    message: `Successfully deleted relationship between ${name} ${idValue} and asset_types.`,
     result: null,
   };
 
@@ -25,7 +28,7 @@ async function deleteCustomField(
     client = await newClient(connection);
     clientInitiated = true;
     await checkExistence(client, tableName, idField, idValue, name, shouldExist);
-    await deleteInfo(client, tableName, idField, idValue, name);
+    await deleteInfo(client, linkingTableName, idField, idValue, name);
     await client.end();
   } catch (error) {
     if (clientInitiated) {
