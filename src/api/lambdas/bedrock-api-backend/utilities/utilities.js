@@ -341,6 +341,24 @@ async function getBaseCustomFieldsInfo(client, idField, idValue, name, tableName
   return customFields;
 }
 
+async function checkBeforeDelete(client, name, tableName, idField, idValue, connectedData, connectedDataIdField) {
+  const sql = `SELECT * FROM ${tableName} where ${idField} like $1`;
+  let res;
+  let list = [];
+  try {
+    res = await client.query(sql, [idValue]);
+  } catch (error) {
+    throw new Error([`Postgres error: ${pgErrorCodes[error.code]||error.code}`, error]);
+  }
+
+  if (res.rowCount !== 0) {
+    console.log(res);
+    res.rows.forEach((element) => list.push(element[connectedDataIdField]))
+    throw new Error(`${capitalizeFirstLetter(name)} ${idValue} is still connected to one or more ${connectedData} (Ids: ${list.join(', ')}). You must delete these relationships from ${tableName} before deleting this ${name}.`)
+  }
+
+}
+
 export {
   newClient,
   checkInfo,
@@ -354,5 +372,6 @@ export {
   addAssetTypeCustomFields,
   formatCustomFields,
   getAncestorCustomFieldsInfo,
-  getBaseCustomFieldsInfo
+  getBaseCustomFieldsInfo,
+  checkBeforeDelete,
 };
