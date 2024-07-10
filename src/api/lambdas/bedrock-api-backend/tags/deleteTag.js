@@ -14,6 +14,7 @@ async function deleteTag(
   const shouldExist = true;
   let client;
   let clientInitiated = false;
+  const linkingTableName = 'bedrock.asset_tags'
 
   const response = {
     error: false,
@@ -26,6 +27,7 @@ async function deleteTag(
     clientInitiated = true;
     await checkExistence(client, tableName, idField, idValue, name, shouldExist);
     await deleteInfo(client, tableName, idField, idValue, name);
+    await deleteInfo(client, linkingTableName, idField, idValue, name);
     await client.end();
   } catch (error) {
     if (clientInitiated) {
