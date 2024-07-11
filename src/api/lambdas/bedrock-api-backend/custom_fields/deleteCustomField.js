@@ -20,7 +20,7 @@ async function deleteCustomField(
 
   const response = {
     error: false,
-    message: `Successfully deleted relationship between ${name} ${idValue} and asset_types.`,
+    message: `Successfully deleted relationship between ${name} ${idValue} and corresponding asset_type(s).`,
     result: null,
   };
 

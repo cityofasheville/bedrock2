@@ -1,9 +1,8 @@
 /* eslint-disable import/extensions */
 /* eslint-disable no-console */
 import {
-  newClient, checkInfo, checkExistence, addInfo, generateId,
+  newClient, checkInfo, checkExistence, addInfo, generateId, addAssetTypeCustomFields
 } from '../utilities/utilities.js';
-import { addAssetTypeCustomFields } from '../utilities/utilities.js'
 
 function checkCustomFields(body) {
   if (body.custom_fields) {

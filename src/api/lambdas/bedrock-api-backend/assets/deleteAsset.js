@@ -2,7 +2,7 @@
 /* eslint-disable no-console */
 import pgpkg from 'pg';
 import pgErrorCodes from '../pgErrorCodes.js';
-import { newClient, checkExistence, deleteInfo } from '../utilities/utilities.js';
+import { newClient, checkExistence, deleteInfo, checkBeforeDelete } from '../utilities/utilities.js';
 
 async function handleDelete(tableNames, client, idField, idValue, name) {
   try {
@@ -33,6 +33,9 @@ async function deleteAsset(
   let client;
   const shouldExist = true;
   const tableNames = ['bedrock.assets', 'bedrock.custom_values', 'bedrock.asset_tags', 'bedrock.dependencies', 'bedrock.tasks'];
+  const dependencyTableName = 'bedrock.dependencies';
+  const connectedData = 'dependent assets';
+  const connectedDataIdField = 'dependent_asset_id';
   // no need for building a map object to send to the requester, as we only return the asset name.
   const response = {
     error: false,
@@ -50,6 +53,7 @@ async function deleteAsset(
 
   try {
     await checkExistence(client, tableName, idField, idValue, name, shouldExist);
+    await checkBeforeDelete(client, name, dependencyTableName, idField, idValue, connectedData, connectedDataIdField)
   } catch (error) {
     await client.end();
     response.error = true;

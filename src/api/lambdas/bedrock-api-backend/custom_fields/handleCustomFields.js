@@ -22,7 +22,7 @@ async function handleCustomFields(
   let body;
   const idField = 'custom_field_id';
   let idValue;
-  const name = 'custom_fields';
+  const name = 'custom_field';
   const tableName = 'bedrock.custom_fields';
   const requiredFields = ['custom_field_id', 'custom_field_name', 'field_type', 'field_data'];
   const allFields = ['custom_field_id', 'custom_field_name', 'field_type', 'field_data'];

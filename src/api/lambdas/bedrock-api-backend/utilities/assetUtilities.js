@@ -18,32 +18,32 @@ function calculateRequestedFields(queryParams, allFields) {
 async function getCustomFieldsInfo(client, asset_type) {
   let sqlQuery;
   let sqlResult;
-  let types = '';
+  // let types = '';
   const customFields = new Map();
   try {
-    // Get the asset type hierarchy
-    sqlQuery = `
-      WITH RECURSIVE ancestors AS (
-        SELECT asset_type_id, parent, asset_type_name FROM bedrock.asset_types
-        WHERE asset_type_id = $1
-        UNION
-          SELECT t.asset_type_id, t.parent, t.asset_type_name
-          FROM bedrock.asset_types t
-          INNER JOIN ancestors a ON a.parent = t.asset_type_id
-      ) SELECT * FROM ancestors;
-    `;
-    console.log(sqlQuery)
-    console.log(asset_type)
-    sqlResult = await client.query(sqlQuery, [asset_type]);
-    if (sqlResult.rowCount < 1) {
-      throw new Error(`Asset type ${asset_type} not found`);
-    }
-    sqlResult.rows.forEach((itm, i) => {
-      const comma = i > 0 ? ',' : '';
-      types = `${types}${comma} '${itm.asset_type_id}'`;
-    });
-    console.log(sqlResult)
-    console.log(types)
+  //   // Get the asset type hierarchy
+  //   sqlQuery = `
+  //     WITH RECURSIVE ancestors AS (
+  //       SELECT asset_type_id, parent, asset_type_name FROM bedrock.asset_types
+  //       WHERE asset_type_id = $1
+  //       UNION
+  //         SELECT t.asset_type_id, t.parent, t.asset_type_name
+  //         FROM bedrock.asset_types t
+  //         INNER JOIN ancestors a ON a.parent = t.asset_type_id
+  //     ) SELECT * FROM ancestors;
+  //   `;
+  //   console.log(sqlQuery)
+  //   console.log(asset_type)
+  //   sqlResult = await client.query(sqlQuery, [asset_type]);
+  //   if (sqlResult.rowCount < 1) {
+  //     throw new Error(`Asset type ${asset_type} not found`);
+  //   }
+  //   sqlResult.rows.forEach((itm, i) => {
+  //     const comma = i > 0 ? ',' : '';
+  //     types = `${types}${comma} '${itm.asset_type_id}'`;
+  //   });
+  //   console.log(sqlResult)
+  //   console.log(types)
     // Now get custom fields associated with any of the types
     // Field is required if any type in the hierarchy requires it
     sqlQuery = `
@@ -52,11 +52,11 @@ async function getCustomFieldsInfo(client, asset_type) {
         select c.custom_field_id, c.custom_field_name, c.field_type, j.asset_type_id, j.required from bedrock.custom_fields c
         left outer join bedrock.asset_type_custom_fields j
         on c.custom_field_id = j.custom_field_id
-        where j.asset_type_id in (${types})
+        where j.asset_type_id = $1
       ) a
       group by custom_field_id, custom_field_name, field_type
     `;
-    sqlResult = await client.query(sqlQuery, []);
+    sqlResult = await client.query(sqlQuery, [asset_type]);
       console.log(sqlResult)
 
     sqlResult.rows.forEach((itm) => {
