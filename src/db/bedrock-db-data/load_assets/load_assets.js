@@ -39,30 +39,31 @@ async function readCsvFiles(client, data_directory) {
     let tableName = fileNm[0];
     if (fileNm[fileNm.length - 1].toLowerCase() === 'csv')  {
       let fileContent = readFileSync  (data_directory + '/' + file_name, 'utf8').trim();
+      if (fileContent.length > 0) {
+        let values = parse(fileContent,{ 
+          cast: (value, {quoting}) => {
+              if (value === 'NULL') {return null;}
+              if (quoting) {return value;}
+              if (value === '') {return null;}
+              return value;
+            }
+        });
+        let numCols = values[0].length;
 
-      let values = parse(fileContent,{ 
-        cast: (value, {quoting}) => {
-            if (value === 'NULL') {return null;}
-            if (quoting) {return value;}
-            if (value === '') {return null;}
-            return value;
-          }
-       });
-      let numCols = values[0].length;
-
-      // load into DB
-      let sql = `insert into ${process.env.BEDROCK_DB_SCHEMA}.${tableName} values (`;
-      let ii = []; // for the $1, $2, $3, etc.
-      for (let i = 1; i < numCols + 1; i++) {
-        ii.push(`$${i}`);
-      }
-      sql += ii.join(',') + ');';
-      for(let row of values) {
-        await client.query(sql, row)
-          .catch((err) => {
-            const errmsg = [err.code];
-            throw new Error([`Postgres error: ${errmsg}`, err]);
-          });
+        // load into DB
+        let sql = `insert into ${process.env.BEDROCK_DB_SCHEMA}.${tableName} values (`;
+        let ii = []; // for the $1, $2, $3, etc.
+        for (let i = 1; i < numCols + 1; i++) {
+          ii.push(`$${i}`);
+        }
+        sql += ii.join(',') + ');';
+        for(let row of values) {
+          await client.query(sql, row)
+            .catch((err) => {
+              const errmsg = [err.code];
+              throw new Error([`Postgres error: ${errmsg}`, err]);
+            });
+        }
       }
     }
   }

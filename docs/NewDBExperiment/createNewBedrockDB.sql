@@ -26,7 +26,7 @@ DROP SCHEMA IF EXISTS bedrock;
 -- 	NOBYPASSRLS
 -- 	CONNECTION LIMIT -1;
 
--- ALTER USER bedrock_user WITH PASSWORD 'password';   -- <====================== PASSWORD	
+-- ALTER USER bedrock_user WITH PASSWORD 'test-bedrock';   -- <====================== PASSWORD	
 
 CREATE SCHEMA bedrock;
 ALTER SCHEMA bedrock OWNER TO bedrock_user;

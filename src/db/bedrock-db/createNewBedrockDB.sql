@@ -26,7 +26,7 @@ CREATE ROLE bedrock_user WITH
 	NOBYPASSRLS
 	CONNECTION LIMIT -1;
 
-ALTER USER bedrock_user WITH PASSWORD 'password';   -- <====================== PASSWORD	
+ALTER USER bedrock_user WITH PASSWORD 'test-bedrock';   -- <====================== PASSWORD	
 
 CREATE SCHEMA bedrock;
 ALTER SCHEMA bedrock OWNER TO bedrock_user;
@@ -294,3 +294,26 @@ GRANT SELECT ON TABLE bedrock.etl_view TO bedrock_user;
 GRANT SELECT ON TABLE bedrock.task_view TO bedrock_user;
 GRANT SELECT ON TABLE bedrock.asset_view TO bedrock_user;
 GRANT SELECT ON TABLE bedrock.custom_value_view TO bedrock_user;
+
+
+-- Create testdata schema and tables to test Bedrock. 
+drop table if exists testdata.testtable;
+drop schema if exists testdata;
+
+create schema testdata;
+ALTER SCHEMA testdata OWNER TO bedrock_user;
+GRANT USAGE ON SCHEMA testdata TO bedrock_user;
+
+create table testdata.fromtable as 
+SELECT generate_series(1,100) AS id,
+now()::timestamp as date_loaded, md5(random()::text) AS random_data;
+
+ALTER TABLE testdata.fromtable OWNER TO bedrock_user;
+GRANT ALL ON TABLE testdata.fromtable TO bedrock_user;
+
+select * into testdata.totable
+from testdata.fromtable
+where 1=2;
+
+ALTER TABLE testdata.totable OWNER TO bedrock_user;
+GRANT ALL ON TABLE testdata.totable TO bedrock_user;
