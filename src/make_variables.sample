@@ -16,8 +16,10 @@ BEDROCK_PRIVATE_SUBNETS = ["subnet-00e55df750014753d", "subnet-0c119b605ff498f3b
 
 # This section is for database connections.
 # If using the database built as part of this instance, you can copy from
-# ./db/make_variables (but do not include the :5432).
-# Leave these blank to use the hard-coded production database.
+# ./db/make_variables.generated (but do not include the :5432).
+# If USER, PASSWORD and DB_NAME are not provided, the default values will be used.
+# Leave HOST blank to use the hard-coded production database.
+
 BEDROCK_DB_HOST=
 BEDROCK_DB_USER=
 BEDROCK_DB_PASSWORD=
@@ -32,7 +34,7 @@ BEDROCK_DB_SCHEMA="bedrock"
 STATE_MACHINE_ARN = "arn:aws:xxx"
 
 # This is the directory (relative to the root of the project) where the data files are stored.
-data_directory = '../managed-data-assets/data';
+data_directory='src/db/bedrock-data-db/data';
 
 # Do not edit or delete the next line
 reverse = $(if $(1),$(call reverse,$(wordlist 2,$(words $(1)),$(1)))) $(firstword $(1))

@@ -1,6 +1,6 @@
 include ../../make_variables
 
-code_files = *.js *.json
+# code_files = *.js *.json
 
 dirs = build
 .PHONY: $(dirs) init plan apply destroy prebuild
@@ -28,8 +28,8 @@ apply-y: $(TF_TARGS) $(dirs)
 destroy: $(TF_TARGS) $(dirs)
 
 # install used by Lambdas not using layers
-install: $(code_files)
-	npm install
+# install: $(code_files)
+# 	npm install
 
 clean:
 	rm -f *.instance

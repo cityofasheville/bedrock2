@@ -9,7 +9,7 @@ TFFILES := config.tf datablocks.tf backend.tf local.tfvars variables.tf makefile
 
 TF_TARGS := $(patsubst %,$(DEST_DIR)/%,$(TFFILES))
 
-code_files = ./*.js ./*.json
+code_files = ./*.js ./package.json
 
 prebuild:
 	mkdir -p ./build
@@ -31,7 +31,7 @@ apply: function.zip $(TF_TARGS) $(dirs)
 apply-y: function.zip $(TF_TARGS) $(dirs)
 destroy: $(TF_TARGS) $(dirs)
 
-node_modules:
+node_modules: $(code_files)
 	npm install
 
 local: node_modules

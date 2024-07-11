@@ -37,7 +37,9 @@ make seed    #(Fill database with assets from Github)
 ```
 
 #### API and ETL
-The remaining infrastructure requires the shared set of Lambda Layers in the `bedrock_common` directory. To build them, perform:
+The remaining infrastructure requires a database to be set in src/make_variables.
+It also requires the shared set of Lambda Layers in the `bedrock_common` directory. 
+To build them, perform:
 
 ```sh
 cd src/bedrock_common
