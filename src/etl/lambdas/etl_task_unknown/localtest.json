@@ -1,0 +1,12 @@
+{
+    "ETLJob": {
+      "etl_tasks": [
+        {
+          "type": "dance",
+          "active": true
+        }
+      ]
+    },
+    "JobType": "dance",
+    "TaskIndex": 0
+  }
