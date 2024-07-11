@@ -134,10 +134,7 @@ async function addAsset(
   };
   bodyWithID[idField] = generateId();
   const idValue = bodyWithID[idField];
-
   let customFields = new Map(Object.entries(bodyWithID.custom_fields));
-
-  console.log(customFields)
 
   const response = {
     error: false,
@@ -154,19 +151,15 @@ async function addAsset(
   }
 
   await client.query('BEGIN');
-  console.log(bodyWithID);
 
   try {
-    // await checkExistence(client, idValue);
     checkExistence(client, tableName, idField, idValue, name, shouldExist);
     checkInfo(bodyWithID, requiredFields, name, idValue, idField);
     customFieldsFromAssetType = await getCustomFieldsInfo(client, bodyWithID.asset_type_id);
-    // customValues are from body
+    // customValues are from body, not CV table
     customValues = getCustomValues(bodyWithID);
     checkCustomFieldsInfo(body, customFieldsFromAssetType);
     asset = await baseInsert(bodyWithID, client);
-    console.log('logging custom_fields')
-    console.log(customFields)
     const updatedCustomFields = await addCustomFieldsInfo(bodyWithID, client, customFields, customValues);
     asset.set('custom_fields', Object.fromEntries(updatedCustomFields));
     asset.set('parents', await addDependencies(bodyWithID, client));

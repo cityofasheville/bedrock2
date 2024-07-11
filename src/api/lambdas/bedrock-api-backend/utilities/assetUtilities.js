@@ -16,7 +16,6 @@ function calculateRequestedFields(queryParams, allFields) {
 }
 
 async function getCustomFieldsInfo(client, assetType) {
-  console.log(assetType)
   let sqlQuery;
   let sqlResult;
   const customFields = new Map();
@@ -32,8 +31,6 @@ async function getCustomFieldsInfo(client, assetType) {
       group by custom_field_id, custom_field_name, field_type
     `;
     sqlResult = await client.query(sqlQuery, [assetType]);
-      console.log(sqlResult)
-
     sqlResult.rows.forEach((itm) => {
       customFields.set(itm.custom_field_id, itm);
     });

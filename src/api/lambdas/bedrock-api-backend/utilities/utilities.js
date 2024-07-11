@@ -237,7 +237,6 @@ async function checkBeforeDelete(client, name, tableName, idField, idValue, conn
   }
 
   if (res.rowCount !== 0) {
-    console.log(res);
     res.rows.forEach((element) => list.push(element[connectedDataIdField]))
     throw new Error(`${capitalizeFirstLetter(name)} ${idValue} is still connected to one or more ${connectedData} (Ids: ${list.join(', ')}). You must delete these relationships from ${tableName} before deleting this ${name}.`)
   }
