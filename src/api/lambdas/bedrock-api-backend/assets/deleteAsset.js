@@ -53,7 +53,10 @@ async function deleteAsset(
 
   try {
     await checkExistence(client, tableName, idField, idValue, name, shouldExist);
-    await checkBeforeDelete(client, name, dependencyTableName, idField, idValue, connectedData, connectedDataIdField)
+    // the two ID fields in the next line seemed to be switched, but they are correct- the naming convention in the
+    //dependency table makes it a bit confusing (we want to check if asset is in the "dependent_asset_id colum",
+    // not the "asset_id" column)
+    await checkBeforeDelete(client, name, dependencyTableName, connectedDataIdField, idValue, connectedData, idField)
   } catch (error) {
     await client.end();
     response.error = true;

@@ -57,10 +57,10 @@ async function getCustomFieldInfo(client, assetRows, idValue, requestedFields, o
         `PG error getting custom fields: ${pgErrorCodes[error.code]}`,
       );
     }
-
+    console.log(res)
     res.rows.forEach((item) => {
-      if (!customValues.has(item.asset_type_id)) {
-        customValues.set(item.asset_type_id, null)
+      if (!customValues.has(item.custom_field_id)) {
+        customValues.set(item.custom_field_id, null)
       }
     })
     console.log('logging res')
