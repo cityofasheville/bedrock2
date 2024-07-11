@@ -1,14 +1,7 @@
 import { lambda_handler } from './handler.js';
-let event = {
-    "success": [
-        "fakey_mcfakesterson.s3",
-        "fakey_mcfakesterson.mun"
-    ],
-    "skipped": [],
-    "failure": [],
-    "results": null,
-    "RunSetIsGo": false
-};
+import { readFile } from 'fs/promises';
 
-console.log(await lambda_handler(event));
+let event = JSON.parse(await readFile("localtest.json", "utf8"));
+
+console.log( await lambda_handler(event));
 

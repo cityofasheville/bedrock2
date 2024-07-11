@@ -1,17 +1,7 @@
 import { lambda_handler } from './handler.js';
-let event = {
-    "ETLJob": {
-      "etl_tasks": [
-        {
-          "type": "sql",
-          "sql_string": "select * from internal.ad_info limit 1;",
-          "connection": "pubrecdb1/mdastore1/dbadmin",
-          "active": true
-        }
-      ]
-    },
-    "TaskIndex": 0
-  };
+import { readFile } from 'fs/promises';
+
+let event = JSON.parse(await readFile("localtest.json", "utf8"));
 
 let context = {
   getRemainingTimeInMillis: () => 900_000

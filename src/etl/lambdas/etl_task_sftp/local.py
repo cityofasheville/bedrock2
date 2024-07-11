@@ -1,18 +1,16 @@
 from handler import lambda_handler
-event = {
-    "ETLJob": {
-      "etl_tasks": [
-        {
-            "type": "sftp",
-            "active": True,
-            "action": "list",
-            "ftp_connection": "aclara_ftp",
-            "ftp_path": "/AclaraLatestReads"
-        }
-      ]
-    },
-    "TaskIndex": 0
-  }
+import sys
+import json
+
+event = {}
 context = {}
 
-print(lambda_handler(event, context))
+filename = 'localtest.json'
+if len(sys.argv) == 2:
+    filename = sys.argv[1]
+
+f = open(filename)
+event = json.load(f)
+f.close()
+
+lambda_handler(event, context)

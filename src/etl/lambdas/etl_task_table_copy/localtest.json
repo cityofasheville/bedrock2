@@ -1,0 +1,30 @@
+{
+  "JobIsGo": true,
+  "ETLJob": {
+    "name": "equity_students_completed.goog",
+    "run_group": "d",
+    "depends": [
+      "training_students.lib"
+    ],
+    "etl_tasks": [
+      {
+        "type": "table_copy",
+        "active": true,
+        "source_location": {
+          "asset": "generalledgerparameters.mun",
+          "tablename": "GeneralLedgerParameters",
+          "connection": "munis/munprod/fme_jobs",
+          "schemaname": "dbo"
+          },
+          "target_location": {
+          "asset": "general_ledger_parameters.lib",
+          "tablename": "general_ledger_parameters",
+          "connection": "pubrecdb1/mdastore1/dbadmin",
+          "schemaname": "internal"
+          }
+      }
+    ]
+  },
+  "TaskIndex": 0,
+  "JobType": "table_copy"
+}

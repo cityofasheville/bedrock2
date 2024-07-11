@@ -1,8 +1,6 @@
-/* eslint-disable import/extensions */
-// eslint-disable-next-line camelcase
 import { lambda_handler } from './handler.js';
+import { readFile } from 'fs/promises';
 
-// const event = { run_group: 'vxsmart_balances', debug: true };
-const event = { one_asset: 'ad_info.lib', debug: true };
+let event = JSON.parse(await readFile("localtest.json", "utf8"));
 
-await lambda_handler(event);
+console.log( await lambda_handler(event));
