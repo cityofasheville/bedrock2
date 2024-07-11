@@ -42,7 +42,7 @@ apply: function.zip $(TF_TARGS) $(dirs)
 apply-y: function.zip $(TF_TARGS) $(dirs)
 destroy: $(TF_TARGS) $(dirs)
 
-package:
+package: requirements.txt
 	rm -Rf ./package
 	pip3 install -r requirements.txt --target ./package  
 

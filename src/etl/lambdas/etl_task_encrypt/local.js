@@ -11,7 +11,7 @@ let event = {
           "type": "encrypt",
           "s3_connection": "s3_data_files",
           "encrypt_connection": "arag_ftp",
-          "filename": "users${YYYY}${MM}${DD}.csv",
+          "filename": "users20240704.csv",
           "encrypted_filename": "faketest${YYYY}${MM}${DD}${HH}.pgp",
           "path": "safetyskills/",
           "active": true

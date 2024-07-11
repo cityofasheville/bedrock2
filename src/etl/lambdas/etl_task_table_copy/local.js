@@ -12,19 +12,17 @@ let event = {
         "type": "table_copy",
         "active": true,
         "source_location": {
-          "asset": "equity_students_completed.lib",
-          "tablename": "equity_students_completed",
+          "asset": "generalledgerparameters.mun",
+          "tablename": "GeneralLedgerParameters",
+          "connection": "munis/munprod/fme_jobs",
+          "schemaname": "dbo"
+          },
+          "target_location": {
+          "asset": "general_ledger_parameters.lib",
+          "tablename": "general_ledger_parameters",
           "connection": "pubrecdb1/mdastore1/dbadmin",
-          "schemaname": "aux"
-        },
-        "target_location": {
-          "asset": "equity_students_completed.goog",
-          "tab": "Sheet1",
-          "range": "A2:Z",
-          "filename": "equity_students_completed",
-          "connection": "bedrock-googlesheets",
-          "spreadsheetid": "1xGD2jVSveuYjDLRc6Z8dlwGIA78LKJKxu0ck0Y7easg"
-        }
+          "schemaname": "internal"
+          }
       }
     ]
   },
