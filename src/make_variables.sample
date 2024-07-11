@@ -34,7 +34,7 @@ BEDROCK_DB_SCHEMA="bedrock"
 STATE_MACHINE_ARN = "arn:aws:xxx"
 
 # This is the directory (relative to the root of the project) where the data files are stored.
-data_directory='src/db/bedrock-data-db/data';
+data_directory='src/db/bedrock-db-data/data';
 
 # Do not edit or delete the next line
 reverse = $(if $(1),$(call reverse,$(wordlist 2,$(words $(1)),$(1)))) $(firstword $(1))
