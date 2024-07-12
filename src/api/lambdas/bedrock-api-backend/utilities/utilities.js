@@ -203,121 +203,6 @@ async function addAssetTypeCustomFields(client, idValue, body) {
   return body.custom_fields;
 }
 
-async function getAncestorCustomFieldsInfo(client, idValue) {
-  let sqlQuery;
-  let sqlResult;
-  let types = '';
-  const customFields = new Map();
-  try {
-    // Get the asset type hierarchy
-    sqlQuery = `
-      WITH RECURSIVE ancestors AS (
-        SELECT asset_type_id, parent, asset_type_name FROM bedrock.asset_types
-        WHERE asset_type_id = $1
-        UNION
-          SELECT t.asset_type_id, t.parent, t.asset_type_name
-          FROM bedrock.asset_types t
-          INNER JOIN ancestors a ON a.parent = t.asset_type_id
-      ) SELECT * FROM ancestors;
-    `;
-    sqlResult = await client.query(sqlQuery, [idValue]);
-    if (sqlResult.rowCount < 1) {
-      throw new Error(`Asset type ${idValue} not found`);
-    }
-  //   sqlResult.rows.forEach((itm, i) => {
-  //     const comma = i > 0 ? ',' : '';
-  //     if (itm.asset_type_id != idValue) {
-  //     types = `${types}${comma} '${itm.asset_type_id}'`;
-  // }});
-  let types = [];
-
-  sqlResult.rows.forEach((itm) => {
-    if (itm.asset_type_id != idValue) {
-      types.push(`'${itm.asset_type_id}'`);
-    }
-  });
-
-  types = types.join(', ');
-
-    // Now get custom fields associated with any of the types
-    // Field is required if any type in the hierarchy requires it
-    if (types) {
-      sqlQuery = `
-      select custom_field_id, custom_field_name, field_type, field_data, bool_or(required) as required
-      from (
-        select c.custom_field_id, c.custom_field_name, c.field_type, c.field_data, j.required from bedrock.custom_fields c
-        left outer join bedrock.asset_type_custom_fields j
-        on c.custom_field_id = j.custom_field_id
-        where j.asset_type_id in (${types})
-      ) a
-      group by custom_field_id, custom_field_name, field_type, field_data
-    `;
-    sqlResult = await client.query(sqlQuery, []);
-
-    sqlResult.rows.forEach((itm) => {
-      customFields.set(itm.custom_field_id, itm);
-    });
-    }
-
-  } catch (error) {
-    throw new Error(
-      `PG error getting asset type hierarchy for type ${idValue}: ${pgErrorCodes[error.code]}`,
-    );
-  }
-  return customFields;
-}
-
-function formatCustomFields(baseCustomFields, ancestorCustomFields) {
-
-  const combinedCustomFields = new Map();
-
-    // Process all entries from baseCustomFields
-    for (const [key, baseValue] of baseCustomFields) {
-        if (ancestorCustomFields.has(key)) {
-            // Property exists in both baseCustomFields and ancestorCustomFields
-            const ancestorValue = ancestorCustomFields.get(key);
-            combinedCustomFields.set(key, {
-                ...baseValue,
-                inherited: calculateInheritance(true, ancestorValue.required),
-                required: ancestorValue.required
-            });
-        } else {
-            // Property only exists in baseCustomFields
-            combinedCustomFields.set(key, {
-                ...baseValue,
-                inherited: calculateInheritance(false, baseValue.required)
-            });
-        }
-    }
-
-    // Add properties from ancestorCustomFields that are not in baseCustomFields
-    if (ancestorCustomFields) {
-      for (const [key] of ancestorCustomFields) {
-        const ancestorValue = ancestorCustomFields.get(key);
-        if (!baseCustomFields.has(key)) {
-          combinedCustomFields.set(key, {
-                ...ancestorValue,
-                inherited: calculateInheritance(true, ancestorValue.required)
-            });
-        }
-    }
-    }
-
-  return Object.fromEntries(combinedCustomFields);
-}
-
-function calculateInheritance(inherited, required) {
-  if (inherited) {
-    if (required) {
-      return 1
-    } else {
-      return 0
-    }
-  } else {
-    return -1
-  }
-}
-
 async function getBaseCustomFieldsInfo(client, idField, idValue, name, tableName) {
   let customFields = new Map();
     const sql = `
@@ -341,6 +226,23 @@ async function getBaseCustomFieldsInfo(client, idField, idValue, name, tableName
   return customFields;
 }
 
+async function checkBeforeDelete(client, name, tableName, idField, idValue, connectedData, connectedDataIdField) {
+  const sql = `SELECT * FROM ${tableName} where ${idField} like $1`;
+  let res;
+  let list = [];
+  try {
+    res = await client.query(sql, [idValue]);
+  } catch (error) {
+    throw new Error([`Postgres error: ${pgErrorCodes[error.code]||error.code}`, error]);
+  }
+
+  if (res.rowCount !== 0) {
+    res.rows.forEach((element) => list.push(element[connectedDataIdField]))
+    throw new Error(`${capitalizeFirstLetter(name)} ${idValue} is still connected to one or more ${connectedData} (Ids: ${list.join(', ')}). You must delete these relationships from ${tableName} before deleting this ${name}.`)
+  }
+
+}
+
 export {
   newClient,
   checkInfo,
@@ -352,7 +254,6 @@ export {
   deleteInfo,
   generateId,
   addAssetTypeCustomFields,
-  formatCustomFields,
-  getAncestorCustomFieldsInfo,
-  getBaseCustomFieldsInfo
+  getBaseCustomFieldsInfo,
+  checkBeforeDelete,
 };

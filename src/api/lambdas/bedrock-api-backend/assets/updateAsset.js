@@ -115,11 +115,13 @@ async function updateAsset(
   allFields,
   body,
 ) {
-  let customFields;
+  let customFieldsFromAssetType;
   let customValues;
   let client;
   const baseFields = ['asset_id', 'asset_name', 'description', 'location', 'active', 'owner_id', 'asset_type_id', 'location', 'link', 'notes'];
   const assetType = body.asset_type_id;
+  let customFields = new Map(Object.entries(body.custom_fields));
+
 
   const response = {
     error: false,
@@ -142,9 +144,10 @@ async function updateAsset(
     await checkExistence(client, idValue);
     await updateInfo(client, baseFields, body, tableName, idField, idValue, name);
     if (assetType) {
-      customFields = await getCustomFieldsInfo(client, body.asset_type_id);
+      customFieldsFromAssetType = await getCustomFieldsInfo(client, body.asset_type_id);
+      // CVs are from body, not CVs table!
       customValues = getCustomValues(body);
-      checkCustomFieldsInfo(body, customFields);
+      checkCustomFieldsInfo(body, customFieldsFromAssetType);
       await deleteInfo(client, 'bedrock.custom_values', idField, idValue, name);
       await addCustomFieldsInfo(body, client, customFields, customValues);
     }

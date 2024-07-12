@@ -36,7 +36,7 @@ async function getAssetType(
     client = await newClient(connection);
     clientInitiated = true;
     response.result = await getInfo(client, idField, idValue, name, tableName);
-    const customFieldsResponse = await getBaseCustomFieldsInfo(client, idField, idValue, name, tableNameCustomFields);
+    const customFieldsResponse = await getBaseCustomFieldsInfo(client, idField, idValue, name, tableNameCustomFields)
     response.result.custom_fields = simpleFormatCustomFields(customFieldsResponse);
     await client.end();
   } catch (error) {

@@ -1,7 +1,7 @@
 /* eslint-disable import/extensions */
 /* eslint-disable no-console */
 import {
-  newClient, checkExistence, deleteInfo,
+  newClient, checkExistence, deleteInfo, checkBeforeDelete,
 } from '../utilities/utilities.js';
 
 async function deleteRunGroup(
@@ -14,6 +14,9 @@ async function deleteRunGroup(
   const shouldExist = true;
   let client;
   let clientInitiated = false;
+  const etlTableName = 'bedrock.etl'
+  const connectedData = 'assets'
+  const connectedDataIdField = 'asset_id'
 
   const response = {
     error: false,
@@ -25,6 +28,7 @@ async function deleteRunGroup(
     client = await newClient(connection);
     clientInitiated = true;
     await checkExistence(client, tableName, idField, idValue, name, shouldExist);
+    await checkBeforeDelete(client, name, etlTableName, idField, idValue, connectedData, connectedDataIdField)
     await deleteInfo(client, tableName, idField, idValue, name);
     await client.end();
   } catch (error) {

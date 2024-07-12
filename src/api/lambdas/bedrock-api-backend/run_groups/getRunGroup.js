@@ -38,7 +38,6 @@ async function getRunGroup(
     clientInitiated = true;
     response.result = await getInfo(client, idField, idValue, name, tableName);
     const assetInfo = await getAssetInfo(client, idValue, name);
-    console.log(assetInfo);
     response.result.assets = [];
     assetInfo.rows.forEach((obj) => {
       response.result.assets.push({ asset_name: obj.asset_name, display_name: obj.display_name }); 

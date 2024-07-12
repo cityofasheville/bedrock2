@@ -28,10 +28,10 @@ async function getCustomFieldInfo(client, assetRows, idValue, requestedFields, o
   // this function is different than getCustomFieldsInfo in assetUtilities. This one queries from
   // the custom_values table, while the other builds a list of needed customfields based on
   // asset type.
-  const cv = new Map();
-  if (assetRows.asset_type_id !== null) {
+  const customValues = new Map();
+  if (assetRows[0].asset_type_id !== null) {
     let res;
-    const sql = 'SELECT custom_field_id, field_value from bedrock.custom_values where asset_id like $1';
+    let sql = 'SELECT custom_field_id, field_value from bedrock.custom_values where asset_id like $1';
     try {
       res = await client.query(sql, [idValue]);
     } catch (error) {
@@ -43,12 +43,26 @@ async function getCustomFieldInfo(client, assetRows, idValue, requestedFields, o
     if (res.rowCount > 0) {
       for (let i = 0; i < res.rowCount; i += 1) {
         if (!overrideFields || requestedFields.includes(res.rows[i].field_name)) {
-          cv.set(res.rows[i].custom_field_id, res.rows[i].field_value);
+          customValues.set(res.rows[i].custom_field_id, res.rows[i].field_value);
         }
       }
     }
+    sql = 'SELECT * from bedrock.asset_type_custom_fields where asset_type_id like $1';
+    try {
+      res = await client.query(sql, [assetRows[0].asset_type_id]);
+    } catch (error) {
+      console.log(`PG error getting custom fields: ${pgErrorCodes[error.code]||error.code}`);
+      throw new Error(
+        `PG error getting custom fields: ${pgErrorCodes[error.code]}`,
+      );
+    }
+    res.rows.forEach((item) => {
+      if (!customValues.has(item.custom_field_id)) {
+        customValues.set(item.custom_field_id, null)
+      }
+    })
   }
-  return Object.fromEntries(cv.entries());
+  return Object.fromEntries(customValues.entries());
 }
 
 async function getBaseInfo(assetRows, requestedFields, available) {
@@ -112,32 +126,21 @@ async function getAsset(
     message: '',
     result: null,
   };
-  console.log('very beginning')
+
   try {
     client = await newClient(connection);
-    console.log('past clinet0')
   } catch (error) {
     response.error = true;
     response.message = error.message;
     return response;
   }
 
-  console.log('begin')
-
   try {
     const assetRows = await getAssetInfo(client, idValue);
-    console.log('after getAssetInfo')
-
     asset = await getBaseInfo(assetRows, requestedFields, allFields);
-    console.log('after Baseinfo')
-
     asset.set('custom_fields', await getCustomFieldInfo(client, assetRows, idValue, requestedFields, overrideFields));
-    console.log('after custom fields')
-
     if (requestedFields.includes('tags')) {
       asset.set('tags', await getAssetTags(client, idValue));
-      console.log('after tags')
-
     }
     response.result = Object.fromEntries(asset.entries());
   } catch (error) {

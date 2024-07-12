@@ -87,7 +87,6 @@ async function getCustomFields(client) {
     throw new Error(`PG error getting asset types: ${pgErrorCodes[error.code]||error.code}`);
   }
   let type;
-  console.log(types)
   for (type of types) {
     const customFields = await getCustomFieldsInfo(client, type);
     const typeMap = resultMap.get(type);

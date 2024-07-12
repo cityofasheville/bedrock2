@@ -85,7 +85,6 @@ async function addBaseFields(sqlResult, requestedFields, availableFields) {
     asset.set('asset_id', row.asset_id);
     asset.set('asset_name', row.asset_name);
     asset.set('asset_type_id', row.asset_type_id);
-    asset.set('custom_fields', new Map());
     for (let j = 0; j < requestedFields.length; j += 1) {
       const itm = requestedFields[j];
       if (availableFields.includes(itm)) {
@@ -113,21 +112,6 @@ async function addTags(client, assets) {
   } catch (error) {
     throw new Error(`PG error getting asset tags: ${pgErrorCodes[error.code]||error.code}`);
   }
-  return sqlResult;
-}
-
-async function addCustomFields(client, assets) {
-  const sql = `
-    select asset_id, custom_field_id, field_value from bedrock.custom_values
-    where asset_id in (${assets.assetIds.join()})
-  `;
-  let sqlResult;
-  try {
-    sqlResult = await client.query(sql);
-  } catch (error) {
-    throw new Error(`PG error getting asset custom values: ${pgErrorCodes[error.code]||error.code}`);
-  }
-
   return sqlResult;
 }
 
@@ -238,15 +222,7 @@ async function getAssetList(domainName, pathElements, queryParams, connection, t
 
     // Build the asset list
     assets = await addBaseFields(sqlResult, requestedFields, availableFields);
-    // Add custom fields them to their respective assets
-    const customFieldsResult = await addCustomFields(client, assets);
-    for (let i = 0; i < customFieldsResult.rowCount; i += 1) {
-      const row = customFieldsResult.rows[i];
-      if (!overrideFields || requestedFields.includes(row.field_id)) {
-        const cv = assets.assetMap.get(row.asset_id).get('custom_fields');
-        cv.set(row.custom_field_id, row.field_value);
-      }
-    }
+
 
     const tagsResult = await addTags(client, assets);
     for (let i = 0; i < tagsResult.rowCount; i += 1) {
@@ -255,11 +231,6 @@ async function getAssetList(domainName, pathElements, queryParams, connection, t
         const innerMap = assets.assetMap.get(row.asset_id);
         innerMap.get('tags').push({ tag_id: row.tag_id, tag_name: row.tag_name });
       }
-    }
-
-    // Now convert all the Map objects to ordinary objects
-    for (const [nm, asset] of assets.assetMap) {
-      asset.set('custom_fields', Object.fromEntries(asset.get('custom_fields').entries()));
     }
 
     if (requestedFields.includes('parents')) {
