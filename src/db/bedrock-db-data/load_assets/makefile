@@ -11,7 +11,7 @@ clean:
 seed:
 	make local
 
-node_modules: $(code_files)
+node_modules: ./package.json
 	npm install
 
 devhostname := $(shell echo $(BEDROCK_DB_HOST_ENDPOINT) | cut -d ":" -f 1)

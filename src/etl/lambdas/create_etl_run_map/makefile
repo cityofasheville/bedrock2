@@ -31,7 +31,7 @@ apply: function.zip $(TF_TARGS) $(dirs)
 apply-y: function.zip $(TF_TARGS) $(dirs)
 destroy: $(TF_TARGS) $(dirs)
 
-node_modules: $(code_files)
+node_modules: ./package.json
 	npm install
 
 local: node_modules

@@ -7,7 +7,7 @@ code_files = *.js package.json
 clean:
 	echo 'Nothing to clean'
 
-node_modules: $(code_files)
+node_modules: ./package.json
 	npm install
 
 local: node_modules
