@@ -13,20 +13,21 @@ function sendEmails(results) {
     let emailRecip = [process.env.EMAIL_RECIPIENT];
     let emailSender = process.env.EMAIL_SENDER;
     let htmlEmail, emailSubject;
-      results.failure = results.failure.map(res => res.name);
-      results.failure.sort();
-      results.success.sort();
-      results.skipped.sort();
+    let failureMessages = results.failure.map(res => res.result);
+    results.failure = results.failure.map(res => res.name);
+    results.failure.sort();
+    results.success.sort();
+    results.skipped.sort();
 
-      emailSubject = "ETL Jobs Status: OK";
-      if (results.skipped.length > 0 || results.failure.length > 0) {
-        emailSubject = "ETL Jobs Status: Error";
-      }
+    emailSubject = "ETL Jobs Status: OK";
+    if (results.skipped.length > 0 || results.failure.length > 0) {
+      emailSubject = "ETL Jobs Status: Error";
+    }
 
-      let pugObj = {};
-      pugObj.results = results;
-      htmlEmail = compiledFunction(pugObj);
-      return ses_sendemail(emailRecip, emailSender, htmlEmail, emailSubject);
+    let pugObj = {};
+    pugObj.results = results;
+    htmlEmail = compiledFunction(pugObj);
+    return ses_sendemail(emailRecip, emailSender, htmlEmail, emailSubject, failureMessages);
   }else{
     console.log('No email sent');
   }

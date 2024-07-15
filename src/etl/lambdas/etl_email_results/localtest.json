@@ -4,7 +4,72 @@
         "fakey_mcfakesterson.mun"
     ],
     "skipped": [],
-    "failure": [],
+    "failure": [
+      {
+        "name": "testdata_witherror.bed",
+        "job": {
+          "name": "testdata_witherror.bed",
+          "depends": [
+            "testdatafrom.bed"
+          ],
+          "etl_tasks": [
+            {
+              "type": "table_copy",
+              "active": true,
+              "source_location": {
+                "asset": "testdatafrom.bed",
+                "tablename": "fromtable",
+                "connection": "pubrecdb1/bedrock/bedrock_user",
+                "schemaname": "testdata",
+                "connection_id": "50ffafcd5055f2fbb9c0"
+              },
+              "target_location": {
+                "asset": "testdata_witherror.bed",
+                "tablename": "totable",
+                "connection": "pubrecdb1/bedrock/bedrock_user",
+                "schemaname": "testdata",
+                "connection_id": "50ffafcd5055f2fbb9c0"
+              }
+            }
+          ]
+        },
+        "result": {
+          "name": "testdata_witherror.bed",
+          "depends": [
+            "testdatafrom.bed"
+          ],
+          "etl_tasks": [
+            {
+              "type": "table_copy",
+              "active": true,
+              "source_location": {
+                "asset": "testdatafrom.bed",
+                "tablename": "fromtable",
+                "connection": "pubrecdb1/bedrock/bedrock_user",
+                "schemaname": "testdata",
+                "connection_id": "50ffafcd5055f2fbb9c0"
+              },
+              "target_location": {
+                "asset": "testdata_witherror.bed",
+                "tablename": "totable",
+                "connection": "pubrecdb1/bedrock/bedrock_user",
+                "schemaname": "testdata",
+                "connection_id": "50ffafcd5055f2fbb9c0"
+              },
+              "result": {
+                "statusCode": 500,
+                "body": {
+                  "lambda_output": "Lambda crash: Runtime.UnhandledPromiseRejection{\"errorType\":\"Runtime.UnhandledPromiseRejection\",\"errorMessage\":\"error: permission denied for table totable\",\"trace\":[\"Runtime.UnhandledPromiseRejection: error: permission denied for table totable\",\"    at process.<anonymous> (file:///var/runtime/index.mjs:1276:17)\",\"    at process.emit (node:events:519:28)\",\"    at emit (node:internal/process/promises:150:20)\",\"    at processPromiseRejections (node:internal/process/promises:284:27)\",\"    at process.processTicksAndRejections (node:internal/process/task_queues:96:32)\"]}"
+                }
+              }
+            }
+          ]
+        }
+      }
+    ],
     "results": null,
-    "RunSetIsGo": false
-}
+    "RunSetIsGo": false,
+    "TaskOutput": {
+      "statusCode": 200
+    }
+  }
