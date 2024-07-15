@@ -70,12 +70,13 @@ async function addTasks(client, allFields, body) {
         if (key === 'source' || key === 'target') {
           valuesFromBody.push(JSON.stringify(obj[key]));
           // valuesFromBody.push(obj[key]);
-        } else {
-          if (key == 'task_id') {
-            valuesFromBody.push(generateId())
-          } else {
+        } else  {
           valuesFromBody.push(obj[key]);
-          }}
+          };
+      } else if (key === 'task_id') {
+        let newId = generateId();
+        valuesFromBody.push(newId);
+        obj['task_id'] = newId;
       } else {
         valuesFromBody.push(null);
       }
@@ -122,10 +123,10 @@ async function updateTasks(
   try {
     await client.query('BEGIN');
     await deleteInfo(client, tableName, idField, idValue, name);
-    await addTasks(client, allFields, body);
+    const newBody = await addTasks(client, allFields, body);
     await updateETLInfo(client, ['asset_id', 'run_group_id', 'active'], body, 'bedrock.etl', idField, idValue, name)
     await client.query('COMMIT');
-    response.result = body;
+    response.result = newBody;
   } catch (error) {
     await client.query('ROLLBACK');
     await client.end();
