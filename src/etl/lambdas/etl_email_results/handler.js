@@ -3,7 +3,7 @@ import sendEmails from './sendEmails.js';
 
 export async function lambda_handler(event) {
   try {
-    await sendEmails(event);
+    sendEmails(event);
     return {
       statusCode: 200
     };

@@ -1,0 +1,13 @@
+{
+    "success": [
+        "fakey_mcfakesterson.s3",
+        "fakey_mcfakesterson.mun"
+    ],
+    "skipped": [],
+    "failure": [],
+    "results": null,
+    "RunSetIsGo": false,
+    "TaskOutput": {
+      "statusCode": 200
+    }
+  }
