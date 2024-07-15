@@ -29,33 +29,41 @@ FROM bedrock.assets a
 left join bedrock.asset_types at2
 on a.asset_type_id = at2.asset_type_id;
 
-create view bedrock.dependency_view as
-select dep.asset_id, as2.asset_name, dep.dependent_asset_id, as3.asset_name dependency
-from bedrock.dependencies dep
-inner join bedrock.assets as2 
-on as2.asset_id = dep.asset_id
-inner join bedrock.assets as3 
-on dep.dependent_asset_id = as3.asset_id
-	union -- add aggregate dependencies
-select a1.asset_id, a1.asset_name, a2.asset_id dependency_id, a2.asset_name as dependency from
-bedrock.assets a1
-inner join bedrock.tasks t 
-on a1.asset_id = t.asset_id
-inner join bedrock.tags
-on t.source->>'aggregate' = tags.tag_name 
-inner join bedrock.asset_tags at2
-on tags.tag_id = at2.tag_id 
-inner join bedrock.assets a2 
-on a2.asset_id = at2.asset_id 
-where t.type = 'aggregate'
-	union -- add copy dependencies
-select a1.asset_id, a1.asset_name, a2.asset_id dependency_id, a2.asset_name as dependency from
-bedrock.assets a1
-inner join bedrock.tasks t 
-on a1.asset_name = t.target->>'asset'
-inner join bedrock.assets a2 
-on a2.asset_name = t.source->>'asset'
-where t.type in ('table_copy','file_copy');
+CREATE VIEW bedrock.dependency_view as
+select asset_id, asset_name, dependent_asset_id, dependency, bool_and(implied_dependency) implied_dependency from (
+ SELECT dep.asset_id,
+    as2.asset_name,
+    dep.dependent_asset_id,
+    as3.asset_name AS dependency,
+    false as implied_dependency
+   FROM dependencies dep
+     JOIN assets as2 ON as2.asset_id = dep.asset_id
+     JOIN assets as3 ON dep.dependent_asset_id = as3.asset_id
+UNION
+ SELECT a1.asset_id,
+    a1.asset_name,
+    a2.asset_id AS dependent_asset_id,
+    a2.asset_name AS dependency,
+    true as implied_dependency
+   FROM assets a1
+     JOIN tasks t ON a1.asset_id = t.asset_id
+     JOIN tags ON (t.source ->> 'aggregate'::text) = tags.tag_name
+     JOIN asset_tags at2 ON tags.tag_id = at2.tag_id
+     JOIN assets a2 ON a2.asset_id = at2.asset_id
+  WHERE t.type = 'aggregate'::text
+UNION
+ SELECT a1.asset_id,
+    a1.asset_name,
+    a2.asset_id AS dependent_asset_id,
+    a2.asset_name AS dependency,
+    true as implied_dependency
+   FROM assets a1
+     JOIN tasks t ON a1.asset_name = (t.target ->> 'asset'::text)
+     JOIN assets a2 ON a2.asset_name = (t.source ->> 'asset'::text)
+  WHERE t.type = ANY (ARRAY['table_copy'::text, 'file_copy'::text])
+  order by asset_name 
+) inr
+group by asset_id, asset_name, dependent_asset_id, dependency;
 
 create view bedrock.etl_view as 
 select etl.asset_id, asset_name, etl.run_group_id, run_group_name, etl.active 
