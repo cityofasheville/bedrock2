@@ -82,8 +82,6 @@ async function addTasks(client, allFields, body) {
       }
     });
 
-    console.log(valuesFromBody)
-
     try {
       await client
         .query(`INSERT INTO bedrock.tasks ${fieldsString} VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`, valuesFromBody);
