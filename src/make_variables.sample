@@ -1,9 +1,8 @@
+# Deploy settings.
 INSTANCE = <UNIQUE INSTANCE STRING LIKE ej-test-0: lowercase alphanumeric characters and hyphens only>
 region = "us-east-1"
 statebucket = "avl-tfstate-store"
 account = 518970837364
-EMAIL_SENDER = "asheville_fake@ashevillenc.gov"
-EMAIL_RECIPIENT = "dummy@ashevillenc.gov"
 build_mode = std # Set to sam to build using SAM
 
 # The next four variables provide information on the VPC, subnets and security
@@ -35,6 +34,10 @@ STATE_MACHINE_ARN = "arn:aws:xxx"
 
 # This is the directory (relative to the root of the project) where the data files are stored.
 data_directory='src/db/bedrock-db-data/data';
+
+# Email settings
+EMAIL_SENDER = "asheville_fake@ashevillenc.gov"
+EMAIL_RECIPIENT = "dummy@ashevillenc.gov"
 
 # Do not edit or delete the next line
 reverse = $(if $(1),$(call reverse,$(wordlist 2,$(words $(1)),$(1)))) $(firstword $(1))

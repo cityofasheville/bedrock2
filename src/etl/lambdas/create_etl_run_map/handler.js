@@ -109,7 +109,7 @@ async function readLocationFromAsset(client, assetName) {
   return locData;
 }
 
-async function readAggregateData(client, tempLocation, location, taskSource) {
+async function readAggregateData(client, tempLocation, location, taskSource, email) {
   const { aggregate, data_range, data_connection } = taskSource;
   const sql = `
   select a.asset_name, location->>'spreadsheetid' spreadsheetid, 
@@ -144,6 +144,9 @@ async function readAggregateData(client, tempLocation, location, taskSource) {
           },
           target_location: tempTargetLocal,
         };
+        if(email) {
+          task.email = email;
+        } 
         aggregateTasks.push(task);
       }
       // final copy temp to real
@@ -182,7 +185,9 @@ async function readTasks(client, assetMap) {
         type: task.type,
         active: task.active,
       };
-
+      if(task.target.email) {
+        thisTask.email = task.target.email;
+      }
       if (task.type === 'table_copy' || task.type === 'file_copy') {
         let sourceLoc;
         let targetLoc;
@@ -198,13 +203,14 @@ async function readTasks(client, assetMap) {
       } else if (task.type === 'aggregate') {
         const tempLocation = await readLocationFromAsset(client, task.source.temp_table);
         const location = await readLocationFromAsset(client, task.target.asset);
-        const aggregateTasks = await readAggregateData(client, tempLocation, location, task.source);
+        const aggregateTasks = await readAggregateData(client, tempLocation, location, task.source, thisTask.email);
         asset.etl_tasks = aggregateTasks;
       } else if (task.type === 'run_lambda' || task.type === 'encrypt') {
         thisTask = task.target;
         asset.etl_tasks.push(thisTask);
       } else if (task.type === 'sql') {
         thisTask.connection = task.target.connection;
+        // thisTask = {...thisTask, ...task.target};
         thisTask.sql_string = task.configuration;
         asset.etl_tasks.push(thisTask);
       } else {
@@ -340,6 +346,7 @@ const lambda_handler = async function x(event) {
         runsets: runs,
         RunSetIsGo: true,
         success: [],
+        noemail: [],
         skipped: [],
         failure: [],
         results: null,

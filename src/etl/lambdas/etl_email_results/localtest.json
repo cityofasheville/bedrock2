@@ -3,6 +3,7 @@
         "fakey_mcfakesterson.s3",
         "fakey_mcfakesterson.mun"
     ],
+    "noemail": [],
     "skipped": [],
     "failure": [
       {

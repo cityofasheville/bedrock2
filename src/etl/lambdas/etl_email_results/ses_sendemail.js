@@ -47,8 +47,10 @@ async function ses_sendemail(emailAddrs, emailSender, htmlEmail, emailSubject, f
     const sendRawEmailCommand = new SendRawEmailCommand(rawEmail);
     const response = await sesClient.send(sendRawEmailCommand);
     console.log("Email sent successfully:", response.MessageId);
+    return "Email sent successfully:" + response.MessageId;
   } catch (error) {
     console.error("Error sending email:", error);
+    return error;
   }
 }
 
