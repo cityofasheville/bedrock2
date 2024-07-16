@@ -170,7 +170,8 @@ CREATE TABLE bedrock.etl (
 	asset_id text NOT NULL,
 	run_group_id text NOT NULL,
 	active bool NOT NULL,
-	CONSTRAINT etl_key UNIQUE (asset_id, run_group_id)
+	CONSTRAINT etl_key UNIQUE (asset_id, run_group_id),
+	CONSTRAINT etl_unique UNIQUE (asset_id)
 );
 --
 ALTER TABLE bedrock.etl OWNER TO bedrock_user;

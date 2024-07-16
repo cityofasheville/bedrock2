@@ -15,31 +15,9 @@ function checkInfo(body, requiredFields) {
   }
 }
 
-async function updateETLInfo(client, allFields, body, tableName, idField, idValue, name) {
-  let cnt = 1;
-  const args = [];
-  let sql = `UPDATE ${tableName} SET `;
-  let comma = '';
-
-  // Creating a string like 'tag_name = $1, display_name = 2$' etc
-  // and adding the actual value to the args array
-  Object.keys(body.run_group).forEach((key) => {
-
-    if (allFields.includes(key)) {
-
-      if (key == 'asset_id') {
-        sql += `${comma} ${key} = $${cnt}`;
-        args.push(idValue);
-      }
-      sql += `${comma} ${key} = $${cnt}`;
-      args.push(body.run_group[key]);
-      cnt += 1;
-      comma = ',';
-    }
-  });
-
-  sql += ` where ${idField} = $${cnt}`;
-  args.push(idValue);
+async function updateETLInfo(client, body, tableName, idValue, name) {
+  const args = [idValue, body.run_group.run_group_id, body.run_group.active];
+  let sql = `INSERT INTO ${tableName} (asset_id, run_group_id, active) VALUES ($1, $2, $3) ON CONFLICT(asset_id) DO UPDATE SET run_group_id = $2, active = $3`;
 
   try {
     await client.query(sql, args);
@@ -123,7 +101,7 @@ async function updateTasks(
     await client.query('BEGIN');
     await deleteInfo(client, tableName, idField, idValue, name);
     const newBody = await addTasks(client, allFields, body);
-    await updateETLInfo(client, ['asset_id', 'run_group_id', 'active'], body, 'bedrock.etl', idField, idValue, name)
+    await updateETLInfo(client, body, 'bedrock.etl', idValue, name)
     await client.query('COMMIT');
     response.result = newBody;
   } catch (error) {
