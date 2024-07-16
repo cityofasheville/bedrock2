@@ -2,7 +2,8 @@
 /* eslint-disable import/extensions */
 /* eslint-disable no-console */
 import pgErrorCodes from '../pgErrorCodes.js';
-import { deleteInfo, generateId, newClient } from '../utilities/utilities.js';
+import { deleteInfo, generateId, newClient, checkExistence } from '../utilities/utilities.js';
+import getTasks from './getTasks.js';
 
 function checkInfo(body, requiredFields) {
   // loop through requiredFields array and check that each one is in body
@@ -28,7 +29,7 @@ async function updateETLInfo(client, body, tableName, idValue, name) {
   return body;
 }
 
-async function addTasks(client, allFields, body) {
+async function addTasks(client, allFields, body, idValue) {
   let fieldsString = '(';
   let comma = '';
 
@@ -47,6 +48,8 @@ async function addTasks(client, allFields, body) {
       if (obj[key] || obj[key] === 0 || obj[key] === false) {
         if (key === 'source' || key === 'target') {
           valuesFromBody.push(JSON.stringify(obj[key]));
+        } else if (key === 'asset_id') {
+          valuesFromBody.push(idValue)
         } else {
           valuesFromBody.push(obj[key]);
           };
@@ -87,6 +90,7 @@ async function updateTasks(
   const tableName = 'bedrock.tasks';
   const allFields = ['task_id', 'asset_id', 'seq_number', 'description', 'type', 'active', 'source', 'target', 'configuration'];
   const requiredFields = ['asset_id', 'seq_number', 'type', 'active'];
+  const shouldExist = true;
 
   try {
     client = await newClient(connection);
@@ -99,11 +103,14 @@ async function updateTasks(
 
   try {
     await client.query('BEGIN');
+    // make sure asset exists in the asset table
+    await checkExistence(client, 'bedrock.assets', idField, idValue, name, shouldExist);
     await deleteInfo(client, tableName, idField, idValue, name);
-    const newBody = await addTasks(client, allFields, body);
+    await addTasks(client, allFields, body, idValue);
     await updateETLInfo(client, body, 'bedrock.etl', idValue, name)
     await client.query('COMMIT');
-    response.result = newBody;
+    let newResponse = await getTasks(connection, idValue, idField, name)
+    response.result = newResponse.result;
   } catch (error) {
     await client.query('ROLLBACK');
     await client.end();
