@@ -66,7 +66,7 @@ async function addTasks(client, allFields, body) {
   for (const obj of body.items) {
     const valuesFromBody = [];
     allFields.forEach((key) => {
-      if (obj[key] || obj[key] === 0) {
+      if (obj[key] || obj[key] === 0 || obj[key] === false) {
         if (key === 'source' || key === 'target') {
           valuesFromBody.push(JSON.stringify(obj[key]));
           // valuesFromBody.push(obj[key]);
@@ -81,6 +81,8 @@ async function addTasks(client, allFields, body) {
         valuesFromBody.push(null);
       }
     });
+
+    console.log(valuesFromBody)
 
     try {
       await client
