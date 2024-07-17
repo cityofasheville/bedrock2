@@ -1,6 +1,7 @@
 
-The data directory (src/db/bedrock-db-data/data) is the canonical store for all Bedrock assets.
+The data directory (src/db/bedrock-db-data/data) contains files that builds example data sources when ```make seed``` is run in the db dir.
 Under data/, a subdir exists for each asset.
+The canonical store for all Bedrock assets is now in a separate repo: managed-data-assets
 
 # Asset File
 - The **Asset** json file is shaped like this:
@@ -76,6 +77,7 @@ Under data/, a subdir exists for each asset.
           "seq_number": 0,
           "description": null,
           "type": "table_copy",
+          "email": "only_on_error", (OPTIONAL)
           "active": true,
           "source": {
             "asset": "ad_info.mun"
@@ -91,6 +93,7 @@ Under data/, a subdir exists for each asset.
 
     - run_group_id looks up the run group to tell Bedrock when to run the ETL task.
     - The ETL job can have multiple tasks. For example, it might copy a table and then run an SQL script.
+    - The "email": "only_on_error" flag means that if the task is successful, there is no need to send an email. (By default an email is sent for every set of tasks run.) If there are tasks without the flag run at the same time, the email will be sent.
 
 ## ETL Task Types
   The fields source, target, and configuration are used differently for different task types
