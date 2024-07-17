@@ -3,9 +3,10 @@ import sendEmails from './sendEmails.js';
 
 export async function lambda_handler(event) {
   try {
-    sendEmails(event);
+    let msg = await sendEmails(event);
     return {
-      statusCode: 200
+      statusCode: 200,
+      body: msg
     };
   } catch (error) {
     console.error(error);

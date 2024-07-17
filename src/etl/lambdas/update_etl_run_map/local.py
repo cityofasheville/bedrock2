@@ -13,4 +13,5 @@ f = open(filename)
 event = json.load(f)
 f.close()
 
-lambda_handler(event, context)
+json_object = json.dumps(lambda_handler(event, context), indent = 4) 
+# print(json_object) 

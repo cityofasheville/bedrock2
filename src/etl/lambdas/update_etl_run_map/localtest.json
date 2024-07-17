@@ -3,28 +3,127 @@
     "runsets": [
       [
         {
-          "name": "equity_students_completed.goog",
-          "run_group": "d",
+          "name": "public_meeting_data.lib",
+          "run_group": "every15",
           "depends": [
-            "training_students.lib"
+            "public_meeting_data.goog"
+          ],
+          "etl_tasks": [
+            {
+              "type": "table_copy",
+              "active": true,
+              "email": "only_on_error",
+              "source_location": {
+                "asset": "public_meeting_data.goog",
+                "tab": "ActiveMeetings",
+                "range": "A2:W",
+                "filename": "public_meeting_data",
+                "connection": "bedrock-googlesheets",
+                "spreadsheetid": "11sK5YUKLDIA5cjzrXu_EzP5_5q_X1HbTPIkKyppR2SM"
+              },
+              "target_location": {
+                "asset": "public_meeting_data.lib",
+                "tablename": "public_meeting_data",
+                "connection": "pubrecdb1/mdastore1/dbadmin",
+                "schemaname": "internal"
+              }
+            },
+            {
+              "type": "table_copy",
+              "active": true,
+              "source_location": {
+                "asset": "public_meeting_data_archive.goog",
+                "tab": "MeetingArchive",
+                "range": "A2:W",
+                "filename": "public_meeting_data",
+                "connection": "bedrock-googlesheets",
+                "spreadsheetid": "11sK5YUKLDIA5cjzrXu_EzP5_5q_X1HbTPIkKyppR2SM"
+              },
+              "target_location": {
+                "asset": "public_meeting_data.lib",
+                "append": true,
+                "tablename": "public_meeting_data",
+                "connection": "pubrecdb1/mdastore1/dbadmin",
+                "schemaname": "internal"
+              }
+            }
+          ]
+        },
+        {
+          "name": "public_meeting_data_categories.lib",
+          "run_group": "every15",
+          "depends": [
+            "public_meeting_data_categories.goog"
           ],
           "etl_tasks": [
             {
               "type": "table_copy",
               "active": true,
               "source_location": {
-                "asset": "equity_students_completed.lib",
-                "tablename": "equity_students_completed",
-                "connection": "pubrecdb1/mdastore1/dbadmin",
-                "schemaname": "aux"
+                "asset": "public_meeting_data_categories.goog",
+                "tab": "CategoryValues",
+                "range": "A2:E",
+                "filename": "public_meeting_data_categories",
+                "connection": "bedrock-googlesheets",
+                "spreadsheetid": "11sK5YUKLDIA5cjzrXu_EzP5_5q_X1HbTPIkKyppR2SM"
               },
               "target_location": {
-                "asset": "equity_students_completed.goog",
-                "tab": "Sheet1",
-                "range": "A2:Z",
-                "filename": "equity_students_completed",
-                "connection": "bedrock-googlesheets",
-                "spreadsheetid": "1xGD2jVSveuYjDLRc6Z8dlwGIA78LKJKxu0ck0Y7easg"
+                "asset": "public_meeting_data_categories.lib",
+                "tablename": "public_meeting_data_categories",
+                "connection": "pubrecdb1/mdastore1/dbadmin",
+                "schemaname": "internal"
+              }
+            }
+          ]
+        }
+      ],
+      [
+        {
+          "name": "public_meeting_data.pub",
+          "run_group": "every15",
+          "depends": [
+            "public_meeting_data.lib"
+          ],
+          "etl_tasks": [
+            {
+              "type": "table_copy",
+              "active": true,
+              "source_location": {
+                "asset": "public_meeting_data.lib",
+                "tablename": "public_meeting_data",
+                "connection": "pubrecdb1/mdastore1/dbadmin",
+                "schemaname": "internal"
+              },
+              "target_location": {
+                "asset": "public_meeting_data.pub",
+                "tablename": "public_meeting_data",
+                "connection": "coa-publicdb1/coa_share/dbadmin",
+                "schemaname": "open"
+              }
+            }
+          ]
+        },
+        {
+          "name": "public_meeting_data_categories.pub",
+          "run_group": "every15",
+          "depends": [
+            "public_meeting_data_categories.lib"
+          ],
+          "etl_tasks": [
+            {
+              "type": "table_copy",
+              "active": true,
+              "source_location": {
+                "asset": "public_meeting_data_categories.lib",
+                "tablename": "public_meeting_data_categories",
+                "connection": "pubrecdb1/mdastore1/dbadmin",
+                "schemaname": "internal"
+              },
+              "target_location": {
+                "asset": "public_meeting_data_categories.pub",
+                "tablename": "public_meeting_data_categories",
+                "connection": "coa-publicdb1/coa_share/dbadmin",
+                "schemaname": "open"
               }
             }
           ]
@@ -33,39 +132,166 @@
     ],
     "RunSetIsGo": true,
     "success": [],
+    "noemail": [],
     "skipped": [],
     "failure": [],
     "results": [
       {
         "JobIsGo": false,
         "ETLJob": {
-          "name": "equity_students_completed.goog",
-          "run_group": "d",
+          "name": "public_meeting_data.lib",
+          "run_group": "every15",
           "depends": [
-            "training_students.lib"
+            "public_meeting_data.goog"
           ],
           "etl_tasks": [
             {
               "type": "table_copy",
               "active": true,
               "source_location": {
-                "asset": "equity_students_completed.lib",
-                "tablename": "equity_students_completed",
-                "connection": "pubrecdb1/mdastore1/dbadmin",
-                "schemaname": "aux"
+                "asset": "public_meeting_data.goog",
+                "tab": "ActiveMeetings",
+                "range": "A2:W",
+                "filename": "public_meeting_data",
+                "connection": "bedrock-googlesheets",
+                "spreadsheetid": "11sK5YUKLDIA5cjzrXu_EzP5_5q_X1HbTPIkKyppR2SM"
               },
               "target_location": {
-                "asset": "equity_students_completed.goog",
-                "tab": "Sheet1",
-                "range": "A2:Z",
-                "filename": "equity_students_completed",
-                "connection": "bedrock-googlesheets",
-                "spreadsheetid": "1xGD2jVSveuYjDLRc6Z8dlwGIA78LKJKxu0ck0Y7easg"
+                "asset": "public_meeting_data.lib",
+                "tablename": "public_meeting_data",
+                "connection": "pubrecdb1/mdastore1/dbadmin",
+                "schemaname": "internal"
               },
               "result": {
                 "statusCode": 200,
                 "body": {
-                  "lambda_output": "Google Sheet copied 1xGD2jVSveuYjDLRc6Z8dlwGIA78LKJKxu0ck0Y7easg"
+                  "lambda_output": "Table copied pubrecdb1/mdastore1/dbadmin internal.public_meeting_data"
+                }
+              }
+            },
+            {
+              "type": "table_copy",
+              "active": true,
+              "source_location": {
+                "asset": "public_meeting_data_archive.goog",
+                "tab": "MeetingArchive",
+                "range": "A2:W",
+                "filename": "public_meeting_data",
+                "connection": "bedrock-googlesheets",
+                "spreadsheetid": "11sK5YUKLDIA5cjzrXu_EzP5_5q_X1HbTPIkKyppR2SM"
+              },
+              "target_location": {
+                "asset": "public_meeting_data.lib",
+                "append": true,
+                "tablename": "public_meeting_data",
+                "connection": "pubrecdb1/mdastore1/dbadmin",
+                "schemaname": "internal"
+              },
+              "result": {
+                "statusCode": 200,
+                "body": {
+                  "lambda_output": "Table copied pubrecdb1/mdastore1/dbadmin internal.public_meeting_data"
+                }
+              }
+            }
+          ]
+        },
+        "TaskIndex": 1,
+        "JobType": "table_copy",
+        "results": {
+          "JobIsGo": false,
+          "ETLJob": {
+            "name": "public_meeting_data.lib",
+            "run_group": "every15",
+            "depends": [
+              "public_meeting_data.goog"
+            ],
+            "etl_tasks": [
+              {
+                "type": "table_copy",
+                "active": true,
+                "source_location": {
+                  "asset": "public_meeting_data.goog",
+                  "tab": "ActiveMeetings",
+                  "range": "A2:W",
+                  "filename": "public_meeting_data",
+                  "connection": "bedrock-googlesheets",
+                  "spreadsheetid": "11sK5YUKLDIA5cjzrXu_EzP5_5q_X1HbTPIkKyppR2SM"
+                },
+                "target_location": {
+                  "asset": "public_meeting_data.lib",
+                  "tablename": "public_meeting_data",
+                  "connection": "pubrecdb1/mdastore1/dbadmin",
+                  "schemaname": "internal"
+                },
+                "result": {
+                  "statusCode": 200,
+                  "body": {
+                    "lambda_output": "Table copied pubrecdb1/mdastore1/dbadmin internal.public_meeting_data"
+                  }
+                }
+              },
+              {
+                "type": "table_copy",
+                "active": true,
+                "source_location": {
+                  "asset": "public_meeting_data_archive.goog",
+                  "tab": "MeetingArchive",
+                  "range": "A2:W",
+                  "filename": "public_meeting_data",
+                  "connection": "bedrock-googlesheets",
+                  "spreadsheetid": "11sK5YUKLDIA5cjzrXu_EzP5_5q_X1HbTPIkKyppR2SM"
+                },
+                "target_location": {
+                  "asset": "public_meeting_data.lib",
+                  "append": true,
+                  "tablename": "public_meeting_data",
+                  "connection": "pubrecdb1/mdastore1/dbadmin",
+                  "schemaname": "internal"
+                },
+                "result": {
+                  "statusCode": 200,
+                  "body": {
+                    "lambda_output": "Table copied pubrecdb1/mdastore1/dbadmin internal.public_meeting_data"
+                  }
+                }
+              }
+            ]
+          },
+          "TaskIndex": 1,
+          "JobType": "table_copy"
+        }
+      },
+      {
+        "JobIsGo": false,
+        "ETLJob": {
+          "name": "public_meeting_data_categories.lib",
+          "run_group": "every15",
+          "depends": [
+            "public_meeting_data_categories.goog"
+          ],
+          "etl_tasks": [
+            {
+              "type": "table_copy",
+              "active": true,
+              "source_location": {
+                "asset": "public_meeting_data_categories.goog",
+                "tab": "CategoryValues",
+                "range": "A2:E",
+                "filename": "public_meeting_data_categories",
+                "connection": "bedrock-googlesheets",
+                "spreadsheetid": "11sK5YUKLDIA5cjzrXu_EzP5_5q_X1HbTPIkKyppR2SM"
+              },
+              "target_location": {
+                "asset": "public_meeting_data_categories.lib",
+                "tablename": "public_meeting_data_categories",
+                "connection": "pubrecdb1/mdastore1/dbadmin",
+                "schemaname": "internal"
+              },
+              "result": {
+                "statusCode": 200,
+                "body": {
+                  "lambda_output": "Table copied pubrecdb1/mdastore1/dbadmin internal.public_meeting_data_categories"
                 }
               }
             }
@@ -76,33 +302,33 @@
         "results": {
           "JobIsGo": false,
           "ETLJob": {
-            "name": "equity_students_completed.goog",
-            "run_group": "d",
+            "name": "public_meeting_data_categories.lib",
+            "run_group": "every15",
             "depends": [
-              "training_students.lib"
+              "public_meeting_data_categories.goog"
             ],
             "etl_tasks": [
               {
                 "type": "table_copy",
                 "active": true,
                 "source_location": {
-                  "asset": "equity_students_completed.lib",
-                  "tablename": "equity_students_completed",
-                  "connection": "pubrecdb1/mdastore1/dbadmin",
-                  "schemaname": "aux"
+                  "asset": "public_meeting_data_categories.goog",
+                  "tab": "CategoryValues",
+                  "range": "A2:E",
+                  "filename": "public_meeting_data_categories",
+                  "connection": "bedrock-googlesheets",
+                  "spreadsheetid": "11sK5YUKLDIA5cjzrXu_EzP5_5q_X1HbTPIkKyppR2SM"
                 },
                 "target_location": {
-                  "asset": "equity_students_completed.goog",
-                  "tab": "Sheet1",
-                  "range": "A2:Z",
-                  "filename": "equity_students_completed",
-                  "connection": "bedrock-googlesheets",
-                  "spreadsheetid": "1xGD2jVSveuYjDLRc6Z8dlwGIA78LKJKxu0ck0Y7easg"
+                  "asset": "public_meeting_data_categories.lib",
+                  "tablename": "public_meeting_data_categories",
+                  "connection": "pubrecdb1/mdastore1/dbadmin",
+                  "schemaname": "internal"
                 },
                 "result": {
                   "statusCode": 200,
                   "body": {
-                    "lambda_output": "Google Sheet copied 1xGD2jVSveuYjDLRc6Z8dlwGIA78LKJKxu0ck0Y7easg"
+                    "lambda_output": "Table copied pubrecdb1/mdastore1/dbadmin internal.public_meeting_data_categories"
                   }
                 }
               }

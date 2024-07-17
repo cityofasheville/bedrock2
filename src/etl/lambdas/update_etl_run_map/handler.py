@@ -2,18 +2,23 @@
 def update_run_map(state):
     newstate = {}
     newstate['success'] = state['success']
+    newstate['noemail'] = state['noemail'] # successful jobs that should not send email
     newstate['skipped'] = state['skipped']
     newstate['failure'] = state['failure']
 
     jobs = state['runsets'].pop(0)
     results = state['results']
     fails = {}
-    for i in range(len(jobs)):
+    for i in range(len(jobs)): # each asset
         job = jobs[i]
         result = results[i]['ETLJob']
         name = result['name']
         success = True
-        for j in range(len(result['etl_tasks'])):
+        email = ''
+        for j in range(len(result['etl_tasks'])): # each task
+            if 'email' in result['etl_tasks'][j]:
+                email = result['etl_tasks'][j]['email']
+
             task_result = result['etl_tasks'][j]['result']
             if 'statusCode' not in task_result or task_result['statusCode'] != 200:
                 newstate['failure'].append({
@@ -28,7 +33,10 @@ def update_run_map(state):
                 break
 
         if success:
-            newstate['success'].append(name)
+            if email == 'only_on_error':
+                newstate['noemail'].append(name)
+            else:
+                newstate['success'].append(name)
 
     # Purge all jobs from state['remainder'] that depend on failed or skipped jobs
     newremainder = []
