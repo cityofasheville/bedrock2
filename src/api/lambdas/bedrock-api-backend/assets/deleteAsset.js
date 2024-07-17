@@ -25,7 +25,7 @@ async function deleteAsset(
 ) {
   let client;
   const shouldExist = true;
-  const tableNames = ['bedrock.assets', 'bedrock.custom_values', 'bedrock.asset_tags', 'bedrock.dependencies', 'bedrock.tasks'];
+  const tableNames = ['bedrock.assets', 'bedrock.custom_values', 'bedrock.asset_tags', 'bedrock.dependencies', 'bedrock.tasks', 'bedrock.etl'];
   const dependencyTableName = 'bedrock.dependencies';
   const connectedData = 'dependent assets';
   const connectedDataIdField = 'dependent_asset_id';
