@@ -135,6 +135,8 @@ async function handleAssets(event, pathElements, queryParams, verb, connection) 
           connection,
           idValue,
           tableName,
+          idField,
+          name
         );
       } else {
         response.message = `Unknown assets endpoint: [${pathElements.join()}]`;
