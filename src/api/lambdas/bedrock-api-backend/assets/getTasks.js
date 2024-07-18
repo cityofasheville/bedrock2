@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import pgpkg from 'pg';
 import pgErrorCodes from '../pgErrorCodes.js';
-import { getInfo } from '../utilities/utilities.js';
+import { getInfo, checkExistence } from '../utilities/utilities.js';
 
 const { Client } = pgpkg;
 
@@ -50,12 +50,17 @@ async function getTasks(connection, idValue, idField, name) {
   const response = {
     error: false,
     message: '',
-    result: null,
-  };
+    result: {
+      items: [],
+      run_group: {
+      run_group_id: null,
+      active: false,
+    }}};
   let client;
   let res;
   let tasks = [];
   let runGroup;
+  const shouldExist = true;
 
   try {
     client = await newClient(connection);
@@ -66,21 +71,22 @@ async function getTasks(connection, idValue, idField, name) {
   }
 
   try {
+    await checkExistence(client, 'bedrock.assets', idField, idValue, name, shouldExist)
     res = await readTasks(client, idValue);
     runGroup = await getInfo(client, idField, idValue, name, 'bedrock.etl')
-    if (res.rowCount === 0) {
-      response.message = 'No tasks found';
-    } else {
-      tasks = formatTasks(res);
-      response.result = {
-        items: tasks,
-        run_group: {run_group_id: runGroup.run_group_id, active: runGroup.active}
-      };
-    }
+
+    if (res.rowCount > 0) {
+    tasks = formatTasks(res);
+    response.result = {
+      items: tasks,
+    };
+  }
+  response.result.run_group = {run_group_id: runGroup.run_group_id, active: runGroup.active}
   } catch (error) {
     await client.end();
     response.error = true;
     response.message = error.message;
+    response.result = null;
     return response;
   } finally {
     await client.end();
