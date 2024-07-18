@@ -270,9 +270,10 @@ async function verifyAssetExists(client, assetName) {
 // eslint-disable-next-line camelcase
 const lambda_handler = async function x(event) {
   let debug = event.debug || false;
+  let client;
   try {
     const dbConnection = await getDBConnection();
-    const client = new Client(dbConnection);
+    client = new Client(dbConnection);
     await client.connect()
       .catch((err) => {
         const errmsg = pgErrorCodes[err.code];
@@ -297,8 +298,6 @@ const lambda_handler = async function x(event) {
     }
     assetMap = await readDependencies(client, assetMap);
     assetMap = await readTasks(client, assetMap);
-
-    await client.end();
 
     const graph = [];
     const level = {};
@@ -357,9 +356,23 @@ const lambda_handler = async function x(event) {
     if (debug) console.log(JSON.stringify(finalResult, null, 2));
     return finalResult;
   } catch (err) {
-    const res = formatRes(500, JSON.stringify(err, Object.getOwnPropertyNames(err)));
-    if (debug) console.log('Error: ', res);
-    return res;
+    let failureObj = {
+      "name": "Error in create-etl-run-map",
+      "result": err.stack
+    }
+    let result = {
+      RunSetIsGo: false,
+      success: [],
+      noemail: [],
+      skipped: [],
+      failure: [failureObj],
+      results: null,
+    };
+    const finalResult = (formatRes(200, result));
+    if (debug) console.log(JSON.stringify(finalResult, null, 2));
+    return finalResult;
+  } finally {
+    await client.end();
   }
 };
 
