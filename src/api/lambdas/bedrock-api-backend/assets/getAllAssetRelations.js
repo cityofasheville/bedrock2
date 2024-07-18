@@ -2,6 +2,7 @@
 /* eslint-disable no-console */
 import pgpkg from 'pg';
 import pgErrorCodes from '../pgErrorCodes.js';
+import { checkExistence } from '../utilities/utilities.js';
 
 const { Client } = pgpkg;
 
@@ -105,10 +106,13 @@ async function getAllAssetRelations(
   connection,
   idValue,
   tableName,
+  idField,
+  name
 ) {
   let client;
   let relations;
   let res;
+  const shouldExist = true;
   const response = {
     error: false,
     message: '',
@@ -133,6 +137,7 @@ async function getAllAssetRelations(
   }
 
   try {
+    await checkExistence(client, 'bedrock.assets', idField, idValue, name, shouldExist)
     res = await readAsset(client, idValue, tableName);
     if (res.rowCount === 0) {
       response.message = 'No assets found';
@@ -146,6 +151,7 @@ async function getAllAssetRelations(
   } catch (error) {
     response.error = true;
     response.message = error.message;
+    response.result = null;
     return response;
   } finally {
     await client.end();
