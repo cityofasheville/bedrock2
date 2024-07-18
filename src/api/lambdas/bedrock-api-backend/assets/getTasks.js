@@ -1,18 +1,19 @@
 /* eslint-disable no-console */
-import pgpkg from 'pg';
 import pgErrorCodes from '../pgErrorCodes.js';
-import { getInfo, checkExistence } from '../utilities/utilities.js';
+import { newClient, checkExistence } from '../utilities/utilities.js';
 
-const { Client } = pgpkg;
-
-async function newClient(connection) {
-  const client = new Client(connection);
+async function getInfo(client, idField, idValue, name, tableName) {
+  // Querying database to get information. Function can be used multiple times per method
+  // if we need information from multiple tables
+  const sql = `SELECT * FROM ${tableName} where ${idField} like $1`;
+  let res;
   try {
-    await client.connect();
-    return client;
+    res = await client.query(sql, [idValue]);
   } catch (error) {
-    throw new Error(`PG error connecting: ${pgErrorCodes[error.code]||error.code}`);
+    throw new Error([`Postgres error: ${pgErrorCodes[error.code]||error.code}`, error]);
   }
+
+  return res;
 }
 
 async function readTasks(client, idValue) {
@@ -48,19 +49,19 @@ function formatTasks(res) {
 
 async function getTasks(connection, idValue, idField, name) {
   const response = {
-    error: false,
-    message: '',
-    result: {
-      items: [],
-      run_group: {
-      run_group_id: null,
-      active: false,
-    }}};
+        error: false,
+        message: '',
+        result: {
+          items: [],
+          run_group: {
+          run_group_id: null,
+          active: false,
+        }}};
   let client;
   let res;
   let tasks = [];
   let runGroup;
-  const shouldExist = true;
+  let shouldExist = true;
 
   try {
     client = await newClient(connection);
@@ -74,14 +75,13 @@ async function getTasks(connection, idValue, idField, name) {
     await checkExistence(client, 'bedrock.assets', idField, idValue, name, shouldExist)
     res = await readTasks(client, idValue);
     runGroup = await getInfo(client, idField, idValue, name, 'bedrock.etl')
-
-    if (res.rowCount > 0) {
-    tasks = formatTasks(res);
-    response.result = {
-      items: tasks,
-    };
-  }
-  response.result.run_group = {run_group_id: runGroup.run_group_id, active: runGroup.active}
+    if (res.rowCount !== 0) {
+      tasks = formatTasks(res);
+      response.result.items = tasks;
+    }
+    if (runGroup.rowCount !== 0) {
+      response.result.run_group= {run_group_id: runGroup.rows[0].run_group_id, active: runGroup.rows[0].active};
+    }
   } catch (error) {
     await client.end();
     response.error = true;
