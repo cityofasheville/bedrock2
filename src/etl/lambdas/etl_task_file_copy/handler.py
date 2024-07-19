@@ -90,6 +90,8 @@ def lambda_handler(event, context):
                 put_win(target_location)
             else:
                 raise Exception("Invalid file copy connection type " + target_location["connection_data"]["type"])
+        else:
+            print('No file found - skipping put')
             
         if os.path.exists(tempfile):
                 os.remove(tempfile)
