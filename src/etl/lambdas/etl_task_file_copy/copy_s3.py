@@ -3,6 +3,7 @@ import boto3
 s3 = boto3.client('s3')
         
 def download_s3(location):
+    fileResult = { "fileFound": True, "fileName": location["filename"] }
     try:
         s3.download_file(
             location["connection_data"]["s3_bucket"], 
@@ -11,6 +12,8 @@ def download_s3(location):
         print("File retrieved from S3: " + location["filename"])
     except BaseException as err:
         raise Exception("Download S3 Error: " + str(err))
+    
+    return fileResult
 
 def upload_s3(location):
     try:

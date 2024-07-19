@@ -37,9 +37,10 @@ def get_ftp(location):
                 source_file = lf[0]["name"]
             else:
                 source_file = None
-
+        fileResult = { "fileFound": True, "fileName": source_file }
         if not source_file:
             print('No recent source file matching pattern found')
+            fileResult["fileFound"] = False
         else:
             sftp.get(location["path"] + source_file, file_to_get)
             print('Downloaded from FTP: ' + source_file)
@@ -47,6 +48,8 @@ def get_ftp(location):
         sftp.close() 
     except BaseException as err:
         raise Exception("Get FTP Error: " + str(err))
+
+    return fileResult
 
 def put_ftp(location):
     try:
