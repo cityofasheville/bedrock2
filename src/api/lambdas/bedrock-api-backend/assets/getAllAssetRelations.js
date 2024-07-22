@@ -44,10 +44,10 @@ async function readRelations(client, idValue) {
   };
   let sql = `
         WITH RECURSIVE subdependencies AS (
-          SELECT asset_id, dependent_asset_id FROM bedrock.dependency_view
+          SELECT asset_id, asset_name, dependent_asset_id, dependency FROM bedrock.dependency_view
           WHERE asset_id = $1
           UNION
-            SELECT d.asset_id, d.dependent_asset_id
+            SELECT d.asset_id, d.asset_name, d.dependent_asset_id, d.dependency
             FROM bedrock.dependency_view d
             INNER JOIN subdependencies s ON s.dependent_asset_id = d.asset_id
         ) SELECT * FROM subdependencies;
@@ -63,7 +63,9 @@ async function readRelations(client, idValue) {
     relations.ancestors.items.push(
       {
         asset_id: res.rows[i].asset_id,
+        asset_name: res.rows[i].asset_name,
         parent: res.rows[i].dependent_asset_id,
+        parent_name: res.rows[i].dependency
       },
     );
     if (!(res.rows[i].dependent_asset_id in check)) {
@@ -75,10 +77,10 @@ async function readRelations(client, idValue) {
   // Now the other direction
   sql = `
         WITH RECURSIVE subdependencies AS (
-          SELECT asset_id, dependent_asset_id FROM bedrock.dependency_view
+          SELECT asset_id, asset_name, dependent_asset_id, dependency FROM bedrock.dependency_view
           WHERE dependent_asset_id = $1
           UNION
-            SELECT d.asset_id, d.dependent_asset_id
+            SELECT d.asset_id, d.dependent_asset_id, d.asset_name, d.dependency
             FROM bedrock.dependency_view d
             INNER JOIN subdependencies s ON s.asset_id = d.dependent_asset_id
         ) SELECT * FROM subdependencies;
@@ -93,7 +95,9 @@ async function readRelations(client, idValue) {
     relations.descendants.items.push(
       {
         asset_id: res.rows[i].asset_id,
+        asset_name: res.rows[i].asset_name,
         parent: res.rows[i].dependent_asset_id,
+        parent_name: res.rows[i].dependency
       },
     );
     if (!(res.rows[i].asset_id in check)) {
