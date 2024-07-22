@@ -11,6 +11,7 @@ import handleAssetTypes from './asset_types/handleAssetTypes.js';
 import handleTags from './tags/handleTags.js';
 import handleCustomFields from './custom_fields/handleCustomFields.js';
 import handleOwners from './owners/handleOwner.js';
+import handleAbout from './about/handleAbout.js';
 import handleExecuteETL from './execute_etl/handleExecuteETL.js';
 
 // eslint-disable-next-line camelcase, import/prefer-default-export
@@ -87,9 +88,18 @@ export async function lambda_handler(event) {
         result = await handleOwners(event, pathElements, queryParams || {}, verb, connection);
       } catch (e) {
         result.message = e;
-        console.log('Error in owners ', e);
+        console.log('Error in handleOwners ', e);
       }
       break;
+
+      case 'about':
+        try {
+          result = await handleAbout();
+        } catch (e) {
+          result.message = e;
+          console.log('Error in handleAbout ', e);
+        }
+        break;
 
     case 'execute_etl':
       try {
