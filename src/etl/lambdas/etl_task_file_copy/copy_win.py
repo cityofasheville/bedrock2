@@ -1,6 +1,7 @@
 from smb.SMBConnection import SMBConnection
 
 def get_win(location):
+  fileResult = { "fileFound": True, "fileName": location["filename"] }
   try:
     connection_data = location["connection_data"]
     share_name = connection_data['share_name']
@@ -11,6 +12,7 @@ def get_win(location):
     file_attributes, filesize = conn.retrieveFile(share_name, file_path, file_obj)
   except BaseException as err:
     raise Exception("Get Windows file share Error: " + str(err))
+  return fileResult
 
 def put_win(location):
   try:
