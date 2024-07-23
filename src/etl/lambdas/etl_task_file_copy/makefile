@@ -6,7 +6,7 @@ current_dir := $(shell pwd)
 
 SRC_DIR := ./deploy
 DEST_DIR := ./build
-TFFILES := config.tf datablocks.tf backend.tf local.tfvars variables.tf makefile template.yaml
+TFFILES := config.tf datablocks.tf backend.tf local.tfvars variables.tf makefile
 
 TF_TARGS := $(patsubst %,$(DEST_DIR)/%,$(TFFILES))
 
@@ -16,11 +16,7 @@ prebuild:
 	mkdir -p ./build
 
 $(DEST_DIR)/%: $(SRC_DIR)/% ../../../make_variables
-ifeq ($(build_mode),sam)
-	python3 ../../../scripts/vreplace.py -v codeuri=.. -f ../../../make_variables $< $@
-else
-	python3 ../../../scripts/vreplace.py -v codeuri=. -f ../../../make_variables $< $@
-endif
+	python3 ../../../scripts/vreplace.py -f ../../../make_variables $< $@
 
 init: prebuild $(TF_TARGS)
 	$(MAKE) -C build $(MAKECMDGOALS)
@@ -28,20 +24,16 @@ init: prebuild $(TF_TARGS)
 	@touch $(INSTANCE).instance		# Marker file to display the instance name
 
 function.zip: $(code_files)
-	rm -Rf ./function.zip ./package
-ifeq ($(build_mode),sam)
-	sam build --template-file build/template.yaml --use-container
-	pushd .aws-sam/build/filecopy; zip -r9q ../../../function.zip . -x \*terraform\*; popd
-else
-	pip3 install -r requirements.txt --target ./package
-	cd package; zip -r9q ../function.zip . -x \*terraform\*; cd ..
-	zip -g function.zip $(code_files)
-endif
+	rm -f ./function.zip
+	zip -r9q function.zip $(code_files)
 
 plan: function.zip $(TF_TARGS) $(dirs)
 apply: function.zip $(TF_TARGS) $(dirs)
 apply-y: function.zip $(TF_TARGS) $(dirs)
 destroy: $(TF_TARGS) $(dirs)
+
+requirements.txt: ../../../bedrock_common/packages_py/requirements.txt
+	cp ../../../bedrock_common/packages_py/requirements.txt .
 
 package: requirements.txt
 	rm -Rf ./package
@@ -52,7 +44,7 @@ local: package
 
 clean:
 	rm -f *.instance
-	\rm -Rf build function.zip ./package __pycache__ .aws-sam
+	\rm -Rf build function.zip ./package __pycache__ .aws-sam requirements.txt
 
 $(dirs):
 	$(MAKE) -C $@ $(MAKECMDGOALS)

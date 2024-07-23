@@ -18,17 +18,8 @@ From etl_task_file_copy dir, run ```make init``` and then ```make apply```
 
 ## Build and test locally
 
-Edit ```sam_event.json``` with the event you wish to test.
-From etl_task_file_copy dir, run ```make init``` and then:
-
-```
-cd build
-sam build --use-container
-sam local invoke "filecopy" -e ../deploy/sam_event.json
-```
-
-
-
+Edit ```localtest.json``` with the event you wish to test.
+From etl_task_file_copy dir, run ```make local``` and then:
 
 Special note: ftp_path requires a slash at start and end, while path must have only a trailing slash.
 
