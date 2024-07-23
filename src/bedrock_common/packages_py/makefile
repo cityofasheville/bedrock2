@@ -5,7 +5,7 @@ dirs = build
 
 SRC_DIR := ./deploy
 DEST_DIR := ./build
-TFFILES := config.tf backend.tf local.tfvars variables.tf makefile
+TFFILES := config.tf backend.tf local.tfvars variables.tf makefile template.yaml
 
 TF_TARGS := $(patsubst %,$(DEST_DIR)/%,$(TFFILES))
 
@@ -13,7 +13,11 @@ prebuild:
 	mkdir -p ./build
 
 $(DEST_DIR)/%: $(SRC_DIR)/% ../../make_variables
-	python3 ../../scripts/vreplace.py -f ../../make_variables $< $@
+ifeq ($(build_mode),sam)
+	python3 ../../scripts/vreplace.py -v codeuri=.. -f ../../make_variables $< $@
+else
+	python3 ../../scripts/vreplace.py -v codeuri=. -f ../../make_variables $< $@
+endif
 
 init: prebuild $(TF_TARGS)
 	$(MAKE) -C build $(MAKECMDGOALS)

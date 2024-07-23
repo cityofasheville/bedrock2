@@ -10,6 +10,9 @@ resource "aws_lambda_function" "etl_task_file_copy-$$INSTANCE$$" {
     handler         = "handler.lambda_handler"
     runtime         = "python3.12"
     source_code_hash = filebase64sha256("../function.zip")
+    layers = [
+      data.terraform_remote_state.bedrock_packages_py_$$INSTANCE$$.outputs.bedrock_packages_py_$$INSTANCE$$_layer_arn,
+    ]
     timeout         = 300
     tags = {
       "coa:application" = "bedrock"
