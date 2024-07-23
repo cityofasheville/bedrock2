@@ -4,6 +4,7 @@ s3 = boto3.client('s3')
         
 def download_s3(location):
     fileResult = { "fileFound": True, "fileName": location["filename"] }
+    # TODO check if file is found
     try:
         s3.download_file(
             location["connection_data"]["s3_bucket"], 
