@@ -55,10 +55,8 @@ async function addAssetType(
     await client.query('BEGIN');
     await checkExistence(client, tableName, idField, idValue, name, shouldExist);
     response.result = await addInfo(client, allFields, bodyWithID, tableName, name);
-    if (body.custom_fields) {
-      if (body.custom_fields.length > 0) {
+    if (body.custom_fields?.length > 0) {
         response.result.custom_fields = await addAssetTypeCustomFields(client, idValue, body);
-      }
     } else {
       response.result.custom_fields = [];
     }

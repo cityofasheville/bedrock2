@@ -44,9 +44,12 @@ async function updateAssetType(
     await client.query('BEGIN');
     response.result = await updateInfo(client, allFields, body, tableName, idField, idValue, name);
     await deleteInfo(client, tableNameCustomFields, 'asset_type_id', idValue, name);
-    await addAssetTypeCustomFields(client, idValue, body);
+    if (body.custom_fields?.length > 0) {
+      await addAssetTypeCustomFields(client, idValue, body);
+    } else {
+      response.result.custom_fields = [];
+    }
     await client.query('COMMIT');
-
     await client.end();
   } catch (error) {
     await client.query('ROLLBACK');
