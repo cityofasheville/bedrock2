@@ -2,6 +2,7 @@ from smb.SMBConnection import SMBConnection
 
 def get_win(location):
   fileResult = { "fileFound": True, "fileName": location["filename"] }
+  # TODO check if file is found
   try:
     connection_data = location["connection_data"]
     share_name = connection_data['share_name']
