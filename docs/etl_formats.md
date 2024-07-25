@@ -116,112 +116,106 @@ The canonical store for all Bedrock assets is now in a separate repo: managed-da
         {
           "type": "table_copy",
           "source": {
-                <TYPE INFO, see below>
+            "asset": "assetname.mun",
+            __SOURCE OPTIONS__
           },
           "target": {
-                <TYPE INFO, see below>
+            "asset": "assetname.s3",
+            __TARGET OPTIONS__
           },
-          "configuration": "null",
-          "active": true
+          "configuration": null
         }
       ]
   ```
   - ### TYPE INFO: Table Copy Types
 
-  - #### Database
-            "asset": "asset_name"
-              __SOURCE OPTIONS__
-              <OPTIONAL>: "tableheaders": true (include headers in data: this is mainly used for creating csv files)
-              <OPTIONAL> "sortasc": "fieldname",
-              <OPTIONAL> "sortdesc": "fieldname",
-              <OPTIONAL> "fixedwidth_noquotes": true,  (Tables converted to csv by default have strings with double quotes in the data quoted. For fixed width and XML files we don't want that)
-              <OPTIONAL> "crlf": true,                 (Tables converted to csv by default use record delimiters of LF. Set this true to use CRLF.)
-              <OPTIONAL> "copy_since" : { (Only copy the latest data from a larger table.)
-              "num_weeks": 1,
-              "column_to_filter": "ACTIVITY_TIME"
-              }  
-              __TARGET OPTIONS__
-              <OPTIONAL> "append": true  (By default, data is overwritten in table. Set to true to append as new rows.)       
-              <OPTIONAL> "append_serial": "fieldname"  (Adds an integer auto-numbering key field to target table. A serial field with this name must appear as the last field in the target table.)
+#### database
+            __SOURCE OPTIONS__
+            <OPTIONAL>: "tableheaders": true (include headers in data: this is mainly used for creating csv files)
+            <OPTIONAL> "sortasc": "fieldname",
+            <OPTIONAL> "sortdesc": "fieldname",
+            <OPTIONAL> "fixedwidth_noquotes": true,  (Tables converted to csv by default have strings with double quotes in the data quoted. For fixed width and XML files we don't want that)
+            <OPTIONAL> "crlf": true,                 (Tables converted to csv by default use record delimiters of LF. Set this true to use CRLF.)    
+            __TARGET OPTIONS__
+            <OPTIONAL> "append": true  (By default, data is overwritten in table. Set to true to append as new rows.)       
+            <OPTIONAL> "append_serial": "fieldname"  (Adds an integer auto-numbering key field to target table. A serial field with this name must appear as the last field in the target table.)
 
-  - #### CSV -S3
-            "asset": "asset_name"
-              __SOURCE OPTIONS__
-              <OPTIONAL>: "removeheaders": true (skip first row of csv file)
-  - #### CSV -S3
-            "asset": "asset_name"
-              __SOURCE OPTIONS__
-              <OPTIONAL>: "removeheaders": true (skip first row of csv file)
+#### CSV -S3
+            __SOURCE OPTIONS__
+            <OPTIONAL>: "removeheaders": true (skip first row of csv file)
 
-  - #### Google Sheets
-            "asset": "asset_name"
-              __SOURCE OPTIONS__
-              <OPTIONAL>: "append_asset_name": true (In the data an extra column is appended to each row with the name of the asset)
-              __TARGET OPTIONS__
-              <OPTIONAL> "append": true  (By default, data is overwritten in sheet. Set to true to append as new rows.)       
-  - #### Google Sheets
-            "asset": "asset_name"
-              __SOURCE OPTIONS__
-              <OPTIONAL>: "append_asset_name": true (In the data an extra column is appended to each row with the name of the asset)
-              __TARGET OPTIONS__
-              <OPTIONAL> "append": true  (By default, data is overwritten in sheet. Set to true to append as new rows.)       
+#### google_sheets
+            __SOURCE OPTIONS__
+            <OPTIONAL>: "append_asset_name": true (In the data an extra column is appended to each row with the name of the asset)
+            __TARGET OPTIONS__
+            <OPTIONAL> "append": true  (By default, data is overwritten in sheet. Set to true to append as new rows.)       
 
 
-- ## File Copy
-  File copy can read and write from S3, Windows file share, and SFTP sites. Google Drive to be added.
-  All locations have the same three fields: connection, filename, and path. Connections include a type field to distinguish S3 from SFTP, etc.
-  The option "adjustdate" on a target or source changes the filename created in fillDateTemplate by that number of days. (-1 means yesterday)
-  ```
+## File Copy
+File copy can read and write from S3, Windows file share (SMB), and SFTP sites. Google Drive to be added.
+```
       "tasks": [
-          {
-              "type": "file_copy",
-              "source": {
-                  "asset": "asset_name",
-                  <OPTIONAL>: "adjustdate": -1,
-                  <OPTIONAL>: "config": {
-                    <OPTIONAL>: "sort": "time",
-                    <OPTIONAL>: "pick": -1,
-                    <OPTIONAL>: "max_age": 23
-                  }
-              },
-              "target": {
-                  "asset": "asset_name"
-                  <OPTIONAL>: "adjustdate": -1
-              },
-              "active": true
-          }
+        {
+          "type": "file_copy",
+          "source": {
+            "asset": "assetname.ftp",
+            __OPTIONS__
+          },
+          "target": {
+            "asset": "assetname.s3",
+            __OPTIONS__
+          },
+          "configuration": null
+        }
       ]
-  ```
-The optional ```config``` member pertains only to an ```sftp``` source connection. For that case, if the ```filename``` parameter is enclosed in forward slashes (```/```), the name is interpreted as a regex expression that any file to be downloaded must match. The ```sort```, ```pick```, and ```max_age``` parameters in ```config``` then select a final single file for download, as follows:
- - if ```max_age``` is greater than 0, it represents a maxiumum allowed age for files in hours (default is 60,000),
- - ```sort``` may be set to ```time``` or ```name``` (default is ```time```) and determines how the resulting list of files is sorted before applying the ```pick``` paramer,
- - ```pick``` can be ```first`` or 0 to pick the first value in the list, ```last``` or -1 to pick the last (default is -1) .
 
-- ## Encrypt
-  Takes files from S3, encrypts them and writes them back to the same dir on S3.
-  ```
-      "tasks": [
-    {
-      "type": "encrypt",
-      "source": null,
-      "target": {
-        "path": "aip/",
+      __OPTIONS__ Both source and target can have this option
+            <OPTIONAL>: "adjustdate": -1
+
+      The option "adjustdate" on a target or source changes the filename created in fillDateTemplate by that number of days. (-1 means yesterday)
+```
+
+## Encrypt
+Takes files from S3, encrypts them and writes them back to the same dir on S3.
+```
+    "tasks": [
+      {
         "type": "encrypt",
-        "active": true,
-        "filename": "CityofAsheville5871_To_InfoArmor_FULL_${YYYY}${MM}${DD}.txt",
-        "s3_connection": "s3_data_files",
-        "encrypt_connection": "aip_ftp",
-        "encrypted_filename": "CityofAsheville5871_To_InfoArmor_FULL_${YYYY}${MM}${DD}"
+        "source": null,
+        "target": {
+          "s3_connection": "s3_data_files",
+          "path": "vendor/",
+          "encrypt_connection": "vendor_ftp",
+          "filename": "vendor_asheville_${YYYY}${MM}${DD}.csv",
+          "encrypted_filename": "vendor_asheville_${YYYY}${MM}${DD}.csv.pgp"
+        },
+        "configuration": null
       },
       "configuration": null
     }
       ]
   ```
 
-- ## SFTP
-  SFTP has mostly been superseded by file copy, which has more potential source and target destinations. It does include a few useful specialized FTP commands: list, delete, and getall
-  ```
-      "tasks": [
+## SFTP
+SFTP has mostly been superseded by file copy, which has more potential source and target destinations. It does include a few useful specialized FTP commands: list, delete, and getall
+```
+    "tasks": [
+      {
+        "type": "encrypt",
+        "source": null,
+        "target": {
+          "action": "sftp_action",
+          "s3_connection": "s3_data_files",
+          "path": "vendor/",
+          "ftp_connection": "telestaff_ftp",
+          "ftp_path": "/PROD/import/ongoing.unprocessed/",
+          "filename": "vendor_asheville_${YYYY}${MM}${DD}.csv.pgp"
+        },
+        "configuration": null
+      },
+    ]
+
+// sftp actions can be one of these: (always include "type": "sftp", and "active": true too)
         {
           "type": "sftp",      
           "source": null,
@@ -231,19 +225,63 @@ The optional ```config``` member pertains only to an ```sftp``` source connectio
             "s3_connection": "s3_data_files",
             "path": "telestaff-import-person/",
             "ftp_connection": "telestaff_ftp",
-            "ftp_path": "/PROD/import/ongoing.unprocessed/",
-            "filename": "vendor_asheville_${YYYY}${MM}${DD}.csv.pgp",
-            "active": true
-          }
+            "ftp_path": "/PROD/person.errors/",
+            "filename": "PD-220218-thu.csv"
         }
-      ]
-  // sftp actions can be one of these: (always include "type": "sftp", and "active": true too)
-- ## SFTP
-  SFTP has mostly been superseded by file copy, which has more potential source and target destinations. It does include a few useful specialized FTP commands: list, delete, and getall
 
-  // sftp actions can be one of these: (always include "type": "sftp", and "active": true too)
-  ```
-[
+        {
+            "action": "get",
+            "s3_connection": "s3_data_files",
+            "path": "telestaff-payroll-export/", 
+            "ftp_connection": "telestaff_ftp",
+            "ftp_path": "/PROD/person.errors/",
+            "filename": "payroll-report-export.csv"
+        }
+
+        {
+            "action": "list",
+            "ftp_connection": "telestaff_ftp",
+            "ftp_path": "/PROD/export/"
+        }
+
+        {
+            "action": "del",
+            "ftp_connection": "telestaff_ftp",
+            "ftp_path": "/PROD/export/",
+            "filename": "Yesterday.csv"
+        }
+
+        {
+            "action": "getall",
+            "s3_connection": "",
+            "path": "", 
+            "ftp_connection": "",
+            "ftp_path": "/"
+        }
+
+```
+## Run Lambda
+Called Lambda must return standard format: ```{statusCode: 200,body: {lambda_output: ""}}```
+```
+      "source": null,
+      "target": {
+        "type": "run_lambda",
+        "active": true,
+        "lambda_arn": "arn:aws:lambda:us-east-1:acct:function:functionname",
+      },
+      "configuration": null
+```
+Note: Running arbitrary code does mean that some Bedrock conventions can be bypassed. For example, normally an ETL job only creates one asset.
+If your Lambda creates more than one asset, the work around we have used is to create the ETL job on one of the assets, and have the other ones depend on it.
+
+
+## Aggregate
+Aggregate task type takes multiple Google Sheets with data in the same format on each sheet and writes it to a single table.
+It requires a staging table (called temp_table, but not a temp table in database terms, you will need to create a table with that name) for the data to be collected in before writing to the final destination.
+Each source spreadsheet tab has its own asset, and they share the data_connection and data_range, and have their own spreadsheetid's and tab names.
+
+```
+{
   "tasks": [
     "target": {
       "action": "put",
@@ -279,64 +317,21 @@ The optional ```config``` member pertains only to an ```sftp``` source connectio
       "ftp_path": "/"
     }
   ]
-
-  ```
-- ## Run Lambda
-  Called Lambda must return standard format: ```{statusCode: 200,body: {lambda_output: ""}}```
-  ```
-      "tasks": [
-          "target": {
-              "type": "run_lambda",
-              "lambda_arn": "arn:aws:lambda:us-east-1:acct:function:functionname",
-              "otherparams: "params required by called lambda",
-              "active": true
-          }
-      ]
-  ```
-  Note: Running arbitrary code does mean that some Bedrock conventions can be bypassed. For example, normally an ETL job only creates one asset.
-  If your Lambda creates more than one asset, the work around we have used is to create the ETL job on one of the assets, and have the other ones depend on it.
-
-
-- ## Aggregate
-  Aggregate task type takes multiple Google Sheets with data in the same format on each sheet and writes it to a single table.
-  It requires a staging table (called temp_table, but not a temp table in database terms) for the data to be collected in before writing to the final destination.
-  Each source spreadsheet tab has its own asset, and they share the data_connection and data_range, and have their own spreadsheetid's and tab names.
-- ## Aggregate
-  Aggregate task type takes multiple Google Sheets with data in the same format on each sheet and writes it to a single table.
-  It requires a staging table (called temp_table, but not a temp table in database terms) for the data to be collected in before writing to the final destination.
-  Each source spreadsheet tab has its own asset, and they share the data_connection and data_range, and have their own spreadsheetid's and tab names.
-
-  ```
-    "tasks": [
-      {
-        "type": "aggregate",
-        "active": true,
-        "source": {
-          "temp_table": "nc_benchmarks_temp.lib", (name of the staging table asset)
-          "aggregate": "nc_benchmarks",           (the aggregate name that matches a tag in each source sheet)
-          "data_range": "A2:E",                   (all the sheets have to have the data in the same columns)
-          "data_connection": "bedrock-googlesheets",
-          "append_asset_name": true               (if true, each row of data has an additional column holding the name of the source asset)
-        },
-        "target": {
-          "asset": "nc_benchmarks.lib"
-        }
-      }
-    ]
-    
-  ```
-  Each aggregate source asset:
-  ```
-  {
-    "asset_name": "sog_billed_water_volume.ncb",
-    "description": "Water SOG Benchmark: Billed Water Volume",
-    "location": {
-      "spreadsheetid": "1m2xD4JyH4BEBey_ybsEgrvYopsl0PjWNmY_PEv3l6D4",
-      "tab": "billed_water_volume"
-    },
-    "active": true,
-    "tags": [
-      "8723t4r8t"   (id that looks up to match "source.aggregate" field in task)
-    ]
-  }
-  ``` 
+}
+```
+Each aggregate source asset:
+```
+{
+  "asset_name": "sog_billed_water_volume.ncb",
+  "description": "Water SOG Benchmark: Billed Water Volume",
+  "location": {
+    "spreadsheetid": "1m2xD4JyH4BEBey_ybsEgrvYopsl0PjWNmY_PEv3l6D4",
+    "connection_id": "76085554183a536a7fae",
+    "tab": "billed_water_volume"
+  },
+  "active": true,
+  "tags": [
+    "nc_benchmarks"   (matches "source_location.aggregate" field in task)
+  ]
+}
+```
