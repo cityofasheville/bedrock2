@@ -40,7 +40,7 @@ async function getRunGroup(
     const assetInfo = await getAssetInfo(client, idValue, name);
     response.result.assets = [];
     assetInfo.rows.forEach((obj) => {
-      response.result.assets.push({ asset_name: obj.asset_name, display_name: obj.display_name }); 
+      response.result.assets.push({ asset_id: obj.asset_id, asset_name: obj.asset_name, display_name: obj.display_name }); 
     });
     await client.end();
   } catch (error) {
