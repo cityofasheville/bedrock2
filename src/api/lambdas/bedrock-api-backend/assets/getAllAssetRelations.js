@@ -80,7 +80,7 @@ async function readRelations(client, idValue) {
           SELECT asset_id, asset_name, dependent_asset_id, dependency FROM bedrock.dependency_view
           WHERE dependent_asset_id = $1
           UNION
-            SELECT d.asset_id, d.dependent_asset_id, d.asset_name, d.dependency
+            SELECT d.asset_id, d.asset_name, d.dependent_asset_id, d.dependency
             FROM bedrock.dependency_view d
             INNER JOIN subdependencies s ON s.asset_id = d.dependent_asset_id
         ) SELECT * FROM subdependencies;
