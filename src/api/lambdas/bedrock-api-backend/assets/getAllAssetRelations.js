@@ -70,7 +70,7 @@ async function readRelations(client, idValue) {
         asset_id: res.rows[i].asset_id,
         asset_name: res.rows[i].asset_name,
         asset_type: res.rows[i].asset_type,
-        parent: res.rows[i].dependent_asset_id,
+        parent_id: res.rows[i].dependent_asset_id,
         parent_name: res.rows[i].dependency,
         parent_asset_type: res.rows[i].dependent_asset_type
       },
@@ -107,7 +107,7 @@ async function readRelations(client, idValue) {
         asset_id: res.rows[i].asset_id,
         asset_name: res.rows[i].asset_name,
         asset_type: res.rows[i].asset_type,
-        parent: res.rows[i].dependent_asset_id,
+        parent_id: res.rows[i].dependent_asset_id,
         parent_name: res.rows[i].dependency,
         parent_asset_type: res.rows[i].dependent_asset_type
       },
