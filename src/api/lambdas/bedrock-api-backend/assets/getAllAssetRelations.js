@@ -44,13 +44,18 @@ async function readRelations(client, idValue) {
   };
   let sql = `
         WITH RECURSIVE subdependencies AS (
-          SELECT asset_id, asset_name, dependent_asset_id, dependency FROM bedrock.dependency_view
+          SELECT asset_id, asset_name, dependent_asset_id, dependency 
+          FROM bedrock.dependency_view
           WHERE asset_id = $1
           UNION
-            SELECT d.asset_id, d.asset_name, d.dependent_asset_id, d.dependency
-            FROM bedrock.dependency_view d
-            INNER JOIN subdependencies s ON s.dependent_asset_id = d.asset_id
-        ) SELECT * FROM subdependencies;
+          SELECT d.asset_id, d.asset_name, d.dependent_asset_id, d.dependency
+          FROM bedrock.dependency_view d
+          INNER JOIN subdependencies s ON s.dependent_asset_id = d.asset_id
+      )
+      SELECT subdependencies.asset_id, subdependencies.asset_name, subdependencies.dependent_asset_id, subdependencies.dependency, i.asset_type_id as asset_type, t.asset_type_id as dependent_asset_type
+      FROM subdependencies
+      LEFT JOIN bedrock.assets i ON subdependencies.asset_id = i.asset_id
+      LEFT JOIN bedrock.assets t ON subdependencies.dependent_asset_id = t.asset_id
       `;
   let check = {};
   try {
@@ -64,8 +69,10 @@ async function readRelations(client, idValue) {
       {
         asset_id: res.rows[i].asset_id,
         asset_name: res.rows[i].asset_name,
+        asset_type: res.rows[i].asset_type,
         parent: res.rows[i].dependent_asset_id,
-        parent_name: res.rows[i].dependency
+        parent_name: res.rows[i].dependency,
+        parent_asset_type: res.rows[i].dependent_asset_type
       },
     );
     if (!(res.rows[i].dependent_asset_id in check)) {
@@ -83,7 +90,10 @@ async function readRelations(client, idValue) {
             SELECT d.asset_id, d.asset_name, d.dependent_asset_id, d.dependency
             FROM bedrock.dependency_view d
             INNER JOIN subdependencies s ON s.asset_id = d.dependent_asset_id
-        ) SELECT * FROM subdependencies;
+        ) SELECT subdependencies.asset_id, subdependencies.asset_name, subdependencies.dependent_asset_id, subdependencies.dependency, i.asset_type_id as asset_type, t.asset_type_id as dependent_asset_type
+        FROM subdependencies
+        LEFT JOIN bedrock.assets i ON subdependencies.asset_id = i.asset_id
+        LEFT JOIN bedrock.assets t ON subdependencies.dependent_asset_id = t.asset_id
       `;
   check = {};
   try {
@@ -96,8 +106,10 @@ async function readRelations(client, idValue) {
       {
         asset_id: res.rows[i].asset_id,
         asset_name: res.rows[i].asset_name,
+        asset_type: res.rows[i].asset_type,
         parent: res.rows[i].dependent_asset_id,
-        parent_name: res.rows[i].dependency
+        parent_name: res.rows[i].dependency,
+        parent_asset_type: res.rows[i].dependent_asset_type
       },
     );
     if (!(res.rows[i].asset_id in check)) {
