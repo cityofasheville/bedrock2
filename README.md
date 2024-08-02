@@ -7,7 +7,7 @@ Bedrock is a data management system that makes data visible, usable, and high-qu
 To deploy Bedrock, follow the instructions [here](./docs/deploy-notes.md). To install on Docker, see [here](./docs/docker-install.md).
 
 A full deployment includes a web front end which can be used to create and run Assets and ETL jobs.
-- Instructions for creating tasks: [Using Frontend for Task Configuration](<Using Frontend for Task Configuration.md]>).
+- Instructions for creating tasks: [Using Frontend for Task Configuration](<./Using Frontend for Task Configuration.md]>).
 - Creating connection files for the ETL tasks: [Creating a New Connection](<./docs/Creating a New Connection.md>)
 
 
