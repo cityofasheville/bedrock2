@@ -1,4 +1,1 @@
-.aws-sam/
-.terraform*
-*.zip
-.venv
+requirements.txt

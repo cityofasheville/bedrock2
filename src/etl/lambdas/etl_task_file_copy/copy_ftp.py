@@ -6,7 +6,6 @@ import time
 def get_ftp(location):
     try:
         sftp = connectToFTP(location["connection_data"])
-        file_to_get = location["tempfile"]
         source_file = location["filename"]
         if source_file.startswith("/"):
             pat = source_file[1:-1]
@@ -42,23 +41,25 @@ def get_ftp(location):
             print('No recent source file matching pattern found')
             fileResult["fileFound"] = False
         else:
-            sftp.get(location["path"] + source_file, file_to_get)
+            stream = sftp.open(location["path"] + source_file, mode='r') # , bufsize=1024)
             print('Downloaded from FTP: ' + source_file)
-
-        sftp.close() 
+            fileResult["stream"] = stream
     except BaseException as err:
         raise Exception("Get FTP Error: " + str(err))
 
     return fileResult
 
-def put_ftp(location):
+def put_ftp(location, from_stream):
     try:
         sftp = connectToFTP(location["connection_data"])
-        file_to_put = location["tempfile"]
-        sftp.put(file_to_put, location["path"] + location["filename"])
+        to_stream = sftp.open(location["path"] + location["filename"], mode='w')
+
+        for line in from_stream:
+            to_stream.write(line)
+        to_stream.close()
+        from_stream.close()
 
         print('Uploaded To FTP: ' + location["filename"])
-        sftp.close() 
     except BaseException as err:
         raise Exception("Put FTP Error: " + str(err))
 

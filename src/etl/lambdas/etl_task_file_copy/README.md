@@ -13,15 +13,15 @@ because the Crypto in SSH/SFTP in a Lambda requires a Linux native build.
 Set build_mode = sam in make_variables)
 
 ```
-terraform init
-terraform apply -var-file=ca.tfvars
+make init
+make apply
 ```
 
 ## Usage: Event structure to pass to Lambda
 
 s3_connection and ftp_connection refer to named connections in AWS Secrets Manager.
 
-Special note: ftp_path requires a slash at start and end, while path must have only a trailing slash.
+Special note: "path" for an FTP site requires a slash at start and end, while "path" for s3 must have only a trailing slash.
 
 
 
