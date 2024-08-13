@@ -78,12 +78,12 @@ LEFT JOIN bedrock.run_groups r2 ON e2.run_group_id = r2.run_group_id
       {
         asset_id: res.rows[i].asset_id,
         asset_name: res.rows[i].asset_name,
-        asset_type: res.rows[i].asset_type,
+        asset_type: res.rows[i].asset_type_name,
         asset_run_group: res.rows[i].run_group_name,
         asset_owner_name: res.rows[i].asset_owner_name,
         parent_id: res.rows[i].dependent_asset_id,
         parent_name: res.rows[i].dependency,
-        parent_asset_type: res.rows[i].dependent_asset_type,
+        parent_asset_type: res.rows[i].dependent_asset_type_name,
         parent_run_group: res.rows[i].dependent_run_group,
         parent_owner_name: res.rows[i].dependent_owner_name
       },
@@ -131,12 +131,12 @@ LEFT JOIN bedrock.run_groups r2 ON e2.run_group_id = r2.run_group_id
       {
         asset_id: res.rows[i].asset_id,
         asset_name: res.rows[i].asset_name,
-        asset_type: res.rows[i].asset_type,
+        asset_type: res.rows[i].asset_type_name,
         asset_run_group: res.rows[i].run_group_name,
         asset_owner_name: res.rows[i].asset_owner_name,
         parent_id: res.rows[i].dependent_asset_id,
         parent_name: res.rows[i].dependency,
-        parent_asset_type: res.rows[i].dependent_asset_type,
+        parent_asset_type: res.rows[i].dependent_asset_type_name,
         parent_run_group: res.rows[i].dependent_run_group,
         parent_owner_name: res.rows[i].dependent_owner_name
       },
