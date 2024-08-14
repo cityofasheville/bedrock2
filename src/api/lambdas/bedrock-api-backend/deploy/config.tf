@@ -29,6 +29,7 @@ resource "aws_lambda_function" "bedrock-api-backend-$$INSTANCE$$" {
       variables = {
         BEDROCK_DB_HOST = $$BEDROCK_DB_HOST$$
         STATE_MACHINE_ARN = $$STATE_MACHINE_ARN$$
+        API_KEY = jsondecode(data.aws_secretsmanager_secret_version.current.secret_string)["API_KEY"]
       }
     }
 }

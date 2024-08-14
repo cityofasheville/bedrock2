@@ -36,8 +36,12 @@ make seed    #(Fill database with assets from Github)
 # in src/make_variables (without the port number)
 ```
 
+#### API Key
+before you can build the API, you will need to set up an API key. This is created in Secrets Manager, in a key/value secret that must be called "Bedrock_API_Key". This secret has one key called API_KEY. Use the same value in the front end.
+
 #### API and ETL
 The remaining infrastructure requires a database to be set in src/make_variables.
+
 It also requires the shared set of Lambda Layers in the `bedrock_common` directory. 
 To build them, perform:
 

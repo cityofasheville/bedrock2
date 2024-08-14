@@ -5,7 +5,12 @@ const host = 'localhost';
 const port = 8000;
 
 const requestListener = async function (req, res) {
+  // Bypass API_KEY authorization
+  process.env.API_KEY = req.headers.authorization;
   let event = {
+    headers : {
+      authorization: req.headers.authorization
+    },
     requestContext: {
       http: {
         method: req.method,
@@ -13,6 +18,7 @@ const requestListener = async function (req, res) {
       }
     }
   };
+
   let ret = await lambda_handler(event);
   res.setHeader("Content-Type", "application/json");
   res.writeHead(200);

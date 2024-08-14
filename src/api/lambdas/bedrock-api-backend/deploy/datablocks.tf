@@ -24,3 +24,11 @@ data "terraform_remote_state" "bedrock_packages_$$INSTANCE$$" {
     region = "us-east-1"
   }
 }
+
+data "aws_secretsmanager_secret" "secrets" {
+ name = "Bedrock_API_Key"
+}
+
+data "aws_secretsmanager_secret_version" "current" {
+  secret_id = data.aws_secretsmanager_secret.secrets.id
+}

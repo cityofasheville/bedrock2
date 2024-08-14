@@ -16,6 +16,15 @@ import handleExecuteETL from './execute_etl/handleExecuteETL.js';
 
 // eslint-disable-next-line camelcase, import/prefer-default-export
 export async function lambda_handler(event) {
+  if(event.headers.authorization !== process.env.API_KEY) {
+    let result = {
+      error: true,
+      message: 'Not Authorized',
+      result: null,
+    };
+    return result;
+  }
+
   let result = {
     error: true,
     message: 'Unknown resource',

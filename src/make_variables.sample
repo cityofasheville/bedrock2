@@ -1,44 +1,41 @@
 # Deploy settings.
-INSTANCE = <UNIQUE INSTANCE STRING LIKE ej-test-0: lowercase alphanumeric characters and hyphens only>
-region = "us-east-1"
-statebucket = "avl-tfstate-store"
-account = 518970837364
-build_mode = std # Set to sam to build using SAM
+INSTANCE=<UNIQUE INSTANCE STRING LIKE ej-test-0: lowercase alphanumeric characters and hyphens only>
+region="us-east-1"
+statebucket="avl-tfstate-store"
+account=518970837364
+build_mode=std # Set to sam to build using SAM
 
 # The next four variables provide information on the VPC, subnets and security
 # groups that Bedrock will use. They can be created in the network folder and
 # the resulting output copied here, or you can use existing resources.
-BEDROCK_VPC_ID = "vpc-0340a3823e5b5f0d2"
-DB_SUBNET_GROUP_NAME =  "public-db-subnet-group"
-BEDROCK_SECURITY_GROUP_IDS = ["sg-076e12ba2a9012944"]
-BEDROCK_PRIVATE_SUBNETS = ["subnet-00e55df750014753d", "subnet-0c119b605ff498f3b"]
+BEDROCK_VPC_ID="vpc-0340a3823e5b5f0d2"
+DB_SUBNET_GROUP_NAME= "public-db-subnet-group"
+BEDROCK_SECURITY_GROUP_IDS=["sg-076e12ba2a9012944"]
+BEDROCK_PRIVATE_SUBNETS=["subnet-00e55df750014753d", "subnet-0c119b605ff498f3b"]
 
 # This section is for database connections.
 # If using the database built as part of this instance, you can copy from
 # ./db/make_variables.generated (but do not include the :5432).
 # If USER, PASSWORD and DB_NAME are not provided, the default values will be used.
 # Leave HOST blank to use the hard-coded production database.
-
-BEDROCK_DB_HOST=
-BEDROCK_DB_USER=
-BEDROCK_DB_PASSWORD=
-BEDROCK_DB_NAME=
-
+BEDROCK_DB_HOST=""
+BEDROCK_DB_USER=""
+BEDROCK_DB_PASSWORD=""
+BEDROCK_DB_NAME=""
 # Unlike the other DB variables, always include a schema name.
 BEDROCK_DB_SCHEMA="bedrock"
 
-# This is used in the API. The value can be read from 
-# src/etl/state_machine_variables.generated 
-# after creating the step function.
-STATE_MACHINE_ARN = "arn:aws:xxx"
+# This is used in the API. 
+# Can be read from the output of creating the step function in Terraform.
+STATE_MACHINE_ARN="arn:aws:xxx"
 
 # This is the directory (relative to the root of the project) where the data files are stored.
 data_directory='src/db/bedrock-db-data/data';
 
 # Email settings
-EMAIL_SENDER = "asheville_fake@ashevillenc.gov"
-EMAIL_RECIPIENT = "dummy@ashevillenc.gov"
+EMAIL_SENDER="asheville_fake@ashevillenc.gov"
+EMAIL_RECIPIENT="dummy@ashevillenc.gov"
 
 # Do not edit or delete the next line
-reverse = $(if $(1),$(call reverse,$(wordlist 2,$(words $(1)),$(1)))) $(firstword $(1))
+reverse=$(if $(1),$(call reverse,$(wordlist 2,$(words $(1)),$(1)))) $(firstword $(1))
 
