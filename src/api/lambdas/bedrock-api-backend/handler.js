@@ -16,16 +16,23 @@ import handleExecuteETL from './execute_etl/handleExecuteETL.js';
 
 // eslint-disable-next-line camelcase, import/prefer-default-export
 export async function lambda_handler(event) {
+  if (event.requestContext.http.method === "OPTIONS") {
+    return { statusCode: 204 };
+  }
   if(event.headers.authorization !== process.env.API_KEY) {
-    let result = {
-      error: true,
-      message: 'Not Authorized',
-      result: null,
+    console.log('Not Authenticated');
+    return {
+      statusCode: 401,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        'message': 'Not Authenticated'
+      })
     };
-    return result;
   }
 
-  let result = {
+  let api_result = {
     error: true,
     message: 'Unknown resource',
     result: null,
@@ -41,80 +48,80 @@ export async function lambda_handler(event) {
   switch (pathElements[0]) {
     case 'run_groups':
       try {
-        result = handleRunGroups(event, pathElements, queryParams || {}, verb, connection);
+        api_result = await handleRunGroups(event, pathElements, queryParams || {}, verb, connection);
       } catch (e) {
-        result.message = e;
+        api_result.message = e;
       }
       break;
 
     case 'assets':
       try {
-        result = await handleAssets(event, pathElements, queryParams || {}, verb, connection);
+        api_result = await handleAssets(event, pathElements, queryParams || {}, verb, connection);
       } catch (e) {
-        result.message = e;
+        api_result.message = e;
         console.log('Error in handleAssets ', e);
       }
       break;
 
     case 'asset_types':
       try {
-        result = await handleAssetTypes(event, pathElements, queryParams || {}, verb, connection);
+        api_result = await handleAssetTypes(event, pathElements, queryParams || {}, verb, connection);
       } catch (e) {
-        result.message = e;
+        api_result.message = e;
         console.log('Error in handleAssetTypes ', e);
       }
       break;
 
     case 'reference':
       try {
-        result = await handleReference(event, pathElements, queryParams || {}, verb, connection);
+        api_result = await handleReference(event, pathElements, queryParams || {}, verb, connection);
       } catch (e) {
-        result.message = e;
+        api_result.message = e;
         console.log('Error in handleReference ', e);
       }
       break;
 
     case 'tags':
       try {
-        result = await handleTags(event, pathElements, queryParams || {}, verb, connection);
+        api_result = await handleTags(event, pathElements, queryParams || {}, verb, connection);
       } catch (e) {
-        result.message = e;
+        api_result.message = e;
         console.log('Error in handleTags ', e);
       }
       break;
 
     case 'custom_fields':
       try {
-        result = await handleCustomFields(event, pathElements, queryParams || {}, verb, connection);
+        api_result = await handleCustomFields(event, pathElements, queryParams || {}, verb, connection);
       } catch (e) {
-        result.message = e;
+        api_result.message = e;
         console.log('Error in handleTags ', e);
       }
       break;
 
     case 'owners':
       try {
-        result = await handleOwners(event, pathElements, queryParams || {}, verb, connection);
+        api_result = await handleOwners(event, pathElements, queryParams || {}, verb, connection);
       } catch (e) {
-        result.message = e;
+        api_result.message = e;
         console.log('Error in handleOwners ', e);
       }
       break;
 
-      case 'about':
-        try {
-          result = await handleAbout();
-        } catch (e) {
-          result.message = e;
-          console.log('Error in handleAbout ', e);
-        }
-        break;
+    case 'about':
+      try {
+        api_result = await handleAbout();
+      } catch (e) {
+        api_result.message = e;
+        console.log('Error in handleAbout ', e);
+      }
+      break;
 
     case 'execute_etl':
       try {
-        result = await handleExecuteETL(event, pathElements, queryParams || {}, verb, connection);
+        api_result = await handleExecuteETL(event, pathElements, queryParams || {}, verb, connection);
       } catch (e) {
-        result.message = e;
+        api_result.message = e;
         console.log('Error in execute_etl ', e);
       }
       break;
@@ -123,6 +130,23 @@ export async function lambda_handler(event) {
       console.log('Unknown path ', pathElements[0]);
       break;
   }
-
-  return result;
+  let statusCode = 200;
+  if (api_result.error) {
+    statusCode = 404;
+  }
+  let body = '';
+  if (api_result.result) {
+    body = JSON.stringify(api_result.result);
+  } else {
+    body = JSON.stringify({
+      'message': api_result.message
+    });
+  }
+  return {
+    statusCode,
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body
+  };
 }

@@ -1,12 +1,14 @@
 import { createServer } from "http";
 import { lambda_handler } from './handler.js';
+import localtest from './localtest.json' with { type: "json" };
 
 const host = 'localhost';
 const port = 8000;
 
 const requestListener = async function (req, res) {
-  // Bypass API_KEY authorization
-  process.env.API_KEY = req.headers.authorization;
+
+  process.env.API_KEY = localtest.API_KEY;
+
   let event = {
     headers : {
       authorization: req.headers.authorization
@@ -20,9 +22,11 @@ const requestListener = async function (req, res) {
   };
 
   let ret = await lambda_handler(event);
-  res.setHeader("Content-Type", "application/json");
-  res.writeHead(200);
-  res.end(JSON.stringify(ret));
+  for(const header in ret.headers) {
+    res.setHeader(header, ret.headers[header]);
+  }
+  res.writeHead(ret.statusCode);
+  res.end(ret.body);
 };
 
 const server = createServer(requestListener);
