@@ -3,75 +3,29 @@
     "runsets": [
       [
         {
-          "name": "public_meeting_data.lib",
-          "run_group": "every15",
+          "name": "moo2",
+          "run_group": "moo",
           "depends": [
-            "public_meeting_data.goog"
+            "moo"
           ],
           "etl_tasks": [
             {
-              "type": "table_copy",
-              "active": true,
-              "email": "only_on_error",
-              "source_location": {
-                "asset": "public_meeting_data.goog",
-                "tab": "ActiveMeetings",
-                "range": "A2:W",
-                "filename": "public_meeting_data",
-                "connection": "bedrock-googlesheets",
-                "spreadsheetid": "11sK5YUKLDIA5cjzrXu_EzP5_5q_X1HbTPIkKyppR2SM"
-              },
-              "target_location": {
-                "asset": "public_meeting_data.lib",
-                "tablename": "public_meeting_data",
-                "connection": "pubrecdb1/mdastore1/dbadmin",
-                "schemaname": "internal"
-              }
-            },
-            {
-              "type": "table_copy",
+              "type": "file_copy",
               "active": true,
               "source_location": {
-                "asset": "public_meeting_data_archive.goog",
-                "tab": "MeetingArchive",
-                "range": "A2:W",
-                "filename": "public_meeting_data",
-                "connection": "bedrock-googlesheets",
-                "spreadsheetid": "11sK5YUKLDIA5cjzrXu_EzP5_5q_X1HbTPIkKyppR2SM"
+                "asset": "moo",
+                "email": "if_file_found",
+                "path": "test/",
+                "filename": "moo_NO.csv",
+                "connection": "s3_data_files",
+                "connection_id": "120a7bca9bbd89d15ae2"
               },
               "target_location": {
-                "asset": "public_meeting_data.lib",
-                "append": true,
-                "tablename": "public_meeting_data",
-                "connection": "pubrecdb1/mdastore1/dbadmin",
-                "schemaname": "internal"
-              }
-            }
-          ]
-        },
-        {
-          "name": "public_meeting_data_categories.lib",
-          "run_group": "every15",
-          "depends": [
-            "public_meeting_data_categories.goog"
-          ],
-          "etl_tasks": [
-            {
-              "type": "table_copy",
-              "active": true,
-              "source_location": {
-                "asset": "public_meeting_data_categories.goog",
-                "tab": "CategoryValues",
-                "range": "A2:E",
-                "filename": "public_meeting_data_categories",
-                "connection": "bedrock-googlesheets",
-                "spreadsheetid": "11sK5YUKLDIA5cjzrXu_EzP5_5q_X1HbTPIkKyppR2SM"
-              },
-              "target_location": {
-                "asset": "public_meeting_data_categories.lib",
-                "tablename": "public_meeting_data_categories",
-                "connection": "pubrecdb1/mdastore1/dbadmin",
-                "schemaname": "internal"
+                "asset": "moo2",
+                "path": "test/",
+                "filename": "moo2.csv",
+                "connection": "s3_data_files",
+                "connection_id": "120a7bca9bbd89d15ae2"
               }
             }
           ]
@@ -79,51 +33,57 @@
       ],
       [
         {
-          "name": "public_meeting_data.pub",
-          "run_group": "every15",
+          "name": "moo3",
+          "run_group": "moo",
           "depends": [
-            "public_meeting_data.lib"
+            "moo2"
           ],
           "etl_tasks": [
             {
-              "type": "table_copy",
+              "type": "file_copy",
               "active": true,
               "source_location": {
-                "asset": "public_meeting_data.lib",
-                "tablename": "public_meeting_data",
-                "connection": "pubrecdb1/mdastore1/dbadmin",
-                "schemaname": "internal"
+                "asset": "moo2",
+                "path": "test/",
+                "filename": "moo2.csv",
+                "connection": "s3_data_files",
+                "connection_id": "120a7bca9bbd89d15ae2"
               },
               "target_location": {
-                "asset": "public_meeting_data.pub",
-                "tablename": "public_meeting_data",
-                "connection": "coa-publicdb1/coa_share/dbadmin",
-                "schemaname": "open"
+                "asset": "moo3",
+                "path": "test/",
+                "filename": "moo3.csv",
+                "connection": "s3_data_files",
+                "connection_id": "120a7bca9bbd89d15ae2"
               }
             }
           ]
-        },
+        }
+      ],
+      [
         {
-          "name": "public_meeting_data_categories.pub",
-          "run_group": "every15",
+          "name": "moo4",
+          "run_group": "moo",
           "depends": [
-            "public_meeting_data_categories.lib"
+            "moo3"
           ],
           "etl_tasks": [
             {
-              "type": "table_copy",
+              "type": "file_copy",
               "active": true,
               "source_location": {
-                "asset": "public_meeting_data_categories.lib",
-                "tablename": "public_meeting_data_categories",
-                "connection": "pubrecdb1/mdastore1/dbadmin",
-                "schemaname": "internal"
+                "asset": "moo3",
+                "path": "test/",
+                "filename": "moo3.csv",
+                "connection": "s3_data_files",
+                "connection_id": "120a7bca9bbd89d15ae2"
               },
               "target_location": {
-                "asset": "public_meeting_data_categories.pub",
-                "tablename": "public_meeting_data_categories",
-                "connection": "coa-publicdb1/coa_share/dbadmin",
-                "schemaname": "open"
+                "asset": "moo4",
+                "path": "test/",
+                "filename": "moo4.csv",
+                "connection": "s3_data_files",
+                "connection_id": "120a7bca9bbd89d15ae2"
               }
             }
           ]
@@ -139,203 +99,75 @@
       {
         "JobIsGo": false,
         "ETLJob": {
-          "name": "public_meeting_data.lib",
-          "run_group": "every15",
+          "name": "moo2",
+          "run_group": "moo",
           "depends": [
-            "public_meeting_data.goog"
+            "moo"
           ],
           "etl_tasks": [
             {
-              "type": "table_copy",
+              "type": "file_copy",
               "active": true,
               "source_location": {
-                "asset": "public_meeting_data.goog",
-                "tab": "ActiveMeetings",
-                "range": "A2:W",
-                "filename": "public_meeting_data",
-                "connection": "bedrock-googlesheets",
-                "spreadsheetid": "11sK5YUKLDIA5cjzrXu_EzP5_5q_X1HbTPIkKyppR2SM"
+                "asset": "moo",
+                "email": "if_file_found",
+                "path": "test/",
+                "filename": "moo_NO.csv",
+                "connection": "s3_data_files",
+                "connection_id": "120a7bca9bbd89d15ae2"
               },
               "target_location": {
-                "asset": "public_meeting_data.lib",
-                "tablename": "public_meeting_data",
-                "connection": "pubrecdb1/mdastore1/dbadmin",
-                "schemaname": "internal"
+                "asset": "moo2",
+                "path": "test/",
+                "filename": "moo2.csv",
+                "connection": "s3_data_files",
+                "connection_id": "120a7bca9bbd89d15ae2"
               },
               "result": {
-                "statusCode": 200,
-                "body": {
-                  "lambda_output": "Table copied pubrecdb1/mdastore1/dbadmin internal.public_meeting_data"
-                }
-              }
-            },
-            {
-              "type": "table_copy",
-              "active": true,
-              "source_location": {
-                "asset": "public_meeting_data_archive.goog",
-                "tab": "MeetingArchive",
-                "range": "A2:W",
-                "filename": "public_meeting_data",
-                "connection": "bedrock-googlesheets",
-                "spreadsheetid": "11sK5YUKLDIA5cjzrXu_EzP5_5q_X1HbTPIkKyppR2SM"
-              },
-              "target_location": {
-                "asset": "public_meeting_data.lib",
-                "append": true,
-                "tablename": "public_meeting_data",
-                "connection": "pubrecdb1/mdastore1/dbadmin",
-                "schemaname": "internal"
-              },
-              "result": {
-                "statusCode": 200,
-                "body": {
-                  "lambda_output": "Table copied pubrecdb1/mdastore1/dbadmin internal.public_meeting_data"
-                }
-              }
-            }
-          ]
-        },
-        "TaskIndex": 1,
-        "JobType": "table_copy",
-        "results": {
-          "JobIsGo": false,
-          "ETLJob": {
-            "name": "public_meeting_data.lib",
-            "run_group": "every15",
-            "depends": [
-              "public_meeting_data.goog"
-            ],
-            "etl_tasks": [
-              {
-                "type": "table_copy",
-                "active": true,
-                "source_location": {
-                  "asset": "public_meeting_data.goog",
-                  "tab": "ActiveMeetings",
-                  "range": "A2:W",
-                  "filename": "public_meeting_data",
-                  "connection": "bedrock-googlesheets",
-                  "spreadsheetid": "11sK5YUKLDIA5cjzrXu_EzP5_5q_X1HbTPIkKyppR2SM"
-                },
-                "target_location": {
-                  "asset": "public_meeting_data.lib",
-                  "tablename": "public_meeting_data",
-                  "connection": "pubrecdb1/mdastore1/dbadmin",
-                  "schemaname": "internal"
-                },
-                "result": {
-                  "statusCode": 200,
-                  "body": {
-                    "lambda_output": "Table copied pubrecdb1/mdastore1/dbadmin internal.public_meeting_data"
-                  }
-                }
-              },
-              {
-                "type": "table_copy",
-                "active": true,
-                "source_location": {
-                  "asset": "public_meeting_data_archive.goog",
-                  "tab": "MeetingArchive",
-                  "range": "A2:W",
-                  "filename": "public_meeting_data",
-                  "connection": "bedrock-googlesheets",
-                  "spreadsheetid": "11sK5YUKLDIA5cjzrXu_EzP5_5q_X1HbTPIkKyppR2SM"
-                },
-                "target_location": {
-                  "asset": "public_meeting_data.lib",
-                  "append": true,
-                  "tablename": "public_meeting_data",
-                  "connection": "pubrecdb1/mdastore1/dbadmin",
-                  "schemaname": "internal"
-                },
-                "result": {
-                  "statusCode": 200,
-                  "body": {
-                    "lambda_output": "Table copied pubrecdb1/mdastore1/dbadmin internal.public_meeting_data"
-                  }
-                }
-              }
-            ]
-          },
-          "TaskIndex": 1,
-          "JobType": "table_copy"
-        }
-      },
-      {
-        "JobIsGo": false,
-        "ETLJob": {
-          "name": "public_meeting_data_categories.lib",
-          "run_group": "every15",
-          "depends": [
-            "public_meeting_data_categories.goog"
-          ],
-          "etl_tasks": [
-            {
-              "type": "table_copy",
-              "active": true,
-              "source_location": {
-                "asset": "public_meeting_data_categories.goog",
-                "tab": "CategoryValues",
-                "range": "A2:E",
-                "filename": "public_meeting_data_categories",
-                "connection": "bedrock-googlesheets",
-                "spreadsheetid": "11sK5YUKLDIA5cjzrXu_EzP5_5q_X1HbTPIkKyppR2SM"
-              },
-              "target_location": {
-                "asset": "public_meeting_data_categories.lib",
-                "tablename": "public_meeting_data_categories",
-                "connection": "pubrecdb1/mdastore1/dbadmin",
-                "schemaname": "internal"
-              },
-              "result": {
-                "statusCode": 200,
-                "body": {
-                  "lambda_output": "Table copied pubrecdb1/mdastore1/dbadmin internal.public_meeting_data_categories"
-                }
+                "statusCode": 218,
+                "body": "No file found - skipping put"
               }
             }
           ]
         },
         "TaskIndex": 0,
-        "JobType": "table_copy",
+        "JobType": "file_copy",
         "results": {
           "JobIsGo": false,
           "ETLJob": {
-            "name": "public_meeting_data_categories.lib",
-            "run_group": "every15",
+            "name": "moo2",
+            "run_group": "moo",
             "depends": [
-              "public_meeting_data_categories.goog"
+              "moo"
             ],
             "etl_tasks": [
               {
-                "type": "table_copy",
+                "type": "file_copy",
                 "active": true,
                 "source_location": {
-                  "asset": "public_meeting_data_categories.goog",
-                  "tab": "CategoryValues",
-                  "range": "A2:E",
-                  "filename": "public_meeting_data_categories",
-                  "connection": "bedrock-googlesheets",
-                  "spreadsheetid": "11sK5YUKLDIA5cjzrXu_EzP5_5q_X1HbTPIkKyppR2SM"
+                  "asset": "moo",
+                  "email": "if_file_found",
+                  "path": "test/",
+                  "filename": "moo_NO.csv",
+                  "connection": "s3_data_files",
+                  "connection_id": "120a7bca9bbd89d15ae2"
                 },
                 "target_location": {
-                  "asset": "public_meeting_data_categories.lib",
-                  "tablename": "public_meeting_data_categories",
-                  "connection": "pubrecdb1/mdastore1/dbadmin",
-                  "schemaname": "internal"
+                  "asset": "moo2",
+                  "path": "test/",
+                  "filename": "moo2.csv",
+                  "connection": "s3_data_files",
+                  "connection_id": "120a7bca9bbd89d15ae2"
                 },
                 "result": {
-                  "statusCode": 200,
-                  "body": {
-                    "lambda_output": "Table copied pubrecdb1/mdastore1/dbadmin internal.public_meeting_data_categories"
-                  }
+                  "statusCode": 218,
+                  "body": "No file found - skipping put"
                 }
               }
             ]
           },
           "TaskIndex": 0,
-          "JobType": "table_copy"
+          "JobType": "file_copy"
         }
       }
     ]

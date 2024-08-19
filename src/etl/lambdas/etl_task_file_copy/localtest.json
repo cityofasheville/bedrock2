@@ -10,9 +10,14 @@
           "connection": "A-2GKKZB3"
         },
         "target_location": {
-          "path": "/home/jon/",
-          "filename": "test.csv",
-          "connection": "hoopcha"
+          "path": "test/",
+          "filename": "moo.csv",
+          "connection": "s3_data_files"
+        },
+        "target_location2": {
+          "path": "/PROD/person.errors/",
+          "filename": "log.txt",
+          "connection": "telestaff_ftp"
         }
       }
     ]

@@ -1,4 +1,5 @@
 from smb.SMBConnection import SMBConnection
+from smb import smb_structs
 import io
 
 def get_win(location):
@@ -14,9 +15,12 @@ def get_win(location):
     stream.seek(0)
     fileResult = { "fileFound": True, "fileName": location["filename"], "stream": stream }
     print("File retrieved from Windows: " + location["filename"])
+  except smb_structs.OperationFailure as err:
+    print('No source file found in Windows')
+    fileResult = { "fileFound": False, "fileName": location["filename"], "stream": None }
   except BaseException as err:
     fileResult = { "fileFound": False, "fileName": location["filename"], "stream": None }
-    raise Exception("Get Windows file share Error: " + str(err))
+    raise Exception("Get Windows file share Error: " + str(type(err)))
   return fileResult
 
 def put_win(location,from_stream):

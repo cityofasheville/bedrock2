@@ -1,5 +1,5 @@
-import paramiko
-import re
+import paramiko  # SFTP
+import re        # RegEx
 import io
 import time 
 
@@ -41,10 +41,14 @@ def get_ftp(location):
             print('No recent source file matching pattern found')
             fileResult["fileFound"] = False
         else:
-            stream = sftp.open(location["path"] + source_file, mode='r') # , bufsize=1024)
+            stream = sftp.open(location["path"] + source_file, mode='r')
             print('Downloaded from FTP: ' + source_file)
             fileResult["stream"] = stream
+    except FileNotFoundError as err:
+        print('No source file found in FTP')
+        fileResult = { "fileFound": False, "fileName": None, "stream": None }            
     except BaseException as err:
+        # print(type(err))
         raise Exception("Get FTP Error: " + str(err))
 
     return fileResult

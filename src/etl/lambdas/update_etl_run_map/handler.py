@@ -2,13 +2,14 @@
 def update_run_map(state):
     newstate = {}
     newstate['success'] = state['success']
-    newstate['noemail'] = state['noemail'] # successful jobs that should not send email
+    newstate['noemail'] = state['noemail'] # jobs that should not send email, set in addition to success, failure or skipped
     newstate['skipped'] = state['skipped']
     newstate['failure'] = state['failure']
 
     jobs = state['runsets'].pop(0)
     results = state['results']
     fails = {}
+    fails_noemail = {}
     for i in range(len(jobs)): # each asset
         job = jobs[i]
         result = results[i]['ETLJob']
@@ -20,6 +21,11 @@ def update_run_map(state):
                 email = result['etl_tasks'][j]['email']
 
             task_result = result['etl_tasks'][j]['result']
+            if task_result['statusCode'] == 404:
+                if email == 'if_file_found':
+                    newstate['noemail'].append(name)
+                    fails_noemail[name] = True
+                # no break, we also set failure below    
             if 'statusCode' not in task_result or task_result['statusCode'] != 200:
                 newstate['failure'].append({
                     "name": name,
@@ -33,10 +39,9 @@ def update_run_map(state):
                 break
 
         if success:
+            newstate['success'].append(name)
             if email == 'only_on_error':
                 newstate['noemail'].append(name)
-            else:
-                newstate['success'].append(name)
 
     # Purge all jobs from state['remainder'] that depend on failed or skipped jobs
     newremainder = []
@@ -46,6 +51,9 @@ def update_run_map(state):
         while (len(jobset)) > 0:
             job = jobset.pop(0)
             for i in range(len(job['depends'])):
+                if job['depends'][i] in fails_noemail:
+                    newstate['noemail'].append(job['name'])
+                    fails_noemail[job['name']] = True
                 if job['depends'][i] in fails:
                     fails[job['name']] = True
                     newstate['skipped'].append(job['name'])
@@ -64,8 +72,6 @@ def update_run_map(state):
         newstate['RunSetIsGo'] = False
 
     return newstate
-
-
 
 def lambda_handler(event, context):
     state = event['state']

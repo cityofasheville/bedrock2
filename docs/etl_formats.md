@@ -78,6 +78,7 @@ The canonical store for all Bedrock assets is now in a separate repo: managed-da
           "description": null,
           "type": "table_copy",
           "email": "only_on_error", (OPTIONAL)
+          "email": "if_file_found", (OPTIONAL)
           "active": true,
           "source": {
             "asset": "ad_info.mun"
@@ -93,7 +94,10 @@ The canonical store for all Bedrock assets is now in a separate repo: managed-da
 
     - run_group_id looks up the run group to tell Bedrock when to run the ETL task.
     - The ETL job can have multiple tasks. For example, it might copy a table and then run an SQL script.
-    - The "email": "only_on_error" flag means that if the task is successful, there is no need to send an email. (By default an email is sent for every set of tasks run.) If there are tasks without the flag run at the same time, the email will be sent.
+    - The two "email" flags: "only_on_error" and "if_file_found" can control when emails are sent. 
+    - "only_on_error" means that if the task is successful, there is no need to send an email. (By default an email is sent for every set of tasks run.) 
+    - "if_file_found" is used when polling for a file, and when it appears send an email.
+    - If there are tasks without these flags run at the same time, the email will be sent.
 
 ## ETL Task Types
   The fields source, target, and configuration are used differently for different task types

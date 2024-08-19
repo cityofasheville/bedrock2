@@ -90,7 +90,11 @@ def lambda_handler(event, context):
             else:
                 raise Exception("Invalid file copy connection type " + target_location["connection_data"]["type"])
         else:
-            print('No file found - skipping put')                    
+            print('No file found - skipping put')
+            return {
+                'statusCode': 404,
+                'body': 'No file found - skipping put'
+            }
 
         retmsg = ('File uploaded to ' +
             target_location["connection_data"]["type"] + ': ' +
