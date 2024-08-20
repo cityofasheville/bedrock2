@@ -1,6 +1,6 @@
 include ../make_variables
 
-dirs = bedrock_common packages table_copy encrypt
+dirs = bedrock_common packages table_copy encrypt packages_py
 
 .PHONY: $(dirs) init plan apply destroy clean
 

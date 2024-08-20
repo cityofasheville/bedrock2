@@ -1,0 +1,4 @@
+// Create a file localtest.json in the format below with your API key.
+{
+  "API_KEY": "YOUR_API_KEY"
+}
