@@ -1,7 +1,7 @@
 include ../../../make_variables
 
 dirs = build
-.PHONY: $(dirs) init plan apply destroy prebuild local clean
+.PHONY: $(dirs) init plan apply destroy prebuild local clean test
 
 SRC_DIR := ./deploy
 DEST_DIR := ./build
@@ -40,6 +40,9 @@ package: requirements.txt
 
 local: package
 	PYTHONPATH=./package python3 local.py
+
+run: package # To use: "make run run=somepythonfile.py"
+	PYTHONPATH=./package python3 $(run)
 
 clean:
 	rm -f *.instance

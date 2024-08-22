@@ -1,29 +1,26 @@
 {
-    "JobIsGo": true,
-    "ETLJob": {
-      "name": "everbridge.emp.ftp",
-      "run_group": "daily",
-      "depends": [
-      ],
-      "etl_tasks": [
-        {
-          "type": "file_copy",
-          "active": true,
-          "source_location": {
-            "asset": "everbridge.emp.s3",
-            "path": "everbridge/",
-            "filename": "avl.PR_City_Employees_Everbridge.csv",
-            "connection": "s3_data_files"
-          },
-          "target_location": {
-            "asset": "everbridge.emp.fake.s3",
-            "path": "everbridge/",
-            "filename": "avl.PR_City_Employees_Everbridge.copy.csv",
-            "connection": "s3_data_files"
-          }
+  "ETLJob": {
+    "etl_tasks": [
+      {
+        "type": "file_copy",
+        "active": true,
+        "source_location": {
+          "path": "/",
+          "filename": "test.csv",
+          "connection": "A-2GKKZB3"
+        },
+        "target_location": {
+          "path": "test/",
+          "filename": "moo.csv",
+          "connection": "s3_data_files"
+        },
+        "target_location2": {
+          "path": "/PROD/person.errors/",
+          "filename": "log.txt",
+          "connection": "telestaff_ftp"
         }
-      ]
-    },
-    "TaskIndex": 0,
-    "JobType": "file_copy"
+      }
+    ]
+  },
+  "TaskIndex": 0
 }

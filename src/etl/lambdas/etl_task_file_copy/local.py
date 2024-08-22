@@ -13,4 +13,5 @@ f = open(filename)
 event = json.load(f)
 f.close()
 
-lambda_handler(event, context)
+ret = lambda_handler(event, context)
+print(ret)

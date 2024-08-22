@@ -47,11 +47,10 @@ def lambda_handler(event, context):
                 'statusCode': 200,
                 'body': "Inactive: skipped"
             }
-        tempfile = fillDateTemplate('/tmp/temp${YYYY}${MM}${DD}${HH}${mm}${SS}.txt') 
-
+        
         locations = [
-          { "name": 'source_location', "tempfile": tempfile },
-          { "name": 'target_location', "tempfile": tempfile }
+          { "name": 'source_location' },
+          { "name": 'target_location' }
         ]
 
         for loc in locations:
@@ -70,31 +69,32 @@ def lambda_handler(event, context):
                 loc["config"] = location["config"]
 
         source_location = locations[0]
-        fileResult = None # Form: { fileFound: Bool, fileName: String }
+        fileResult = None # Form: { fileFound: Bool, fileName: String, stream: BytesIO }
         if source_location["connection_data"]["type"] == "s3":
-           fileResult = download_s3(source_location)
+            fileResult = download_s3(source_location)
         elif source_location["connection_data"]["type"] == "sftp":
-           fileResult = get_ftp(source_location)
+            fileResult = get_ftp(source_location)
         elif source_location["connection_data"]["type"] == "win":
-           fileResult = get_win(source_location)
+            fileResult = get_win(source_location)
         else:
             raise Exception("Invalid file copy connection type " + source_location["connection_data"]["type"])
-        
         target_location = locations[1]
         if (fileResult and fileResult["fileFound"]):
+            stream = fileResult["stream"]
             if target_location["connection_data"]["type"] == "s3":
-                upload_s3(target_location)
+                upload_s3(target_location,stream)
             elif target_location["connection_data"]["type"] == "sftp":
-                put_ftp(target_location)
+                put_ftp(target_location,stream)
             elif target_location["connection_data"]["type"] == "win":
-                put_win(target_location)
+                put_win(target_location,stream)
             else:
                 raise Exception("Invalid file copy connection type " + target_location["connection_data"]["type"])
         else:
             print('No file found - skipping put')
-            
-        if os.path.exists(tempfile):
-                os.remove(tempfile)
+            return {
+                'statusCode': 404,
+                'body': 'No file found - skipping put'
+            }
 
         retmsg = ('File uploaded to ' +
             target_location["connection_data"]["type"] + ': ' +

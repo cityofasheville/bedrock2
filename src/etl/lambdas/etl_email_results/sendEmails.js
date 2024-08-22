@@ -8,8 +8,10 @@ const __dirname = dirname(fileURLToPath(import.meta.url)); // current directory
 const compiledFunction = compileFile(join(__dirname, '/email.pug'));
 
 async function sendEmails(results) {
-  const totalResults = results?.failure?.length + results?.success?.length + results?.skipped?.length;
-  if (totalResults > 0) {
+  let noemail_list = results.noemail;
+  let email_list = results.success.concat(results.skipped).concat(results.failure.map(res => res.name));
+  let in_email_but_not_noemail = email_list.filter(item => !noemail_list.includes(item));
+  if (in_email_but_not_noemail.length > 0) {
     let emailRecip = [process.env.EMAIL_RECIPIENT];
     let emailSender = process.env.EMAIL_SENDER;
     let htmlEmail, emailSubject;
@@ -17,7 +19,6 @@ async function sendEmails(results) {
     results.failure = results.failure.map(res => res.name);
     results.failure.sort();
     results.success.sort();
-    results.noemail.sort();
     results.skipped.sort();
     emailSubject = "ETL Jobs Status: OK";
     if (results.skipped.length > 0 || results.failure.length > 0) {
