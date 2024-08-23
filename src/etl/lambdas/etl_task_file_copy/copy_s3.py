@@ -11,7 +11,6 @@ def download_s3(location):
             )
         print("File retrieved from S3: " + location["filename"])
         stream = response['Body']
-        print(stream)
         fileResult = { "fileFound": True, "fileName": location["filename"], "stream": stream }
         return fileResult
     except s3.exceptions.NoSuchKey as err:

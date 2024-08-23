@@ -13,7 +13,7 @@ resource "aws_lambda_function" "etl_task_sftp-$$INSTANCE$$" {
     layers = [
       data.terraform_remote_state.bedrock_packages_py_$$INSTANCE$$.outputs.bedrock_packages_py_$$INSTANCE$$_layer_arn,
     ]
-    timeout         = 300
+    timeout         = 900
     tags = {
       "coa:application" = "bedrock"
       "coa:department"  = "information-technology"
