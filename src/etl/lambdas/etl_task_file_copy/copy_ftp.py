@@ -58,8 +58,8 @@ def put_ftp(location, from_stream):
         sftp = connectToFTP(location["connection_data"])
         to_stream = sftp.open(location["path"] + location["filename"], mode='w')
 
-        for line in from_stream:
-            to_stream.write(line)
+        to_stream.write(from_stream.read())
+
         to_stream.close()
         from_stream.close()
 

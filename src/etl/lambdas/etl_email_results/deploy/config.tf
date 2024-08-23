@@ -13,7 +13,7 @@ resource "aws_lambda_function" "etl_email_results-$$INSTANCE$$" {
     layers = [
       data.terraform_remote_state.bedrock_packages_$$INSTANCE$$.outputs.bedrock_packages_$$INSTANCE$$_layer_arn
     ]
-    timeout         = 30
+    timeout         = 900
     memory_size     = 256
     tags = {
       "coa:application" = "bedrock"
