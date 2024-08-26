@@ -2,7 +2,7 @@
 /* eslint-disable no-console */
 import pgpkg from 'pg';
 import pgErrorCodes from '../pgErrorCodes.js';
-import { newClient, checkExistence, deleteInfo, checkBeforeDelete, getInfo } from '../utilities/utilities.js';
+import { newClient, checkExistence, deleteInfo } from '../utilities/utilities.js';
 
 async function handleDelete(tableNames, client, idField, idValue, name) {
   try {
@@ -49,7 +49,6 @@ async function getRelationsInfo(client, idField, idValue, name, tableName, idCol
 }
 
 function formatAncestors(ancestors) {
-  console.log('in format ancestors')
   return ancestors.map(obj => ({
     asset_id: obj.dependent_asset_id,
     asset_name: obj.asset_name
@@ -92,9 +91,7 @@ async function deleteAsset(
   }
 
   try {
-    console.log('before ce')
     await checkExistence(client, tableName, idField, idValue, name, shouldExist);
-    console.log('after ce')
 
   } catch (error) {
     await client.end();
