@@ -34,6 +34,7 @@ async function getGoogleStream(location) {
         ['https://www.googleapis.com/auth/spreadsheets.readonly'],
       );
       await jwtClient.authorize();
+      google.options({auth: jwtClient});
 
       const spreadsheetId = location.spreadsheetid;
       const { tab, range } = location;
@@ -41,10 +42,13 @@ async function getGoogleStream(location) {
       const sheets = google.sheets('v4');
 
       const response = await sheets.spreadsheets.values.get({
-        auth: jwtClient,
         spreadsheetId,
         range: tabrange,
       });
+
+      if(!response.data.values) {
+        return { stream: Readable.from(''), promise: Promise.resolve() };
+      }
 
       console.log(`Copy from Google Sheet: https://docs.google.com/spreadsheets/d/${location.spreadsheetid}/edit#gid=${range.split('!')[0]}`);
       const data = fixUnevenRows(range, response.data.values);
@@ -58,12 +62,14 @@ async function getGoogleStream(location) {
           data[i].push(tab);
         }
       }
-      // console.log(data);
       const csvstring = stringify(data);
       return { stream: Readable.from(csvstring), promise: Promise.resolve() };
     } catch (err) {
-      console.error('Google Sheet error: ', err);
-      throw new Error(`Google Sheet error: ${err}`);
+      if(err==="TypeError: values is not iterable") {
+        console.error(`Google Sheet error: ${JSON.stringify(err)}`);
+      } else {
+        throw new Error(`Google Sheet error: ${err}`);
+      }
     }
   } else if (location.fromto === 'target_location') {
     return createGoogleWritable(location);

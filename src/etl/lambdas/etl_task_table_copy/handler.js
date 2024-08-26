@@ -72,6 +72,14 @@ export const lambda_handler = async function x(event, context) {
           }
         }))
           .then(() => {
+            if(!loc.source_location.stream) {
+              resolve({
+                statusCode: 200,
+                body: {
+                  lambda_output: `No stream at ${JSON.stringify(etl.target_location)}`,
+                },
+              });
+            }
             pipeline(
               loc.source_location.stream,
               // streamDebug,
