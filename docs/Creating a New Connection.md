@@ -17,14 +17,14 @@ Add a row to the "bedrock.connections" table in the bedrock database, with these
 ### Connection Files
 Secrets Manager holds data in a json structure. Each of these formats will have a field "type" which can be one of:
 
-    "postgresql"
-    "sqlserver"
-    "google_sheets"
-    "s3"
-    "sftp"
-    "win"
-    "mysql" (not implemented)
-    "google_drive" (not implemented)
+- "postgresql"
+- "sqlserver"
+- "google_sheets"
+- "s3"
+- "sftp"
+- "win"
+- "mysql" (not implemented)
+- "google_drive" (not implemented)
     
 We name database connections with names like "servername/database/username".
 In Secrets Manager we create them as "Other type of secret" and then "Plaintext", which allows you to add key/values as JSON.
@@ -74,7 +74,7 @@ In Secrets Manager we create them as "Other type of secret" and then "Plaintext"
 ### SFTP
 ### (file_copy and sftp and encrypt)
 - Use either password or private_key to connect
-- pgp_key is used for encrypting file before sending
+- pgp_key is optionally used for encrypting file before sending
 - Optional: disabled_algorithms might be needed in unusual circumstances (see paramiko docs)
 ```
     {

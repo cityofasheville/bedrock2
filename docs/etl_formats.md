@@ -1,5 +1,6 @@
 
 The data directory (src/db/bedrock-db-data/data) contains files that builds example data sources when ```make seed``` is run in the db dir.
+The two scripts under /src/db/bedrock-db-data "load_assets" and "load_files"
 Under data/, a subdir exists for each asset.
 The canonical store for all Bedrock assets is now in a separate repo: managed-data-assets
 
@@ -139,7 +140,11 @@ The canonical store for all Bedrock assets is now in a separate repo: managed-da
             <OPTIONAL> "sortasc": "fieldname",
             <OPTIONAL> "sortdesc": "fieldname",
             <OPTIONAL> "fixedwidth_noquotes": true,  (Tables converted to csv by default have strings with double quotes in the data quoted. For fixed width and XML files we don't want that)
-            <OPTIONAL> "crlf": true,                 (Tables converted to csv by default use record delimiters of LF. Set this true to use CRLF.)    
+            <OPTIONAL> "crlf": true,                 (Tables converted to csv by default use record delimiters of LF. Set this true to use CRLF.)
+            <OPTIONAL> "copy_since" : { (Only copy the latest data from a larger table.)
+            "num_weeks": 1,
+            "column_to_filter": "ACTIVITY_TIME"
+            }  
             __TARGET OPTIONS__
             <OPTIONAL> "append": true  (By default, data is overwritten in table. Set to true to append as new rows.)       
             <OPTIONAL> "append_serial": "fieldname"  (Adds an integer auto-numbering key field to target table. A serial field with this name must appear as the last field in the target table.)
@@ -148,7 +153,7 @@ The canonical store for all Bedrock assets is now in a separate repo: managed-da
             __SOURCE OPTIONS__
             <OPTIONAL>: "removeheaders": true (skip first row of csv file)
 
-#### google_sheets
+#### Google Sheets
             __SOURCE OPTIONS__
             <OPTIONAL>: "append_asset_name": true (In the data an extra column is appended to each row with the name of the asset)
             __TARGET OPTIONS__
@@ -163,7 +168,8 @@ File copy can read and write from S3, Windows file share (SMB), and SFTP sites. 
           "type": "file_copy",
           "source": {
             "asset": "assetname.ftp",
-            __OPTIONS__
+              __SOURCE OPTIONS__
+              __OPTIONS__
           },
           "target": {
             "asset": "assetname.s3",
@@ -172,14 +178,23 @@ File copy can read and write from S3, Windows file share (SMB), and SFTP sites. 
           "configuration": null
         }
       ]
-
+      __SOURCE OPTIONS__
+        <OPTIONAL>: "config": {
+          <OPTIONAL>: "sort": "time",
+          <OPTIONAL>: "pick": -1,
+          <OPTIONAL>: "max_age": 23
+        }
       __OPTIONS__ Both source and target can have this option
             <OPTIONAL>: "adjustdate": -1
-
-      The option "adjustdate" on a target or source changes the filename created in fillDateTemplate by that number of days. (-1 means yesterday)
 ```
+      The option "adjustdate" on a target or source changes the filename created in fillDateTemplate by that number of days. (-1 means yesterday)
 
-## Encrypt
+The optional ```config``` member pertains only to an ```sftp``` source connection. For that case, if the ```filename``` parameter is enclosed in forward slashes (```/```), the name is interpreted as a regex expression that any file to be downloaded must match. The ```sort```, ```pick```, and ```max_age``` parameters in ```config``` then select a final single file for download, as follows:
+ - if ```max_age``` is greater than 0, it represents a maxiumum allowed age for files in hours (default is 60,000),
+ - ```sort``` may be set to ```time``` or ```name``` (default is ```time```) and determines how the resulting list of files is sorted before applying the ```pick``` paramer,
+ - ```pick``` can be ```first`` or 0 to pick the first value in the list, ```last``` or -1 to pick the last (default is -1) .
+ 
+ ## Encrypt
 Takes files from S3, encrypts them and writes them back to the same dir on S3.
 ```
     "tasks": [
@@ -187,81 +202,66 @@ Takes files from S3, encrypts them and writes them back to the same dir on S3.
         "type": "encrypt",
         "source": null,
         "target": {
-          "s3_connection": "s3_data_files",
           "path": "vendor/",
+          "type": "encrypt",
+          "active": true,
+          "filename": "vendor${YYYY}${MM}${DD}.txt",
+          "s3_connection": "s3_data_files",
           "encrypt_connection": "vendor_ftp",
-          "filename": "vendor_asheville_${YYYY}${MM}${DD}.csv",
-          "encrypted_filename": "vendor_asheville_${YYYY}${MM}${DD}.csv.pgp"
-        },
-        "configuration": null
-      },
-      "configuration": null
-    }
-      ]
-  ```
-
-## SFTP
-SFTP has mostly been superseded by file copy, which has more potential source and target destinations. It does include a few useful specialized FTP commands: list, delete, and getall
-```
-    "tasks": [
-      {
-        "type": "encrypt",
-        "source": null,
-        "target": {
-          "action": "sftp_action",
-          "s3_connection": "s3_data_files",
-          "path": "vendor/",
-          "ftp_connection": "telestaff_ftp",
-          "ftp_path": "/PROD/import/ongoing.unprocessed/",
-          "filename": "vendor_asheville_${YYYY}${MM}${DD}.csv.pgp"
+          "encrypted_filename": "vendor_encrypted${YYYY}${MM}${DD}"
         },
         "configuration": null
       },
     ]
 
-// sftp actions can be one of these: (always include "type": "sftp", and "active": true too)
+## SFTP
+SFTP has mostly been superseded by file copy, which has more potential source and target destinations. It does include a few useful specialized FTP commands: list, delete, and getall
+```
+
+// sftp actions are put in "target" and can be one of these: (always include "type": "sftp", and "active": true too)
         {
           "type": "sftp",      
           "source": null,
           "target": {
-            "description": "Copy vendor S3 to FTP site",
             "action": "put",
             "s3_connection": "s3_data_files",
             "path": "telestaff-import-person/",
             "ftp_connection": "telestaff_ftp",
             "ftp_path": "/PROD/person.errors/",
             "filename": "PD-220218-thu.csv"
-        }
+          },
 
-        {
-            "action": "get",
-            "s3_connection": "s3_data_files",
-            "path": "telestaff-payroll-export/", 
-            "ftp_connection": "telestaff_ftp",
-            "ftp_path": "/PROD/person.errors/",
-            "filename": "payroll-report-export.csv"
-        }
+          "target": {
+              "action": "get",
+              "s3_connection": "s3_data_files",
+              "path": "telestaff-payroll-export/", 
+              "ftp_connection": "telestaff_ftp",
+              "ftp_path": "/PROD/person.errors/",
+              "filename": "payroll-report-export.csv"
+          },
 
-        {
-            "action": "list",
-            "ftp_connection": "telestaff_ftp",
-            "ftp_path": "/PROD/export/"
-        }
+          "target": {
+              "action": "list",
+              "ftp_connection": "telestaff_ftp",
+              "ftp_path": "/PROD/export/"
+          },
 
-        {
-            "action": "del",
-            "ftp_connection": "telestaff_ftp",
-            "ftp_path": "/PROD/export/",
-            "filename": "Yesterday.csv"
-        }
+          "target": {
+              "action": "del",
+              "ftp_connection": "telestaff_ftp",
+              "ftp_path": "/PROD/export/",
+              "filename": "Yesterday.csv"
+          },
 
-        {
-            "action": "getall",
-            "s3_connection": "",
-            "path": "", 
-            "ftp_connection": "",
-            "ftp_path": "/"
-        }
+          "target": {
+              "action": "getall",
+              "s3_connection": "",
+              "path": "", 
+              "ftp_connection": "",
+              "ftp_path": "/"
+          },
+          "configuration": null
+        }          
 
 ```
 ## Run Lambda
@@ -284,44 +284,24 @@ Aggregate task type takes multiple Google Sheets with data in the same format on
 It requires a staging table (called temp_table, but not a temp table in database terms, you will need to create a table with that name) for the data to be collected in before writing to the final destination.
 Each source spreadsheet tab has its own asset, and they share the data_connection and data_range, and have their own spreadsheetid's and tab names.
 
-```
-{
-  "tasks": [
-    "target": {
-      "action": "put",
-      "s3_connection": "s3_data_files",
-      "path": "telestaff-payroll-export/", 
-      "ftp_connection": "telestaff_ftp",
-      "ftp_path": "/PROD/person.errors/",
-      "filename": "PD-220218-thu.csv"
-    },
-    "target": {
-      "action": "get",
-      "s3_connection": "s3_data_files",
-      "path": "telestaff-payroll-export/", 
-      "ftp_connection": "telestaff_ftp",
-      "ftp_path": "/PROD/person.errors/",
-      "filename": "payroll-report-export.csv"
-    },
-    "target": {
-      "action": "list",
-      "ftp_connection": "telestaff_ftp",
-      "ftp_path": "/PROD/export/"
-    },
-    "target": {
-      "action": "del",
-      "ftp_connection": "telestaff_ftp",
-      "ftp_path": "/PROD/export/",
-    },
-    "target": {
-      "action": "getall",
-      "s3_connection": "",
-      "path": "", 
-      "ftp_connection": "",
-      "ftp_path": "/"
-    }
-  ]
-}
+  ```
+    "tasks": [
+      {
+        "type": "aggregate",
+        "active": true,
+        "source": {
+          "temp_table": "nc_benchmarks_temp.lib", (name of the staging table asset)
+          "aggregate": "nc_benchmarks",           (the aggregate name that matches a tag in each source sheet)
+          "data_range": "A2:E",                   (all the sheets have to have the data in the same columns)
+          "data_connection": "bedrock-googlesheets",
+          "append_asset_name": true               (if true, each row of data has an additional column holding the name of the source asset)
+        },
+        "target": {
+          "asset": "nc_benchmarks.lib"
+        }
+      }
+    ]
+
 ```
 Each aggregate source asset:
 ```
