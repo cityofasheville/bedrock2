@@ -1,8 +1,5 @@
 /* eslint-disable import/extensions */
-import pgpkg from 'pg';
-import pgErrorCodes from '../pgErrorCodes.js';
 
-const { Client } = pgpkg;
 
 function checkParameters(queryParams) {
   const parameters = ['tags', 'period', 'pattern', 'count', 'offset'];
@@ -20,16 +17,6 @@ function checkParameters(queryParams) {
   return message;
 }
 
-async function newClient(connection) {
-  const client = new Client(connection);
-  try {
-    await client.connect();
-    return client;
-  } catch (error) {
-    throw new Error(`PG error connecting: ${pgErrorCodes[error.code]||error.code}`);
-  }
-}
-
 function createSqlWhereClause(queryParams) {
   const whereClause = {
     whereClause: '',
@@ -42,18 +29,18 @@ function createSqlWhereClause(queryParams) {
   return whereClause;
 }
 
-async function getAssetCount(whereClause, client, tableName) {
+async function getAssetCount(whereClause, db, tableName) {
   const sql = `SELECT count(*) FROM ${tableName} a ${whereClause.whereClause}`;
   let sqlResult;
   try {
-    sqlResult = await client.query(sql, whereClause.sqlParams);
+    sqlResult = await db.query(sql, whereClause.sqlParams);
   } catch (error) {
-    throw new Error(`PG error getting asset count: ${pgErrorCodes[error.code]||error.code}`);
+    throw new Error(`PG error getting asset count: ${error}`);
   }
   return Number(sqlResult.rows[0].count);
 }
 
-async function readAssets(client, offset, count, whereClause, tableName) {
+async function readAssets(db, offset, count, whereClause, tableName) {
   const sql = `
     SELECT a.*, c.connection_class FROM ${tableName} a
     left join bedrock.connections c
@@ -64,9 +51,9 @@ async function readAssets(client, offset, count, whereClause, tableName) {
   `;
   let sqlResult;
   try {
-    sqlResult = await client.query(sql, whereClause.sqlParams);
+    sqlResult = await db.query(sql, whereClause.sqlParams);
   } catch (error) {
-    throw new Error(`PG error getting asset base information: ${pgErrorCodes[error.code]||error.code}`);
+    throw new Error(`PG error getting asset base information: ${error}`);
   }
   return sqlResult;
 }
@@ -101,21 +88,21 @@ async function addBaseFields(sqlResult, requestedFields, availableFields) {
   return tempAssets;
 }
 
-async function addTags(client, assets) {
+async function addTags(db, assets) {
   const sql = `
   select * from bedrock.asset_tags a left join bedrock.tags b on a.tag_id = b.tag_id
   where asset_id in (${assets.assetIds.join()})
 `;
   let sqlResult;
   try {
-    sqlResult = await client.query(sql);
+    sqlResult = await db.query(sql);
   } catch (error) {
-    throw new Error(`PG error getting asset tags: ${pgErrorCodes[error.code]||error.code}`);
+    throw new Error(`PG error getting asset tags: ${error}`);
   }
   return sqlResult;
 }
 
-async function addDependencies(client, assets) {
+async function addDependencies(db, assets) {
   let res;
   const sql = `
     select asset_id, dependent_asset_id from bedrock.dependencies
@@ -123,9 +110,9 @@ async function addDependencies(client, assets) {
   `;
 
   try {
-    res = await client.query(sql);
+    res = await db.query(sql);
   } catch (error) {
-    throw new Error(`PG error getting asset dependencies: ${pgErrorCodes[error.code]||error.code}`);
+    throw new Error(`PG error getting asset dependencies: ${error}`);
   }
   return res;
 }
@@ -154,7 +141,7 @@ function buildURL(queryParams, domainName, rowsReadCount, offset, total, pathEle
   return url;
 }
 
-async function getAssetList(domainName, pathElements, queryParams, connection, tableName) {
+async function getAssetList(domainName, pathElements, queryParams, db, tableName) {
   const availableFields = [
     'asset_id',
     'asset_type_id',
@@ -176,12 +163,11 @@ async function getAssetList(domainName, pathElements, queryParams, connection, t
   } else {
     requestedFields = [...availableFields];
   }
-  let client;
   const count = ('count' in queryParams) ? queryParams.count : 25;
   const offset = ('offset' in queryParams) ? queryParams.offset : 0;
   const whereClause = createSqlWhereClause(queryParams);
   const response = {
-    error: false,
+    statusCode: 200,
     message: checkParameters(queryParams),
     result: {
       items: [],
@@ -192,77 +178,57 @@ async function getAssetList(domainName, pathElements, queryParams, connection, t
     },
   };
 
-  try {
-    client = await newClient(connection);
-  } catch (error) {
-    response.error = true;
-    response.message = error.message;
-    response.result = null;
+  // Get the total asset count. If 0, return early.
+  response.result.total = await getAssetCount(whereClause, db, tableName);
+  if (response.result.total === 0) {
+    response.message = 'No assets found.';
     return response;
   }
 
-  try {
-    // Get the total asset count. If 0, return early.
-    response.result.total = await getAssetCount(whereClause, client, tableName);
-    if (response.result.total === 0) {
-      client.end();
-      response.message = 'No assets found.';
-      return response;
+  // Read the base fields
+  const overrideFields = ('fields' in queryParams);
+  const sqlResult = await readAssets(db, offset, count, whereClause, tableName);
+  let assets = {
+    count: sqlResult.rowCount,
+    assetIds: [],
+    assetMap: new Map(),
+  };
+  response.result.count = assets.count;
+
+  // Build the asset list
+  assets = await addBaseFields(sqlResult, requestedFields, availableFields);
+
+
+  const tagsResult = await addTags(db, assets);
+  for (let i = 0; i < tagsResult.rowCount; i += 1) {
+    const row = tagsResult.rows[i];
+    if (!overrideFields || requestedFields.includes('tags')) {
+      const innerMap = assets.assetMap.get(row.asset_id);
+      innerMap.get('tags').push({ tag_id: row.tag_id, tag_name: row.tag_name });
     }
-
-    // Read the base fields
-    const overrideFields = ('fields' in queryParams);
-    const sqlResult = await readAssets(client, offset, count, whereClause, tableName);
-    let assets = {
-      count: sqlResult.rowCount,
-      assetIds: [],
-      assetMap: new Map(),
-    };
-    response.result.count = assets.count;
-
-    // Build the asset list
-    assets = await addBaseFields(sqlResult, requestedFields, availableFields);
-
-
-    const tagsResult = await addTags(client, assets);
-    for (let i = 0; i < tagsResult.rowCount; i += 1) {
-      const row = tagsResult.rows[i];
-      if (!overrideFields || requestedFields.includes('tags')) {
-        const innerMap = assets.assetMap.get(row.asset_id);
-        innerMap.get('tags').push({ tag_id: row.tag_id, tag_name: row.tag_name });
-      }
-    }
-
-    if (requestedFields.includes('parents')) {
-      const res = await addDependencies(client, assets);
-      for (let i = 0; i < res.rowCount; i += 1) {
-        const row = res.rows[i];
-        assets.assetMap.get(row.asset_id).get('parents').push(row.dependent_asset_id);
-      }
-    }
-
-    // Now package up all the assets
-    for (const [assetId, asset] of assets.assetMap) {
-      response.result.items.push(Object.fromEntries(asset.entries()));
-    }
-    response.result.url = buildURL(
-      queryParams,
-      domainName,
-      assets.count,
-      offset,
-      response.result.total,
-      pathElements,
-    );
-    await client.end();
-  } catch (error) {
-    response.error = true;
-    response.message = error.message;
-    response.result = null;
-    await client.end();
-    return response;
-  } finally {
-    await client.end();
   }
+
+  if (requestedFields.includes('parents')) {
+    const res = await addDependencies(db, assets);
+    for (let i = 0; i < res.rowCount; i += 1) {
+      const row = res.rows[i];
+      assets.assetMap.get(row.asset_id).get('parents').push(row.dependent_asset_id);
+    }
+  }
+
+  // Now package up all the assets
+  for (const [assetId, asset] of assets.assetMap) {
+    response.result.items.push(Object.fromEntries(asset.entries()));
+  }
+  response.result.url = buildURL(
+    queryParams,
+    domainName,
+    assets.count,
+    offset,
+    response.result.total,
+    pathElements,
+  );
+
   return response;
 }
 

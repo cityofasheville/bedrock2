@@ -10,9 +10,10 @@ import getTasks from './getTasks.js';
 import updateTasks from './updateTasks.js';
 
 // eslint-disable-next-line no-unused-vars
-async function handleAssets(event, pathElements, queryParams, verb, connection) {
+async function handleAssets(event, pathElements, queryParams, verb, db) {
+  try {
   let response = {
-    error: false,
+    statusCode: 200,
     message: '',
     result: null,
   };
@@ -45,14 +46,14 @@ async function handleAssets(event, pathElements, queryParams, verb, connection) 
             event.requestContext.domainName,
             pathElements,
             queryParams,
-            connection,
+            db,
             tableName,
           );
           break;
 
         case 'POST':
           response = await addAsset(
-            connection,
+            db,
             idField,
             name,
             tableName,
@@ -63,7 +64,7 @@ async function handleAssets(event, pathElements, queryParams, verb, connection) 
 
         default:
           response.message = `handleAssets: unknown verb ${verb}`;
-          response.error = true;
+          response.statusCode = 404;
           break;
       }
       break;
@@ -74,7 +75,7 @@ async function handleAssets(event, pathElements, queryParams, verb, connection) 
         case 'GET':
           response = await getAsset(
             queryParams,
-            connection,
+            db,
             idValue,
             allFields,
           );
@@ -84,7 +85,7 @@ async function handleAssets(event, pathElements, queryParams, verb, connection) 
           response = await updateAsset(
             pathElements,
             queryParams,
-            connection,
+            db,
             idField,
             idValue,
             name,
@@ -96,8 +97,8 @@ async function handleAssets(event, pathElements, queryParams, verb, connection) 
           break;
 
         case 'DELETE':
-          response = deleteAsset(
-            connection,
+          response = await deleteAsset(
+            db,
             idField,
             idValue,
             name,
@@ -107,7 +108,7 @@ async function handleAssets(event, pathElements, queryParams, verb, connection) 
 
         default:
           response.message = `handleAssets: unknown verb ${verb}`;
-          response.error = true;
+          response.statusCode = 404;
           break;
       }
       break;
@@ -117,10 +118,10 @@ async function handleAssets(event, pathElements, queryParams, verb, connection) 
     case 3:
       if (pathElements[2] === 'tasks') {
         if (verb === 'GET') {
-          response = await getTasks(connection, idValue, idField, name);
+          response = await getTasks(db, idValue, idField, name);
         } else if (verb === 'PUT') {
           response = await updateTasks(
-            connection,
+            db,
             idField,
             idValue,
             name,
@@ -128,11 +129,11 @@ async function handleAssets(event, pathElements, queryParams, verb, connection) 
           );
         } else {
           response.message = `${verb} all asset tasks not implemented`;
-          response.error = true;
+          response.statusCode = 404;
         }
       } else if (pathElements[2] === 'relations') {
         response = await getAllAssetRelations(
-          connection,
+          db,
           idValue,
           tableName,
           idField,
@@ -140,7 +141,7 @@ async function handleAssets(event, pathElements, queryParams, verb, connection) 
         );
       } else {
         response.message = `Unknown assets endpoint: [${pathElements.join()}]`;
-        response.error = true;
+        response.statusCode = 404;
       }
       break;
 
@@ -149,39 +150,46 @@ async function handleAssets(event, pathElements, queryParams, verb, connection) 
     case 4:
       if (pathElements[1] === 'search') {
         response.message = 'Assets search not implemented';
-        response.error = true;
+        response.statusCode = 404;
       } else if (pathElements[2] === 'tasks') {
         switch (verb) {
           case 'POST':
             response.message = 'Add asset task not implemented';
-            response.error = true;
+            response.statusCode = 404;
             break;
 
           case 'DELETE':
             response.message = 'Delete asset task not implemented';
-            response.error = true;
+            response.statusCode = 404;
             break;
 
           default:
             response.message = `handleAssets: unknown verb ${verb}`;
-            response.error = true;
+            response.statusCode = 404;
             break;
         }
       } else {
         response.message = `Unknown assets endpoint: [${pathElements.join()}]`;
-        response.error = true;
+        response.statusCode = 404;
       }
       break;
 
     default:
       response.message = `Unknown assets endpoint: [${pathElements.join()}]`;
-      response.error = true;
+      response.statusCode = 404;
       break;
   }
-  if (response.error) {
+  if (response.statusCode !== 200) {
     console.log(`We have an error but do not know why! - ${response.message}`);
   }
   return response;
+} catch (e) {
+  return {
+    statusCode: 500,
+    message: e,
+    result: null,
+  };
+}
 }
 
 export default handleAssets;

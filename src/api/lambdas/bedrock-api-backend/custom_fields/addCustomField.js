@@ -1,11 +1,11 @@
 /* eslint-disable import/extensions */
 /* eslint-disable no-console */
 import {
-  newClient, checkInfo, checkExistence, addInfo, generateId,
+  checkInfo, checkExistence, addInfo, generateId,
 } from '../utilities/utilities.js';
 
 async function addCustomField(
-  connection,
+  client,
   allFields,
   body,
   idField,
@@ -14,7 +14,6 @@ async function addCustomField(
   requiredFields,
 ) {
   const shouldExist = false;
-  let client;
   const bodyWithID = {
     ...body,
   };
@@ -22,31 +21,15 @@ async function addCustomField(
   const idValue = bodyWithID[idField];
 
   const response = {
-    error: false,
+    statusCode: 200,
     message: `Successfully added ${name} ${idValue}`,
     result: null,
   };
 
-  try {
-    client = await newClient(connection);
-    checkInfo(bodyWithID, requiredFields, name, idValue, idField);
-  } catch (error) {
-    response.error = true;
-    response.message = error.message;
-    return response;
-  }
+  checkInfo(bodyWithID, requiredFields, name, idValue, idField);
+  await checkExistence(client, tableName, idField, idValue, name, shouldExist);
+  response.result = await addInfo(client, allFields, bodyWithID, tableName, idField, idValue, name);
 
-  try {
-    checkInfo(bodyWithID, requiredFields, name, idValue, idField);
-    await checkExistence(client, tableName, idField, idValue, name, shouldExist);
-    response.result = await addInfo(client, allFields, bodyWithID, tableName, idField, idValue, name);
-    await client.end();
-  } catch (error) {
-    await client.end();
-    response.error = true;
-    response.message = error.message;
-    return response;
-  }
   return response;
 }
 

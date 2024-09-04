@@ -1,12 +1,12 @@
 /* eslint-disable import/extensions */
 /* eslint-disable no-console */
 import {
-  newClient, checkInfo, checkExistence, updateInfo, deleteInfo,
+  checkInfo, checkExistence, updateInfo, deleteInfo,
 } from '../utilities/utilities.js';
 import { addAssetTypeCustomFields } from '../utilities/utilities.js'
 
 async function updateAssetType(
-  connection,
+  db,
   allFields,
   body,
   idField,
@@ -17,49 +17,26 @@ async function updateAssetType(
   requiredFields,
 ) {
   const shouldExist = true;
-  let client;
-  let clientInitiated = false;
 
   const response = {
-    error: false,
+    statusCode: 200,
     message: `Successfully updated ${name} ${idValue}`,
     result: null,
   };
 
-  try {
-    checkInfo(body, requiredFields, name, idValue, idField);
-    client = await newClient(connection);
-    clientInitiated = true;
-    await checkExistence(client, tableName, idField, idValue, name, shouldExist);
-  } catch (error) {
-    if (clientInitiated) {
-      await client.end();
-    }
-    response.error = true;
-    response.message = error.message;
-    return response;
+  let client = await db.newClient();
+  checkInfo(body, requiredFields, name, idValue, idField);
+  await checkExistence(client, tableName, idField, idValue, name, shouldExist);
+  await client.query('BEGIN');
+  response.result = await updateInfo(client, allFields, body, tableName, idField, idValue, name);
+  await deleteInfo(client, tableNameCustomFields, 'asset_type_id', idValue, name);
+  if (body.custom_fields?.length > 0) {
+    await addAssetTypeCustomFields(client, idValue, body);
+  } else {
+    response.result.custom_fields = [];
   }
+  await client.query('COMMIT');
 
-  try {
-    await client.query('BEGIN');
-    response.result = await updateInfo(client, allFields, body, tableName, idField, idValue, name);
-    await deleteInfo(client, tableNameCustomFields, 'asset_type_id', idValue, name);
-    if (body.custom_fields?.length > 0) {
-      await addAssetTypeCustomFields(client, idValue, body);
-    } else {
-      response.result.custom_fields = [];
-    }
-    await client.query('COMMIT');
-    await client.end();
-  } catch (error) {
-    await client.query('ROLLBACK');
-    if (clientInitiated) {
-      await client.end();
-    }
-    response.error = true;
-    response.message = error.message;
-    return response;
-  }
   return response;
 }
 

@@ -13,6 +13,7 @@ import handleCustomFields from './custom_fields/handleCustomFields.js';
 import handleOwners from './owners/handleOwner.js';
 import handleAbout from './about/handleAbout.js';
 import handleExecuteETL from './execute_etl/handleExecuteETL.js';
+import { getDb } from './utilities/dbUtilities.js';
 
 // eslint-disable-next-line camelcase, import/prefer-default-export
 export async function lambda_handler(event) {
@@ -32,12 +33,14 @@ export async function lambda_handler(event) {
     };
   }
 
+  const connection = await getDBConnection();
+  let db = await getDb(connection);
+  
   let api_result = {
-    error: true,
+    statusCode: 404,
     message: 'Unknown resource',
     result: null,
   };
-  const connection = await getDBConnection();
 
   // Parse event.path to pick up the path elements and verb
   const pathElements = event.requestContext.http.path.substring(1).split('/');
@@ -48,62 +51,70 @@ export async function lambda_handler(event) {
   switch (pathElements[0]) {
     case 'run_groups':
       try {
-        api_result = await handleRunGroups(event, pathElements, queryParams || {}, verb, connection);
+        api_result = await handleRunGroups(event, pathElements, queryParams || {}, verb, db);
       } catch (e) {
         api_result.message = e;
+        api_result.statusCode = 500;
+        console.log('Error in handleRunGroups ', e);
       }
       break;
 
     case 'assets':
       try {
-        api_result = await handleAssets(event, pathElements, queryParams || {}, verb, connection);
+        api_result = await handleAssets(event, pathElements, queryParams || {}, verb, db);
       } catch (e) {
         api_result.message = e;
+        api_result.statusCode = 500;
         console.log('Error in handleAssets ', e);
       }
       break;
 
     case 'asset_types':
       try {
-        api_result = await handleAssetTypes(event, pathElements, queryParams || {}, verb, connection);
+        api_result = await handleAssetTypes(event, pathElements, queryParams || {}, verb, db);
       } catch (e) {
         api_result.message = e;
+        api_result.statusCode = 500;
         console.log('Error in handleAssetTypes ', e);
       }
       break;
 
     case 'reference':
       try {
-        api_result = await handleReference(event, pathElements, queryParams || {}, verb, connection);
+        api_result = await handleReference(event, pathElements, queryParams || {}, verb, db);
       } catch (e) {
         api_result.message = e;
+        api_result.statusCode = 500;
         console.log('Error in handleReference ', e);
       }
       break;
 
     case 'tags':
       try {
-        api_result = await handleTags(event, pathElements, queryParams || {}, verb, connection);
+        api_result = await handleTags(event, pathElements, queryParams || {}, verb, db);
       } catch (e) {
         api_result.message = e;
+        api_result.statusCode = 500;
         console.log('Error in handleTags ', e);
       }
       break;
 
     case 'custom_fields':
       try {
-        api_result = await handleCustomFields(event, pathElements, queryParams || {}, verb, connection);
+        api_result = await handleCustomFields(event, pathElements, queryParams || {}, verb, db);
       } catch (e) {
         api_result.message = e;
+        api_result.statusCode = 500;
         console.log('Error in handleTags ', e);
       }
       break;
 
     case 'owners':
       try {
-        api_result = await handleOwners(event, pathElements, queryParams || {}, verb, connection);
+        api_result = await handleOwners(event, pathElements, queryParams || {}, verb, db);
       } catch (e) {
         api_result.message = e;
+        api_result.statusCode = 500;
         console.log('Error in handleOwners ', e);
       }
       break;
@@ -113,15 +124,17 @@ export async function lambda_handler(event) {
         api_result = await handleAbout();
       } catch (e) {
         api_result.message = e;
+        api_result.statusCode = 500;
         console.log('Error in handleAbout ', e);
       }
       break;
 
     case 'execute_etl':
       try {
-        api_result = await handleExecuteETL(event, pathElements, queryParams || {}, verb, connection);
+        api_result = await handleExecuteETL(event, pathElements, queryParams || {}, verb, db);
       } catch (e) {
         api_result.message = e;
+        api_result.statusCode = 500;
         console.log('Error in execute_etl ', e);
       }
       break;
@@ -130,23 +143,19 @@ export async function lambda_handler(event) {
       console.log('Unknown path ', pathElements[0]);
       break;
   }
-  let statusCode = 200;
-  if (api_result.error) {
-    statusCode = 404;
-  }
-  let body = '';
+  let bodyJSON = {};
   if (api_result.result) {
-    body = JSON.stringify(api_result.result);
-  } else {
-    body = JSON.stringify({
-      'message': api_result.message
-    });
+    bodyJSON = api_result.result;
   }
-  return {
-    statusCode,
+  if (api_result.message) {
+    bodyJSON.message = api_result.message.message || api_result.message;
+  }
+  let retvalue = {
+    statusCode: api_result.statusCode,
     headers: {
       'Content-Type': 'application/json'
     },
-    body
+    body: JSON.stringify(bodyJSON)
   };
+  return retvalue;
 }

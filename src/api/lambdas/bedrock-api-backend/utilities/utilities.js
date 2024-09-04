@@ -2,24 +2,10 @@
 /* eslint-disable no-console */
 /* eslint-disable import/no-extraneous-dependencies */
 import { customAlphabet } from 'nanoid';
-import pgpkg from 'pg';
-import pgErrorCodes from '../pgErrorCodes.js';
 
-const { Client } = pgpkg;
 
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
-}
-
-async function newClient(connection) {
-  const client = new Client(connection);
-  try {
-    await client.connect();
-
-    return client;
-  } catch (error) {
-    throw new Error(`PG error connecting: ${pgErrorCodes[error.code]||error.code}`);
-  }
 }
 
 function checkInfo(body, requiredFields, name, idValue, idField) {
@@ -36,14 +22,14 @@ function checkInfo(body, requiredFields, name, idValue, idField) {
   }
 }
 
-async function checkExistence(client, tableName, idField, idValue, name, shouldExist) {
+async function checkExistence(db, tableName, idField, idValue, name, shouldExist) {
   // query the database to make sure resource exists
   const sql = `SELECT * FROM ${tableName} where ${idField} like $1`;
   let res;
   try {
-    res = await client.query(sql, [idValue]);
+    res = await db.query(sql, [idValue]);
   } catch (error) {
-    throw new Error([`Postgres error: ${pgErrorCodes[error.code]||error.code}`, error]);
+    throw new Error([`Postgres error: ${error}`]);
   }
 
   // for some methods, the resource needs to exist (PUT),
@@ -64,15 +50,15 @@ function generateId() {
   return thisID;
 }
 
-async function getInfo(client, idField, idValue, name, tableName) {
+async function getInfo(db, idField, idValue, name, tableName) {
   // Querying database to get information. Function can be used multiple times per method
   // if we need information from multiple tables
   const sql = `SELECT * FROM ${tableName} where ${idField} like $1`;
   let res;
   try {
-    res = await client.query(sql, [idValue]);
+    res = await db.query(sql, [idValue]);
   } catch (error) {
-    throw new Error([`Postgres error: ${pgErrorCodes[error.code]||error.code}`, error]);
+    throw new Error([`Postgres error: ${error}`]);
   }
 
   if (res.rowCount === 0) {
@@ -81,7 +67,7 @@ async function getInfo(client, idField, idValue, name, tableName) {
   return res.rows[0];
 }
 
-async function addInfo(client, allFields, body, tableName, name) {
+async function addInfo(db, allFields, body, tableName, name) {
   let res;
   let fieldsString = '(';
   let valueString = '(';
@@ -123,13 +109,13 @@ async function addInfo(client, allFields, body, tableName, name) {
   });
 
   try {
-    res = await client
+    res = await db
       .query(
         `INSERT INTO ${tableName} ${fieldsString} VALUES${valueString}`,
         valuesFromBody,
       );
   } catch (error) {
-    throw new Error([`Postgres error: ${pgErrorCodes[error.code]||error.code}`, error]);
+    throw new Error([`Postgres error: ${error}`]);
   }
 
   if (res.rowCount !== 1) {
@@ -139,7 +125,7 @@ async function addInfo(client, allFields, body, tableName, name) {
   return body;
 }
 
-async function updateInfo(client, allFields, body, tableName, idField, idValue, name) {
+async function updateInfo(db, allFields, body, tableName, idField, idValue, name) {
   let cnt = 1;
   const args = [];
   let sql = `UPDATE ${tableName} SET `;
@@ -161,26 +147,26 @@ async function updateInfo(client, allFields, body, tableName, idField, idValue, 
   args.push(idValue);
 
   try {
-    await client.query(sql, args);
+    await db.query(sql, args);
   } catch (error) {
-    throw new Error(`PG error updating ${name}: ${pgErrorCodes[error.code]||error.code}`);
+    throw new Error(`PG error updating ${name}: ${error}`);
   }
 
   return body;
 }
 
-async function deleteInfo(client, tableName, idField, idValue, name) {
+async function deleteInfo(db, tableName, idField, idValue, name) {
   try {
-    await client
+    await db
       .query(`delete from ${tableName} where ${idField} = $1`, [
         idValue,
       ]);
   } catch (error) {
-    throw new Error(`PG error deleting ${name} ${idValue}: ${pgErrorCodes[error.code]||error.code}`);
+    throw new Error(`PG error deleting ${name} ${idValue}: ${error}`);
   }
 }
 
-async function addAssetTypeCustomFields(client, idValue, body) {
+async function addAssetTypeCustomFields(db, idValue, body) {
   let res;
   const valueStrings = [];
 
@@ -192,18 +178,18 @@ async function addAssetTypeCustomFields(client, idValue, body) {
   const combinedValueString = valueStrings.join(', ');
 
   try {
-    res = await client
+    res = await db
       .query(
         `INSERT INTO bedrock.asset_type_custom_fields (asset_type_id, custom_field_id, required) VALUES ${combinedValueString}`,
       );
   } catch (error) {
-    throw new Error([`Postgres error: ${pgErrorCodes[error.code]}`, error]);
+    throw new Error([`Postgres error: ${error}`, error]);
   }
 
   return body.custom_fields;
 }
 
-async function getBaseCustomFieldsInfo(client, idField, idValue, name, tableName) {
+async function getBaseCustomFieldsInfo(db, idField, idValue, name, tableName) {
   let customFields = new Map();
     const sql = `
     SELECT c.custom_field_id, c.custom_field_name, c.field_type, c.field_data, j.required
@@ -214,9 +200,9 @@ async function getBaseCustomFieldsInfo(client, idField, idValue, name, tableName
   `;
   let res;
   try {
-    res = await client.query(sql, []);
+    res = await db.query(sql, []);
   } catch (error) {
-    throw new Error([`Postgres error: ${pgErrorCodes[error.code]}`, error]);
+    throw new Error([`Postgres error: ${error}`, error]);
   }
 
   res.rows.forEach((itm) => {
@@ -226,14 +212,14 @@ async function getBaseCustomFieldsInfo(client, idField, idValue, name, tableName
   return customFields;
 }
 
-async function checkBeforeDelete(client, name, tableName, idField, idValue, connectedData, connectedDataIdField) {
+async function checkBeforeDelete(db, name, tableName, idField, idValue, connectedData, connectedDataIdField) {
   const sql = `SELECT * FROM ${tableName} where ${idField} like $1`;
   let res;
   let list = [];
   try {
-    res = await client.query(sql, [idValue]);
+    res = await db.query(sql, [idValue]);
   } catch (error) {
-    throw new Error([`Postgres error: ${pgErrorCodes[error.code]||error.code}`, error]);
+    throw new Error([`Postgres error: ${error}`]);
   }
 
   if (res.rowCount !== 0) {
@@ -244,7 +230,6 @@ async function checkBeforeDelete(client, name, tableName, idField, idValue, conn
 }
 
 export {
-  newClient,
   checkInfo,
   checkExistence,
   capitalizeFirstLetter,

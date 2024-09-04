@@ -1,6 +1,6 @@
 /* eslint-disable import/extensions */
 /* eslint-disable no-console */
-import pgErrorCodes from '../pgErrorCodes.js';
+
 
 function buildOffset(queryParams) {
   let offset = 0;
@@ -39,28 +39,28 @@ function buildWhereClause(queryParams, idField) {
   return whereClause;
 }
 
-async function getCount(whereClause, client, tableName, name) {
+async function getCount(whereClause, db, tableName, name) {
   const sql = `SELECT count(*) FROM ${tableName}  ${whereClause.whereClause}`;
   let res;
 
   try {
-    res = await client.query(sql, whereClause.sqlParams);
+    res = await db.query(sql, whereClause.sqlParams);
   } catch (error) {
-    throw new Error(`PG error getting ${name} count: ${pgErrorCodes[error.code]||error.code}`);
+    throw new Error(`PG error getting ${name} count: ${error}`);
   }
   return Number(res.rows[0].count);
 }
 
-async function getListInfo(offset, count, whereClause, client, idField, tableName, name) {
+async function getListInfo(offset, count, whereClause, db, idField, tableName, name) {
   let sql = `SELECT * FROM ${tableName} ${whereClause.whereClause}`;
   sql += ` order by ${idField} asc`;
   sql += ` offset ${offset} limit ${count} `;
   let res;
 
   try {
-    res = await client.query(sql, whereClause.sqlParams);
+    res = await db.query(sql, whereClause.sqlParams);
   } catch (error) {
-    throw new Error(`PG error getting ${name} base information: ${pgErrorCodes[error.code]||error.code}`);
+    throw new Error(`PG error getting ${name} base information: ${error}`);
   }
   return res;
 }

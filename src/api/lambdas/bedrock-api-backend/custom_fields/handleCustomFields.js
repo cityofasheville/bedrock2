@@ -11,10 +11,10 @@ async function handleCustomFields(
   pathElements,
   queryParams,
   verb,
-  connection,
+  db,
 ) {
   let result = {
-    error: false,
+    statusCode: 200,
     message: '',
     result: null,
   };
@@ -31,7 +31,6 @@ async function handleCustomFields(
   if ('body' in event) {
     body = JSON.parse(event.body);
   }
-  console.log(pathElements);
   if (!(pathElements[1] == null)) {
     [, idValue] = pathElements;
   } else if (body) { // For POST requests, setting idValue here since it's not in the path
@@ -47,7 +46,7 @@ async function handleCustomFields(
             event.requestContext.domainName,
             pathElements,
             queryParams,
-            connection,
+            db,
             idField,
             name,
             tableName,
@@ -56,7 +55,7 @@ async function handleCustomFields(
 
         case 'POST':
           result = await addCustomField(
-            connection,
+            db,
             allFields,
             body,
             idField,
@@ -68,7 +67,7 @@ async function handleCustomFields(
 
         default:
           result.message = `handleCustomFields: unknown verb ${verb}`;
-          result.error = true;
+          result.statusCode = 404;
           break;
       }
       break;
@@ -77,7 +76,7 @@ async function handleCustomFields(
       switch (verb) {
         case 'GET':
           result = await getCustomField(
-            connection,
+            db,
             idField,
             idValue,
             name,
@@ -87,7 +86,7 @@ async function handleCustomFields(
 
         case 'PUT':
           result = await updateCustomField(
-            connection,
+            db,
             allFields,
             body,
             idField,
@@ -99,8 +98,8 @@ async function handleCustomFields(
           break;
 
         case 'DELETE':
-          result = deleteCustomField(
-            connection,
+          result = await deleteCustomField(
+            db,
             idField,
             idValue,
             name,
@@ -110,17 +109,17 @@ async function handleCustomFields(
 
         default:
           result.message = `handleCustomFields: unknown verb ${verb}`;
-          result.error = true;
+          result.statusCode = 404;
           break;
       }
       break;
 
     default:
       result.message = `Unknown custom fields endpoint: [${pathElements.join()}]`;
-      result.error = true;
+      result.statusCode = 404;
       break;
   }
-  if (result.error) {
+  if (result.statusCode !== 200) {
     console.log('We have an error but do not know why!');
     console.log(result.message);
   }

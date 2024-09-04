@@ -1,36 +1,23 @@
 /* eslint-disable import/extensions */
 /* eslint-disable no-console */
-import { newClient, getInfo } from '../utilities/utilities.js';
+import { getInfo } from '../utilities/utilities.js';
 
 async function getOwner(
-  connection,
+  db,
   idField,
   idValue,
   name,
   tableName,
 ) {
-  let client;
-  let clientInitiated = false;
 
   const response = {
-    error: false,
+    statusCode: 200,
     message: '',
     result: null,
   };
 
-  try {
-    client = await newClient(connection);
-    clientInitiated = true;
-    response.result = await getInfo(client, idField, idValue, name, tableName);
-    await client.end();
-  } catch (error) {
-    if (clientInitiated) {
-      await client.end();
-    }
-    response.error = true;
-    response.message = error.message;
-    return response;
-  }
+  response.result = await getInfo(db, idField, idValue, name, tableName);
+
   return response;
 }
 

@@ -9,10 +9,10 @@ async function handleReference(
   pathElements,
   queryParams,
   verb,
-  connection,
+  db,
 ) {
   let result = {
-    error: false,
+    statusCode: 200,
     message: '',
     result: null,
   };
@@ -22,10 +22,10 @@ async function handleReference(
   switch (nParams) {
     // GET reference
     case 1:
-      result = await getReference(connection);
+      result = await getReference(db);
       break;
   }
-  if (result.error) {
+  if (result.statusCode !== 200) {
     console.log('We have an error but do not know why!');
     console.log(result.message);
   }

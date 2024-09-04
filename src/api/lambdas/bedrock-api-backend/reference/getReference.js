@@ -1,11 +1,10 @@
 /* eslint-disable import/extensions */
 /* eslint-disable no-console */
 import pgpkg from 'pg';
-import pgErrorCodes from '../pgErrorCodes.js';
-import { getCustomFieldsInfo } from '../utilities/assetUtilities.js';
-import { newClient } from '../utilities/utilities.js';
 
-async function getInfo(client, info) {
+import { getCustomFieldsInfo } from '../utilities/assetUtilities.js';
+
+async function getInfo(db, info) {
   let sql = `SELECT * FROM bedrock.${info.table_name}`;
   let res;
   let resultArray = [];
@@ -15,7 +14,7 @@ async function getInfo(client, info) {
   }
 
   try {
-    res = await client.query(sql, []);
+    res = await db.query(sql, []);
     // Either build the array of strings if you just need one field,
     // or just add the entire res.rows if you need all fields
     if (info.field_name !== 'all') {
@@ -26,49 +25,49 @@ async function getInfo(client, info) {
       resultArray = res.rows;
     }
   } catch (error) {
-    throw new Error(`PG error getting ${info.table_name} information: ${pgErrorCodes[error.code]||error.code}`);
+    throw new Error(`PG error getting ${info.table_name} information: ${error}`);
   }
 
   return resultArray;
 }
 
-async function getTaskType(client) {
+async function getTaskType(db) {
   const sql = 'SELECT unnest(enum_range(NULL::task_types)) as task_type;';
   let res;
   const resultArray = [];
 
   // We're only adding unique task types
   try {
-    res = await client.query(sql, []);
+    res = await db.query(sql, []);
     for (let i = 0; i < res.rows.length; i += 1) {
       resultArray.push(res.rows[i].task_type);
     }
   } catch (error) {
-    throw new Error(`PG error getting tasks information: ${pgErrorCodes[error.code]||error.code}`);
+    throw new Error(`PG error getting tasks information: ${error}`);
   }
 
   return resultArray;
 }
 
-async function getConnectionClass(client) {
+async function getConnectionClass(db) {
   const sql = 'SELECT unnest(enum_range(NULL::connections_classes)) as connection_class;';
   let res;
   const resultArray = [];
 
   // We're only adding unique task types
   try {
-    res = await client.query(sql, []);
+    res = await db.query(sql, []);
     for (let i = 0; i < res.rows.length; i += 1) {
       resultArray.push(res.rows[i].connection_class);
     }
   } catch (error) {
-    throw new Error(`PG error getting tasks information: ${pgErrorCodes[error.code]||error.code}`);
+    throw new Error(`PG error getting tasks information: ${error}`);
   }
 
   return resultArray;
 }
 
-async function getCustomFields(client) {
+async function getCustomFields(db) {
   const sql = 'SELECT asset_type_id, asset_type_name FROM bedrock.asset_types';
   let res;
 
@@ -76,7 +75,7 @@ async function getCustomFields(client) {
   const types = [];
 
   try {
-    res = await client.query(sql, []);
+    res = await db.query(sql, []);
     res.rows.forEach((row) => {
       types.push(row.asset_type_id);
       const typeMap = new Map();
@@ -84,11 +83,11 @@ async function getCustomFields(client) {
       resultMap.set(row.asset_type_id, typeMap);
     });
   } catch (error) {
-    throw new Error(`PG error getting asset types: ${pgErrorCodes[error.code]||error.code}`);
+    throw new Error(`PG error getting asset types: ${error}`);
   }
   let type;
   for (type of types) {
-    const customFields = await getCustomFieldsInfo(client, type);
+    const customFields = await getCustomFieldsInfo(db, type);
     const typeMap = resultMap.get(type);
     typeMap.set('fields', Object.fromEntries(customFields.entries()));
   }
@@ -100,14 +99,12 @@ async function getCustomFields(client) {
   return resultMap;
 }
 
-async function getReference(connection) {
+async function getReference(db) {
   const result = {
-    error: false,
+    statusCode: 200,
     message: '',
     result: {},
   };
-
-  let client;
 
   // if you want to add info from a new another table, and need either a single column
   // or all the columns, just add it to this array
@@ -118,22 +115,12 @@ async function getReference(connection) {
     // { table_name: 'owners', field_name: 'all' },
   ];
 
-  // get a new client
-  try {
-    client = await newClient(connection);
-  } catch (error) {
-    result.error = true;
-    result.message = error.message;
-    return result;
-  }
-
   // loop through queryInfo array, adding info for each table listed in the array
   for (let i = 0; i < queryInfo.length; i += 1) {
     try {
-      result.result[queryInfo[i].table_name] = await getInfo(client, queryInfo[i]);
+      result.result[queryInfo[i].table_name] = await getInfo(db, queryInfo[i]);
     } catch (error) {
-      await client.end();
-      result.error = true;
+      result.statusCode = 500;
       result.message = error.message;
       return result;
     }
@@ -142,22 +129,19 @@ async function getReference(connection) {
   // Tasks and connections class gets their own functions because
   // we have to build the array differently
   try {
-    result.result.task_type = await getTaskType(client);
-    result.result.connection_class = await getConnectionClass(client);
+    result.result.task_type = await getTaskType(db);
+    result.result.connection_class = await getConnectionClass(db);
   } catch (error) {
-    await client.end();
-    result.error = true;
+    result.statusCode = 500;
     result.message = error.message;
     return result;
   }
 
   // Custom fields also gets its own function because we're creating a map to return
   try {
-    result.result.custom_fields = await getCustomFields(client);
-    await client.end();
+    result.result.custom_fields = await getCustomFields(db);
   } catch (error) {
-    await client.end();
-    result.error = true;
+    result.statusCode = 500;
     result.message = error.message;
     return result;
   }

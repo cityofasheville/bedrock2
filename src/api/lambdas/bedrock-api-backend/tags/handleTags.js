@@ -11,10 +11,10 @@ async function handleTags(
   pathElements,
   queryParams,
   verb,
-  connection,
+  db,
 ) {
   let result = {
-    error: false,
+    statusCode: 200,
     message: '',
     result: null,
   };
@@ -46,7 +46,7 @@ async function handleTags(
             event.requestContext.domainName,
             pathElements,
             queryParams,
-            connection,
+            db,
             idField,
             name,
             tableName,
@@ -55,7 +55,7 @@ async function handleTags(
 
         case 'POST':
           result = await addTag(
-            connection,
+            db,
             allFields,
             body,
             idField,
@@ -67,7 +67,7 @@ async function handleTags(
 
         default:
           result.message = `handleTags: unknown verb ${verb}`;
-          result.error = true;
+          result.statusCode = 404;
           break;
       } break;
     // VERB tags/{tag_name}
@@ -75,7 +75,7 @@ async function handleTags(
       switch (verb) {
         case 'GET':
           result = await getTag(
-            connection,
+            db,
             idField,
             idValue,
             name,
@@ -85,7 +85,7 @@ async function handleTags(
 
         case 'PUT':
           result = await updateTag(
-            connection,
+            db,
             allFields,
             body,
             idField,
@@ -97,8 +97,8 @@ async function handleTags(
           break;
 
         case 'DELETE':
-          result = deleteTag(
-            connection,
+          result = await deleteTag(
+            db,
             idField,
             idValue,
             name,
@@ -108,17 +108,17 @@ async function handleTags(
 
         default:
           result.message = `handleTags: unknown verb ${verb}`;
-          result.error = true;
+          result.statusCode = 404;
           break;
       }
       break;
 
     default:
       result.message = `Unknown tags endpoint: [${pathElements.join()}]`;
-      result.error = true;
+      result.statusCode = 404;
       break;
   }
-  if (result.error) {
+  if (result.statusCode !== 200) {
     console.log('We have an error but do not know why!');
     console.log(result.message);
   }

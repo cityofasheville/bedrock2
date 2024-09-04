@@ -3,7 +3,7 @@
 
 async function handleAbout() {
   let result = {
-    error: false,
+    statusCode: 200,
     message: '',
     result: {
         inProduction: !(process.env.BEDROCK_DB_HOST)

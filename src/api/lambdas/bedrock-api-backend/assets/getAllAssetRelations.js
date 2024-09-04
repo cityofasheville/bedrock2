@@ -1,34 +1,20 @@
 /* eslint-disable import/extensions */
 /* eslint-disable no-console */
-import pgpkg from 'pg';
-import pgErrorCodes from '../pgErrorCodes.js';
 import { checkExistence } from '../utilities/utilities.js';
 
-const { Client } = pgpkg;
-
-async function newClient(connection) {
-  const client = new Client(connection);
-  try {
-    await client.connect();
-    return client;
-  } catch (error) {
-    throw new Error(`PG error connecting: ${pgErrorCodes[error.code]||error.code}`);
-  }
-}
-
-async function readAsset(client, idValue, tableName) {
+async function readAsset(db, idValue, tableName) {
   let res;
   const sql = `SELECT a.asset_id
   FROM ${tableName} a where a.asset_id like $1`;
   try {
-    res = await client.query(sql, [idValue]);
+    res = await db.query(sql, [idValue]);
   } catch (error) {
-    throw new Error(`PG error getting asset information: ${pgErrorCodes[error.code]||error.code}`);
+    throw new Error(`PG error getting asset information: ${error}`);
   }
   return res;
 }
 
-async function readRelations(client, idValue) {
+async function readRelations(db, idValue) {
   // this function queries the dependency_view , not the dependencies table.
   // this is done to capture any implied dependencies
   let res;
@@ -67,9 +53,9 @@ LEFT JOIN bedrock.run_groups r2 ON e2.run_group_id = r2.run_group_id
       `;
   let check = {};
   try {
-    res = await client.query(sql, [idValue]);
+    res = await db.query(sql, [idValue]);
   } catch (error) {
-    throw new Error(`PG error getting ancestor information: ${pgErrorCodes[error.code]||error.code}`);
+    throw new Error(`PG error getting ancestor information: ${error}`);
   }
 
 
@@ -120,9 +106,9 @@ LEFT JOIN bedrock.run_groups r2 ON e2.run_group_id = r2.run_group_id
       `;
   check = {};
   try {
-    res = await client.query(sql, [idValue]);
+    res = await db.query(sql, [idValue]);
   } catch (error) {
-    throw new Error(`PG error getting descendent information: ${pgErrorCodes[error.code]||error.code}`);
+    throw new Error(`PG error getting descendent information: ${error}`);
   }
 
 
@@ -149,33 +135,33 @@ LEFT JOIN bedrock.run_groups r2 ON e2.run_group_id = r2.run_group_id
   return relations;
 }
 
-async function getTags(client, formattedTagList) {
+async function getTags(db, formattedTagList) {
   const sql = `
   select * from bedrock.asset_tags a left join bedrock.tags b on a.tag_id = b.tag_id
   where asset_id in (${formattedTagList.join()})
 `;
   let sqlResult;
   try {
-    sqlResult = await client.query(sql);
+    sqlResult = await db.query(sql);
   } catch (error) {
-    throw new Error(`PG error getting asset tags: ${pgErrorCodes[error.code]||error.code}`);
+    throw new Error(`PG error getting asset tags: ${error}`);
   }
   return sqlResult;
 }
 
 async function getAllAssetRelations(
-  connection,
+  db,
   idValue,
   tableName,
   idField,
   name
 ) {
-  let client;
+
   let relations;
   let res;
   const shouldExist = true;
   const response = {
-    error: false,
+    statusCode: 200,
     message: '',
     result: {
       ancestors: {
@@ -189,31 +175,24 @@ async function getAllAssetRelations(
     },
   };
 
-  try {
-    client = await newClient(connection);
-  } catch (error) {
-    response.error = true;
-    response.message = error.message;
+  await checkExistence(db, 'bedrock.assets', idField, idValue, name, shouldExist)
+  res = await readAsset(db, idValue, tableName);
+  if (res.rowCount === 0) {
+    response.message = 'No assets found';
     return response;
   }
 
-  try {
-    await checkExistence(client, 'bedrock.assets', idField, idValue, name, shouldExist)
-    res = await readAsset(client, idValue, tableName);
-    if (res.rowCount === 0) {
-      response.message = 'No assets found';
-      return response;
-    }
+  relations = await readRelations(db, idValue);
+  response.result.ancestors.items = relations.ancestors.items;
+  response.result.ancestors.unique_items = relations.ancestors.unique_items;
+  response.result.descendants.items = relations.descendants.items;
+  response.result.descendants.unique_items = relations.descendants.unique_items;
 
-    relations = await readRelations(client, idValue);
-    response.result.ancestors.items = relations.ancestors.items;
-    response.result.ancestors.unique_items = relations.ancestors.unique_items;
-    response.result.descendants.items = relations.descendants.items;
-    response.result.descendants.unique_items = relations.descendants.unique_items;
+  const tagList = response.result.ancestors.unique_items.concat(response.result.descendants.unique_items)
+  const formattedTagList = tagList.map(item => `'${item}'`);
+  if (formattedTagList.length > 0) {
+    const tagsResult = await getTags(db, formattedTagList);
 
-    const tagList = response.result.ancestors.unique_items.concat(response.result.descendants.unique_items)
-    const formattedTagList = tagList.map(item => `'${item}'`);
-    const tagsResult = await getTags(client, formattedTagList);
 
     // matching tags to the correct assets
     // we're only pushing tag name since that's all the frontend needs.
@@ -243,14 +222,8 @@ async function getAllAssetRelations(
         }
       }
     }
-  } catch (error) {
-    response.error = true;
-    response.message = error.message;
-    response.result = null;
-    return response;
-  } finally {
-    await client.end();
   }
+
   return response;
 }
 

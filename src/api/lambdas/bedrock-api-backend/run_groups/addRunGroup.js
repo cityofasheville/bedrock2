@@ -1,12 +1,12 @@
 /* eslint-disable import/extensions */
 /* eslint-disable no-console */
 import {
-  newClient, checkInfo, checkExistence, addInfo,
+  checkInfo, checkExistence, addInfo,
   generateId,
 } from '../utilities/utilities.js';
 
 async function addRunGroup(
-  connection,
+  db,
   allFields,
   body,
   idField,
@@ -15,8 +15,6 @@ async function addRunGroup(
   requiredFields,
 ) {
   const shouldExist = false;
-  let client;
-  let clientInitiated = false;
   const bodyWithID = {
     ...body,
   };
@@ -24,26 +22,15 @@ async function addRunGroup(
   const idValue = bodyWithID[idField];
 
   const response = {
-    error: false,
+    statusCode: 200,
     message: `Successfully added ${name} ${idValue}`,
     result: null,
   };
 
-  try {
-    client = await newClient(connection);
-    clientInitiated = true;
-    checkInfo(bodyWithID, requiredFields, name, idValue, idField);
-    await checkExistence(client, tableName, idField, idValue, name, shouldExist);
-    response.result = await addInfo(client, allFields, bodyWithID, tableName, name);
-    await client.end();
-  } catch (error) {
-    if (clientInitiated) {
-      await client.end();
-    }
-    response.error = true;
-    response.message = error.message;
-    return response;
-  }
+  checkInfo(bodyWithID, requiredFields, name, idValue, idField);
+  await checkExistence(db, tableName, idField, idValue, name, shouldExist);
+  response.result = await addInfo(db, allFields, bodyWithID, tableName, name);
+
   return response;
 }
 

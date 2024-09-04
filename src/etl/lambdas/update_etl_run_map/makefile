@@ -23,6 +23,7 @@ init: prebuild $(TF_TARGS)
 	@touch $(INSTANCE).instance		# Marker file to display the instance name
 
 function.zip: $(code_files)
+	rm -f ./function.zip
 	zip -r9 function.zip $(code_files)
 
 plan: function.zip $(TF_TARGS) $(dirs)

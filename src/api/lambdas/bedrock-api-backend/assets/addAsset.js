@@ -1,12 +1,11 @@
 /* eslint-disable import/extensions */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-console */
-import pgErrorCodes from '../pgErrorCodes.js';
 import {
   getCustomFieldsInfo, addCustomFieldsInfo, getCustomValues, checkCustomFieldsInfo,
 } from '../utilities/assetUtilities.js';
 import {
-  newClient, checkInfo, checkExistence, generateId,
+  checkInfo, checkExistence, generateId,
 } from '../utilities/utilities.js';
 
 async function baseInsert(body, client) {
@@ -40,7 +39,7 @@ async function baseInsert(body, client) {
     res = await client.query(sql, args);
   } catch (error) {
     throw new Error(
-      `PG error adding new base asset: ${pgErrorCodes[error.code]||error.code}`,
+      `PG error adding new base asset: ${error}`,
     );
   }
 
@@ -74,7 +73,7 @@ async function addDependencies(body, client) {
         );
       } catch (error) {
         throw new Error(
-          `PG error adding dependencies: ${pgErrorCodes[error.code]||error.code}`,
+          `PG error adding dependencies: ${error}`,
         );
       }
     }
@@ -110,24 +109,23 @@ async function addTags(body, client) {
       );
     }
   } catch (error) {
-    await client.query('ROLLBACK');
-    throw new Error(`PG error adding asset_tags: ${pgErrorCodes[error.code]||error.code}`);
+    throw new Error(`PG error adding asset_tags: ${error}`);
   }
   return body.tags;
 }
 
 async function addAsset(
-  connection,
+  db,
   idField,
   name,
   tableName,
   requiredFields,
   body,
 ) {
+
   let customFieldsFromAssetType;
   let customValues;
   let asset;
-  let client;
   const shouldExist = false;
   const bodyWithID = {
     ...body,
@@ -137,43 +135,29 @@ async function addAsset(
   let customFields = new Map(Object.entries(bodyWithID.custom_fields));
 
   const response = {
-    error: false,
+    statusCode: 200,
     message: '',
     result: null,
   };
 
-  try {
-    client = await newClient(connection);
-  } catch (error) {
-    response.error = true;
-    response.message = error.message;
-    return response;
-  }
+  let client = await db.newClient();
 
   await client.query('BEGIN');
+  await checkExistence(client, tableName, idField, idValue, name, shouldExist);
+  checkInfo(bodyWithID, requiredFields, name, idValue, idField);
+  customFieldsFromAssetType = await getCustomFieldsInfo(client, bodyWithID.asset_type_id);
+  // customValues are from body, not CV table
+  customValues = getCustomValues(bodyWithID);
+  checkCustomFieldsInfo(body, customFieldsFromAssetType);
+  asset = await baseInsert(bodyWithID, client);
+  const updatedCustomFields = await addCustomFieldsInfo(bodyWithID, client, customFields, customValues);
+  asset.set('custom_fields', Object.fromEntries(updatedCustomFields));
+  asset.set('parents', await addDependencies(bodyWithID, client));
+  asset.set('tags', await addTags(bodyWithID, client));
+  await client.query('COMMIT');
 
-  try {
-    checkExistence(client, tableName, idField, idValue, name, shouldExist);
-    checkInfo(bodyWithID, requiredFields, name, idValue, idField);
-    customFieldsFromAssetType = await getCustomFieldsInfo(client, bodyWithID.asset_type_id);
-    // customValues are from body, not CV table
-    customValues = getCustomValues(bodyWithID);
-    checkCustomFieldsInfo(body, customFieldsFromAssetType);
-    asset = await baseInsert(bodyWithID, client);
-    const updatedCustomFields = await addCustomFieldsInfo(bodyWithID, client, customFields, customValues);
-    asset.set('custom_fields', Object.fromEntries(updatedCustomFields));
-    asset.set('parents', await addDependencies(bodyWithID, client));
-    asset.set('tags', await addTags(bodyWithID, client));
-    await client.query('COMMIT');
-    await client.end();
-    asset.set('asset_id', bodyWithID[idField]);
-    response.result = Object.fromEntries(asset.entries());
-  } catch (error) {
-    await client.query('ROLLBACK');
-    response.error = true;
-    response.message = error.message;
-  }
+  asset.set('asset_id', bodyWithID[idField]);
+  response.result = Object.fromEntries(asset.entries());
   return response;
 }
-
 export default addAsset;

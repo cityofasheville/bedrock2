@@ -1,7 +1,7 @@
 /* eslint-disable import/extensions */
 /* eslint-disable no-console */
 import {
-  newClient, checkInfo, checkExistence, addInfo, generateId, addAssetTypeCustomFields
+  checkInfo, checkExistence, addInfo, generateId, addAssetTypeCustomFields
 } from '../utilities/utilities.js';
 
 function checkCustomFields(body) {
@@ -13,7 +13,7 @@ function checkCustomFields(body) {
 }
 
 async function addAssetType(
-  connection,
+  db,
   allFields,
   body,
   idField,
@@ -23,8 +23,6 @@ async function addAssetType(
   requiredFields,
 ) {
   const shouldExist = false;
-  let client;
-  let clientInitiated = false;
   const bodyWithID = {
     ...body,
   };
@@ -32,45 +30,26 @@ async function addAssetType(
   const idValue = bodyWithID[idField];
 
   const response = {
-    error: false,
+    statusCode: 200,
     message: `Successfully added ${name} ${idValue}`,
     result: null,
   };
 
-  try {
-    client = await newClient(connection);
-    clientInitiated = true;
-    checkInfo(bodyWithID, requiredFields, name, idValue, idField);
-    checkCustomFields(bodyWithID);
-  } catch (error) {
-    if (clientInitiated) {
-      await client.end();
-    }
-    response.error = true;
-    response.message = error.message;
-    return response;
-  }
+  checkInfo(bodyWithID, requiredFields, name, idValue, idField);
+  checkCustomFields(bodyWithID);
 
-  try {
-    await client.query('BEGIN');
-    await checkExistence(client, tableName, idField, idValue, name, shouldExist);
-    response.result = await addInfo(client, allFields, bodyWithID, tableName, name);
-    if (body.custom_fields?.length > 0) {
-        response.result.custom_fields = await addAssetTypeCustomFields(client, idValue, body);
-    } else {
-      response.result.custom_fields = [];
-    }
-    await client.query('COMMIT');
-    await client.end();
-  } catch (error) {
-    await client.query('ROLLBACK');
-    if (clientInitiated) {
-      await client.end();
-    }
-    response.error = true;
-    response.message = error.message;
-    return response;
+  let client = await db.newClient();
+
+  await client.query('BEGIN');
+  await checkExistence(client, tableName, idField, idValue, name, shouldExist);
+  response.result = await addInfo(client, allFields, bodyWithID, tableName, name);
+  if (body.custom_fields?.length > 0) {
+    response.result.custom_fields = await addAssetTypeCustomFields(client, idValue, body);
+  } else {
+    response.result.custom_fields = [];
   }
+  await client.query('COMMIT');
+
   return response;
 }
 
