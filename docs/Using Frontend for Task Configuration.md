@@ -3,7 +3,7 @@ Assets can have ETL task associated with them. Each type of task has different c
 
 ## Standard Fields
 These options are added to the ETL configuration for an Asset and differ depending of the Task Type:
-![Screenshot showing Source and Target fields in program](./SourceTargetScreenshot.png)
+![Screenshot showing Source and Target fields in program](./src/SourceTargetScreenshot.png)
 
 | Task Type| Source                       | Target                             | Configuration  |
 |----------|------------------------------|------------------------------------|--------------- |
@@ -17,7 +17,7 @@ These options are added to the ETL configuration for an Asset and differ dependi
 
 ## OPTIONAL fields
 These options are appended to the Source and Target fields:
-![Screenshot showing Source and Target fields in program](./SourceTargetOptionsScreenshot.png)
+![Screenshot showing Source and Target fields in program](./img/SourceTargetOptionsScreenshot.png)
 ### Table_Copy
 #### Database
 - SOURCE OPTIONS

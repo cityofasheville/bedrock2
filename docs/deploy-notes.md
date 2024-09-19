@@ -79,4 +79,4 @@ make init
 make apply
 ```
 
-![directory-structure](./deployment-folders.png)
+![directory-structure](./img/deployment-folders.png)
