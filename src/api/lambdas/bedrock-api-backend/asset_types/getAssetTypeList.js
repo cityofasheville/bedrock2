@@ -1,6 +1,6 @@
 /* eslint-disable import/extensions */
 /* eslint-disable no-console */
-import { newClient, getBaseCustomFieldsInfo } from '../utilities/utilities.js';
+import { getBaseCustomFieldsInfo } from '../utilities/utilities.js';
 import {
   buildCount, buildOffset, buildWhereClause, getCount, getListInfo, buildURL,
 } from '../utilities/listUtilities.js';
@@ -9,7 +9,7 @@ async function getAssetTypeList(
   domainName,
   pathElements,
   queryParams,
-  connection,
+  db,
   idField,
   name,
   tableName,
@@ -17,47 +17,34 @@ async function getAssetTypeList(
 ) {
   let total;
   let res;
-  let client;
-  let clientInitiated = false;
   const count = buildCount(queryParams);
   const offset = buildOffset(queryParams);
   const whereClause = buildWhereClause(queryParams, idField);
 
   const response = {
-    error: false,
+    statusCode: 200,
     message: '',
     result: { items: null },
   };
   response.result.count = count;
   response.result.offset = offset;
 
-  try {
-    client = await newClient(connection);
-    clientInitiated = true;
-    total = await getCount(whereClause, client, tableName, name);
-    if (total === 0) {
-      response.message = `No ${name}s found.`;
-      return response;
-    }
-    response.result.total = total;
-    res = await getListInfo(offset, count, whereClause, client, idField, tableName, name);
-    response.result.items = res.rows;
-    response.result.url = buildURL(queryParams, domainName, res, offset, total, pathElements);
-
-    for (const item of response.result.items) {
-      const asset_type_id = item.asset_type_id
-      const customFieldsResponse = await getBaseCustomFieldsInfo(client, idField, asset_type_id, name, tableNameCustomFields);
-      item.custom_fields = Object.fromEntries(customFieldsResponse) || {};
-    }
-    
-    await client.end();
-  } catch (error) {
-    if (clientInitiated) {
-      await client.end();
-    }
-    response.error = true;
-    response.message = error.message;
+  total = await getCount(whereClause, db, tableName, name);
+  if (total === 0) {
+    response.message = `No ${name}s found.`;
+    return response;
   }
+  response.result.total = total;
+  res = await getListInfo(offset, count, whereClause, db, idField, tableName, name);
+  response.result.items = res.rows;
+  response.result.url = buildURL(queryParams, domainName, res, offset, total, pathElements);
+
+  for (const item of response.result.items) {
+    const asset_type_id = item.asset_type_id
+    const customFieldsResponse = await getBaseCustomFieldsInfo(db, idField, asset_type_id, name, tableNameCustomFields);
+    item.custom_fields = Object.fromEntries(customFieldsResponse) || {};
+  }
+
   return response;
 }
 

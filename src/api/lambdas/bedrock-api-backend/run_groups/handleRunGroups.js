@@ -12,10 +12,10 @@ async function handleRunGroups(
   pathElements,
   queryParams,
   verb,
-  connection,
+  db,
 ) {
   let result = {
-    error: false,
+    statusCode: 200,
     message: '',
     result: null,
   };
@@ -48,7 +48,7 @@ async function handleRunGroups(
             event.requestContext.domainName,
             pathElements,
             queryParams,
-            connection,
+            db,
             idField,
             name,
             tableName,
@@ -57,7 +57,7 @@ async function handleRunGroups(
 
         case 'POST':
           result = await addRunGroup(
-            connection,
+            db,
             allFields,
             body,
             idField,
@@ -69,7 +69,7 @@ async function handleRunGroups(
 
         default:
           result.message = `handleRunGroups: unknown verb ${verb}`;
-          result.error = true;
+          result.statusCode = 404;
           break;
       } break;
 
@@ -78,7 +78,7 @@ async function handleRunGroups(
       switch (verb) {
         case 'GET':
           result = await getRunGroup(
-            connection,
+            db,
             idField,
             idValue,
             name,
@@ -88,7 +88,7 @@ async function handleRunGroups(
 
         case 'PUT':
           result = await updateRunGroup(
-            connection,
+            db,
             allFields,
             body,
             idField,
@@ -100,8 +100,8 @@ async function handleRunGroups(
           break;
 
         case 'DELETE':
-          result = deleteRunGroup(
-            connection,
+          result = await deleteRunGroup(
+            db,
             idField,
             idValue,
             name,
@@ -111,17 +111,17 @@ async function handleRunGroups(
 
         default:
           result.message = `handleRunGroups: unknown verb ${verb}`;
-          result.error = true;
+          result.statusCode = 404;
           break;
       }
       break;
 
     default:
       result.message = `Unknown runGroups endpoint: [${pathElements.join()}]`;
-      result.error = true;
+      result.statusCode = 404;
       break;
   }
-  if (result.error) {
+  if (result.statusCode !== 200) {
     console.log('We have an error but do not know why!');
     console.log(result.message);
   }

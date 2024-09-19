@@ -1,6 +1,6 @@
 /* eslint-disable import/extensions */
 /* eslint-disable no-console */
-import { newClient, getInfo, getBaseCustomFieldsInfo } from '../utilities/utilities.js';
+import { getInfo, getBaseCustomFieldsInfo } from '../utilities/utilities.js';
 
 function simpleFormatCustomFields(customFieldsResponse) {
   let formattedCustomFields = [];
@@ -16,38 +16,24 @@ function simpleFormatCustomFields(customFieldsResponse) {
 }
 
 async function getAssetType(
-  connection,
+  db,
   idField,
   idValue,
   name,
   tableName,
   tableNameCustomFields,
 ) {
-  let client;
-  let clientInitiated = false;
 
   const response = {
-    error: false,
+    statusCode: 200,
     message: '',
     result: null,
   };
 
-  try {
-    client = await newClient(connection);
-    clientInitiated = true;
-    response.result = await getInfo(client, idField, idValue, name, tableName);
-    const customFieldsResponse = await getBaseCustomFieldsInfo(client, idField, idValue, name, tableNameCustomFields)
-    response.result.custom_fields = simpleFormatCustomFields(customFieldsResponse);
-    await client.end();
-  } catch (error) {
-    if (clientInitiated) {
-      await client.end();
-    }
-    response.error = true;
-    response.message = error.message;
-    response.result = null;
-    return response;
-  }
+  response.result = await getInfo(db, idField, idValue, name, tableName);
+  const customFieldsResponse = await getBaseCustomFieldsInfo(db, idField, idValue, name, tableNameCustomFields)
+  response.result.custom_fields = simpleFormatCustomFields(customFieldsResponse);
+
   return response;
 }
 

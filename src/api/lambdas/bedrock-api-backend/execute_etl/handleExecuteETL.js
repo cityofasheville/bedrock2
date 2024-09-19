@@ -6,10 +6,10 @@ async function handleExecuteETL(
   pathElements,
   queryParams,
   verb,
-  connection,
+  client,
 ) {
   let result = {
-    error: false,
+    statusCode: 200,
     message: '',
     result: null,
   };
@@ -27,9 +27,9 @@ async function handleExecuteETL(
     idValue = body[idField];
   }
 
-  console.log("event:", JSON.stringify(event, null, 2));
-  console.log("pathElements", pathElements);
-  console.log("nParams", nParams);
+  // console.log("event:", JSON.stringify(event, null, 2));
+  // console.log("pathElements", pathElements);
+  // console.log("nParams", nParams);
 
   switch (nParams) {
     case 3:
@@ -44,7 +44,7 @@ async function handleExecuteETL(
 
           default:
             result.message = `handleExecuteETL: unknown verb ${verb}`;
-            result.error = true;
+            result.statusCode = 404;
             break;
         }
       } else if (idValue === 'one_asset') {
@@ -58,21 +58,21 @@ async function handleExecuteETL(
 
           default:
             result.message = `handleExecuteETL: unknown verb ${verb}`;
-            result.error = true;
+            result.statusCode = 404;
             break;
         }
       } else {
         result.message = `Unknown execute_etl endpoint: [${pathElements.join()}]`;
-        result.error = true;
+        result.statusCode = 404;
       }
       break;
 
     default:
       result.message = `Unknown execute_etl endpoint: [${pathElements.join()}]`;
-      result.error = true;
+      result.statusCode = 404;
       break;
   }
-  if (result.error) {
+  if (result.statusCode !== 200) {
     console.log('We have an error but do not know why!');
     console.log(result.message);
   }

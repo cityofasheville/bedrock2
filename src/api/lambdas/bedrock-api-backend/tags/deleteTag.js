@@ -1,42 +1,29 @@
 /* eslint-disable import/extensions */
 /* eslint-disable no-console */
 import {
-  newClient, checkExistence, deleteInfo,
+  checkExistence, deleteInfo,
 } from '../utilities/utilities.js';
 
 async function deleteTag(
-  connection,
+  db,
   idField,
   idValue,
   name,
   tableName,
 ) {
   const shouldExist = true;
-  let client;
-  let clientInitiated = false;
   const linkingTableName = 'bedrock.asset_tags'
 
   const response = {
-    error: false,
+    statusCode: 200,
     message: `Successfully deleted ${name} ${idValue}`,
     result: null,
   };
 
-  try {
-    client = await newClient(connection);
-    clientInitiated = true;
-    await checkExistence(client, tableName, idField, idValue, name, shouldExist);
-    await deleteInfo(client, tableName, idField, idValue, name);
-    await deleteInfo(client, linkingTableName, idField, idValue, name);
-    await client.end();
-  } catch (error) {
-    if (clientInitiated) {
-      await client.end();
-    }
-    response.error = true;
-    response.message = error.message;
-    return response;
-  }
+  await checkExistence(db, tableName, idField, idValue, name, shouldExist);
+  await deleteInfo(db, tableName, idField, idValue, name);
+  await deleteInfo(db, linkingTableName, idField, idValue, name);
+
   return response;
 }
 

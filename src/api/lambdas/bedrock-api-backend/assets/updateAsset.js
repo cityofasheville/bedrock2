@@ -1,12 +1,12 @@
 /* eslint-disable import/extensions */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-console */
-import pgErrorCodes from '../pgErrorCodes.js';
+
 import {
   getCustomFieldsInfo, addCustomFieldsInfo, getCustomValues, checkCustomFieldsInfo,
 } from '../utilities/assetUtilities.js';
 import {
-  newClient, checkInfo, updateInfo, deleteInfo,
+  checkInfo, updateInfo, deleteInfo,
 } from '../utilities/utilities.js';
 import getAsset from './getAsset.js';
 
@@ -16,7 +16,7 @@ async function checkExistence(client, idValue) {
   try {
     res = await client.query(sql, [idValue]);
   } catch (error) {
-    throw new Error(`PG error verifying that asset exists: ${pgErrorCodes[error.code] || error.code}`);
+    throw new Error(`PG error verifying that asset exists: ${error}`);
   }
 
   if (res.rowCount === 0) {
@@ -30,7 +30,7 @@ async function updateDependencies(client, idField, idValue, name, body) {
   try {
     await deleteInfo(client, 'bedrock.dependencies', idField, idValue, name);
   } catch (error) {
-    throw new Error(`PG error deleting dependencies for update: ${pgErrorCodes[error.code] || error.code}`);
+    throw new Error(`PG error deleting dependencies for update: ${error}`);
   }
   if (body.parents.length > 0) {
     for (let i = 0; i < body.parents.length; i += 1) {
@@ -41,7 +41,7 @@ async function updateDependencies(client, idField, idValue, name, body) {
           [idValue, dependency],
         );
       } catch (error) {
-        throw new Error(`PG error updating dependencies: ${pgErrorCodes[error.code] || error.code}`);
+        throw new Error(`PG error updating dependencies: ${error}`);
       }
     }
   }
@@ -76,14 +76,14 @@ async function updateTags(idValue, idField, body, client, name) {
     try {
       res = await client.query(sql, tags);
     } catch (error) {
-      throw new Error(`PG error reading tags for update: ${pgErrorCodes[error.code] || error.code}`);
+      throw new Error(`PG error reading tags for update: ${error}`);
     }
 
     // Now delete any existing tags
     try {
       await deleteInfo(client, 'bedrock.asset_tags', idField, idValue, name);
     } catch (error) {
-      throw new Error(`PG error deleting tags for update: ${pgErrorCodes[error.code] || error.code}`);
+      throw new Error(`PG error deleting tags for update: ${error}`);
     }
 
     // And add the new ones back in
@@ -96,7 +96,7 @@ async function updateTags(idValue, idField, body, client, name) {
         );
       }
     } catch (error) {
-      throw new Error(`PG error inserting tags for update: ${pgErrorCodes[error.code] || error.code}`);
+      throw new Error(`PG error inserting tags for update: ${error}`);
     }
   }
   return tags;
@@ -106,7 +106,7 @@ async function updateTags(idValue, idField, body, client, name) {
 async function updateAsset(
   pathElements,
   queryParams,
-  connection,
+  db,
   idField,
   idValue,
   name,
@@ -117,62 +117,45 @@ async function updateAsset(
 ) {
   let customFieldsFromAssetType;
   let customValues;
-  let client;
   const baseFields = ['asset_id', 'asset_name', 'description', 'location', 'active', 'owner_id', 'asset_type_id', 'location', 'link', 'notes'];
   const assetType = body.asset_type_id;
   let customFields = new Map(Object.entries(body.custom_fields));
 
 
   const response = {
-    error: false,
+    statusCode: 200,
     message: `Successfully updated asset ${idValue}`,
     result: null,
   };
 
-  try {
-    await checkInfo(body, requiredFields, name, idValue, idField);
-    client = await newClient(connection);
-  } catch (error) {
-    response.error = true;
-    response.message = error.message;
-    return response;
-  }
+  checkInfo(body, requiredFields, name, idValue, idField);
 
+  let client = await db.newClient();
   await client.query('BEGIN');
-
-  try {
-    await checkExistence(client, idValue);
-    await updateInfo(client, baseFields, body, tableName, idField, idValue, name);
-    if (assetType) {
-      customFieldsFromAssetType = await getCustomFieldsInfo(client, body.asset_type_id);
-      // CVs are from body, not CVs table!
-      customValues = getCustomValues(body);
-      checkCustomFieldsInfo(body, customFieldsFromAssetType);
-      await deleteInfo(client, 'bedrock.custom_values', idField, idValue, name);
-      await addCustomFieldsInfo(body, client, customFields, customValues);
-    }
-    if ('parents' in body) {
-      await updateDependencies(client, idField, idValue, name, body);
-    }
-    if ('tags' in body) {
-      await updateTags(idValue, idField, body, client, name);
-    }
-    await client.query('COMMIT');
-    const responseInfo = await getAsset(
-      queryParams,
-      connection,
-      idValue,
-      allFields,
-    );
-    response.result = responseInfo.result;
-  } catch (error) {
-    await client.query('ROLLBACK');
-    await client.end();
-    response.error = true;
-    response.message = error.message;
-  } finally {
-    await client.end();
+  await checkExistence(client, idValue);
+  await updateInfo(client, baseFields, body, tableName, idField, idValue, name);
+  if (assetType) {
+    customFieldsFromAssetType = await getCustomFieldsInfo(client, body.asset_type_id);
+    // CVs are from body, not CVs table!
+    customValues = getCustomValues(body);
+    checkCustomFieldsInfo(body, customFieldsFromAssetType);
+    await deleteInfo(client, 'bedrock.custom_values', idField, idValue, name);
+    await addCustomFieldsInfo(body, client, customFields, customValues);
   }
+  if ('parents' in body) {
+    await updateDependencies(client, idField, idValue, name, body);
+  }
+  if ('tags' in body) {
+    await updateTags(idValue, idField, body, client, name);
+  }
+  await client.query('COMMIT');
+  const responseInfo = await getAsset(
+    queryParams,
+    client,
+    idValue,
+    allFields,
+  );
+  response.result = responseInfo.result;
   return response;
 }
 

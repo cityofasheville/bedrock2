@@ -14,10 +14,10 @@ async function handleAssetTypes(
   pathElements,
   queryParams,
   verb,
-  connection,
+  db,
 ) {
   let result = {
-    error: false,
+    statusCode: 200,
     message: '',
     result: null,
   };
@@ -35,7 +35,6 @@ async function handleAssetTypes(
   if ('body' in event) {
     body = JSON.parse(event.body);
   }
-  console.log(pathElements);
   if (!(pathElements[1] == null)) {
     [, idValue] = pathElements;
   } else if (body) { // For POST requests, setting idValue here since it's not in the path
@@ -51,7 +50,7 @@ async function handleAssetTypes(
             event.requestContext.domainName,
             pathElements,
             queryParams,
-            connection,
+            db,
             idField,
             name,
             tableName,
@@ -61,7 +60,7 @@ async function handleAssetTypes(
 
         case 'POST':
           result = await addAssetType(
-            connection,
+            db,
             allFields,
             body,
             idField,
@@ -74,7 +73,7 @@ async function handleAssetTypes(
 
         default:
           result.message = `Unknown asset types endpoint: [${pathElements.join()}]`;
-          result.error = true;
+          result.statusCode = 404;
           break;
       }
       break;
@@ -84,7 +83,7 @@ async function handleAssetTypes(
       switch (verb) {
         case 'GET':
           result = await getAssetType(
-            connection,
+            db,
             idField,
             idValue,
             name,
@@ -95,7 +94,7 @@ async function handleAssetTypes(
 
         case 'PUT':
           result = await updateAssetType(
-            connection,
+            db,
             allFields,
             body,
             idField,
@@ -108,8 +107,8 @@ async function handleAssetTypes(
           break;
 
         case 'DELETE':
-          result = deleteAssetType(
-            connection,
+          result = await deleteAssetType(
+            db,
             idField,
             idValue,
             name,
@@ -120,7 +119,7 @@ async function handleAssetTypes(
 
         default:
           result.message = `handleAssetType: unknown verb ${verb}`;
-          result.error = true;
+          result.statusCode = 404;
           break;
       }
 
@@ -128,7 +127,7 @@ async function handleAssetTypes(
       if (pathElements[2] === 'custom_fields') {
         if (verb === 'GET') {
           result = await getRichCustomFields(
-            connection,
+            db,
             idField,
             idValue,
             name,
@@ -140,10 +139,10 @@ async function handleAssetTypes(
 
     default:
       result.message = `Unknown asset types endpoint: [${pathElements.join()}]`;
-      result.error = true;
+      result.statusCode = 404;
       break;
   }
-  if (result.error) {
+  if (result.statusCode !== 200) {
     console.log('We have an error but do not know why!');
     console.log(result.message);
   }

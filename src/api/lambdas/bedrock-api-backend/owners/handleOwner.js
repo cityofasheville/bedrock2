@@ -11,10 +11,10 @@ async function handleOwners(
   pathElements,
   queryParams,
   verb,
-  connection,
+  db,
 ) {
   let result = {
-    error: false,
+    statusCode: 200,
     message: '',
     result: null,
   };
@@ -44,7 +44,7 @@ async function handleOwners(
             event.requestContext.domainName,
             pathElements,
             queryParams,
-            connection,
+            db,
             idField,
             name,
             tableName,
@@ -53,7 +53,7 @@ async function handleOwners(
 
         case 'POST':
           result = await addOwner(
-            connection,
+            db,
             allFields,
             body,
             idField,
@@ -65,7 +65,7 @@ async function handleOwners(
 
         default:
           result.message = `handleOwners: unknown verb ${verb}`;
-          result.error = true;
+          result.statusCode = 404;
           break;
       } break;
     // VERB Owners/{Owner_name}
@@ -73,7 +73,7 @@ async function handleOwners(
       switch (verb) {
         case 'GET':
           result = await getOwner(
-            connection,
+            db,
             idField,
             idValue,
             name,
@@ -83,7 +83,7 @@ async function handleOwners(
 
         case 'PUT':
           result = await updateOwner(
-            connection,
+            db,
             allFields,
             body,
             idField,
@@ -95,8 +95,8 @@ async function handleOwners(
           break;
 
         case 'DELETE':
-          result = deleteOwner(
-            connection,
+          result = await deleteOwner(
+            db,
             idField,
             idValue,
             name,
@@ -106,17 +106,17 @@ async function handleOwners(
 
         default:
           result.message = `handleOwners: unknown verb ${verb}`;
-          result.error = true;
+          result.statusCode = 404;
           break;
       }
       break;
 
     default:
       result.message = `Unknown owners endpoint: [${pathElements.join()}]`;
-      result.error = true;
+      result.statusCode = 404;
       break;
   }
-  if (result.error) {
+  if (result.statusCode !== 200) {
     console.log('We have an error but do not know why!');
     console.log(result.message);
   }

@@ -1,7 +1,7 @@
 include ../../../make_variables
 
 dirs = build
-.PHONY: $(dirs) init plan apply destroy prebuild local
+.PHONY: $(dirs) init plan apply destroy prebuild local test clean
 
 SRC_DIR := ./deploy
 DEST_DIR := ./build
@@ -37,7 +37,12 @@ local: node_modules
 	@export BEDROCK_DB_HOST=$(BEDROCK_DB_HOST);export BEDROCK_DB_USER=$(BEDROCK_DB_USER); \
 	export BEDROCK_DB_PASSWORD=$(BEDROCK_DB_PASSWORD);export BEDROCK_DB_NAME=$(BEDROCK_DB_NAME); \
 	export API_KEY=${API_KEY};npm start
-	
+
+test: node_modules
+	@export BEDROCK_DB_HOST=$(BEDROCK_DB_HOST);export BEDROCK_DB_USER=$(BEDROCK_DB_USER); \
+	export BEDROCK_DB_PASSWORD=$(BEDROCK_DB_PASSWORD);export BEDROCK_DB_NAME=$(BEDROCK_DB_NAME); \
+	export API_KEY=${API_KEY};node --expose-gc test.js
+
 clean:
 	rm -f *.instance
 	\rm -Rf build function.zip node_modules

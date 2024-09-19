@@ -2,7 +2,7 @@
 /* eslint-disable no-console */
 /* eslint-disable import/no-extraneous-dependencies */
 import pgpkg from 'pg';
-import pgErrorCodes from '../pgErrorCodes.js';
+
 
 function calculateRequestedFields(queryParams, allFields) {
   // Use fields from the query if they're present, otherwise use all available
@@ -15,7 +15,7 @@ function calculateRequestedFields(queryParams, allFields) {
   return requestedFields;
 }
 
-async function getCustomFieldsInfo(client, assetType) {
+async function getCustomFieldsInfo(db, assetType) {
   let sqlQuery;
   let sqlResult;
   const customFields = new Map();
@@ -30,13 +30,13 @@ async function getCustomFieldsInfo(client, assetType) {
       ) a
       group by custom_field_id, custom_field_name, field_type
     `;
-    sqlResult = await client.query(sqlQuery, [assetType]);
+    sqlResult = await db.query(sqlQuery, [assetType]);
     sqlResult.rows.forEach((itm) => {
       customFields.set(itm.custom_field_id, itm);
     });
   } catch (error) {
     throw new Error(
-      `PG error getting asset type hierarchy for type ${asset_type}: ${pgErrorCodes[error.code]}`,
+      `PG error getting asset type hierarchy for type ${asset_type}: ${error}`,
     );
   }
 
@@ -65,7 +65,7 @@ for (const [key, value] of customFields) {
   }
 }
 
-async function addCustomFieldsInfo(body, client, customFields, customValues) {
+async function addCustomFieldsInfo(body, db, customFields, customValues) {
   const customOut = new Map();
   let sql;
   let args;
@@ -77,10 +77,10 @@ async function addCustomFieldsInfo(body, client, customFields, customValues) {
       args = [body.asset_id, id, customValues[id]];
 
       try {
-        res = await client.query(sql, args);
+        res = await db.query(sql, args);
       } catch (error) {
         console.log(error.code);
-        throw new Error(`Error inserting custom value ${id}: ${pgErrorCodes[error.code]}`);
+        throw new Error(`Error inserting custom value ${id}: ${error}`);
       }
       customOut.set(id, customValues[id]);
     }

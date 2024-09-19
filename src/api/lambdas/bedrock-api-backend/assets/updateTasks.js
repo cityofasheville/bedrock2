@@ -1,8 +1,8 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable import/extensions */
 /* eslint-disable no-console */
-import pgErrorCodes from '../pgErrorCodes.js';
-import { deleteInfo, generateId, newClient, checkExistence } from '../utilities/utilities.js';
+
+import { deleteInfo, generateId, checkExistence } from '../utilities/utilities.js';
 import getTasks from './getTasks.js';
 
 function checkInfo(body, requiredFields) {
@@ -23,7 +23,7 @@ async function updateETLInfo(client, body, tableName, idValue, name) {
   try {
     await client.query(sql, args);
   } catch (error) {
-    throw new Error(`PG error updating ${name}: ${pgErrorCodes[error.code]||error.code}`);
+    throw new Error(`PG error updating ${name}: ${error}`);
   }
 
   return body;
@@ -52,7 +52,7 @@ async function addTasks(client, allFields, body, idValue) {
           valuesFromBody.push(idValue)
         } else {
           valuesFromBody.push(obj[key]);
-          };
+        };
       } else if (key === 'task_id') {
         let newId = generateId();
         valuesFromBody.push(newId);
@@ -66,7 +66,7 @@ async function addTasks(client, allFields, body, idValue) {
       await client
         .query(`INSERT INTO bedrock.tasks ${fieldsString} VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`, valuesFromBody);
     } catch (error) {
-      throw new Error([`Postgres error: ${pgErrorCodes[error.code]||error.code}`, error]);
+      throw new Error([`Postgres error: ${error}`]);
     }
   }
 
@@ -74,52 +74,36 @@ async function addTasks(client, allFields, body, idValue) {
 }
 
 async function updateTasks(
-  connection,
+  db,
   idField,
   idValue,
   name,
   body,
 ) {
   const response = {
-    error: false,
+    statusCode: 200,
     message: '',
     result: null,
   };
-  let client;
 
   const tableName = 'bedrock.tasks';
   const allFields = ['task_id', 'asset_id', 'seq_number', 'description', 'type', 'active', 'source', 'target', 'configuration'];
   const requiredFields = ['asset_id', 'seq_number', 'type', 'active'];
   const shouldExist = true;
 
-  try {
-    client = await newClient(connection);
-    checkInfo(body, requiredFields);
-  } catch (error) {
-    response.error = true;
-    response.message = error.message;
-    return response;
-  }
+  checkInfo(body, requiredFields);
 
-  try {
-    await client.query('BEGIN');
-    // make sure asset exists in the asset table
-    await checkExistence(client, 'bedrock.assets', idField, idValue, name, shouldExist);
-    await deleteInfo(client, tableName, idField, idValue, name);
-    await addTasks(client, allFields, body, idValue);
-    await updateETLInfo(client, body, 'bedrock.etl', idValue, name)
-    await client.query('COMMIT');
-    let newResponse = await getTasks(connection, idValue, idField, name)
-    response.result = newResponse.result;
-  } catch (error) {
-    await client.query('ROLLBACK');
-    await client.end();
-    response.error = true;
-    response.message = error.message;
-    return response;
-  } finally {
-    await client.end();
-  }
+  let client = await db.newClient();
+  await client.query('BEGIN');
+  // make sure asset exists in the asset table
+  await checkExistence(client, 'bedrock.assets', idField, idValue, name, shouldExist);
+  await deleteInfo(client, tableName, idField, idValue, name);
+  await addTasks(client, allFields, body, idValue);
+  await updateETLInfo(client, body, 'bedrock.etl', idValue, name)
+  await client.query('COMMIT');
+  let newResponse = await getTasks(client, idValue, idField, name)
+  response.result = newResponse.result;
+
   return response;
 }
 

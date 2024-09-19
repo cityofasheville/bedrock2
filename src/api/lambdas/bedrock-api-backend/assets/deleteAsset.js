@@ -1,8 +1,6 @@
 /* eslint-disable import/extensions */
 /* eslint-disable no-console */
-import pgpkg from 'pg';
-import pgErrorCodes from '../pgErrorCodes.js';
-import { newClient, checkExistence, deleteInfo } from '../utilities/utilities.js';
+import { checkExistence, deleteInfo } from '../utilities/utilities.js';
 
 async function handleDelete(tableNames, client, idField, idValue, name) {
   try {
@@ -24,23 +22,23 @@ async function getRelationsInfo(client, idField, idValue, name, tableName, idCol
   try {
     res = await client.query(sql, [idValue]);
   } catch (error) {
-    throw new Error([`Postgres error: ${pgErrorCodes[error.code]||error.code}`, error]);
+    throw new Error([`Postgres error: ${error}`]);
   }
 
   if (res.rowCount === 0) {
-  return null
-}
+    return null
+  }
 
   // get asset names. id column is either asset_id or descendent_asset_id depending on if we're 
   // looking at ancestors or descendants
-  for (let i= 0; i < res.rows.length; i++) {
+  for (let i = 0; i < res.rows.length; i++) {
     const sql = `SELECT asset_name FROM bedrock.assets where asset_id like $1`;
     let result;
     try {
       result = await client.query(sql, [res.rows[i][idColumn]]);
 
     } catch (error) {
-      throw new Error([`Postgres error: ${pgErrorCodes[error.code]||error.code}`, error]);
+      throw new Error([`Postgres error: ${error}`]);
     }
     res.rows[i].asset_name = result.rows[0].asset_name
   }
@@ -64,13 +62,12 @@ function formatDescendants(descendants) {
 
 
 async function deleteAsset(
-  connection,
+  db,
   idField,
   idValue,
   name,
   tableName,
 ) {
-  let client;
   const shouldExist = true;
   const tableNames = ['bedrock.assets', 'bedrock.custom_values', 'bedrock.asset_tags', 'bedrock.tasks', 'bedrock.etl'];
   const dependencyTableName = 'bedrock.dependencies';
@@ -78,62 +75,41 @@ async function deleteAsset(
   const connectedDataIdField = 'dependent_asset_id';
 
   const response = {
-    error: false,
+    statusCode: 200,
     message: `Successfully deleted asset ${idValue}`,
   };
 
-  try {
-    client = await newClient(connection);
-  } catch (error) {
-    response.error = true;
-    response.message = error.message;
-    return response;
-  }
+  await checkExistence(db, tableName, idField, idValue, name, shouldExist);
 
-  try {
-    await checkExistence(client, tableName, idField, idValue, name, shouldExist);
+  let client;
 
-  } catch (error) {
-    await client.end();
-    response.error = true;
-    response.message = error.message;
-    return response;
-  }
-
+  client = await db.newClient();
   await client.query('BEGIN');
+  let ancestors = await getRelationsInfo(client, 'asset_id', idValue, name, 'bedrock.dependencies', 'dependent_asset_id');
+  let descendants = await getRelationsInfo(client, 'dependent_asset_id', idValue, name, 'bedrock.dependencies', 'asset_id');
 
-  try {
-    let ancestors = await getRelationsInfo(client, 'asset_id', idValue, name, 'bedrock.dependencies', 'dependent_asset_id');
-    let descendants = await getRelationsInfo(client, 'dependent_asset_id', idValue, name, 'bedrock.dependencies', 'asset_id');
-
-    // if either ancestors or descendants exists, we return info for them
-    if (ancestors) {
-      if (!response.result) response.result = {}
-      response.result.ancestors= formatAncestors(ancestors);
-      deleteInfo(client, 'bedrock.dependencies', 'asset_id', idValue, name)
-    }
-
-    if (descendants) {
-      if (!response.result) response.result = {}
-      response.result.descendants = formatDescendants(descendants);
-      // if there are descendents, we must delete from the dependent_asset_id column in the dependencies table as well.
-      deleteInfo(client, 'bedrock.dependencies', 'dependent_asset_id', idValue, name)
-    }
-
-    handleDelete(tableNames, client, idField, idValue, name);
-
-    if (descendants || ancestors) {
-      response.result.message = `Asset ${idValue} successfully deleted. The following relationships have been removed from the dependencies table.`
-    } 
-
-    await client.query('COMMIT');
-  } catch (error) {
-    await client.query('ROLLBACK');
-    response.error = true;
-    response.message = error.message;
-  } finally {
-    await client.end();
+  // if either ancestors or descendants exists, we return info for them
+  if (ancestors) {
+    if (!response.result) response.result = {}
+    response.result.ancestors = formatAncestors(ancestors);
+    deleteInfo(client, 'bedrock.dependencies', 'asset_id', idValue, name)
   }
+
+  if (descendants) {
+    if (!response.result) response.result = {}
+    response.result.descendants = formatDescendants(descendants);
+    // if there are descendents, we must delete from the dependent_asset_id column in the dependencies table as well.
+    deleteInfo(client, 'bedrock.dependencies', 'dependent_asset_id', idValue, name)
+  }
+
+  handleDelete(tableNames, client, idField, idValue, name);
+
+  if (descendants || ancestors) {
+    response.result.message = `Asset ${idValue} successfully deleted. The following relationships have been removed from the dependencies table.`
+  }
+
+  await client.query('COMMIT');
+
   return response;
 }
 
