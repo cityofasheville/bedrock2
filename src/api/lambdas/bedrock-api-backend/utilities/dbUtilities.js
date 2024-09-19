@@ -26,7 +26,7 @@ function getErroMsg(error) {
   if (error.details) {
     code += ` ${error.details}`;
   }
-  console.log(error.stack);
+  console.log(error.stack); // Full stack error will be returned to CloudWatch
   return `${error.message} ${code}`;
 }
 
