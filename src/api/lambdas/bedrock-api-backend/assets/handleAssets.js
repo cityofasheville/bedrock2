@@ -2,12 +2,13 @@
 /* eslint-disable no-console */
 import getAssetList from './getAssetList.js';
 import getAsset from './getAsset.js';
-import getAllAssetRelations from './getAllAssetRelations.js';
+import getRelations from './getRelations.js';
 import addAsset from './addAsset.js';
 import updateAsset from './updateAsset.js';
 import deleteAsset from './deleteAsset.js';
 import getTasks from './getTasks.js';
 import updateTasks from './updateTasks.js';
+import getExpandedRelations from './getExpandedRelations.js';
 
 // eslint-disable-next-line no-unused-vars
 async function handleAssets(event, pathElements, queryParams, verb, db) {
@@ -132,13 +133,21 @@ async function handleAssets(event, pathElements, queryParams, verb, db) {
           response.statusCode = 404;
         }
       } else if (pathElements[2] === 'relations') {
-        response = await getAllAssetRelations(
+        response = await getRelations(
           db,
           idValue,
           tableName,
           idField,
           name
-        );
+        );       
+      } else if (pathElements[2] === 'expandedRelations') {
+          response = await getExpandedRelations(
+            db,
+            idValue,
+            tableName,
+            idField,
+            name
+          );
       } else {
         response.message = `Unknown assets endpoint: [${pathElements.join()}]`;
         response.statusCode = 404;
