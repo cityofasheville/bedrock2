@@ -2,7 +2,7 @@
 /* eslint-disable no-console */
 import getAssetList from './getAssetList.js';
 import getAsset from './getAsset.js';
-import getDirectRelations from './getDirectRelations.js';
+import getRelations from './getRelations.js';
 import addAsset from './addAsset.js';
 import updateAsset from './updateAsset.js';
 import deleteAsset from './deleteAsset.js';
@@ -132,8 +132,8 @@ async function handleAssets(event, pathElements, queryParams, verb, db) {
           response.message = `${verb} all asset tasks not implemented`;
           response.statusCode = 404;
         }
-      } else if (pathElements[2] === 'directRelations') {
-        response = await getDirectRelations(
+      } else if (pathElements[2] === 'relations') {
+        response = await getRelations(
           db,
           idValue,
           tableName,

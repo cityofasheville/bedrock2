@@ -149,7 +149,7 @@ async function getTags(db, formattedTagList) {
   return sqlResult;
 }
 
-async function getDirectRelations(
+async function getRelations(
   db,
   idValue,
   tableName,
@@ -227,4 +227,4 @@ async function getDirectRelations(
   return response;
 }
 
-export default getDirectRelations;
+export default getRelations;

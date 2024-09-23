@@ -134,8 +134,7 @@ LEFT JOIN bedrock.run_groups r2 ON e2.run_group_id = r2.run_group_id
   try {
     res = await db.query(sql, [idList]);
   } catch (error) {
-    throw new Error(`PG error getting ancestor information: ${pgErrorCodes[error.code]||error.code}`);
-  }
+    throw new Error(`PG error getting ancestor information: ${error}`)}
 
   for (let i = 0; i < res.rowCount; i += 1) {
     relations.ancestors.items.push(
@@ -186,8 +185,7 @@ LEFT JOIN bedrock.run_groups r2 ON e2.run_group_id = r2.run_group_id
   try {
     res = await db.query(sql, [idList]);
   } catch (error) {
-    throw new Error(`PG error getting descendent information: ${pgErrorCodes[error.code]||error.code}`);
-  }
+    throw new Error(`PG error getting descendent information: ${error}`)}
 
 
   for (let i = 0; i < res.rowCount; i += 1) {
