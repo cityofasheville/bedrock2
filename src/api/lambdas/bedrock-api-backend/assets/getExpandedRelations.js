@@ -19,16 +19,6 @@ async function readRelations(db, idValue) {
   // this is done to capture any implied dependencies
   let res;
   let assetList = [];
-  const relations = {
-    ancestors: {
-      items: [],
-      unique_items: [],
-    },
-    descendants: {
-      items: [],
-      unique_items: [],
-    },
-  };
   let sql = `
   WITH RECURSIVE subdependencies AS (
     SELECT asset_id, asset_name, dependent_asset_id, dependency 
@@ -59,12 +49,10 @@ LEFT JOIN bedrock.run_groups r2 ON e2.run_group_id = r2.run_group_id
     throw new Error(`PG error getting ancestor information: ${error}`);
   }
 
-
   for (let i = 0; i < res.rowCount; i += 1) {
     assetList.push(res.rows[i].asset_id);
     assetList.push(res.rows[i].dependent_asset_id);
   }
-
 
   // Now the other direction
   sql = `
@@ -96,8 +84,6 @@ LEFT JOIN bedrock.run_groups r2 ON e2.run_group_id = r2.run_group_id
   } catch (error) {
     throw new Error(`PG error getting descendent information: ${error}`);
   }
-
-
 
   for (let i = 0; i < res.rowCount; i += 1) {
     assetList.push(res.rows[i].asset_id);
@@ -150,7 +136,6 @@ LEFT JOIN bedrock.run_groups r2 ON e2.run_group_id = r2.run_group_id
   } catch (error) {
     throw new Error(`PG error getting ancestor information: ${pgErrorCodes[error.code]||error.code}`);
   }
-
 
   for (let i = 0; i < res.rowCount; i += 1) {
     relations.ancestors.items.push(
@@ -286,11 +271,9 @@ async function getExpandedRelations(
   response.result.descendants.items = relations.descendants.items;
   response.result.descendants.unique_items = relations.descendants.unique_items;
 
-
   const tagList = response.result.ancestors.unique_items.concat(response.result.descendants.unique_items)
   const formattedTagList = tagList.map(item => `'${item}'`);
   const tagsResult = await getTags(db, formattedTagList);
-
 
   // matching tags to the correct assets
   // we're only pushing tag name since that's all the frontend needs.
@@ -320,7 +303,6 @@ async function getExpandedRelations(
       }
     }
   }
-  
 
   return response;
 }
