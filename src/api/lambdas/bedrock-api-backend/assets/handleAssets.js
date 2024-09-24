@@ -140,7 +140,7 @@ async function handleAssets(event, pathElements, queryParams, verb, db) {
           idField,
           name
         );       
-      } else if (pathElements[2] === 'expandedRelations') {
+      } else if (pathElements[2] === 'expanded_relations') {
           response = await getExpandedRelations(
             db,
             idValue,
