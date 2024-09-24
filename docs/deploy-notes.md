@@ -36,6 +36,8 @@ make seed    #(Fill database with assets from Github)
 # in src/make_variables (without the port number)
 ```
 
+`make seed` will populate the database with test data. If you want to use real data to populate the database, you need to have a copy of the "managed-data-assets" repo, and it needs to be in the same place as the root directory of the bedrock repo. Then, set data_directory='../managed-data-assets/data'; to populate the new db with real data.
+
 #### API Key
 before you can build the API, you will need to set up an API key. This is created in Secrets Manager, in a key/value secret that must be called "Bedrock_API_Key". This secret has one key called API_KEY. Use the same value in the front end.
 
