@@ -88,7 +88,7 @@ async function readAssetList(client) {
 async function readDependencies(client, assetList) {
   for (let asset of assetList) {
     asset.depends = [];
-    const sql = `SELECT * FROM bedrock.dependencies where asset_id = '${asset.asset_id}';`;
+    const sql = `SELECT dependent_asset_id, relation_type FROM bedrock.dependencies where asset_id = '${asset.asset_id}';`;
     // eslint-disable-next-line no-await-in-loop
     const res = await client.query(sql)
       .catch((err) => {
@@ -97,7 +97,7 @@ async function readDependencies(client, assetList) {
       });
     for (let j = 0; j < res.rowCount; j += 1) {
       const d = res.rows[j];
-      asset.depends.push(d.dependent_asset_id);
+      asset.depends.push(d);
     }
   }
   return assetList;

@@ -116,8 +116,8 @@ async function readAssetFiles(client, assets_directory) {
               });
           }
           for (let dependency of asset.depends) {
-            sql = `insert into bedrock.dependencies(asset_id, dependent_asset_id) values ($1,$2);`;
-            await client.query(sql, [asset.asset_id, dependency])
+            sql = `insert into bedrock.dependencies(asset_id, dependent_asset_id, relation_type) values ($1,$2,$3);`;
+            await client.query(sql, [asset.asset_id, dependency.dependent_asset_id, dependency.relation_type])
               .catch((err) => {
                 const errmsg = [err.code];
                 throw new Error([`Postgres error: ${errmsg}`, err]);
