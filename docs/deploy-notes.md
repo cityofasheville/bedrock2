@@ -29,11 +29,11 @@ If you are using an existing database, set the value of ```BEDROCK_DB_HOST``` in
 ```sh
 cd ../db
 make init
-make apply #(Creates database server - takes a while)
-make db      #(Creates bedrock database and captures DB endpoint in src/db/make_variables.generated)
+make apply #(Creates database server - takes a while, and captures DB endpoint in src/db/make_variables.generated)
+make db      #(Creates bedrock database)
 make seed    #(Fill database with assets from Github)
 # Copy the database host from src/db/make_variables.generated into the value of BEDROCK_DB_HOST
-# in src/make_variables (without the port number)
+# in src/make_variables (without the colon and port number)
 ```
 
 `make seed` will populate the database with test data. If you want to use real data to populate the database, you need to have a copy of the "managed-data-assets" repo, and it needs to be in the same place as the root directory of the bedrock repo. Then, set data_directory='../managed-data-assets/data'; to populate the new db with real data.

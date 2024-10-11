@@ -1,4 +1,7 @@
 include ../../../make_variables
+-include ../../../db/make_variables.generated
+
+.EXPORT_ALL_VARIABLES:
 
 dirs = build
 .PHONY: $(dirs) init plan apply destroy prebuild local
@@ -15,7 +18,8 @@ prebuild:
 	mkdir -p ./build
 
 $(DEST_DIR)/%: $(SRC_DIR)/% ../../../make_variables
-	python3 ../../../scripts/vreplace.py -f ../../../make_variables $< $@
+	python3 ../../../scripts/vreplace.py -v BEDROCK_DB_HOST=$(BEDROCK_DB_HOST) -v BEDROCK_DB_USER=$(BEDROCK_DB_USER) \
+		-v BEDROCK_DB_PASSWORD=$(BEDROCK_DB_PASSWORD) -v BEDROCK_DB_NAME=$(BEDROCK_DB_NAME) -f ../../../make_variables $< $@
 
 init: prebuild $(TF_TARGS)
 	$(MAKE) -C build $(MAKECMDGOALS)
@@ -35,9 +39,7 @@ node_modules: ./package.json
 	npm install
 
 local: node_modules
-	@export BEDROCK_DB_HOST=$(BEDROCK_DB_HOST);export BEDROCK_DB_USER=$(BEDROCK_DB_USER); \
-	export BEDROCK_DB_SCHEMA=$(BEDROCK_DB_SCHEMA) \
-	export BEDROCK_DB_PASSWORD=$(BEDROCK_DB_PASSWORD);export BEDROCK_DB_NAME=$(BEDROCK_DB_NAME);node local.js
+	node local.js
 
 clean:
 	rm -f *.instance

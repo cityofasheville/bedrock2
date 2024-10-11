@@ -27,20 +27,41 @@ async function getConnection(secretName) {
 
 // Get connection data for Bedrock database
 async function getDBConnection() {
-  let connection = Promise.resolve({
-    host: process.env.BEDROCK_DB_HOST.replace(/"/g,"") || 'localhost',
-    port: 5432,
-    user: process.env.BEDROCK_DB_USER || 'bedrock',
-    password: process.env.BEDROCK_DB_PASSWORD || 'test-bedrock',
-    database: process.env.BEDROCK_DB_NAME || 'bedrock',
+  // default values
+  let host = '';
+  let port = 5432;
+  let user = 'bedrock';
+  let password = 'test-bedrock';
+  let database = 'bedrock';
+
+  if ('BEDROCK_DB_HOST_ENDPOINT' in process.env && process.env.BEDROCK_DB_HOST_ENDPOINT.trim() !== '') {
+    host = process.env.BEDROCK_DB_HOST_ENDPOINT.replace(/"/g,"").split(':')[0];
+  }
+  if ('BEDROCK_DB_HOST' in process.env && process.env.BEDROCK_DB_HOST.trim() !== '') {
+    host = process.env.BEDROCK_DB_HOST.replace(/"/g,"");
+  }
+  if ('BEDROCK_DB_USER' in process.env && process.env.BEDROCK_DB_USER.trim() !== '') {
+    user = process.env.BEDROCK_DB_USER.replace(/"/g,"");
+  }
+  if ('BEDROCK_DB_PASSWORD' in process.env && process.env.BEDROCK_DB_PASSWORD.trim() !== '') {
+    password = process.env.BEDROCK_DB_PASSWORD.replace(/"/g,"");
+  }
+  if ('BEDROCK_DB_NAME' in process.env && process.env.BEDROCK_DB_NAME.trim() !== '') {
+    database = process.env.BEDROCK_DB_NAME.replace(/"/g,"");
+  }
+
+  let connection = {
+    host,
+    port,
+    user,
+    password,
+    database,
     max: 10,
     idleTimeoutMillis: 10000,
-  });
+  };
 
-  // If BEDROCK_DB_HOST is not in the environment, assume normal bedrock DB
-  if (!('BEDROCK_DB_HOST' in process.env)
-      || process.env.BEDROCK_DB_HOST === null
-      || process.env.BEDROCK_DB_HOST.trim().length === 0) {
+  // If BEDROCK_DB_HOST is not in the environment, assume production Bedrock DB
+  if (host === '') {
     return getConnection('pubrecdb1/bedrock/bedrock_user')
       .then(
         (cpValue) => {

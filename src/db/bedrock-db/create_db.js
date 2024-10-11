@@ -4,6 +4,7 @@ import { readFileSync } from 'fs';
 import { getDBConnection } from 'bedrock_common';
 
 let lambda_handler = async function (event, context) {
+  process.env.BEDROCK_DB_PASSWORD = process.env.BEDROCK_DB_PASSWORD.replace(/"/g,"");
   const connection = await getDBConnection();
 
   let sqltemplate = readFileSync('./createNewBedrockDB.sql').toString();

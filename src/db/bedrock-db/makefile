@@ -1,7 +1,22 @@
 include ../../make_variables
--include ../make_variables.generated
+-include ../../db/make_variables.generated
 
 .EXPORT_ALL_VARIABLES:
+
+# If vars are not set in make_variables, check for make_variables.generated file and set defaults
+devhostname := $(shell echo $(BEDROCK_DB_HOST_ENDPOINT) | cut -d ":" -f 1)
+ifndef BEDROCK_DB_HOST
+BEDROCK_DB_HOST=$(devhostname)
+endif
+ifndef BEDROCK_DB_USER
+BEDROCK_DB_USER=bedrock
+endif
+ifndef BEDROCK_DB_PASSWORD
+BEDROCK_DB_PASSWORD=test-bedrock
+endif
+ifndef BEDROCK_DB_NAME
+BEDROCK_DB_NAME=bedrock
+endif
 
 dirs = build
 
@@ -13,29 +28,12 @@ TFFILES := config.tf backend.tf local.tfvars variables.tf makefile
 
 TF_TARGS := $(patsubst %,$(DEST_DIR)/%,$(TFFILES))
 
-devhostname := $(shell echo $(BEDROCK_DB_HOST_ENDPOINT) | cut -d ":" -f 1)
-
-ifndef BEDROCK_DB_HOST
-BEDROCK_DB_HOST=$(devhostname)
-endif
-ifndef BEDROCK_DB_USER
-BEDROCK_DB_USER=bedrock
-endif
-ifndef BEDROCK_DB_SCHEMA
-BEDROCK_DB_SCHEMA=bedrock
-endif
-ifndef BEDROCK_DB_PASSWORD
-BEDROCK_DB_PASSWORD=test-bedrock
-endif
-ifndef BEDROCK_DB_NAME
-BEDROCK_DB_NAME=bedrock
-endif
-
 prebuild:
 	mkdir -p ./build
 
 $(DEST_DIR)/%: $(SRC_DIR)/% ../../make_variables
-	python3 ../../scripts/vreplace.py -v BEDROCK_DB_USER=$$BEDROCK_DB_USER -v BEDROCK_DB_PASSWORD=$$BEDROCK_DB_PASSWORD -v BEDROCK_DB_NAME=$$BEDROCK_DB_NAME -f ../../make_variables $< $@
+	python3 ../../scripts/vreplace.py -v BEDROCK_DB_USER=$(BEDROCK_DB_USER) -v BEDROCK_DB_PASSWORD=$(BEDROCK_DB_PASSWORD) \
+		-v BEDROCK_DB_NAME=$(BEDROCK_DB_NAME) -f ../../make_variables $< $@
 
 init: prebuild $(TF_TARGS)
 	$(MAKE) -C build $(MAKECMDGOALS)
@@ -54,9 +52,6 @@ node_modules: ./package.json
 	npm install
 
 local: node_modules
-ifndef BEDROCK_DB_HOST
-	$(error No BEDROCK_DB_HOST specified in make_variables file)
-endif
 	node create_db.js
 
 clean:

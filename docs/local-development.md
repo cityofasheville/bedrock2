@@ -15,9 +15,6 @@ Database setup uses these variables:
     BEDROCK_DB_PASSWORD="hunter1"
     BEDROCK_DB_NAME="bedrock"
 
-    # Unlike the other DB variables, always include a schema name.
-    BEDROCK_DB_SCHEMA="bedrock"
-
 If the host name is left empty, the program will look up the production database in AWS Secrets Manager, and you will need AWS credentials for the program to connect to that.
 
 If you have a bastion ssh tunnel to the server set up, use the hostname localhost.
