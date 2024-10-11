@@ -1,38 +1,38 @@
-DROP TABLE IF EXISTS bedrock.tasks cascade;
-DROP TYPE IF EXISTS bedrock.task_types;
-DROP TABLE IF EXISTS bedrock.etl cascade;
-DROP TABLE IF EXISTS bedrock.asset_tags cascade;
-DROP TABLE IF EXISTS bedrock.tags cascade;
-DROP TABLE IF EXISTS bedrock.custom_values cascade;
-DROP TABLE IF EXISTS bedrock.asset_type_custom_fields cascade;
-DROP TABLE IF EXISTS bedrock.custom_fields cascade;
-DROP TABLE IF EXISTS bedrock.dependencies cascade;
-DROP TABLE IF EXISTS bedrock.assets cascade;
-DROP TABLE IF EXISTS bedrock.run_groups cascade;
-DROP TABLE IF EXISTS bedrock.asset_types cascade;
-DROP TABLE IF EXISTS bedrock.connections cascade;
-DROP TYPE IF EXISTS bedrock.connections_classes;
-DROP TABLE IF EXISTS bedrock.owners;
-DROP SCHEMA IF EXISTS bedrock;
-DROP ROLE IF EXISTS bedrock_user;
+DROP TABLE IF EXISTS ${process.env.BEDROCK_DB_SCHEMA}.tasks cascade;
+DROP TYPE IF EXISTS ${process.env.BEDROCK_DB_SCHEMA}.task_types;
+DROP TABLE IF EXISTS ${process.env.BEDROCK_DB_SCHEMA}.etl cascade;
+DROP TABLE IF EXISTS ${process.env.BEDROCK_DB_SCHEMA}.asset_tags cascade;
+DROP TABLE IF EXISTS ${process.env.BEDROCK_DB_SCHEMA}.tags cascade;
+DROP TABLE IF EXISTS ${process.env.BEDROCK_DB_SCHEMA}.custom_values cascade;
+DROP TABLE IF EXISTS ${process.env.BEDROCK_DB_SCHEMA}.asset_type_custom_fields cascade;
+DROP TABLE IF EXISTS ${process.env.BEDROCK_DB_SCHEMA}.custom_fields cascade;
+DROP TABLE IF EXISTS ${process.env.BEDROCK_DB_SCHEMA}.dependencies cascade;
+DROP TABLE IF EXISTS ${process.env.BEDROCK_DB_SCHEMA}.assets cascade;
+DROP TABLE IF EXISTS ${process.env.BEDROCK_DB_SCHEMA}.run_groups cascade;
+DROP TABLE IF EXISTS ${process.env.BEDROCK_DB_SCHEMA}.asset_types cascade;
+DROP TABLE IF EXISTS ${process.env.BEDROCK_DB_SCHEMA}.connections cascade;
+DROP TYPE IF EXISTS ${process.env.BEDROCK_DB_SCHEMA}.connections_classes;
+DROP TABLE IF EXISTS ${process.env.BEDROCK_DB_SCHEMA}.owners;
+DROP SCHEMA IF EXISTS ${process.env.BEDROCK_DB_SCHEMA};
+-- DROP ROLE IF EXISTS ${process.env.BEDROCK_DB_USER};
 
-CREATE ROLE bedrock_user WITH 
-	NOSUPERUSER
-	NOCREATEDB
-	NOCREATEROLE
-	INHERIT
-	LOGIN
-	NOREPLICATION
-	NOBYPASSRLS
-	CONNECTION LIMIT -1;
+-- CREATE ROLE ${process.env.BEDROCK_DB_USER} WITH 
+-- 	NOSUPERUSER
+-- 	NOCREATEDB
+-- 	NOCREATEROLE
+-- 	INHERIT
+-- 	LOGIN
+-- 	NOREPLICATION
+-- 	NOBYPASSRLS
+-- 	CONNECTION LIMIT -1;
+ 
+ALTER USER ${process.env.BEDROCK_DB_USER} WITH PASSWORD '${process.env.BEDROCK_DB_PASSWORD}';   -- <====================== PASSWORD	
 
-ALTER USER bedrock_user WITH PASSWORD 'test-bedrock';   -- <====================== PASSWORD	
+CREATE SCHEMA ${process.env.BEDROCK_DB_SCHEMA};
+ALTER SCHEMA ${process.env.BEDROCK_DB_SCHEMA} OWNER TO ${process.env.BEDROCK_DB_USER};
+GRANT USAGE ON SCHEMA ${process.env.BEDROCK_DB_SCHEMA} TO ${process.env.BEDROCK_DB_USER};
 
-CREATE SCHEMA bedrock;
-ALTER SCHEMA bedrock OWNER TO bedrock_user;
-GRANT USAGE ON SCHEMA bedrock TO bedrock_user;
-
-CREATE TABLE bedrock.owners (
+CREATE TABLE ${process.env.BEDROCK_DB_SCHEMA}.owners (
   owner_id text PRIMARY KEY,
   owner_name text NOT NULL,
   owner_email text NOT NULL,
@@ -43,47 +43,47 @@ CREATE TABLE bedrock.owners (
   notes text NULL
 );
 --
-ALTER TABLE bedrock.owners OWNER TO bedrock_user;
-GRANT ALL ON TABLE bedrock.owners TO bedrock_user;
+ALTER TABLE ${process.env.BEDROCK_DB_SCHEMA}.owners OWNER TO ${process.env.BEDROCK_DB_USER};
+GRANT ALL ON TABLE ${process.env.BEDROCK_DB_SCHEMA}.owners TO ${process.env.BEDROCK_DB_USER};
 
 ---------------------------------------------
--- CREATE TYPE bedrock.connections_classes AS ENUM ('db', 'api', 'file', 'sheets');
+-- CREATE TYPE ${process.env.BEDROCK_DB_SCHEMA}.connections_classes AS ENUM ('db', 'api', 'file', 'sheets');
 
 ---------------------------------------------
-CREATE TABLE bedrock.connections (
+CREATE TABLE ${process.env.BEDROCK_DB_SCHEMA}.connections (
 	connection_id text PRIMARY KEY,
   connection_name text NOT NULL,
   secret_name text NOT NULL,
-  connection_class text NULL,  -- After updates, we may want to change this back to TYPE bedrock.connections_classes
+  connection_class text NULL,  -- After updates, we may want to change this back to TYPE ${process.env.BEDROCK_DB_SCHEMA}.connections_classes
   CONSTRAINT connection_name_key UNIQUE (connection_name)
 );
 --
-ALTER TABLE bedrock.connections OWNER TO bedrock_user;
-GRANT ALL ON TABLE bedrock.connections TO bedrock_user;
+ALTER TABLE ${process.env.BEDROCK_DB_SCHEMA}.connections OWNER TO ${process.env.BEDROCK_DB_USER};
+GRANT ALL ON TABLE ${process.env.BEDROCK_DB_SCHEMA}.connections TO ${process.env.BEDROCK_DB_USER};
 
 ---------------------------------------------
-CREATE TABLE bedrock.asset_types (
+CREATE TABLE ${process.env.BEDROCK_DB_SCHEMA}.asset_types (
   asset_type_id text PRIMARY KEY,
   asset_type_name text NOT NULL,
   parent text NULL
 );
 --
-ALTER TABLE bedrock.asset_types OWNER TO bedrock_user;
-GRANT ALL ON TABLE bedrock.asset_types TO bedrock_user;
+ALTER TABLE ${process.env.BEDROCK_DB_SCHEMA}.asset_types OWNER TO ${process.env.BEDROCK_DB_USER};
+GRANT ALL ON TABLE ${process.env.BEDROCK_DB_SCHEMA}.asset_types TO ${process.env.BEDROCK_DB_USER};
 
 ---------------------------------------------
-CREATE TABLE bedrock.run_groups (
+CREATE TABLE ${process.env.BEDROCK_DB_SCHEMA}.run_groups (
 	run_group_id text PRIMARY KEY,
 	run_group_name text NOT NULL,
 	cron_string text NOT NULL,
 	CONSTRAINT run_groups_name_key UNIQUE (run_group_name)
 );
 --
-ALTER TABLE bedrock.run_groups OWNER TO bedrock_user;
-GRANT ALL ON TABLE bedrock.run_groups TO bedrock_user;
+ALTER TABLE ${process.env.BEDROCK_DB_SCHEMA}.run_groups OWNER TO ${process.env.BEDROCK_DB_USER};
+GRANT ALL ON TABLE ${process.env.BEDROCK_DB_SCHEMA}.run_groups TO ${process.env.BEDROCK_DB_USER};
 
 ---------------------------------------------
-CREATE TABLE bedrock.assets (
+CREATE TABLE ${process.env.BEDROCK_DB_SCHEMA}.assets (
 	asset_id text PRIMARY KEY,
 	asset_name text NOT NULL,
 	description text NULL,
@@ -96,21 +96,21 @@ CREATE TABLE bedrock.assets (
 	CONSTRAINT asset_name_key UNIQUE (asset_name)
 );
 --
-ALTER TABLE bedrock.assets OWNER TO bedrock_user;
-GRANT ALL ON TABLE bedrock.assets TO bedrock_user;
+ALTER TABLE ${process.env.BEDROCK_DB_SCHEMA}.assets OWNER TO ${process.env.BEDROCK_DB_USER};
+GRANT ALL ON TABLE ${process.env.BEDROCK_DB_SCHEMA}.assets TO ${process.env.BEDROCK_DB_USER};
 
 ---------------------------------------------
-CREATE TABLE bedrock.dependencies (
+CREATE TABLE ${process.env.BEDROCK_DB_SCHEMA}.dependencies (
 	asset_id text NOT NULL,
 	dependent_asset_id text NOT NULL,
 	CONSTRAINT dependencies_key UNIQUE (asset_id, dependent_asset_id)
 );
 --
-ALTER TABLE bedrock.dependencies OWNER TO bedrock_user;
-GRANT ALL ON TABLE bedrock.dependencies TO bedrock_user;
+ALTER TABLE ${process.env.BEDROCK_DB_SCHEMA}.dependencies OWNER TO ${process.env.BEDROCK_DB_USER};
+GRANT ALL ON TABLE ${process.env.BEDROCK_DB_SCHEMA}.dependencies TO ${process.env.BEDROCK_DB_USER};
 
 ---------------------------------------------
-CREATE TABLE bedrock.custom_fields (
+CREATE TABLE ${process.env.BEDROCK_DB_SCHEMA}.custom_fields (
   custom_field_id text PRIMARY KEY,
   custom_field_name text NOT NULL, -- display name
   field_type text NOT NULL,
@@ -118,55 +118,55 @@ CREATE TABLE bedrock.custom_fields (
 	CONSTRAINT custom_field_name_key UNIQUE (custom_field_name)
 );
 --
-ALTER TABLE bedrock.custom_fields OWNER TO bedrock_user;
-GRANT ALL ON TABLE bedrock.custom_fields TO bedrock_user;
+ALTER TABLE ${process.env.BEDROCK_DB_SCHEMA}.custom_fields OWNER TO ${process.env.BEDROCK_DB_USER};
+GRANT ALL ON TABLE ${process.env.BEDROCK_DB_SCHEMA}.custom_fields TO ${process.env.BEDROCK_DB_USER};
 
 ---------------------------------------------
-CREATE TABLE bedrock.asset_type_custom_fields (
+CREATE TABLE ${process.env.BEDROCK_DB_SCHEMA}.asset_type_custom_fields (
   asset_type_id text NOT NULL,
   custom_field_id text NOT NULL,
   required boolean NOT NULL DEFAULT FALSE,
 	CONSTRAINT asset_type_custom_fields_key UNIQUE (asset_type_id, custom_field_id)
 );
 --
-ALTER TABLE bedrock.asset_type_custom_fields OWNER TO bedrock_user;
-GRANT ALL ON TABLE bedrock.asset_type_custom_fields TO bedrock_user;
+ALTER TABLE ${process.env.BEDROCK_DB_SCHEMA}.asset_type_custom_fields OWNER TO ${process.env.BEDROCK_DB_USER};
+GRANT ALL ON TABLE ${process.env.BEDROCK_DB_SCHEMA}.asset_type_custom_fields TO ${process.env.BEDROCK_DB_USER};
 
 ---------------------------------------------
-CREATE TABLE bedrock.custom_values (
+CREATE TABLE ${process.env.BEDROCK_DB_SCHEMA}.custom_values (
   asset_id text NOT NULL,
   custom_field_id text NOT NULL,
   field_value text NULL,
 	CONSTRAINT custom_values_key UNIQUE (asset_id, custom_field_id)
 );
 --
-ALTER TABLE bedrock.custom_values OWNER TO bedrock_user;
-GRANT ALL ON TABLE bedrock.custom_values TO bedrock_user;
+ALTER TABLE ${process.env.BEDROCK_DB_SCHEMA}.custom_values OWNER TO ${process.env.BEDROCK_DB_USER};
+GRANT ALL ON TABLE ${process.env.BEDROCK_DB_SCHEMA}.custom_values TO ${process.env.BEDROCK_DB_USER};
 
 ---------------------------------------------
-CREATE TABLE bedrock.tags (
+CREATE TABLE ${process.env.BEDROCK_DB_SCHEMA}.tags (
 	tag_id text PRIMARY KEY,
 	tag_name text NOT NULL,
 	display_name text NULL,
 	CONSTRAINT tag_name_key UNIQUE (tag_name)
 );
 --
-ALTER TABLE bedrock.tags OWNER TO bedrock_user;
-GRANT ALL ON TABLE bedrock.tags TO bedrock_user;
+ALTER TABLE ${process.env.BEDROCK_DB_SCHEMA}.tags OWNER TO ${process.env.BEDROCK_DB_USER};
+GRANT ALL ON TABLE ${process.env.BEDROCK_DB_SCHEMA}.tags TO ${process.env.BEDROCK_DB_USER};
 
 ---------------------------------------------
-CREATE TABLE bedrock.asset_tags (
+CREATE TABLE ${process.env.BEDROCK_DB_SCHEMA}.asset_tags (
 	asset_id text NOT NULL,
 	tag_id text NOT NULL,
 	CONSTRAINT asset_tags_pk UNIQUE (asset_id, tag_id)
 );
 --
-ALTER TABLE bedrock.asset_tags OWNER TO bedrock_user;
-GRANT ALL ON TABLE bedrock.asset_tags TO bedrock_user;
+ALTER TABLE ${process.env.BEDROCK_DB_SCHEMA}.asset_tags OWNER TO ${process.env.BEDROCK_DB_USER};
+GRANT ALL ON TABLE ${process.env.BEDROCK_DB_SCHEMA}.asset_tags TO ${process.env.BEDROCK_DB_USER};
 
 
 ---------------------------------------------
-CREATE TABLE bedrock.etl (
+CREATE TABLE ${process.env.BEDROCK_DB_SCHEMA}.etl (
 	asset_id text NOT NULL,
 	run_group_id text NOT NULL,
 	active bool NOT NULL,
@@ -174,11 +174,11 @@ CREATE TABLE bedrock.etl (
 	CONSTRAINT etl_unique UNIQUE (asset_id)
 );
 --
-ALTER TABLE bedrock.etl OWNER TO bedrock_user;
-GRANT ALL ON TABLE bedrock.etl TO bedrock_user;
+ALTER TABLE ${process.env.BEDROCK_DB_SCHEMA}.etl OWNER TO ${process.env.BEDROCK_DB_USER};
+GRANT ALL ON TABLE ${process.env.BEDROCK_DB_SCHEMA}.etl TO ${process.env.BEDROCK_DB_USER};
 
 ---------------------------------------------
--- CREATE TYPE bedrock.task_types AS ENUM (
+-- CREATE TYPE ${process.env.BEDROCK_DB_SCHEMA}.task_types AS ENUM (
 -- 'aggregate', 
 -- 'encrypt', 
 -- 'file_copy', 
@@ -188,12 +188,12 @@ GRANT ALL ON TABLE bedrock.etl TO bedrock_user;
 
 
 ---------------------------------------------
-CREATE TABLE bedrock.tasks (
+CREATE TABLE ${process.env.BEDROCK_DB_SCHEMA}.tasks (
 	task_id text PRIMARY KEY,
 	asset_id text NOT NULL,
 	seq_number int2 NOT NULL,
 	description text NULL,
-	"type" text NOT NULL, -- After updates, we may want to change this back to TYPE bedrock.task_types
+	"type" text NOT NULL, -- After updates, we may want to change this back to TYPE ${process.env.BEDROCK_DB_SCHEMA}.task_types
 	active bool NOT NULL,
 	"source" jsonb NULL,
 	target jsonb NULL,
@@ -201,46 +201,46 @@ CREATE TABLE bedrock.tasks (
 	CONSTRAINT tasks_key UNIQUE (asset_id, seq_number)
 );
 --
-ALTER TABLE bedrock.tasks OWNER TO bedrock_user;
-GRANT ALL ON TABLE bedrock.tasks TO bedrock_user;
+ALTER TABLE ${process.env.BEDROCK_DB_SCHEMA}.tasks OWNER TO ${process.env.BEDROCK_DB_USER};
+GRANT ALL ON TABLE ${process.env.BEDROCK_DB_SCHEMA}.tasks TO ${process.env.BEDROCK_DB_USER};
 
 
 
 ---------------------------
 -- VIEWS 
 ---------------------------
-create view bedrock.asset_tag_view as
+create view ${process.env.BEDROCK_DB_SCHEMA}.asset_tag_view as
 select at2.asset_id, a.asset_name, 
 at2.tag_id, tags.tag_name 
-from bedrock.asset_tags at2
-inner join bedrock.assets a
+from ${process.env.BEDROCK_DB_SCHEMA}.asset_tags at2
+inner join ${process.env.BEDROCK_DB_SCHEMA}.assets a
 on at2.asset_id = a.asset_id 
-inner join bedrock.tags
+inner join ${process.env.BEDROCK_DB_SCHEMA}.tags
 on at2.tag_id = tags.tag_id;
 
-create view bedrock.asset_type_custom_field_view as
+create view ${process.env.BEDROCK_DB_SCHEMA}.asset_type_custom_field_view as
 select atcf.asset_type_id,  asset_type_name, 
 atcf.custom_field_id, custom_field_name, required
-from bedrock.asset_types at2 
-inner join bedrock.asset_type_custom_fields atcf
+from ${process.env.BEDROCK_DB_SCHEMA}.asset_types at2 
+inner join ${process.env.BEDROCK_DB_SCHEMA}.asset_type_custom_fields atcf
 on at2.asset_type_id = atcf.asset_type_id
-inner join bedrock.custom_fields cf 
+inner join ${process.env.BEDROCK_DB_SCHEMA}.custom_fields cf 
 on atcf.custom_field_id = cf.custom_field_id; 
 
-create view bedrock.asset_type_view as
+create view ${process.env.BEDROCK_DB_SCHEMA}.asset_type_view as
 select at2.asset_type_id, at2.asset_type_name, 
 at2.parent, at3.asset_type_name parent_name
-from bedrock.asset_types at2 
-left join bedrock.asset_types at3 
+from ${process.env.BEDROCK_DB_SCHEMA}.asset_types at2 
+left join ${process.env.BEDROCK_DB_SCHEMA}.asset_types at3 
 on at2.parent = at3.asset_type_id;
 
-create view bedrock.asset_view as
+create view ${process.env.BEDROCK_DB_SCHEMA}.asset_view as
 select asset_id, asset_name, description, "location", a.asset_type_id, asset_type_name, owner_id, notes, link, active
-FROM bedrock.assets a
-left join bedrock.asset_types at2
+FROM ${process.env.BEDROCK_DB_SCHEMA}.assets a
+left join ${process.env.BEDROCK_DB_SCHEMA}.asset_types at2
 on a.asset_type_id = at2.asset_type_id;
 
-CREATE VIEW bedrock.dependency_view as
+CREATE VIEW ${process.env.BEDROCK_DB_SCHEMA}.dependency_view as
 select asset_id, asset_name, dependent_asset_id, dependency, bool_and(implied_dependency) implied_dependency from (
  SELECT dep.asset_id,
     as2.asset_name,
@@ -276,57 +276,58 @@ UNION
 ) inr
 group by asset_id, asset_name, dependent_asset_id, dependency;
 
-create view bedrock.etl_view as 
+create view ${process.env.BEDROCK_DB_SCHEMA}.etl_view as 
 select etl.asset_id, asset_name, etl.run_group_id, run_group_name, etl.active 
-from bedrock.etl
-inner join bedrock.assets
+from ${process.env.BEDROCK_DB_SCHEMA}.etl
+inner join ${process.env.BEDROCK_DB_SCHEMA}.assets
 on etl.asset_id = assets.asset_id 
-inner join bedrock.run_groups rg 
+inner join ${process.env.BEDROCK_DB_SCHEMA}.run_groups rg 
 on etl.run_group_id = rg.run_group_id; 
 
-create view bedrock.task_view as
+create view ${process.env.BEDROCK_DB_SCHEMA}.task_view as
 SELECT tasks.task_id, tasks.asset_id, asset_name, seq_number, tasks.description, "type", tasks.active, "source", target, "configuration"
-FROM bedrock.tasks
-inner join bedrock.assets a 
+FROM ${process.env.BEDROCK_DB_SCHEMA}.tasks
+inner join ${process.env.BEDROCK_DB_SCHEMA}.assets a 
 on tasks.asset_id = a.asset_id; 
 
-create view bedrock.custom_value_view as
+create view ${process.env.BEDROCK_DB_SCHEMA}.custom_value_view as
 select cv.asset_id, a.asset_name,
 cv.custom_field_id, cf.custom_field_name, cf.field_type, cf.field_data 
-from bedrock.custom_values cv
-inner join bedrock.assets a
+from ${process.env.BEDROCK_DB_SCHEMA}.custom_values cv
+inner join ${process.env.BEDROCK_DB_SCHEMA}.assets a
 on cv.asset_id = a.asset_id 
-inner join bedrock.custom_fields cf 
+inner join ${process.env.BEDROCK_DB_SCHEMA}.custom_fields cf 
 on cv.custom_field_id = cf.custom_field_id;
 
-GRANT SELECT ON TABLE bedrock.asset_type_custom_field_view TO bedrock_user;
-GRANT SELECT ON TABLE bedrock.asset_tag_view TO bedrock_user;
-GRANT SELECT ON TABLE bedrock.asset_type_view TO bedrock_user;
-GRANT SELECT ON TABLE bedrock.dependency_view TO bedrock_user;
-GRANT SELECT ON TABLE bedrock.etl_view TO bedrock_user;
-GRANT SELECT ON TABLE bedrock.task_view TO bedrock_user;
-GRANT SELECT ON TABLE bedrock.asset_view TO bedrock_user;
-GRANT SELECT ON TABLE bedrock.custom_value_view TO bedrock_user;
+GRANT SELECT ON TABLE ${process.env.BEDROCK_DB_SCHEMA}.asset_type_custom_field_view TO ${process.env.BEDROCK_DB_USER};
+GRANT SELECT ON TABLE ${process.env.BEDROCK_DB_SCHEMA}.asset_tag_view TO ${process.env.BEDROCK_DB_USER};
+GRANT SELECT ON TABLE ${process.env.BEDROCK_DB_SCHEMA}.asset_type_view TO ${process.env.BEDROCK_DB_USER};
+GRANT SELECT ON TABLE ${process.env.BEDROCK_DB_SCHEMA}.dependency_view TO ${process.env.BEDROCK_DB_USER};
+GRANT SELECT ON TABLE ${process.env.BEDROCK_DB_SCHEMA}.etl_view TO ${process.env.BEDROCK_DB_USER};
+GRANT SELECT ON TABLE ${process.env.BEDROCK_DB_SCHEMA}.task_view TO ${process.env.BEDROCK_DB_USER};
+GRANT SELECT ON TABLE ${process.env.BEDROCK_DB_SCHEMA}.asset_view TO ${process.env.BEDROCK_DB_USER};
+GRANT SELECT ON TABLE ${process.env.BEDROCK_DB_SCHEMA}.custom_value_view TO ${process.env.BEDROCK_DB_USER};
 
 
--- Create testdata schema and tables to test Bedrock. 
-drop table if exists testdata.testtable;
+-- Create testdata schema and tables to test ${process.env.BEDROCK_DB_SCHEMA}. 
+drop table if exists testdata.fromtable;
+drop table if exists testdata.totable;
 drop schema if exists testdata;
 
 create schema testdata;
-ALTER SCHEMA testdata OWNER TO bedrock_user;
-GRANT USAGE ON SCHEMA testdata TO bedrock_user;
+ALTER SCHEMA testdata OWNER TO ${process.env.BEDROCK_DB_USER};
+GRANT USAGE ON SCHEMA testdata TO ${process.env.BEDROCK_DB_USER};
 
 create table testdata.fromtable as 
 SELECT generate_series(1,100) AS id,
 now()::timestamp as date_loaded, md5(random()::text) AS random_data;
 
-ALTER TABLE testdata.fromtable OWNER TO bedrock_user;
-GRANT ALL ON TABLE testdata.fromtable TO bedrock_user;
+ALTER TABLE testdata.fromtable OWNER TO ${process.env.BEDROCK_DB_USER};
+GRANT ALL ON TABLE testdata.fromtable TO ${process.env.BEDROCK_DB_USER};
 
 select * into testdata.totable
 from testdata.fromtable
 where 1=2;
 
-ALTER TABLE testdata.totable OWNER TO bedrock_user;
-GRANT ALL ON TABLE testdata.totable TO bedrock_user;
+ALTER TABLE testdata.totable OWNER TO ${process.env.BEDROCK_DB_USER};
+GRANT ALL ON TABLE testdata.totable TO ${process.env.BEDROCK_DB_USER};

@@ -141,7 +141,7 @@ async function readAssetFiles(client, assets_directory) {
 
 ////////////////////////////////////////////
 
-let data_directory = `../../../../${process.env.data_directory}`;
+let data_directory = `../../../../${process.env.data_directory.replace(/"|'/g, '')}`;
 let assets_directory = data_directory + '/assets/';
 
 console.log(`Connect to the DB: ${process.env.BEDROCK_DB_HOST}`);

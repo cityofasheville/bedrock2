@@ -26,7 +26,7 @@ if __name__ == "__main__":
 
   if args.variable is not None and len(args.variable) > 0:
     for vdef in args.variable:
-      v = vdef.split('=')
+      v = vdef.replace('"', '').split('=')
       vmap[v[0]] = v[1]
 
   with (open(args.templateFile, 'r')) as tfile:
