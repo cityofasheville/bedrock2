@@ -1,4 +1,4 @@
-# Deploying a test copy
+# Deploying a complete system
 Included scripts will build a complete copy of Bedrock on AWS, including the network, asset database, roles, Lambdas, and the Step Function.
 
 You will need AdministratorAccess command line permissions to AWS.
