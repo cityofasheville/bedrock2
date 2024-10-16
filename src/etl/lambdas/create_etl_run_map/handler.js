@@ -30,7 +30,7 @@ async function readEtlList(client, run_groups) {
       const sep = (accumulator !== '') ? ', ' : '';
       return `${accumulator + sep}'${currentValue}'`;
     }, '');
-    const sql = `SELECT * FROM ${process.env.BEDROCK_DB_SCHEMA}.etl_view where run_group_name in (${rgString}) and active = true;`;
+    const sql = `SELECT * FROM bedrock.etl_view where run_group_name in (${rgString}) and active = true;`;
     const res = await client.query(sql)
       .catch((err) => {
         const errmsg = pgErrorCodes[err.code];
@@ -57,7 +57,7 @@ async function readDependencies(client, assetMap) {
   const arr = Object.entries(assetMap);
   for (let i = 0; i < arr.length; i += 1) {
     const asset = arr[i][1];
-    const sql = `SELECT * FROM ${process.env.BEDROCK_DB_SCHEMA}.dependency_view where asset_name = '${arr[i][0]}';`;
+    const sql = `SELECT * FROM bedrock.dependency_view where asset_name = '${arr[i][0]}';`;
     // eslint-disable-next-line no-await-in-loop
     const res = await client.query(sql)
       .catch((err) => {
@@ -68,7 +68,7 @@ async function readDependencies(client, assetMap) {
       const d = res.rows[j].dependency;
       if (d[0] === '#') { // Aggregate Dependancy. Look up list of dependencies in tags
         const aggrDependency = d.slice(1);
-        const aggrSql = `SELECT asset_name FROM ${process.env.BEDROCK_DB_SCHEMA}.asset_tag_view where tag_name = '${aggrDependency}';`;
+        const aggrSql = `SELECT asset_name FROM bedrock.asset_tag_view where tag_name = '${aggrDependency}';`;
         // eslint-disable-next-line no-await-in-loop
         const aggrRes = await client.query(aggrSql)
           .catch((err) => {
@@ -92,8 +92,8 @@ async function readLocationFromAsset(client, assetName) {
   const sql = `   select assets.location || 
    jsonb_build_object('connection', secret_name) || 
    jsonb_build_object('asset', asset_name) as location
-   FROM ${process.env.BEDROCK_DB_SCHEMA}.assets
-   inner join ${process.env.BEDROCK_DB_SCHEMA}.connections conn
+   FROM bedrock.assets
+   inner join bedrock.connections conn
    on location->>'connection_id' = conn.connection_id 
    where asset_name = '${assetName}';`;
   // eslint-disable-next-line no-await-in-loop
@@ -113,8 +113,8 @@ async function readAggregateData(client, tempLocation, location, taskSource, ema
   const { aggregate, data_range, data_connection } = taskSource;
   const sql = `
   select a.asset_name, location->>'spreadsheetid' spreadsheetid, 
-  location->>'tab' tab from ${process.env.BEDROCK_DB_SCHEMA}.assets a  
-  join ${process.env.BEDROCK_DB_SCHEMA}.asset_tag_view using (asset_id)
+  location->>'tab' tab from bedrock.assets a  
+  join bedrock.asset_tag_view using (asset_id)
   where tag_name = '${aggregate}' and active = true;
   `;
   // process.stdout.write(sql);
@@ -171,7 +171,7 @@ async function readTasks(client, assetMap) {
   for (let i = 0; i < arr.length; i += 1) {
     const assetName = arr[i][0];
     const asset = arr[i][1];
-    const sql = `SELECT * FROM ${process.env.BEDROCK_DB_SCHEMA}.task_view where asset_name = '${assetName}' order by seq_number;`;
+    const sql = `SELECT * FROM bedrock.task_view where asset_name = '${assetName}' order by seq_number;`;
 
     // eslint-disable-next-line no-await-in-loop
     const res = await client.query(sql)
@@ -225,7 +225,7 @@ async function readTasks(client, assetMap) {
 
 // Get Cron based run_group list
 async function getRunGroups(client, debug) {
-  const sql = `SELECT run_group_name, cron_string FROM ${process.env.BEDROCK_DB_SCHEMA}.run_groups;`;
+  const sql = `SELECT run_group_name, cron_string FROM bedrock.run_groups;`;
   return client.query(sql)
     .then((res) => {
       const run_groups = [];
@@ -253,7 +253,7 @@ async function getRunGroups(client, debug) {
 }
 
 async function verifyAssetExists(client, assetName) {
-  const sql = `SELECT * FROM ${process.env.BEDROCK_DB_SCHEMA}.etl_view where asset_name = '${assetName}';`;
+  const sql = `SELECT * FROM bedrock.etl_view where asset_name = '${assetName}';`;
   return client.query(sql)
     .then((res) => {
       if (res.rowCount === 0) {

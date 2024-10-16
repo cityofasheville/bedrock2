@@ -9,8 +9,8 @@ import { getDBConnection } from 'bedrock_common';
 
 async function readEtlList(client) {
   let etlList = [];
-  const sql = `SELECT assets.asset_name, etl.* FROM ${process.env.BEDROCK_DB_SCHEMA}.etl
-  inner join ${process.env.BEDROCK_DB_SCHEMA}.assets on etl.asset_id = assets.asset_id;`;
+  const sql = `SELECT assets.asset_name, etl.* FROM bedrock.etl
+  inner join bedrock.assets on etl.asset_id = assets.asset_id;`;
   const res = await client.query(sql)
     .catch((err) => {
       const errmsg = [err.code];
@@ -23,7 +23,7 @@ async function readEtlList(client) {
 async function readTasks(client, etlList) {
   for (let etl of etlList) {
     etl.tasks = [];
-    const sql = `SELECT * FROM ${process.env.BEDROCK_DB_SCHEMA}.tasks where asset_id = '${etl.asset_id}' order by seq_number;`;
+    const sql = `SELECT * FROM bedrock.tasks where asset_id = '${etl.asset_id}' order by seq_number;`;
     // eslint-disable-next-line no-await-in-loop
     const res = await client.query(sql)
       .catch((err) => {
@@ -32,21 +32,6 @@ async function readTasks(client, etlList) {
       });
     for (let j = 0; j < res.rowCount; j += 1) {
       const task = res.rows[j];
-      // let thisTask = {
-      //   task_id: task.task_id,
-      //   type: task.type,
-      //   active: task.active,
-      //   description: task.description,
-      // };
-      // if (task.type === 'table_copy' || task.type === 'file_copy' || task.type === 'aggregate') {
-      //   thisTask.source_location = task.source;
-      //   thisTask.target_location = task.target;
-      // } else if (task.type === 'sql') {
-      //   thisTask.connection = task.target.connection;
-      //   thisTask.sql_string = task.configuration;
-      // } else if (task.type === 'run_lambda' || task.type === 'encrypt') {
-        // thisTask = { ...thisTask, ...task.target };
-      // }
       etl.tasks.push(task);
     }
   }
@@ -54,7 +39,7 @@ async function readTasks(client, etlList) {
 }
 ////////////////////////////////////////////
 async function readAssetList(client) {
-  let sql = `SELECT * FROM ${process.env.BEDROCK_DB_SCHEMA}.assets;`;
+  let sql = `SELECT * FROM bedrock.assets;`;
   // eslint-disable-next-line no-await-in-loop
   let res = await client.query(sql)
     .catch((err) => {
@@ -70,7 +55,7 @@ async function readAssetList(client) {
    */
 
   // Set up a map of custom field values, by asset_name
-  sql = `SELECT * FROM ${process.env.BEDROCK_DB_SCHEMA}.custom_values;`
+  sql = `SELECT * FROM bedrock.custom_values;`
   res = await client.query(sql)
   .catch((err) => {
     const errmsg = [err.code];
@@ -103,7 +88,7 @@ async function readAssetList(client) {
 async function readDependencies(client, assetList) {
   for (let asset of assetList) {
     asset.depends = [];
-    const sql = `SELECT * FROM ${process.env.BEDROCK_DB_SCHEMA}.dependencies where asset_id = '${asset.asset_id}';`;
+    const sql = `SELECT * FROM bedrock.dependencies where asset_id = '${asset.asset_id}';`;
     // eslint-disable-next-line no-await-in-loop
     const res = await client.query(sql)
       .catch((err) => {
@@ -121,7 +106,7 @@ async function readDependencies(client, assetList) {
 async function readTags(client, assetList) {
   for (let asset of assetList) {
     asset.tags = [];
-    const sql = `select tag_id from ${process.env.BEDROCK_DB_SCHEMA}.asset_tags inner join ${process.env.BEDROCK_DB_SCHEMA}.tags using (tag_id) where asset_id = '${asset.asset_id}';`;
+    const sql = `select tag_id from bedrock.asset_tags inner join bedrock.tags using (tag_id) where asset_id = '${asset.asset_id}';`;
     // eslint-disable-next-line no-await-in-loop
     const res = await client.query(sql)
       .catch((err) => {
@@ -173,7 +158,7 @@ function writeEtl(etlList, assets_directory) {
 // load stand-alone csv files: eg. run_groups.csv and tags.csv
 async function writeOther(client, data_directory, tablename) {
   console.log(`Writing ${tablename}.csv`);
-  const sql = `SELECT * FROM ${process.env.BEDROCK_DB_SCHEMA}.${tablename}`;
+  const sql = `SELECT * FROM bedrock.${tablename}`;
   // eslint-disable-next-line no-await-in-loop
   const res = await client.query(sql)
     .catch((err) => {
@@ -198,7 +183,7 @@ async function writeOther(client, data_directory, tablename) {
 
 ////////////////////////////////////////////
 
-let data_directory = `../../../../${process.env.data_directory}`;
+let data_directory = `../../../../${process.env.data_directory.replace(/"|'/g,"")}`;
 let assets_directory = data_directory + '/assets/';
 // create or clear assets dir
 if (existsSync(assets_directory)) {

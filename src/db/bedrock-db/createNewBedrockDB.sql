@@ -14,23 +14,23 @@ DROP TABLE IF EXISTS bedrock.connections cascade;
 DROP TYPE IF EXISTS bedrock.connections_classes;
 DROP TABLE IF EXISTS bedrock.owners;
 DROP SCHEMA IF EXISTS bedrock;
-DROP ROLE IF EXISTS bedrock_user;
+-- DROP ROLE IF EXISTS ${process.env.BEDROCK_DB_USER};
 
-CREATE ROLE bedrock_user WITH 
-	NOSUPERUSER
-	NOCREATEDB
-	NOCREATEROLE
-	INHERIT
-	LOGIN
-	NOREPLICATION
-	NOBYPASSRLS
-	CONNECTION LIMIT -1;
-
-ALTER USER bedrock_user WITH PASSWORD 'test-bedrock';   -- <====================== PASSWORD	
+-- CREATE ROLE ${process.env.BEDROCK_DB_USER} WITH 
+-- 	NOSUPERUSER
+-- 	NOCREATEDB
+-- 	NOCREATEROLE
+-- 	INHERIT
+-- 	LOGIN
+-- 	NOREPLICATION
+-- 	NOBYPASSRLS
+-- 	CONNECTION LIMIT -1;
+ 
+ALTER USER ${process.env.BEDROCK_DB_USER} WITH PASSWORD '${process.env.BEDROCK_DB_PASSWORD}';   -- <====================== PASSWORD	
 
 CREATE SCHEMA bedrock;
-ALTER SCHEMA bedrock OWNER TO bedrock_user;
-GRANT USAGE ON SCHEMA bedrock TO bedrock_user;
+ALTER SCHEMA bedrock OWNER TO ${process.env.BEDROCK_DB_USER};
+GRANT USAGE ON SCHEMA bedrock TO ${process.env.BEDROCK_DB_USER};
 
 CREATE TABLE bedrock.owners (
   owner_id text PRIMARY KEY,
@@ -43,8 +43,8 @@ CREATE TABLE bedrock.owners (
   notes text NULL
 );
 --
-ALTER TABLE bedrock.owners OWNER TO bedrock_user;
-GRANT ALL ON TABLE bedrock.owners TO bedrock_user;
+ALTER TABLE bedrock.owners OWNER TO ${process.env.BEDROCK_DB_USER};
+GRANT ALL ON TABLE bedrock.owners TO ${process.env.BEDROCK_DB_USER};
 
 ---------------------------------------------
 -- CREATE TYPE bedrock.connections_classes AS ENUM ('db', 'api', 'file', 'sheets');
@@ -58,8 +58,8 @@ CREATE TABLE bedrock.connections (
   CONSTRAINT connection_name_key UNIQUE (connection_name)
 );
 --
-ALTER TABLE bedrock.connections OWNER TO bedrock_user;
-GRANT ALL ON TABLE bedrock.connections TO bedrock_user;
+ALTER TABLE bedrock.connections OWNER TO ${process.env.BEDROCK_DB_USER};
+GRANT ALL ON TABLE bedrock.connections TO ${process.env.BEDROCK_DB_USER};
 
 ---------------------------------------------
 CREATE TABLE bedrock.asset_types (
@@ -68,8 +68,8 @@ CREATE TABLE bedrock.asset_types (
   parent text NULL
 );
 --
-ALTER TABLE bedrock.asset_types OWNER TO bedrock_user;
-GRANT ALL ON TABLE bedrock.asset_types TO bedrock_user;
+ALTER TABLE bedrock.asset_types OWNER TO ${process.env.BEDROCK_DB_USER};
+GRANT ALL ON TABLE bedrock.asset_types TO ${process.env.BEDROCK_DB_USER};
 
 ---------------------------------------------
 CREATE TABLE bedrock.run_groups (
@@ -79,8 +79,8 @@ CREATE TABLE bedrock.run_groups (
 	CONSTRAINT run_groups_name_key UNIQUE (run_group_name)
 );
 --
-ALTER TABLE bedrock.run_groups OWNER TO bedrock_user;
-GRANT ALL ON TABLE bedrock.run_groups TO bedrock_user;
+ALTER TABLE bedrock.run_groups OWNER TO ${process.env.BEDROCK_DB_USER};
+GRANT ALL ON TABLE bedrock.run_groups TO ${process.env.BEDROCK_DB_USER};
 
 ---------------------------------------------
 CREATE TABLE bedrock.assets (
@@ -96,8 +96,8 @@ CREATE TABLE bedrock.assets (
 	CONSTRAINT asset_name_key UNIQUE (asset_name)
 );
 --
-ALTER TABLE bedrock.assets OWNER TO bedrock_user;
-GRANT ALL ON TABLE bedrock.assets TO bedrock_user;
+ALTER TABLE bedrock.assets OWNER TO ${process.env.BEDROCK_DB_USER};
+GRANT ALL ON TABLE bedrock.assets TO ${process.env.BEDROCK_DB_USER};
 
 ---------------------------------------------
 CREATE TABLE bedrock.dependencies (
@@ -106,8 +106,8 @@ CREATE TABLE bedrock.dependencies (
 	CONSTRAINT dependencies_key UNIQUE (asset_id, dependent_asset_id)
 );
 --
-ALTER TABLE bedrock.dependencies OWNER TO bedrock_user;
-GRANT ALL ON TABLE bedrock.dependencies TO bedrock_user;
+ALTER TABLE bedrock.dependencies OWNER TO ${process.env.BEDROCK_DB_USER};
+GRANT ALL ON TABLE bedrock.dependencies TO ${process.env.BEDROCK_DB_USER};
 
 ---------------------------------------------
 CREATE TABLE bedrock.custom_fields (
@@ -118,8 +118,8 @@ CREATE TABLE bedrock.custom_fields (
 	CONSTRAINT custom_field_name_key UNIQUE (custom_field_name)
 );
 --
-ALTER TABLE bedrock.custom_fields OWNER TO bedrock_user;
-GRANT ALL ON TABLE bedrock.custom_fields TO bedrock_user;
+ALTER TABLE bedrock.custom_fields OWNER TO ${process.env.BEDROCK_DB_USER};
+GRANT ALL ON TABLE bedrock.custom_fields TO ${process.env.BEDROCK_DB_USER};
 
 ---------------------------------------------
 CREATE TABLE bedrock.asset_type_custom_fields (
@@ -129,8 +129,8 @@ CREATE TABLE bedrock.asset_type_custom_fields (
 	CONSTRAINT asset_type_custom_fields_key UNIQUE (asset_type_id, custom_field_id)
 );
 --
-ALTER TABLE bedrock.asset_type_custom_fields OWNER TO bedrock_user;
-GRANT ALL ON TABLE bedrock.asset_type_custom_fields TO bedrock_user;
+ALTER TABLE bedrock.asset_type_custom_fields OWNER TO ${process.env.BEDROCK_DB_USER};
+GRANT ALL ON TABLE bedrock.asset_type_custom_fields TO ${process.env.BEDROCK_DB_USER};
 
 ---------------------------------------------
 CREATE TABLE bedrock.custom_values (
@@ -140,8 +140,8 @@ CREATE TABLE bedrock.custom_values (
 	CONSTRAINT custom_values_key UNIQUE (asset_id, custom_field_id)
 );
 --
-ALTER TABLE bedrock.custom_values OWNER TO bedrock_user;
-GRANT ALL ON TABLE bedrock.custom_values TO bedrock_user;
+ALTER TABLE bedrock.custom_values OWNER TO ${process.env.BEDROCK_DB_USER};
+GRANT ALL ON TABLE bedrock.custom_values TO ${process.env.BEDROCK_DB_USER};
 
 ---------------------------------------------
 CREATE TABLE bedrock.tags (
@@ -151,8 +151,8 @@ CREATE TABLE bedrock.tags (
 	CONSTRAINT tag_name_key UNIQUE (tag_name)
 );
 --
-ALTER TABLE bedrock.tags OWNER TO bedrock_user;
-GRANT ALL ON TABLE bedrock.tags TO bedrock_user;
+ALTER TABLE bedrock.tags OWNER TO ${process.env.BEDROCK_DB_USER};
+GRANT ALL ON TABLE bedrock.tags TO ${process.env.BEDROCK_DB_USER};
 
 ---------------------------------------------
 CREATE TABLE bedrock.asset_tags (
@@ -161,8 +161,8 @@ CREATE TABLE bedrock.asset_tags (
 	CONSTRAINT asset_tags_pk UNIQUE (asset_id, tag_id)
 );
 --
-ALTER TABLE bedrock.asset_tags OWNER TO bedrock_user;
-GRANT ALL ON TABLE bedrock.asset_tags TO bedrock_user;
+ALTER TABLE bedrock.asset_tags OWNER TO ${process.env.BEDROCK_DB_USER};
+GRANT ALL ON TABLE bedrock.asset_tags TO ${process.env.BEDROCK_DB_USER};
 
 
 ---------------------------------------------
@@ -174,8 +174,8 @@ CREATE TABLE bedrock.etl (
 	CONSTRAINT etl_unique UNIQUE (asset_id)
 );
 --
-ALTER TABLE bedrock.etl OWNER TO bedrock_user;
-GRANT ALL ON TABLE bedrock.etl TO bedrock_user;
+ALTER TABLE bedrock.etl OWNER TO ${process.env.BEDROCK_DB_USER};
+GRANT ALL ON TABLE bedrock.etl TO ${process.env.BEDROCK_DB_USER};
 
 ---------------------------------------------
 -- CREATE TYPE bedrock.task_types AS ENUM (
@@ -201,8 +201,8 @@ CREATE TABLE bedrock.tasks (
 	CONSTRAINT tasks_key UNIQUE (asset_id, seq_number)
 );
 --
-ALTER TABLE bedrock.tasks OWNER TO bedrock_user;
-GRANT ALL ON TABLE bedrock.tasks TO bedrock_user;
+ALTER TABLE bedrock.tasks OWNER TO ${process.env.BEDROCK_DB_USER};
+GRANT ALL ON TABLE bedrock.tasks TO ${process.env.BEDROCK_DB_USER};
 
 
 
@@ -247,20 +247,20 @@ select asset_id, asset_name, dependent_asset_id, dependency, bool_and(implied_de
     dep.dependent_asset_id,
     as3.asset_name AS dependency,
     false as implied_dependency
-   FROM dependencies dep
-     JOIN assets as2 ON as2.asset_id = dep.asset_id
-     JOIN assets as3 ON dep.dependent_asset_id = as3.asset_id
+   FROM bedrock.dependencies dep
+     JOIN bedrock.assets as2 ON as2.asset_id = dep.asset_id
+     JOIN bedrock.assets as3 ON dep.dependent_asset_id = as3.asset_id
 UNION
  SELECT a1.asset_id,
     a1.asset_name,
     a2.asset_id AS dependent_asset_id,
     a2.asset_name AS dependency,
     true as implied_dependency
-   FROM assets a1
-     JOIN tasks t ON a1.asset_id = t.asset_id
-     JOIN tags ON (t.source ->> 'aggregate'::text) = tags.tag_name
-     JOIN asset_tags at2 ON tags.tag_id = at2.tag_id
-     JOIN assets a2 ON a2.asset_id = at2.asset_id
+   FROM bedrock.assets a1
+     JOIN bedrock.tasks t ON a1.asset_id = t.asset_id
+     JOIN bedrock.tags ON (t.source ->> 'aggregate'::text) = tags.tag_name
+     JOIN bedrock.asset_tags at2 ON tags.tag_id = at2.tag_id
+     JOIN bedrock.assets a2 ON a2.asset_id = at2.asset_id
   WHERE t.type = 'aggregate'::text
 UNION
  SELECT a1.asset_id,
@@ -268,9 +268,9 @@ UNION
     a2.asset_id AS dependent_asset_id,
     a2.asset_name AS dependency,
     true as implied_dependency
-   FROM assets a1
-     JOIN tasks t ON a1.asset_name = (t.target ->> 'asset'::text)
-     JOIN assets a2 ON a2.asset_name = (t.source ->> 'asset'::text)
+   FROM bedrock.assets a1
+     JOIN bedrock.tasks t ON a1.asset_name = (t.target ->> 'asset'::text)
+     JOIN bedrock.assets a2 ON a2.asset_name = (t.source ->> 'asset'::text)
   WHERE t.type = ANY (ARRAY['table_copy'::text, 'file_copy'::text])
   order by asset_name 
 ) inr
@@ -299,34 +299,35 @@ on cv.asset_id = a.asset_id
 inner join bedrock.custom_fields cf 
 on cv.custom_field_id = cf.custom_field_id;
 
-GRANT SELECT ON TABLE bedrock.asset_type_custom_field_view TO bedrock_user;
-GRANT SELECT ON TABLE bedrock.asset_tag_view TO bedrock_user;
-GRANT SELECT ON TABLE bedrock.asset_type_view TO bedrock_user;
-GRANT SELECT ON TABLE bedrock.dependency_view TO bedrock_user;
-GRANT SELECT ON TABLE bedrock.etl_view TO bedrock_user;
-GRANT SELECT ON TABLE bedrock.task_view TO bedrock_user;
-GRANT SELECT ON TABLE bedrock.asset_view TO bedrock_user;
-GRANT SELECT ON TABLE bedrock.custom_value_view TO bedrock_user;
+GRANT SELECT ON TABLE bedrock.asset_type_custom_field_view TO ${process.env.BEDROCK_DB_USER};
+GRANT SELECT ON TABLE bedrock.asset_tag_view TO ${process.env.BEDROCK_DB_USER};
+GRANT SELECT ON TABLE bedrock.asset_type_view TO ${process.env.BEDROCK_DB_USER};
+GRANT SELECT ON TABLE bedrock.dependency_view TO ${process.env.BEDROCK_DB_USER};
+GRANT SELECT ON TABLE bedrock.etl_view TO ${process.env.BEDROCK_DB_USER};
+GRANT SELECT ON TABLE bedrock.task_view TO ${process.env.BEDROCK_DB_USER};
+GRANT SELECT ON TABLE bedrock.asset_view TO ${process.env.BEDROCK_DB_USER};
+GRANT SELECT ON TABLE bedrock.custom_value_view TO ${process.env.BEDROCK_DB_USER};
 
 
--- Create testdata schema and tables to test Bedrock. 
-drop table if exists testdata.testtable;
+-- Create testdata schema and tables to test bedrock. 
+drop table if exists testdata.fromtable;
+drop table if exists testdata.totable;
 drop schema if exists testdata;
 
 create schema testdata;
-ALTER SCHEMA testdata OWNER TO bedrock_user;
-GRANT USAGE ON SCHEMA testdata TO bedrock_user;
+ALTER SCHEMA testdata OWNER TO ${process.env.BEDROCK_DB_USER};
+GRANT USAGE ON SCHEMA testdata TO ${process.env.BEDROCK_DB_USER};
 
 create table testdata.fromtable as 
 SELECT generate_series(1,100) AS id,
 now()::timestamp as date_loaded, md5(random()::text) AS random_data;
 
-ALTER TABLE testdata.fromtable OWNER TO bedrock_user;
-GRANT ALL ON TABLE testdata.fromtable TO bedrock_user;
+ALTER TABLE testdata.fromtable OWNER TO ${process.env.BEDROCK_DB_USER};
+GRANT ALL ON TABLE testdata.fromtable TO ${process.env.BEDROCK_DB_USER};
 
 select * into testdata.totable
 from testdata.fromtable
 where 1=2;
 
-ALTER TABLE testdata.totable OWNER TO bedrock_user;
-GRANT ALL ON TABLE testdata.totable TO bedrock_user;
+ALTER TABLE testdata.totable OWNER TO ${process.env.BEDROCK_DB_USER};
+GRANT ALL ON TABLE testdata.totable TO ${process.env.BEDROCK_DB_USER};

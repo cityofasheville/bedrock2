@@ -10,7 +10,7 @@ destroy: $(dirs)
 db: $(dirs)
 seed: $(dirs)
 clean: $(dirs)
-	rm make_variables.generated
+	rm ./make_variables.generated
 
 $(dirs):
 	$(MAKE) -C $@ $(MAKECMDGOALS)

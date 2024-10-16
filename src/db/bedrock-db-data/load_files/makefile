@@ -1,4 +1,7 @@
 include ../../../make_variables
+-include ../../make_variables.generated
+
+.EXPORT_ALL_VARIABLES:
 
 code_files = *.js package.json
 
@@ -11,10 +14,4 @@ node_modules: ./package.json
 	npm install
 
 local: node_modules
-	@export BEDROCK_DB_HOST=$(BEDROCK_DB_HOST) \
-	export BEDROCK_DB_USER=$(BEDROCK_DB_USER) \
-	export BEDROCK_DB_SCHEMA=$(BEDROCK_DB_SCHEMA) \
-	export BEDROCK_DB_PASSWORD=$(BEDROCK_DB_PASSWORD) \
-	export BEDROCK_DB_NAME=$(BEDROCK_DB_NAME) \
-	export data_directory=$(data_directory) \
 	node load_files.js

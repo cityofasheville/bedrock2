@@ -13,24 +13,25 @@ DB_SUBNET_GROUP_NAME= "public-db-subnet-group"
 BEDROCK_SECURITY_GROUP_IDS=["sg-076e12ba2a9012944"]
 BEDROCK_PRIVATE_SUBNETS=["subnet-00e55df750014753d", "subnet-0c119b605ff498f3b"]
 
-# This section is for database connections.
-# If using the database built as part of this instance, you can copy from
-# ./db/make_variables.generated (but do not include the :5432).
-# If USER, PASSWORD and DB_NAME are not provided, the default values will be used.
-# Leave HOST blank to use the hard-coded production database.
-BEDROCK_DB_HOST=""
-BEDROCK_DB_USER=""
-BEDROCK_DB_PASSWORD=""
-BEDROCK_DB_NAME=""
-# Unlike the other DB variables, always include a schema name.
-BEDROCK_DB_SCHEMA="bedrock"
+# This section is for database connections. Options:
+  # 1 All values can be specified here.
+  # 2 If you created the database by running "make apply" in the db dir, a file ./db/make_variables.generated
+  #   was written with the created database host name. This value will be used with default password 
+  #   unless it is overridden with values specified here.
+  # 3 If just Host is specified, with no User, Password, or DB Name, the default values will be used.
+  # 4 Set BEDROCK_DB_HOST="" to use the hard-coded production database.
+
+# BEDROCK_DB_HOST=""
+# BEDROCK_DB_USER=""
+# BEDROCK_DB_PASSWORD=""
+# BEDROCK_DB_NAME=""
 
 # This is used in the API. 
 # Can be read from the output of creating the step function in Terraform.
 STATE_MACHINE_ARN="arn:aws:xxx"
 
 # This is the directory (relative to the root of the project) where the data files are stored.
-data_directory='src/db/bedrock-db-data/data';
+data_directory="src/db/bedrock-db-data/data"
 
 # Email settings
 EMAIL_SENDER="asheville_fake@ashevillenc.gov"

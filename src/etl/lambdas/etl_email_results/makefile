@@ -1,5 +1,7 @@
 include ../../../make_variables
 
+.EXPORT_ALL_VARIABLES:
+
 dirs = build
 .PHONY: $(dirs) init plan apply destroy prebuild local
 
@@ -35,7 +37,7 @@ node_modules: ./package.json
 	npm install
 
 local: node_modules
-	export EMAIL_RECIPIENT=$(EMAIL_RECIPIENT); export EMAIL_SENDER=$(EMAIL_SENDER); node local.js
+	node local.js
 
 clean:
 	rm -f *.instance
