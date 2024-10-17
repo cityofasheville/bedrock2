@@ -63,7 +63,6 @@ async function baseInsert(body, client) {
 }
 
 async function addDependencies(body, client) {
-  console.log('boop')
   if (body.parents?.length > 0) {
     let relation_type = 'PULLS_FROM'
     for (let i = 0; i < body.parents.length; i += 1) {
