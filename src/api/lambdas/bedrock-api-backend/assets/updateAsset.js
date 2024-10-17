@@ -32,7 +32,7 @@ async function updateDependencies(client, idField, idValue, name, body) {
   } catch (error) {
     throw new Error(`PG error deleting dependencies for update: ${error}`);
   }
-  if (body.parents.length > 0) {
+  if (body.parents?.length > 0) {
     for (let i = 0; i < body.parents.length; i += 1) {
       const dependency = body.parents[i];
       try {
@@ -45,7 +45,19 @@ async function updateDependencies(client, idField, idValue, name, body) {
       }
     }
   }
-  return body.parents;
+  if (body.uses?.length > 0) {
+    for (let i = 0; i < body.uses.length; i += 1) {
+      const dependency = body.uses[i];
+      try {
+        await client.query(
+          'INSERT INTO dependencies (asset_id, dependent_asset_id) VALUES ($1, $2)',
+          [idValue, dependency],
+        );
+      } catch (error) {
+        throw new Error(`PG error updating dependencies: ${error}`);
+      }
+    }
+  }
 }
 
 async function updateTags(idValue, idField, body, client, name) {
@@ -121,7 +133,6 @@ async function updateAsset(
   const assetType = body.asset_type_id;
   let customFields = new Map(Object.entries(body.custom_fields));
 
-
   const response = {
     statusCode: 200,
     message: `Successfully updated asset ${idValue}`,
@@ -129,11 +140,11 @@ async function updateAsset(
   };
 
   checkInfo(body, requiredFields, name, idValue, idField);
-
   let client = await db.newClient();
   await client.query('BEGIN');
   await checkExistence(client, idValue);
   await updateInfo(client, baseFields, body, tableName, idField, idValue, name);
+
   if (assetType) {
     customFieldsFromAssetType = await getCustomFieldsInfo(client, body.asset_type_id);
     // CVs are from body, not CVs table!
@@ -151,7 +162,7 @@ async function updateAsset(
   await client.query('COMMIT');
   const responseInfo = await getAsset(
     queryParams,
-    client,
+    db,
     idValue,
     allFields,
   );
