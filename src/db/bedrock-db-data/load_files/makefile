@@ -8,7 +8,7 @@ code_files = *.js package.json
 .PHONY: seed init plan apply apply-y destroy db local
 
 clean:
-	echo 'Nothing to clean'
+	rm -rf node_modules
 
 node_modules: ./package.json
 	npm install

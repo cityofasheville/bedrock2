@@ -103,7 +103,8 @@ GRANT ALL ON TABLE bedrock.assets TO ${process.env.BEDROCK_DB_USER};
 CREATE TABLE bedrock.dependencies (
 	asset_id text NOT NULL,
 	dependent_asset_id text NOT NULL,
-	CONSTRAINT dependencies_key UNIQUE (asset_id, dependent_asset_id)
+  relation_type text NOT NULL,
+	CONSTRAINT dependencies_key UNIQUE (asset_id, dependent_asset_id, relation_type)
 );
 --
 ALTER TABLE bedrock.dependencies OWNER TO ${process.env.BEDROCK_DB_USER};
@@ -241,10 +242,11 @@ left join bedrock.asset_types at2
 on a.asset_type_id = at2.asset_type_id;
 
 CREATE VIEW bedrock.dependency_view as
-select asset_id, asset_name, dependent_asset_id, dependency, bool_and(implied_dependency) implied_dependency from (
+select asset_id, asset_name, dependent_asset_id, relation_type, dependency, bool_and(implied_dependency) implied_dependency from (
  SELECT dep.asset_id,
     as2.asset_name,
     dep.dependent_asset_id,
+    dep.relation_type,
     as3.asset_name AS dependency,
     false as implied_dependency
    FROM bedrock.dependencies dep
@@ -254,6 +256,7 @@ UNION
  SELECT a1.asset_id,
     a1.asset_name,
     a2.asset_id AS dependent_asset_id,
+    'PULLS_FROM' as relation_type,
     a2.asset_name AS dependency,
     true as implied_dependency
    FROM bedrock.assets a1
@@ -266,6 +269,7 @@ UNION
  SELECT a1.asset_id,
     a1.asset_name,
     a2.asset_id AS dependent_asset_id,
+    'PULLS_FROM' as relation_type,
     a2.asset_name AS dependency,
     true as implied_dependency
    FROM bedrock.assets a1
@@ -274,7 +278,7 @@ UNION
   WHERE t.type = ANY (ARRAY['table_copy'::text, 'file_copy'::text])
   order by asset_name 
 ) inr
-group by asset_id, asset_name, dependent_asset_id, dependency;
+group by asset_id, relation_type, asset_name, dependent_asset_id, dependency;
 
 create view bedrock.etl_view as 
 select etl.asset_id, asset_name, etl.run_group_id, run_group_name, etl.active 

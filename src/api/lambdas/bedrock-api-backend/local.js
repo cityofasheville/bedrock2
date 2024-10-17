@@ -1,13 +1,13 @@
 import { createServer } from "http";
 import { lambda_handler } from './handler.js';
-import localtest from './localtest.json' with { type: "json" };
-import * as fs from 'fs';
+// import localtest from './localtest.json' with { type: "json" };
+import {readFileSync} from 'fs';
 
 const host = 'localhost';
 const port = 8000;
 
 const requestListener = async function (req, res) {
-
+  let localtest = JSON.parse(readFileSync('./localtest.json', 'utf8'));
   process.env.API_KEY = localtest.API_KEY;
 
   let event = {
