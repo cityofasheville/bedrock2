@@ -63,13 +63,14 @@ async function baseInsert(body, client) {
 }
 
 async function addDependencies(body, client) {
-  if ('parents' in body && body.parents.length > 0) {
+  if (body.parents?.length > 0) {
+    let relation_type = 'PULLS_FROM'
     for (let i = 0; i < body.parents.length; i += 1) {
       const dependency = body.parents[i];
       try {
         await client.query(
-          'INSERT INTO bedrock.dependencies (asset_id, dependent_asset_id) VALUES ($1, $2)',
-          [body.asset_id, dependency],
+          'INSERT INTO bedrock.dependencies (asset_id, dependent_asset_id, relation_type) VALUES ($1, $2, $3)',
+          [body.asset_id, dependency, relation_type],
         );
       } catch (error) {
         throw new Error(
@@ -77,8 +78,30 @@ async function addDependencies(body, client) {
         );
       }
     }
+  } else {
+    body.parents = [];
   }
-  return body.parents;
+  console.log('beep')
+  if (body.uses?.length > 0) {
+    let relation_type = 'USES'
+    for (let i = 0; i < body.uses.length; i += 1) {
+      const dependency = body.uses[i];
+      try {
+        await client.query(
+          'INSERT INTO bedrock.dependencies (asset_id, dependent_asset_id, relation_type) VALUES ($1, $2, $3)',
+          [body.asset_id, dependency, relation_type],
+        );
+      } catch (error) {
+        throw new Error(
+          `PG error adding dependencies: ${error}`,
+        );
+      }
+    }
+  } else {
+    body.uses = [];
+  }
+  console.log(body)
+  return body;
 }
 
 async function addTags(body, client) {
@@ -130,6 +153,7 @@ async function addAsset(
   const bodyWithID = {
     ...body,
   };
+
   bodyWithID[idField] = generateId();
   const idValue = bodyWithID[idField];
   let customFields = new Map(Object.entries(bodyWithID.custom_fields));
@@ -141,7 +165,6 @@ async function addAsset(
   };
 
   let client = await db.newClient();
-
   await client.query('BEGIN');
   await checkExistence(client, tableName, idField, idValue, name, shouldExist);
   checkInfo(bodyWithID, requiredFields, name, idValue, idField);
@@ -152,10 +175,11 @@ async function addAsset(
   asset = await baseInsert(bodyWithID, client);
   const updatedCustomFields = await addCustomFieldsInfo(bodyWithID, client, customFields, customValues);
   asset.set('custom_fields', Object.fromEntries(updatedCustomFields));
-  asset.set('parents', await addDependencies(bodyWithID, client));
+  let {parents, uses} = await addDependencies(bodyWithID, client);
+  asset.set('parents', parents);
+  asset.set('uses', uses);
   asset.set('tags', await addTags(bodyWithID, client));
   await client.query('COMMIT');
-
   asset.set('asset_id', bodyWithID[idField]);
   response.result = Object.fromEntries(asset.entries());
   return response;

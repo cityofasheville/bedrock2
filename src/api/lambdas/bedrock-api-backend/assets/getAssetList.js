@@ -77,6 +77,9 @@ async function addBaseFields(sqlResult, requestedFields, availableFields) {
       if (availableFields.includes(itm)) {
         if (itm === 'parents') {
           asset.set('parents', []);
+        }
+        else if (itm === 'uses') {
+          asset.set('uses', []);
         } else if (itm === 'tags') {
           asset.set('tags', []);
         } else {
@@ -105,7 +108,7 @@ async function addTags(db, assets) {
 async function addDependencies(db, assets) {
   let res;
   const sql = `
-    select asset_id, dependent_asset_id from bedrock.dependencies
+    select asset_id, dependent_asset_id, relation_type from bedrock.dependencies
     where asset_id in (${assets.assetIds.join()})
   `;
 
@@ -155,6 +158,7 @@ async function getAssetList(domainName, pathElements, queryParams, db, tableName
     'notes',
     'tags',
     'parents',
+    'uses',
   ];
   // Use fields from the query if they're present, otherwise use all available
   let requestedFields = null;
@@ -208,11 +212,16 @@ async function getAssetList(domainName, pathElements, queryParams, db, tableName
     }
   }
 
-  if (requestedFields.includes('parents')) {
+  if (requestedFields.includes('parents') || requestedFields.includes('uses')) {
     const res = await addDependencies(db, assets);
     for (let i = 0; i < res.rowCount; i += 1) {
       const row = res.rows[i];
-      assets.assetMap.get(row.asset_id).get('parents').push(row.dependent_asset_id);
+      if (row.relation_type === 'PULLS_FROM') {
+        assets.assetMap.get(row.asset_id).get('parents').push(row.dependent_asset_id);
+      } 
+      if (row.relation_type === 'USES') {
+        assets.assetMap.get(row.asset_id).get('uses').push(row.dependent_asset_id);
+      }
     }
   }
 

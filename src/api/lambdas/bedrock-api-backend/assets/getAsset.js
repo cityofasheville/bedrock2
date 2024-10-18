@@ -5,7 +5,7 @@ import { calculateRequestedFields } from '../utilities/assetUtilities.js';
 
 async function getAssetInfo(db, idValue) {
   let res;
-  const sql = `SELECT a.*, d.dependent_asset_id, c.connection_class
+  const sql = `SELECT a.*, d.dependent_asset_id, d.relation_type, c.connection_class
     FROM bedrock.assets a
     left join bedrock.dependencies d on d.asset_id = a.asset_id
     left join bedrock.connections c on c.connection_id = a."location"->>'connection_id'
@@ -74,12 +74,20 @@ async function getBaseInfo(assetRows, requestedFields, available) {
     if (available.includes(itm)) {
       if (itm === 'parents') {
         const parents = [];
+        const uses = [];
         for (let i = 0; i < assetRows.length; i += 1) {
           if (assetRows[i].dependent_asset_id !== null) {
-            parents.push(assetRows[i].dependent_asset_id);
+            if (assetRows[i].relation_type === 'PULLS_FROM') {
+              parents.push(assetRows[i].dependent_asset_id);
+            }
+            if (assetRows[i].relation_type === 'USES') {
+              uses.push(assetRows[i].dependent_asset_id);
+  
+            }
           }
         }
-        tempAsset.set('parents', parents);
+      tempAsset.set('parents', parents);        
+      tempAsset.set('uses', uses);
       } else if (itm === 'tags') {
         tempAsset.set('tags', []);
       } else {
@@ -116,6 +124,7 @@ async function getAsset(
 ) {
   const overrideFields = ('fields' in queryParams);
   const requestedFields = calculateRequestedFields(queryParams, allFields);
+
   let asset = new Map();
   const response = {
     statusCode: 200,
@@ -130,7 +139,6 @@ async function getAsset(
     asset.set('tags', await getAssetTags(db, idValue));
   }
   response.result = Object.fromEntries(asset.entries());
-
   return response;
 }
 
