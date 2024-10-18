@@ -77,7 +77,7 @@ async function getBaseInfo(assetRows, requestedFields, available) {
         const uses = [];
         for (let i = 0; i < assetRows.length; i += 1) {
           if (assetRows[i].dependent_asset_id !== null) {
-            if (assetRows[i].relation_type === 'PULL_FROM') {
+            if (assetRows[i].relation_type === 'PULLS_FROM') {
               parents.push(assetRows[i].dependent_asset_id);
             }
             if (assetRows[i].relation_type === 'USES') {
