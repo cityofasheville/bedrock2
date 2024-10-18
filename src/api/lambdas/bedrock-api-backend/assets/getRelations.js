@@ -33,6 +33,7 @@ async function readRelations(db, idValue) {
     SELECT asset_id, asset_name, dependent_asset_id, dependency 
     FROM bedrock.dependency_view
     WHERE asset_id = $1
+    AND relation_type = 'PULLS_FROM'
     UNION
     SELECT d.asset_id, d.asset_name, d.dependent_asset_id, d.dependency
     FROM bedrock.dependency_view d
@@ -86,6 +87,7 @@ LEFT JOIN bedrock.run_groups r2 ON e2.run_group_id = r2.run_group_id
         SELECT asset_id, asset_name, dependent_asset_id, dependency 
         FROM bedrock.dependency_view
         WHERE dependent_asset_id = $1
+        AND relation_type = 'PULLS_FROM'
         UNION
         SELECT d.asset_id, d.asset_name, d.dependent_asset_id, d.dependency
         FROM bedrock.dependency_view d
