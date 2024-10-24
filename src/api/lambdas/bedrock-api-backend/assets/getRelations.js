@@ -38,6 +38,7 @@ async function readRelations(db, idValue) {
     SELECT d.asset_id, d.asset_name, d.dependent_asset_id, d.dependency
     FROM bedrock.dependency_view d
     INNER JOIN subdependencies s ON s.dependent_asset_id = d.asset_id
+    WHERE relation_type = 'PULLS_FROM'
 )
 SELECT subdependencies.asset_id, subdependencies.asset_name, subdependencies.dependent_asset_id, subdependencies.dependency, a1.asset_type_id as asset_type, a2.asset_type_id as dependent_asset_type, at1.asset_type_name as asset_type_name, at2.asset_type_name as dependent_asset_type_name, a1.owner_id as asset_owner_id, a2.owner_id as dependent_owner_id, o1.owner_name as asset_owner_name, o2.owner_name as dependent_owner_name, r1.run_group_name as run_group_name, r2.run_group_name as dependent_run_group
 FROM subdependencies
@@ -92,6 +93,7 @@ LEFT JOIN bedrock.run_groups r2 ON e2.run_group_id = r2.run_group_id
         SELECT d.asset_id, d.asset_name, d.dependent_asset_id, d.dependency
         FROM bedrock.dependency_view d
         INNER JOIN subdependencies s ON s.asset_id = d.dependent_asset_id
+        WHERE relation_type = 'PULLS_FROM'
           )
     SELECT subdependencies.asset_id, subdependencies.asset_name, subdependencies.dependent_asset_id, subdependencies.dependency, a1.asset_type_id as asset_type, a2.asset_type_id as dependent_asset_type, at1.asset_type_name as asset_type_name, at2.asset_type_name as dependent_asset_type_name, a1.owner_id as asset_owner_id, a2.owner_id as dependent_owner_id, o1.owner_name as asset_owner_name, o2.owner_name as dependent_owner_name, r1.run_group_name as run_group_name, r2.run_group_name as dependent_run_group
     FROM subdependencies
