@@ -32,7 +32,7 @@ async function getInfo(db, info) {
 }
 
 async function getTaskType(db) {
-  const sql = 'SELECT unnest(enum_range(NULL::task_types)) as task_type;';
+  const sql = 'SELECT unnest(enum_range(NULL::bedrock.task_types)) as task_type;';
   let res;
   const resultArray = [];
 
