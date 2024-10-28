@@ -3,7 +3,8 @@ INSTANCE=<UNIQUE INSTANCE STRING LIKE ej-test-0: lowercase alphanumeric characte
 region="us-east-1"
 statebucket="avl-tfstate-store"
 account=518970837364
-build_mode=std # Set to sam to build using SAM
+# Set build_mode to sam to build using SAM
+build_mode=std
 
 # The next four variables provide information on the VPC, subnets and security
 # groups that Bedrock will use. They can be created in the network folder and
