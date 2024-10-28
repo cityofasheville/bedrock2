@@ -50,7 +50,7 @@ async function getTaskType(db) {
 }
 
 async function getConnectionClass(db) {
-  const sql = 'SELECT unnest(enum_range(NULL::connections_classes)) as connection_class;';
+  const sql = 'SELECT unnest(enum_range(NULL:bedrock.connections_classes)) as connection_class;';
   let res;
   const resultArray = [];
 
