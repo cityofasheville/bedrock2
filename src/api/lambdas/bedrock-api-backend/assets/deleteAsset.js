@@ -76,7 +76,7 @@ async function deleteAsset(
 
   const response = {
     statusCode: 200,
-    message: `Successfully deleted asset ${idValue}`,
+    message: `Successfully deleted asset ${name}`,
   };
 
   await checkExistence(db, tableName, idField, idValue, name, shouldExist);
@@ -105,7 +105,7 @@ async function deleteAsset(
   handleDelete(tableNames, client, idField, idValue, name);
 
   if (descendants || ancestors) {
-    response.result.message = `Asset ${idValue} successfully deleted. The following relationships have been removed from the dependencies table.`
+    response.result.message = `Asset ${name} successfully deleted. The following relationships have been removed from the dependencies table.`
   }
 
   await client.query('COMMIT');
