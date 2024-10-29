@@ -1,7 +1,7 @@
 /* eslint-disable import/extensions */
 /* eslint-disable no-console */
 import {
-  checkExistence, deleteInfo, checkBeforeDelete,
+  checkExistence, deleteInfo, checkBeforeDelete, getName
 } from '../utilities/utilities.js';
 
 async function deleteOwner(
@@ -14,16 +14,19 @@ async function deleteOwner(
   const shouldExist = true;
   const assetsTableName = 'bedrock.assets';
   const connectedData = 'assets';
-  const connectedDataIdField = 'asset_id'
+  const connectedDataIdField = 'asset_id';
+  const nameField = 'owner_name';
 
   const response = {
     statusCode: 200,
-    message: `Successfully deleted ${name} ${idValue}`,
     result: null,
   };
 
   await checkExistence(db, tableName, idField, idValue, name, shouldExist);
   await checkBeforeDelete(db, name, assetsTableName, idField, idValue, connectedData, connectedDataIdField)
+  let ownerName = await getName(db, nameField, tableName, idField, idValue)
+  response.message = `Successfully deleted ${name} ${ownerName}`,
+
   await deleteInfo(db, tableName, idField, idValue, name);
 
   return response;

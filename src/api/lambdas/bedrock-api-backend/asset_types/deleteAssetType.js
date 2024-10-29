@@ -1,7 +1,7 @@
 /* eslint-disable import/extensions */
 /* eslint-disable no-console */
 import {
-  checkExistence, deleteInfo, checkBeforeDelete
+  checkExistence, deleteInfo, checkBeforeDelete, getName
 } from '../utilities/utilities.js';
 
 async function deleteAssetType(
@@ -16,10 +16,10 @@ async function deleteAssetType(
   const assetsTableName = 'bedrock.assets';
   const connectedData = 'assets';
   const connectedDataIdField = 'asset_id'
+  const nameField = 'asset_type_name'
 
   const response = {
     statusCode: 200,
-    message: `Successfully deleted ${name} ${idValue}`,
     result: null,
   };
 
@@ -28,6 +28,8 @@ async function deleteAssetType(
   client = await db.newClient();
   await checkExistence(client, tableName, idField, idValue, name, shouldExist);
   await checkBeforeDelete(client, name, assetsTableName, idField, idValue, connectedData, connectedDataIdField)
+  let assetTypeName = await getName(db, nameField, tableName, idField, idValue)
+  response.message = `Successfully deleted ${name} ${assetTypeName}`,
   await client.query('BEGIN');
   await deleteInfo(client, tableName, idField, idValue, name);
   await deleteInfo(client, tableNameCustomFields, 'asset_type_id', idValue, name);
