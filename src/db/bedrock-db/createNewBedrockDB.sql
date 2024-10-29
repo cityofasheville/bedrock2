@@ -172,7 +172,7 @@ CREATE TABLE bedrock.etl (
 	run_group_id text NOT NULL,
 	active bool NOT NULL,
 	CONSTRAINT etl_key UNIQUE (asset_id, run_group_id),
-	CONSTRAINT etl_unique UNIQUE (asset_id)
+  CONSTRAINT etl_pk PRIMARY KEY (asset_id);
 );
 --
 ALTER TABLE bedrock.etl OWNER TO ${process.env.BEDROCK_DB_USER};
