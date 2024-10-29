@@ -14,17 +14,17 @@ DROP TABLE IF EXISTS bedrock.connections cascade;
 DROP TYPE IF EXISTS bedrock.connections_classes;
 DROP TABLE IF EXISTS bedrock.owners;
 DROP SCHEMA IF EXISTS bedrock;
--- DROP ROLE IF EXISTS ${process.env.BEDROCK_DB_USER};
+DROP ROLE IF EXISTS ${process.env.BEDROCK_DB_USER};
 
--- CREATE ROLE ${process.env.BEDROCK_DB_USER} WITH 
--- 	NOSUPERUSER
--- 	NOCREATEDB
--- 	NOCREATEROLE
--- 	INHERIT
--- 	LOGIN
--- 	NOREPLICATION
--- 	NOBYPASSRLS
--- 	CONNECTION LIMIT -1;
+CREATE ROLE ${process.env.BEDROCK_DB_USER} WITH 
+	NOSUPERUSER
+	NOCREATEDB
+	NOCREATEROLE
+	INHERIT
+	LOGIN
+	NOREPLICATION
+	NOBYPASSRLS
+	CONNECTION LIMIT -1;
  
 ALTER USER ${process.env.BEDROCK_DB_USER} WITH PASSWORD '${process.env.BEDROCK_DB_PASSWORD}';   -- <====================== PASSWORD	
 
@@ -47,14 +47,14 @@ ALTER TABLE bedrock.owners OWNER TO ${process.env.BEDROCK_DB_USER};
 GRANT ALL ON TABLE bedrock.owners TO ${process.env.BEDROCK_DB_USER};
 
 ---------------------------------------------
--- CREATE TYPE bedrock.connections_classes AS ENUM ('db', 'api', 'file', 'sheets');
+CREATE TYPE bedrock.connections_classes AS ENUM ('db', 'api', 'file', 'sheets');
 
 ---------------------------------------------
 CREATE TABLE bedrock.connections (
 	connection_id text PRIMARY KEY,
   connection_name text NOT NULL,
   secret_name text NOT NULL,
-  connection_class text NULL,  -- After updates, we may want to change this back to TYPE bedrock.connections_classes
+  connection_class bedrock.connections_classes NULL,
   CONSTRAINT connection_name_key UNIQUE (connection_name)
 );
 --
@@ -179,13 +179,13 @@ ALTER TABLE bedrock.etl OWNER TO ${process.env.BEDROCK_DB_USER};
 GRANT ALL ON TABLE bedrock.etl TO ${process.env.BEDROCK_DB_USER};
 
 ---------------------------------------------
--- CREATE TYPE bedrock.task_types AS ENUM (
--- 'aggregate', 
--- 'encrypt', 
--- 'file_copy', 
--- 'run_lambda', 
--- 'sql', 
--- 'table_copy');
+CREATE TYPE bedrock.task_types AS ENUM (
+'aggregate', 
+'encrypt', 
+'file_copy', 
+'run_lambda', 
+'sql', 
+'table_copy');
 
 
 ---------------------------------------------
@@ -194,7 +194,7 @@ CREATE TABLE bedrock.tasks (
 	asset_id text NOT NULL,
 	seq_number int2 NOT NULL,
 	description text NULL,
-	"type" text NOT NULL, -- After updates, we may want to change this back to TYPE bedrock.task_types
+	"type" bedrock.task_types NOT NULL,
 	active bool NOT NULL,
 	"source" jsonb NULL,
 	target jsonb NULL,
@@ -241,44 +241,48 @@ FROM bedrock.assets a
 left join bedrock.asset_types at2
 on a.asset_type_id = at2.asset_type_id;
 
-CREATE VIEW bedrock.dependency_view as
-select asset_id, asset_name, dependent_asset_id, relation_type, dependency, bool_and(implied_dependency) implied_dependency from (
- SELECT dep.asset_id,
-    as2.asset_name,
-    dep.dependent_asset_id,
-    dep.relation_type,
-    as3.asset_name AS dependency,
-    false as implied_dependency
-   FROM bedrock.dependencies dep
-     JOIN bedrock.assets as2 ON as2.asset_id = dep.asset_id
-     JOIN bedrock.assets as3 ON dep.dependent_asset_id = as3.asset_id
-UNION
- SELECT a1.asset_id,
-    a1.asset_name,
-    a2.asset_id AS dependent_asset_id,
-    'PULLS_FROM' as relation_type,
-    a2.asset_name AS dependency,
-    true as implied_dependency
-   FROM bedrock.assets a1
-     JOIN bedrock.tasks t ON a1.asset_id = t.asset_id
-     JOIN bedrock.tags ON (t.source ->> 'aggregate'::text) = tags.tag_name
-     JOIN bedrock.asset_tags at2 ON tags.tag_id = at2.tag_id
-     JOIN bedrock.assets a2 ON a2.asset_id = at2.asset_id
-  WHERE t.type = 'aggregate'::text
-UNION
- SELECT a1.asset_id,
-    a1.asset_name,
-    a2.asset_id AS dependent_asset_id,
-    'PULLS_FROM' as relation_type,
-    a2.asset_name AS dependency,
-    true as implied_dependency
-   FROM bedrock.assets a1
-     JOIN bedrock.tasks t ON a1.asset_name = (t.target ->> 'asset'::text)
-     JOIN bedrock.assets a2 ON a2.asset_name = (t.source ->> 'asset'::text)
-  WHERE t.type = ANY (ARRAY['table_copy'::text, 'file_copy'::text])
-  order by asset_name 
-) inr
-group by asset_id, relation_type, asset_name, dependent_asset_id, dependency;
+CREATE OR REPLACE VIEW bedrock.dependency_view
+AS SELECT inr.asset_id,
+    inr.asset_name,
+    inr.dependent_asset_id,
+    inr.relation_type,
+    inr.dependency,
+    bool_and(inr.implied_dependency) AS implied_dependency
+   FROM ( SELECT dep.asset_id,
+            as2.asset_name,
+            dep.dependent_asset_id,
+            dep.relation_type,
+            as3.asset_name AS dependency,
+            false AS implied_dependency
+           FROM bedrock.dependencies dep
+             JOIN bedrock.assets as2 ON as2.asset_id = dep.asset_id
+             JOIN bedrock.assets as3 ON dep.dependent_asset_id = as3.asset_id
+        UNION
+         SELECT a1.asset_id,
+            a1.asset_name,
+            a2.asset_id AS dependent_asset_id,
+            'PULLS_FROM'::text AS relation_type,
+            a2.asset_name AS dependency,
+            true AS implied_dependency
+           FROM bedrock.assets a1
+             JOIN bedrock.tasks t ON a1.asset_id = t.asset_id
+             JOIN bedrock.tags ON (t.source ->> 'aggregate'::text) = tags.tag_name
+             JOIN bedrock.asset_tags at2 ON tags.tag_id = at2.tag_id
+             JOIN bedrock.assets a2 ON a2.asset_id = at2.asset_id
+          WHERE t.type::text = 'aggregate'::text
+        UNION
+         SELECT a1.asset_id,
+            a1.asset_name,
+            a2.asset_id AS dependent_asset_id,
+            'PULLS_FROM'::text AS relation_type,
+            a2.asset_name AS dependency,
+            true AS implied_dependency
+           FROM bedrock.assets a1
+             JOIN bedrock.tasks t ON a1.asset_name = (t.target ->> 'asset'::text)
+             JOIN bedrock.assets a2 ON a2.asset_name = (t.source ->> 'asset'::text)
+          WHERE t.type::text = ANY (ARRAY['table_copy'::text, 'file_copy'::text])
+  ORDER BY 2) inr
+  GROUP BY inr.asset_id, inr.relation_type, inr.asset_name, inr.dependent_asset_id, inr.dependency;
 
 create view bedrock.etl_view as 
 select etl.asset_id, asset_name, etl.run_group_id, run_group_name, etl.active 
