@@ -24,6 +24,7 @@ async function handleOwners(
   let idValue;
   const name = 'owner';
   const tableName = 'bedrock.owners';
+  const nameField = 'owner_name';
   const requiredFields = ['owner_id', 'owner_name', 'owner_email'];
   const allFields = ['owner_id', 'owner_name', 'owner_email', 'owner_phone', 'organization', 'department', 'division', 'notes'];
 
@@ -48,6 +49,7 @@ async function handleOwners(
             idField,
             name,
             tableName,
+            nameField
           );
           break;
 
@@ -101,6 +103,7 @@ async function handleOwners(
             idValue,
             name,
             tableName,
+            nameField
           );
           break;
 

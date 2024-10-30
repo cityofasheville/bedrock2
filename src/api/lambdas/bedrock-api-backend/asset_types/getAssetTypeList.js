@@ -14,6 +14,7 @@ async function getAssetTypeList(
   name,
   tableName,
   tableNameCustomFields,
+  nameField
 ) {
   let total;
   let res;
@@ -35,7 +36,7 @@ async function getAssetTypeList(
     return response;
   }
   response.result.total = total;
-  res = await getListInfo(offset, count, whereClause, db, idField, tableName, name);
+  res = await getListInfo(offset, count, whereClause, db, tableName, name, nameField);
   response.result.items = res.rows;
   response.result.url = buildURL(queryParams, domainName, res, offset, total, pathElements);
 

@@ -11,12 +11,12 @@ async function deleteAssetType(
   name,
   tableName,
   tableNameCustomFields,
+  nameField
 ) {
   const shouldExist = true;
   const assetsTableName = 'bedrock.assets';
   const connectedData = 'assets';
   const connectedDataIdField = 'asset_id'
-  const nameField = 'asset_type_name'
 
   const response = {
     statusCode: 200,

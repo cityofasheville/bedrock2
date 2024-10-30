@@ -12,6 +12,7 @@ async function getOwnerList(
   idField,
   name,
   tableName,
+  nameField
 ) {
   let total;
   let res;
@@ -38,7 +39,7 @@ async function getOwnerList(
     response.result = Object.fromEntries(ownerList.entries());
     return response;
   }
-  res = await getListInfo(offset, count, whereClause, db, idField, tableName, name);
+  res = await getListInfo(offset, count, whereClause, db, tableName, name, nameField);
   ownerList.set('items', res.rows);
   ownerList.set('url', buildURL(queryParams, domainName, res, offset, total, pathElements));
   response.result = Object.fromEntries(ownerList.entries());

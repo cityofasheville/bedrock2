@@ -30,6 +30,8 @@ async function handleAssetTypes(
   const requiredFields = ['asset_type_id', 'asset_type_name'];
   const allFields = ['asset_type_id', 'asset_type_name', 'parent'];
   const tableNameCustomFields = 'bedrock.asset_type_custom_fields';
+  const nameField = 'asset_type_name'
+
 
   if (nParams === 2 && (pathElements[1] === null || pathElements[1].length === 0)) nParams = 1;
   if ('body' in event) {
@@ -55,6 +57,7 @@ async function handleAssetTypes(
             name,
             tableName,
             tableNameCustomFields,
+            nameField
           );
           break;
 
@@ -114,6 +117,7 @@ async function handleAssetTypes(
             name,
             tableName,
             tableNameCustomFields,
+            nameField
           );
           break;
 

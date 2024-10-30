@@ -1,6 +1,6 @@
 /* eslint-disable import/extensions */
 /* eslint-disable no-console */
-import { checkExistence, deleteInfo } from '../utilities/utilities.js';
+import { checkExistence, deleteInfo, getName } from '../utilities/utilities.js';
 
 async function handleDelete(tableNames, client, idField, idValue, name) {
   try {
@@ -67,6 +67,7 @@ async function deleteAsset(
   idValue,
   name,
   tableName,
+  nameField
 ) {
   const shouldExist = true;
   const tableNames = ['bedrock.assets', 'bedrock.custom_values', 'bedrock.asset_tags', 'bedrock.tasks', 'bedrock.etl'];
@@ -76,7 +77,6 @@ async function deleteAsset(
 
   const response = {
     statusCode: 200,
-    message: `Successfully deleted asset ${name}`,
   };
 
   await checkExistence(db, tableName, idField, idValue, name, shouldExist);
@@ -85,6 +85,7 @@ async function deleteAsset(
 
   client = await db.newClient();
   await client.query('BEGIN');
+
   let ancestors = await getRelationsInfo(client, 'asset_id', idValue, name, 'bedrock.dependencies', 'dependent_asset_id');
   let descendants = await getRelationsInfo(client, 'dependent_asset_id', idValue, name, 'bedrock.dependencies', 'asset_id');
 
@@ -92,20 +93,23 @@ async function deleteAsset(
   if (ancestors) {
     if (!response.result) response.result = {}
     response.result.ancestors = formatAncestors(ancestors);
-    deleteInfo(client, 'bedrock.dependencies', 'asset_id', idValue, name)
+    await deleteInfo(client, 'bedrock.dependencies', 'asset_id', idValue, name)
   }
 
   if (descendants) {
     if (!response.result) response.result = {}
     response.result.descendants = formatDescendants(descendants);
     // if there are descendents, we must delete from the dependent_asset_id column in the dependencies table as well.
-    deleteInfo(client, 'bedrock.dependencies', 'dependent_asset_id', idValue, name)
+    await deleteInfo(client, 'bedrock.dependencies', 'dependent_asset_id', idValue, name)
   }
 
-  handleDelete(tableNames, client, idField, idValue, name);
+  let assetName = await getName(db, nameField, tableName, idField, idValue)
+  await handleDelete(tableNames, client, idField, idValue, name);
 
   if (descendants || ancestors) {
-    response.result.message = `Asset ${name} successfully deleted. The following relationships have been removed from the dependencies table.`
+    response.result.message = `Asset ${assetName} successfully deleted. The following relationships have been removed from the dependencies table.`
+  } else {
+    response.result.message = `Asset ${assetName} successfully deleted.`
   }
 
   await client.query('COMMIT');

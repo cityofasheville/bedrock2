@@ -10,12 +10,12 @@ async function deleteCustomField(
   idValue,
   name,
   tableName,
+  nameField
 ) {
   const shouldExist = true;
   // We're only deleting the relationships between CFs and asset_types, not the actual CFs. 
   // which is why we're using a different table name.
   const linkingTableName = 'bedrock.asset_type_custom_fields'
-  const nameField = 'custom_field_name'
 
   const response = {
     statusCode: 200,

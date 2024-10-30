@@ -12,6 +12,7 @@ async function getRunGroupList(
   idField,
   name,
   tableName,
+  nameField
 ) {
   const runGroupList = new Map();
   // setting items first makes the order of the properties in the final object better
@@ -36,7 +37,7 @@ async function getRunGroupList(
     response.result = Object.fromEntries(runGroupList.entries());
     return response;
   }
-  let res = await getListInfo(offset, count, whereClause, db, idField, tableName, name);
+  let res = await getListInfo(offset, count, whereClause, db, tableName, name, nameField);
   runGroupList.set('items', res.rows);
   runGroupList.set('url', buildURL(queryParams, domainName, res, offset, total, pathElements));
   response.result = Object.fromEntries(runGroupList.entries());

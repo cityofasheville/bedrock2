@@ -10,12 +10,12 @@ async function deleteOwner(
   idValue,
   name,
   tableName,
+  nameField
 ) {
   const shouldExist = true;
   const assetsTableName = 'bedrock.assets';
   const connectedData = 'assets';
   const connectedDataIdField = 'asset_id';
-  const nameField = 'owner_name';
 
   const response = {
     statusCode: 200,

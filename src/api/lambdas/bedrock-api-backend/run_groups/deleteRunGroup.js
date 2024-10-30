@@ -10,12 +10,12 @@ async function deleteRunGroup(
   idValue,
   name,
   tableName,
+  nameField
 ) {
   const shouldExist = true;
   const etlTableName = 'bedrock.etl'
   const connectedData = 'assets'
   const connectedDataIdField = 'asset_id'
-  const nameField = 'run_group_name'
 
   const response = {
     statusCode: 200,

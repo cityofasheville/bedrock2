@@ -51,9 +51,9 @@ async function getCount(whereClause, db, tableName, name) {
   return Number(res.rows[0].count);
 }
 
-async function getListInfo(offset, count, whereClause, db, idField, tableName, name) {
+async function getListInfo(offset, count, whereClause, db, tableName, name, nameField) {
   let sql = `SELECT * FROM ${tableName} ${whereClause.whereClause}`;
-  sql += ` order by ${idField} asc`;
+  sql += ` order by ${nameField} asc`;
   sql += ` offset ${offset} limit ${count} `;
   let res;
 
