@@ -144,11 +144,10 @@ export async function lambda_handler(event) {
       break;
   }
   let bodyJSON = {};
-  if (api_result.result) {
-    bodyJSON = api_result.result;
-  }
   if (api_result.message) {
     bodyJSON.message = api_result.message.message || api_result.message;
+  } else if (api_result.result) {
+    bodyJSON = api_result.result;
   }
   let retvalue = {
     statusCode: api_result.statusCode,

@@ -229,6 +229,20 @@ async function checkBeforeDelete(db, name, tableName, idField, idValue, connecte
 
 }
 
+async function getName(db, nameField, tableName, idField, idValue) {
+  const sql = `SELECT ${nameField} FROM ${tableName} where ${idField} like $1`;
+  let res;
+  try {
+    res = await db.query(sql, [idValue]);
+  } catch (error) {
+    throw new Error([`Postgres error: ${error}`]);
+  }
+
+  let individualName = Object.values(res.rows[0])[0]
+  console.log(individualName)
+  return(individualName);
+}
+
 export {
   checkInfo,
   checkExistence,
@@ -241,4 +255,5 @@ export {
   addAssetTypeCustomFields,
   getBaseCustomFieldsInfo,
   checkBeforeDelete,
+  getName
 };
