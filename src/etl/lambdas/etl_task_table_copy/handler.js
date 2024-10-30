@@ -71,13 +71,15 @@ export const lambda_handler = async function x(event, context) {
             return (err);
           }
         }))
-          .then(() => {
+          .then((err) => {
+            if (err) { resolve(returnError(err)); }
             pipeline(
               loc.source_location.stream,
               // streamDebug,
               loc.target_location.stream,
             )
-              .then(() => {
+              .then((err) => {
+                if (err) { resolve(returnError(err)); }
                 loc.source_location.promise
                   .then(() => {
                     loc.target_location.promise
