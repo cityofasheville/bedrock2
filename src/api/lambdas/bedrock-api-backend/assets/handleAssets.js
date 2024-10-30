@@ -25,6 +25,7 @@ async function handleAssets(event, pathElements, queryParams, verb, db) {
   let idValue;
   const name = 'asset';
   const tableName = 'bedrock.assets';
+  const nameField = 'asset_name'
   const requiredFields = ['asset_id', 'asset_name', 'description', 'location', 'active'];
   const allFields = ['asset_id', 'asset_name', 'description', 'location', 'active', 'asset_type_id', 'connection_class', 'location', 'link', 'owner_id', 'tags', 'notes', 'parents', 'custom_fields'];
 
@@ -104,6 +105,7 @@ async function handleAssets(event, pathElements, queryParams, verb, db) {
             idValue,
             name,
             tableName,
+            nameField
           );
           break;
 

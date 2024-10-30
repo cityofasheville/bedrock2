@@ -12,6 +12,7 @@ async function getCustomFieldList(
   idField,
   name,
   tableName,
+  nameField
 ) {
   let total;
   let res;
@@ -38,7 +39,7 @@ async function getCustomFieldList(
     response.result = Object.fromEntries(tagList.entries());
     return response;
   }
-  res = await getListInfo(offset, count, whereClause, db, idField, tableName, name);
+  res = await getListInfo(offset, count, whereClause, db, tableName, name, nameField);
   tagList.set('items', res.rows);
   tagList.set('url', buildURL(queryParams, domainName, res, offset, total, pathElements));
   response.result = Object.fromEntries(tagList.entries());

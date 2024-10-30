@@ -10,10 +10,10 @@ async function deleteTag(
   idValue,
   name,
   tableName,
+  nameField
 ) {
   const shouldExist = true;
   const linkingTableName = 'bedrock.asset_tags'
-  const nameField = 'tag_name'
 
   const response = {
     statusCode: 200,
