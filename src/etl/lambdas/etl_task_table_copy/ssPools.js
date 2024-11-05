@@ -6,14 +6,18 @@ const pools = {};
 // SQL Server Advanced Pool Management https://github.com/tediousjs/node-mssql#advanced-pool-management
 async function getPool(name, config) {
   if (!Object.prototype.hasOwnProperty.call(pools, name)) {
-    const pool = new ConnectionPool(config);
-    const close = pool.close.bind(pool);
-    pool.close = (...args) => {
-      delete pools[name];
-      return close(...args);
-    };
-    await pool.connect();
-    pools[name] = pool;
+    try {
+      const pool = new ConnectionPool(config);
+      const close = pool.close.bind(pool);
+      pool.close = (...args) => {
+        delete pools[name];
+        return close(...args);
+      };
+      await pool.connect();
+      pools[name] = pool;
+    } catch (err) {
+      throw new Error( err );
+    }
   }
   return pools[name];
 }
