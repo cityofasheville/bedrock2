@@ -30,17 +30,15 @@ async function readRelations(db, idValue) {
   };
   let sql = `
   WITH RECURSIVE subdependencies AS (
-    SELECT asset_id, asset_name, dependent_asset_id, dependency 
+    SELECT asset_id, asset_name, dependent_asset_id, dependency, relation_type 
     FROM bedrock.dependency_view
     WHERE asset_id = $1
-    AND relation_type = 'PULLS_FROM'
     UNION
-    SELECT d.asset_id, d.asset_name, d.dependent_asset_id, d.dependency
+    SELECT d.asset_id, d.asset_name, d.dependent_asset_id, d.dependency, d.relation_type
     FROM bedrock.dependency_view d
     INNER JOIN subdependencies s ON s.dependent_asset_id = d.asset_id
-    WHERE relation_type = 'PULLS_FROM'
 )
-SELECT subdependencies.asset_id, subdependencies.asset_name, subdependencies.dependent_asset_id, subdependencies.dependency, a1.asset_type_id as asset_type, a2.asset_type_id as dependent_asset_type, at1.asset_type_name as asset_type_name, at2.asset_type_name as dependent_asset_type_name, a1.owner_id as asset_owner_id, a2.owner_id as dependent_owner_id, o1.owner_name as asset_owner_name, o2.owner_name as dependent_owner_name, r1.run_group_name as run_group_name, r2.run_group_name as dependent_run_group
+SELECT subdependencies.asset_id, subdependencies.asset_name, subdependencies.dependent_asset_id, subdependencies.dependency, subdependencies.relation_type, a1.asset_type_id as asset_type, a2.asset_type_id as dependent_asset_type, at1.asset_type_name as asset_type_name, at2.asset_type_name as dependent_asset_type_name, a1.owner_id as asset_owner_id, a2.owner_id as dependent_owner_id, o1.owner_name as asset_owner_name, o2.owner_name as dependent_owner_name, r1.run_group_name as run_group_name, r2.run_group_name as dependent_run_group
 FROM subdependencies
 LEFT JOIN bedrock.assets a1 ON subdependencies.asset_id = a1.asset_id
 LEFT JOIN bedrock.assets a2 ON subdependencies.dependent_asset_id = a2.asset_id
@@ -73,7 +71,8 @@ LEFT JOIN bedrock.run_groups r2 ON e2.run_group_id = r2.run_group_id
         parent_name: res.rows[i].dependency,
         parent_asset_type: res.rows[i].dependent_asset_type_name,
         parent_run_group: res.rows[i].dependent_run_group,
-        parent_owner_name: res.rows[i].dependent_owner_name
+        parent_owner_name: res.rows[i].dependent_owner_name,
+        relation_type: res.rows[i].relation_type,
       },
     );
     if (!(res.rows[i].dependent_asset_id in check)) {
@@ -85,17 +84,15 @@ LEFT JOIN bedrock.run_groups r2 ON e2.run_group_id = r2.run_group_id
   // Now the other direction
   sql = `
       WITH RECURSIVE subdependencies AS (
-        SELECT asset_id, asset_name, dependent_asset_id, dependency 
+        SELECT asset_id, asset_name, dependent_asset_id, dependency, relation_type
         FROM bedrock.dependency_view
         WHERE dependent_asset_id = $1
-        AND relation_type = 'PULLS_FROM'
         UNION
-        SELECT d.asset_id, d.asset_name, d.dependent_asset_id, d.dependency
+        SELECT d.asset_id, d.asset_name, d.dependent_asset_id, d.dependency, d.relation_type
         FROM bedrock.dependency_view d
         INNER JOIN subdependencies s ON s.asset_id = d.dependent_asset_id
-        WHERE relation_type = 'PULLS_FROM'
           )
-    SELECT subdependencies.asset_id, subdependencies.asset_name, subdependencies.dependent_asset_id, subdependencies.dependency, a1.asset_type_id as asset_type, a2.asset_type_id as dependent_asset_type, at1.asset_type_name as asset_type_name, at2.asset_type_name as dependent_asset_type_name, a1.owner_id as asset_owner_id, a2.owner_id as dependent_owner_id, o1.owner_name as asset_owner_name, o2.owner_name as dependent_owner_name, r1.run_group_name as run_group_name, r2.run_group_name as dependent_run_group
+    SELECT subdependencies.asset_id, subdependencies.asset_name, subdependencies.dependent_asset_id, subdependencies.dependency, subdependencies.relation_type, a1.asset_type_id as asset_type, a2.asset_type_id as dependent_asset_type, at1.asset_type_name as asset_type_name, at2.asset_type_name as dependent_asset_type_name, a1.owner_id as asset_owner_id, a2.owner_id as dependent_owner_id, o1.owner_name as asset_owner_name, o2.owner_name as dependent_owner_name, r1.run_group_name as run_group_name, r2.run_group_name as dependent_run_group
     FROM subdependencies
     LEFT JOIN bedrock.assets a1 ON subdependencies.asset_id = a1.asset_id
     LEFT JOIN bedrock.assets a2 ON subdependencies.dependent_asset_id = a2.asset_id
@@ -128,7 +125,8 @@ LEFT JOIN bedrock.run_groups r2 ON e2.run_group_id = r2.run_group_id
         parent_name: res.rows[i].dependency,
         parent_asset_type: res.rows[i].dependent_asset_type_name,
         parent_run_group: res.rows[i].dependent_run_group,
-        parent_owner_name: res.rows[i].dependent_owner_name
+        parent_owner_name: res.rows[i].dependent_owner_name,
+        relation_type: res.rows[i].relation_type
       },
     );
     if (!(res.rows[i].asset_id in check)) {
