@@ -6,7 +6,7 @@ let event = JSON.parse(await readFile("localtest.json", "utf8"));
 let context = {
   getRemainingTimeInMillis: () => 900_000
 }
-console.log( await lambda_handler(event, context));
+console.log( "PROGRAM RETURNS:", await lambda_handler(event, context));
 
 /*
 "source_location": {

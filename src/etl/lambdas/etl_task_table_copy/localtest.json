@@ -5,11 +5,10 @@
         "type": "table_copy",
         "active": true,
         "source_location": {
-          "tab": "Sheet1",
-          "range": "A2:F",
-          "filename": "nodata",
-          "spreadsheetid": "1xqOvt-dWoMTAT26zH9gLezI-xvTHaw4G3GC8CNtFOls",
-          "connection": "bedrock-googlesheets"
+          "tablename": "ad_infoNOPE",
+          "schemaname": "amd",
+          "connection": "munis/munprod/fme_jobs"
+      
         },
         "target_location": {
           "filename": "nodata.txt",
