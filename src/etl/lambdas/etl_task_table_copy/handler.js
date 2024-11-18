@@ -8,7 +8,6 @@ import getGoogleStream from './getGoogleStream.js';
 import streamDebug from './streamDebug.js';
 
 function returnError(err) {
-  // console.log(err);
   return {
     statusCode: 500,
     body: {
@@ -66,7 +65,7 @@ export async function lambda_handler(event) {
           eachloc.promise = streamObject.promise;
           loc[locname] = eachloc;
       }
-      await pipeline(
+      pipeline(
         loc.source_location.stream,
         // streamDebug,
         loc.target_location.stream,

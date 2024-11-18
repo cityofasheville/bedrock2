@@ -13,12 +13,8 @@ async function getSsStream(location) {
   try {
     let bodyStream;
     let retStream;
-    let returnPromiseResolve, returnPromiseReject, resultsPromiseResolve, resultsPromiseReject;
-    const returnPromise = new Promise((resolve, reject) => { // return from this function {stream, promise}
-      returnPromiseResolve = resolve;
-      returnPromiseReject = reject;
-    });
-    const resultsPromise = new Promise((resolve, reject) => { // results of the stream
+    let resultsPromiseResolve, resultsPromiseReject;
+    const resultsPromise = new Promise((resolve, reject) => { // Promise constructor to return results of the stream
       resultsPromiseResolve = resolve;
       resultsPromiseReject = reject;
     });
@@ -33,7 +29,7 @@ async function getSsStream(location) {
     request.query(sqlString);
 
     request.on('error', (err) => {
-      returnPromiseReject(err);
+      resultsPromiseReject(err);
     });
 
     const stringifyOptions = setStringifyOptions(location);
@@ -48,19 +44,16 @@ async function getSsStream(location) {
       retStream = bodyStream;
     }
 
-    retStream.on('done', (result) => {
+    request.on('done', (result) => {
       resultsPromiseResolve();
       console.log(`SQL Server rows copied: ${result.rowsAffected}`);
     });
 
-    retStream.on('error', (err) => {
+    request.on('error', (err) => {
       resultsPromiseReject(err);
     });
-    let returnPromiseObject = {};
-    returnPromiseObject.stream = retStream;
-    returnPromiseObject.promise = resultsPromise;
-    returnPromiseResolve(returnPromiseObject);
-    return returnPromise; 
+
+    return { stream: retStream, promise: resultsPromise }; 
   } catch (err) {
     throw new Error(`SQL Server stream error ${err}`);
   }

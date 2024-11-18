@@ -8,6 +8,7 @@
           "tablename": "ad_infoNOPE",
           "schemaname": "amd",
           "connection": "munis/munprod/fme_jobs"
+      
         },
         "target_location": {
           "filename": "nodata.txt",
