@@ -8,6 +8,7 @@ import getGoogleStream from './getGoogleStream.js';
 import streamDebug from './streamDebug.js';
 
 function returnError(err) {
+  console.log(err);
   return {
     statusCode: 500,
     body: {

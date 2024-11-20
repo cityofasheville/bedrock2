@@ -5,6 +5,10 @@ import { stringify } from 'csv-stringify';
 import { getPool } from './ssPools.js';
 import createSsWritable from './createSsWritable.js';
 import { ssTableHeaders } from './ssTableHeaders.js';
+import { 
+  promise as resultsPromise, 
+  resolve as resultsPromiseResolve, 
+  reject  as resultsPromiseReject } from './promiseWithResolvers.js';
 
 async function getSsStream(location) {
   if (location.fromto === 'target_location') {
@@ -13,11 +17,6 @@ async function getSsStream(location) {
   try {
     let bodyStream;
     let retStream;
-    let resultsPromiseResolve, resultsPromiseReject;
-    const resultsPromise = new Promise((resolve, reject) => { // Promise constructor to return results of the stream
-      resultsPromiseResolve = resolve;
-      resultsPromiseReject = reject;
-    });
 
     const { tablename, config, poolName, copySinceQuery, orderby } = setParameters(location);
     const sqlString = `SELECT * FROM ${tablename} ${copySinceQuery} ${orderby}`;
