@@ -4,13 +4,10 @@ import mssqlpkg from 'mssql';
 const { VarChar, Table } = mssqlpkg;
 import { parse } from 'csv-parse';
 import { getPool } from './ssPools.js';
-import {
-  promise as resultsPromise,
-  resolve as resultsPromiseResolve,
-  reject as resultsPromiseReject
-} from './promiseWithResolvers.js';
+import { createPromise } from './promiseWithResolvers.js';
 
 async function createSsWritable(location) {
+  const { promise, resolve, reject } = createPromise();
   const { tablename, tempTablename, dropTempQuery, copySinceQuery, config, poolName } = setParameters(location);
 
   const timeout = 900_000; // 15 min
@@ -45,8 +42,8 @@ async function createSsWritable(location) {
     }
   });
 
-  SsStream.on('error', (err) => {
-    console.error(err.message);
+  SsStream.on('error', (err) => { 
+    reject(err); 
   });
 
   SsStream.on('finish', async () => { // 'end' is readable event, 'finish' is writable event
@@ -55,11 +52,11 @@ async function createSsWritable(location) {
     }
     await Promise.all(resPromiseArr);
     await copyFromTemp(location, tablename, tempTablename, dropTempQuery, copySinceQuery, pool);
-    await resultsPromiseResolve();
+    resolve();
   });
   console.log(`Copy to SQL Server ${location.connection} ${tablename}`);
 
-  return { stream: SsStream, resultsPromise };
+  return { stream: SsStream, promise };
 }
 
 // loadTempTable: Load batch of rows into temp table

@@ -3,10 +3,7 @@ import pgpkg from 'pg';
 const { Client } = pgpkg;
 import { to as copyTo } from 'pg-copy-streams'; // pipe from a table _TO_ stream
 import { from as copyFrom } from 'pg-copy-streams'; // pipe to a table _FROM_ stream
-import { 
-  promise as resultsPromise, 
-  resolve as resultsPromiseResolve, 
-  reject  as resultsPromiseReject } from './promiseWithResolvers.js';
+import { createPromise } from './promiseWithResolvers.js';
 
 async function getPgStream(location) {
   try {
@@ -15,6 +12,7 @@ async function getPgStream(location) {
     await client.connect()
 
     if (location.fromto === 'source_location') {
+      const { promise, resolve, reject } = createPromise();
       if (location.fixedwidth_noquotes) {
         throw new Error("Postgres 'fixedwidth_noquotes' not implemented");
       }
@@ -27,12 +25,13 @@ async function getPgStream(location) {
 
       let stream = client.query(copyTo(queryString));
 
-      stream.on('error', (err) => { client.end(); resultsPromiseReject(err); });
-      stream.on('end', () => { client.end(); resultsPromiseResolve(); });
+      stream.on('error', (err) => { client.end(); reject(err); });
+      stream.on('end', () => { client.end(); resolve(); });
 
       console.log('Copy from Postgres: ', location.connection, tablename);
-      return { stream, promise: resultsPromise };
+      return { stream, promise };
     } else if (location.fromto === 'target_location') {
+      const { promise, resolve, reject } = createPromise();
       // create empty temp table
       const createtempString = `SELECT * INTO TEMP ${tempTablename} FROM ${tablename} WHERE 1=2;`;
       await client.query(createtempString);
@@ -41,17 +40,17 @@ async function getPgStream(location) {
         // The serial column appears in target but not source,
         // so drop it first and read it after stream
         const dropserialString = `alter table ${tempTablename} drop column ${location.append_serial};`;
-        client.query(dropserialString).catch((err) => { resultsPromiseReject(err); });
+        client.query(dropserialString).catch((err) => { reject(err); });
       }
 
       const queryString = `COPY ${tempTablename} FROM STDIN WITH (FORMAT csv)`;
       let stream = client.query(copyFrom(queryString));
 
-      stream.on('error', (err) => { client.end(); resultsPromiseReject(err); });
-      stream.on('finish', () => { copyFromTemp(location, tablename, tempTablename, client); });
+      stream.on('error', (err) => { client.end(); reject(err); });
+      stream.on('finish', async () => { await copyFromTemp(location, tablename, tempTablename, client); client.end(); resolve(); });
 
       console.log('Copy to Postgres: ', location.connection, tablename);
-      return { stream, promise: resultsPromise };
+      return { stream, promise };
 
     }
   } catch (err) {
@@ -59,31 +58,32 @@ async function getPgStream(location) {
   }
 }
 
-function copyFromTemp(location, tablename, tempTablename, client) {
-  const serialToAppend = location.append_serial
-    ? `alter table ${tempTablename} add column ${location.append_serial} serial;`
-    : '';
-  let deleteOld;
-  if (location.append === true) {
-    deleteOld = '';
-  } else if (location.copy_since) {
-    deleteOld = `DELETE FROM ${tablename} ${copySinceQuery};`;
-  } else {
-    deleteOld = `TRUNCATE TABLE ${tablename};`;
-  }
+async function copyFromTemp(location, tablename, tempTablename, client) {
+  try {
+    const serialToAppend = location.append_serial
+      ? `alter table ${tempTablename} add column ${location.append_serial} serial;`
+      : '';
+    let deleteOld;
+    if (location.append === true) {
+      deleteOld = '';
+    } else if (location.copy_since) {
+      deleteOld = `DELETE FROM ${tablename} ${copySinceQuery};`;
+    } else {
+      deleteOld = `TRUNCATE TABLE ${tablename};`;
+    }
 
-  const transString = `
-  BEGIN TRANSACTION;
-  ${serialToAppend}
-  ${deleteOld}
-  INSERT INTO ${tablename} SELECT * FROM ${tempTablename};
-  COMMIT;
-`;
-  client.query(transString, (err) => {
+    const transString = `
+    BEGIN TRANSACTION;
+    ${serialToAppend}
+    ${deleteOld}
+    INSERT INTO ${tablename} SELECT * FROM ${tempTablename};
+    COMMIT;
+    `;
+    await client.query(transString);
+  } catch (err) {
     client.end();
-    if (err) resultsPromiseReject(err);
-    resultsPromiseResolve();
-  });
+    throw new Error(`Postgres copyFromTemp error ${err}`);
+  }
 }
 
 function setParameters(location) {
