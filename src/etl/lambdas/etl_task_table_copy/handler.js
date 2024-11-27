@@ -8,6 +8,7 @@ import getGoogleStream from './getGoogleStream.js';
 import streamDebug from './streamDebug.js';
 
 function returnError(err) {
+  console.log(err);
   return {
     statusCode: 500,
     body: {
@@ -55,11 +56,7 @@ export async function lambda_handler(event) {
           } else if (eachloc.location.conn_info.type === 's3') {
             streamObject = await getS3Stream(eachloc.location);
           } else {
-            return ({
-              statusCode: 500,
-              body:
-                { lambda_output: `Invalid connection type: ${eachloc.location.conn_info.type}` },
-            });
+            return (returnError(`Invalid connection type: ${eachloc.location.conn_info.type}`));
           }
           eachloc.stream = streamObject.stream;
           eachloc.promise = streamObject.promise;

@@ -1,40 +1,46 @@
 /* eslint-disable no-console */
 import mssqlpkg from 'mssql';
 const { on } = mssqlpkg;
+import { PassThrough } from 'stream';
 import { stringify } from 'csv-stringify';
 import { getPool } from './ssPools.js';
 import createSsWritable from './createSsWritable.js';
 import { ssTableHeaders } from './ssTableHeaders.js';
+import { createPromise } from './promiseWithResolvers.js';
 
 async function getSsStream(location) {
+  const { promise, resolve, reject } = createPromise();
   if (location.fromto === 'target_location') {
     return createSsWritable(location);
   }
   try {
-    let bodyStream;
+    // let bodyStream;
     let retStream;
-    let resultsPromiseResolve, resultsPromiseReject;
-    const resultsPromise = new Promise((resolve, reject) => { // Promise constructor to return results of the stream
-      resultsPromiseResolve = resolve;
-      resultsPromiseReject = reject;
-    });
 
     const { tablename, config, poolName, copySinceQuery, orderby } = setParameters(location);
     const sqlString = `SELECT * FROM ${tablename} ${copySinceQuery} ${orderby}`;
+    let bodyStream = new PassThrough();
 
     let pool = await getPool(poolName, config);
 
     const request = await pool.request();
-    request.stream = true;
-    request.query(sqlString);
+    const readableStream = request.toReadableStream();
+    // request.stream = true;
 
-    request.on('error', (err) => {
-      resultsPromiseReject(err);
+    readableStream.on('end', () => {
+      resolve();
+    });
+
+    readableStream.on('error', (err) => {
+      reject(err);
     });
 
     const stringifyOptions = setStringifyOptions(location);
-    bodyStream = request
-      .pipe(stringify(stringifyOptions));
+    bodyStream = readableStream
+      .pipe(stringify(stringifyOptions)
+    );
+
+    request.query(sqlString);
 
     console.log('Copy from SQL Server: ', location.connection, tablename);
 
@@ -44,40 +50,33 @@ async function getSsStream(location) {
       retStream = bodyStream;
     }
 
-    request.on('done', (result) => {
-      resultsPromiseResolve();
-      console.log(`SQL Server rows copied: ${result.rowsAffected}`);
-    });
 
-    request.on('error', (err) => {
-      resultsPromiseReject(err);
-    });
 
-    return { stream: retStream, promise: resultsPromise }; 
+    return { stream: retStream, promise };
   } catch (err) {
     throw new Error(`SQL Server stream error ${err}`);
   }
 }
 
 function setParameters(location) {
-    const tablename = `[${location.schemaname}].[${location.tablename}]`;
-    const connInfo = location.conn_info;
-    const poolName = location.connection;
-    const copySinceQuery = location.copy_since
-      ? ` WHERE [${location.copy_since.column_to_filter}] >= DATEADD(WW,${location.copy_since.num_weeks * -1}, GETDATE() ) `
-      : '';
+  const tablename = `[${location.schemaname}].[${location.tablename}]`;
+  const connInfo = location.conn_info;
+  const poolName = location.connection;
+  const copySinceQuery = location.copy_since
+    ? ` WHERE [${location.copy_since.column_to_filter}] >= DATEADD(WW,${location.copy_since.num_weeks * -1}, GETDATE() ) `
+    : '';
 
-    let orderby;
-    if (location.sortdesc) {
-      orderby = ` order by [${location.sortdesc}] desc `;
-    } else if (location.sortasc) {
-      orderby = ` order by [${location.sortasc}] asc `;
-    } else {
-      orderby = '';
-    }
-    const config = setDBConfigFromConnInfo(connInfo);
-    return { tablename, config, poolName, copySinceQuery, orderby };
+  let orderby;
+  if (location.sortdesc) {
+    orderby = ` order by [${location.sortdesc}] desc `;
+  } else if (location.sortasc) {
+    orderby = ` order by [${location.sortasc}] asc `;
+  } else {
+    orderby = '';
   }
+  const config = setDBConfigFromConnInfo(connInfo);
+  return { tablename, config, poolName, copySinceQuery, orderby };
+}
 
 
 
