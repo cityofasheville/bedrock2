@@ -31,7 +31,8 @@ destroy: $(TF_TARGS) $(dirs)
 
 clean:
 	rm -f *.instance
-	\rm -Rf node_modules build function.zip
+	\rm -Rf node_modules build
 
 $(dirs):
 	$(MAKE) -C $@ $(MAKECMDGOALS)
+	

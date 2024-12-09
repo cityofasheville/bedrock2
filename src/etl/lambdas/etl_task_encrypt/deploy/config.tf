@@ -10,6 +10,7 @@ resource "aws_lambda_function" "etl_task_encrypt-$$INSTANCE$$" {
     handler         = "handler.lambda_handler"
     runtime         = "nodejs20.x"
     source_code_hash = filebase64sha256("../function.zip")
+    architectures   = ["$$architecture$$"]
     layers = [
       data.terraform_remote_state.bedrock_common_$$INSTANCE$$.outputs.bedrock_common_$$INSTANCE$$_layer_arn,
       data.terraform_remote_state.bedrock_encrypt_$$INSTANCE$$.outputs.bedrock_encrypt_$$INSTANCE$$_layer_arn

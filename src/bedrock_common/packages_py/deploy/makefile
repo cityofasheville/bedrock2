@@ -3,7 +3,7 @@ include ../../../make_variables
 variable_files = ./local.tfvars
 config_files = config.tf variables.tf local.tfvars
 
-role_key = \"terraform/bedrock/$(INSTANCE)/roles/bedrock-lambda-role/terraform.tfstate\"\\n
+role_key = \"terraform/bedrock/$(INSTANCE)/roles/bedrock-lambda-role/terraform.tfstate\"
 
 terraform.tfvars: ../../../make_variables
 	cat $(variable_files) > terraform.tfvars
@@ -16,8 +16,8 @@ ifeq ($(build_mode),"sam")
 	sam build --template-file template.yaml --use-container
 	pushd .aws-sam/build; zip -r9q ../../layer.zip ./python -x \*terraform\*; popd
 else
-	pip3 install -r ../requirements.txt --target ./package
-	cd package; zip -r9q ../layer.zip . -x \*terraform\*; cd ..
+	python3.12 -m pip install -r ../requirements.txt --target ./python
+	zip -r9q ./layer.zip ./python -x \*terraform\*;
 endif
 
 .PHONY: init
@@ -38,6 +38,7 @@ apply-y: terraform.tfvars $(config_files) layer.zip
 
 .PHONY: destroy
 destroy: terraform.tfvars $(config_files)
+	touch ./layer.zip
 	terraform destroy
 
 clean:

@@ -10,9 +10,9 @@
           "connection": "s3_data_files"
         },
         "target_location": {
-          "path": "/PROD/person.errors/",
-          "filename": "log.txt",
-          "connection": "telestaff_ftp"
+          "path": "test/",
+          "filename": "moo2.csv",
+          "connection": "s3_data_files"
         }
       }
     ]

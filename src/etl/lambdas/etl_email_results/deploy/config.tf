@@ -10,6 +10,7 @@ resource "aws_lambda_function" "etl_email_results-$$INSTANCE$$" {
     handler         = "handler.lambda_handler"
     runtime         = "nodejs20.x"
     source_code_hash = filebase64sha256("../function.zip")
+    architectures   = ["$$architecture$$"]
     layers = [
       data.terraform_remote_state.bedrock_packages_$$INSTANCE$$.outputs.bedrock_packages_$$INSTANCE$$_layer_arn
     ]

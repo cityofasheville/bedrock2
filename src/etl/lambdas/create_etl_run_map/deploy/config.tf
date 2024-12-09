@@ -10,7 +10,8 @@ resource "aws_lambda_function" "create_etl_run_map-$$INSTANCE$$" {
     handler         = "handler.lambda_handler"
     runtime         = "nodejs20.x"
     source_code_hash = filebase64sha256("../function.zip")
-        layers = [
+    architectures   = ["$$architecture$$"]
+    layers = [
       data.terraform_remote_state.bedrock_common_$$INSTANCE$$.outputs.bedrock_common_$$INSTANCE$$_layer_arn,
       data.terraform_remote_state.bedrock_packages_$$INSTANCE$$.outputs.bedrock_packages_$$INSTANCE$$_layer_arn
     ]

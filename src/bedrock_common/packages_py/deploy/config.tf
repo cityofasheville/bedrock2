@@ -6,6 +6,8 @@ resource "aws_lambda_layer_version" "bedrock_packages_py_$$INSTANCE$$_layer" {
   filename   = "layer.zip"
   source_code_hash = filebase64sha256("layer.zip")
   layer_name = "bedrock_packages_py_$$INSTANCE$$_layer"
+  compatible_runtimes = ["python3.12"]
+  compatible_architectures = ["$$architecture$$"]
   description = <<EOF
 boto3
 paramiko

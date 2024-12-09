@@ -5,7 +5,8 @@ You will need AdministratorAccess command line permissions to AWS.
 
 Create a file `make_variables` based on `make_variables.sample`. Change INSTANCE to a unique name for your instance, and set the region and account info.
 
-The variable build_mode can be set to "std" if deploying from Linux or "sam" to use a container. This is needed for two Python Lambdas that need Linux native compilation targets for encryption used by the paramiko package.
+The variable ```build_mode``` can be set to "std" if deploying from Linux or the Docker image. Use "sam" to use AWS SAM. This is needed for two Python Lambdas that need Linux native compilation targets for encryption used by the paramiko package.
+Set ```architecture``` to 'arm64' or 'x86_64' based on your local computer architecture. This will determine which architecture the Lambdas and Lambda Layers will use. The only place this really matters is in the Lambda Layer packages_py, which uses binary packages for cryptography.
 
 Everywhere below you can use ```apply-y``` instead of ```apply``` to avoid having to reply 'yes' to each step.
 

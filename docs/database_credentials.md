@@ -4,7 +4,7 @@ A number of routines access the Bedrock database: create-etl-run-map, bedrock-ap
 
 ## Creating DB: (make apply in src/db)
 
-When creating a new database you don't have to put any db variables in make_variables, it will all work with defaults and the hostname will be in the make_variables.generated file.
+When creating a new database you don't have to put any db variables in [make_variables](./deploy-notes.md), it will all work with defaults and the hostname will be in the make_variables.generated file.
 If you prefer you can set username/password/database.
 
 When running ```make apply``` a file src/db/make_variables.generated will be created with the variable ```BEDROCK_DB_HOST_ENDPOINT=""``` with the name of the server you created. (see Note 1)

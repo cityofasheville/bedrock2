@@ -8,6 +8,7 @@ Bedrock is a data management system that makes data visible, usable, and high-qu
 Bedrock runs on AWS, using Lambdas, Step Functions, API Gateway, and a Postgres RDS instance.
 
 - Prerequisites: Deployment uses Node.js, Python3, and Terraform. In addition, if not deploying from Linux, Docker and AWS SAM are required. Rather than install everything locally, it can be run in a Docker container.
+- Overview of compilation options and prerequisites [here](./docs/Compilation-Prerequisites.md).
 - For a regular local deploy, follow the instructions [here](./docs/deploy-notes.md). 
 - To install on Docker, see [here](./docs/docker-install.md).
 
