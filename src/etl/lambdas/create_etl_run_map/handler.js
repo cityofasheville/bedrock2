@@ -171,7 +171,7 @@ async function readTasks(client, assetMap) {
   for (let i = 0; i < arr.length; i += 1) {
     const assetName = arr[i][0];
     const asset = arr[i][1];
-    const sql = `SELECT * FROM bedrock.task_view where asset_name = '${assetName}' order by seq_number;`;
+    const sql = `SELECT * FROM bedrock.task_view where asset_name = '${assetName}' and active = true order by seq_number;`; 
 
     // eslint-disable-next-line no-await-in-loop
     const res = await client.query(sql)
@@ -179,6 +179,10 @@ async function readTasks(client, assetMap) {
         const errmsg = pgErrorCodes[err.code];
         throw new Error([`Postgres error: ${errmsg}`, err]);
       });
+    if(res.rowCount === 0) {
+      delete assetMap[assetName];
+      continue;
+    } 
     for (let j = 0; j < res.rowCount; j += 1) {
       const task = res.rows[j];
       let thisTask = {
