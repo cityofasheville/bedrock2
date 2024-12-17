@@ -17,7 +17,8 @@ prebuild:
 	mkdir -p ./build
 
 $(DEST_DIR)/%: $(SRC_DIR)/% ../../../make_variables
-	python3 ../../../scripts/vreplace.py -f ../../../make_variables $< $@
+	python3 ../../../scripts/vreplace.py -v BEDROCK_DB_HOST=$(BEDROCK_DB_HOST) -v BEDROCK_DB_USER=$(BEDROCK_DB_USER) \
+		-v BEDROCK_DB_PASSWORD=$(BEDROCK_DB_PASSWORD) -v BEDROCK_DB_NAME=$(BEDROCK_DB_NAME) -f ../../../make_variables $< $@
 
 init: prebuild $(TF_TARGS)
 	$(MAKE) -C build $(MAKECMDGOALS)
