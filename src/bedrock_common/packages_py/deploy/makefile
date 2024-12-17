@@ -12,7 +12,7 @@ terraform.tfvars: ../../../make_variables
 
 layer.zip: ../requirements.txt
 	rm -Rf ./layer.zip ./package
-ifeq ($(build_mode),sam)
+ifeq ($(build_mode),"sam")
 	sam build --template-file template.yaml --use-container
 	pushd .aws-sam/build; zip -r9q ../../layer.zip ./python -x \*terraform\*; popd
 else

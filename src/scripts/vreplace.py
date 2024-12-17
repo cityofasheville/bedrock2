@@ -22,7 +22,7 @@ if __name__ == "__main__":
       for line in vfile.read().split('\n'):
         words = line.split('=')
         if (len(words) == 2):
-          vmap[words[0].strip()] = words[1].strip() # Just skip anything else
+          vmap[words[0].strip('" ')] = words[1].strip('" ') # Just skip anything else
 
   if args.variable is not None and len(args.variable) > 0:
     for vdef in args.variable:
