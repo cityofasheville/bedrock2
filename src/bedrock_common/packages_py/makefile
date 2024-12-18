@@ -13,7 +13,7 @@ prebuild:
 	mkdir -p ./build
 
 $(DEST_DIR)/%: $(SRC_DIR)/% ../../make_variables
-ifeq ($(build_mode),sam)
+ifeq ($(build_mode),"sam")
 	python3 ../../scripts/vreplace.py -v codeuri=.. -f ../../make_variables $< $@
 else
 	python3 ../../scripts/vreplace.py -v codeuri=. -f ../../make_variables $< $@

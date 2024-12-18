@@ -19,7 +19,7 @@ resource "aws_iam_policy" "bedrock-stepfunction-policy-$$INSTANCE$$" {
   name        = "bedrock-stepfunction-policy-$$INSTANCE$$"
   description = "Policy for Bedrock step functions"
   policy = templatefile("./policy.json", {
-    account_num: $$account$$
+    account_num: "$$account$$" 
   })
 }
 

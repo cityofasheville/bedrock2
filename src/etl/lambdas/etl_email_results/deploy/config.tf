@@ -23,8 +23,8 @@ resource "aws_lambda_function" "etl_email_results-$$INSTANCE$$" {
     }
     environment {
       variables = {
-          "EMAIL_RECIPIENT" = $$EMAIL_RECIPIENT$$
-          "EMAIL_SENDER"    = $$EMAIL_SENDER$$
+          "EMAIL_RECIPIENT" = "$$EMAIL_RECIPIENT$$"
+          "EMAIL_SENDER"    = "$$EMAIL_SENDER$$"
       }
     }
 }
