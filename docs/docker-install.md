@@ -23,7 +23,7 @@ You will need AdministratorAccess command line permissions to AWS.
 
 Alternatively, you may set up a profile in the AWS credentials file (see documentation [here](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html#cli-configure-quickstart-profiles)).
 
-Follow the build directions [here](./docs/deploy-notes.md). 
+Follow the build directions [here](./deploy-notes.md). 
 
 ### Getting started with Docker
 
