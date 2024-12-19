@@ -4,7 +4,7 @@ variable_files = ./local.tfvars
 config_files = config.tf variables.tf local.tfvars
 code_files = ../*.json
 
-role_key = \"terraform/bedrock/$(INSTANCE)/roles/bedrock-lambda-role/terraform.tfstate\"\\n
+role_key = \"terraform/bedrock/$(INSTANCE)/roles/bedrock-lambda-role/terraform.tfstate\"
 
 terraform.tfvars: ../../../make_variables
 	cat $(variable_files) > terraform.tfvars
@@ -37,6 +37,7 @@ apply-y: terraform.tfvars $(config_files) layer.zip
 
 .PHONY: destroy
 destroy: terraform.tfvars $(config_files)
+	touch ./layer.zip
 	terraform destroy
 
 clean:

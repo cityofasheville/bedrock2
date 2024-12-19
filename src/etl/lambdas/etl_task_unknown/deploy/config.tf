@@ -10,6 +10,7 @@ resource "aws_lambda_function" "etl_task_unknown-$$INSTANCE$$" {
     handler         = "handler.lambda_handler"
     runtime         = "python3.12"
     source_code_hash = filebase64sha256("../function.zip")
+    architectures   = ["$$architecture$$"]
     tags = {
       "coa:application" = "bedrock"
       "coa:department"  = "information-technology"

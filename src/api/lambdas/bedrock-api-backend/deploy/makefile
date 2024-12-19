@@ -28,6 +28,7 @@ apply-y: terraform.tfvars $(config_files) ../function.zip
 
 .PHONY: destroy
 destroy: terraform.tfvars $(config_files)
+	touch ../function.zip
 	terraform destroy
 
 clean:

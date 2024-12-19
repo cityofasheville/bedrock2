@@ -1,22 +1,19 @@
 ## Installation on Docker
 
-Bedrock will work on most Linux architectures, but we have standardized on Amazon Linux 2, which can be run as a Docker container defined by [Dockerfile.bedrock](./Dockerfile.bedrock). This will install Python, Node, PostgreSQL and AWS tools, as well as clone this repository.
+Bedrock will work on most Linux architectures, but we have standardized on Amazon Linux 2023, which can be run as a Docker container defined by [Dockerfile.bedrock](./Dockerfile.bedrock). This will install Python, Node, and AWS tools, as well as clone this repository.
 
-To build, run and log in on Windows (changing the tag and local directory appropriately):
+Make_variables file: Use build_mode=std and the architecture of your host system.
+
+To build and run:
 ```
-    docker build -f Dockerfile.bedrock --tag ejaxonavl/bedrock .
-    winpty docker run -it -v "C:\Users\ericjackson\dev\bedrock\bedrock2":/home/bedrock ejaxonavl/bedrock bash
+    docker build -f Dockerfile.bedrock --tag cityofasheville/bedrock .
+    docker run -it -v .:/home/bedrock cityofasheville/bedrock bash
 ```
 
 This command maps ```/home/bedrock``` to the specified directory on your local machine so that you can edit the files on your local machine while running Bedrock in the Docker container.
 
-To build Bedrock after logging into the Docker container for the first time, run the following commands (note that a Conda Python environment called  _bedrock_ is automatically activated on login):
-
-    cd /home/bedrock/scripts
-    pip install -r requirements.txt
-    export BEDROCK_BUCKETNAME=managed-data-assets
-
-Next set up the AWS environment by running the following commands:
+To build Bedrock after logging into the Docker container set up the AWS environment by running the following commands.
+You will need AdministratorAccess command line permissions to AWS.
 
 ```
     export AWS_ACCESS_KEY_ID="_<Access_Key_ID>_"
@@ -26,4 +23,15 @@ Next set up the AWS environment by running the following commands:
 
 Alternatively, you may set up a profile in the AWS credentials file (see documentation [here](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html#cli-configure-quickstart-profiles)).
 
+Follow the build directions [here](./deploy-notes.md). 
 
+### Getting started with Docker
+
+A simple way to install Docker on a Mac is using Homebrew.
+Colima (https://github.com/abiosoft/colima) is a minimal open source Docker runtime.
+
+- brew install docker
+- brew install colima
+- colima start
+
+After that you should be able to run docker commands in the terminal.

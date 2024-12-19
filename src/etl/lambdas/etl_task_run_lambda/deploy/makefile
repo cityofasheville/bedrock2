@@ -3,7 +3,7 @@ include ../../../../make_variables
 variable_files = ../../../../account.tfvars ../../lambda.tfvars ./local.tfvars
 config_files = config.tf datablocks.tf variables.tf local.tfvars
 
-role_key = \"terraform/bedrock/$(INSTANCE)/roles/bedrock-lambda-role/terraform.tfstate\"\\n
+role_key = \"terraform/bedrock/$(INSTANCE)/roles/bedrock-lambda-role/terraform.tfstate\"
 
 terraform.tfvars: $(variable_files) ../../../../make_variables
 	cat $(variable_files) > terraform.tfvars
@@ -28,6 +28,7 @@ apply-y: terraform.tfvars $(config_files) ../function.zip
 
 .PHONY: destroy
 destroy: terraform.tfvars $(config_files)
+	touch ../function.zip
 	terraform destroy
 
 clean:
