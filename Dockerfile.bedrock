@@ -2,7 +2,7 @@ FROM amazonlinux:2023
 
 # Base system
 RUN yum -y update
-
+RUN yum install -y make tar gzip zip
 
 # Install Node.js
 ENV NODE_VERSION=20.14.0
@@ -13,8 +13,7 @@ RUN . "$NVM_DIR/nvm.sh" && nvm use v${NODE_VERSION}
 RUN . "$NVM_DIR/nvm.sh" && nvm alias default v${NODE_VERSION}
 ENV PATH="/root/.nvm/versions/node/v${NODE_VERSION}/bin/:${PATH}"
 
-RUN yum -y install git zip unzip
-
+# Install Python
 RUN yum -y install python3.12 
 RUN python3.12 -m ensurepip
 
