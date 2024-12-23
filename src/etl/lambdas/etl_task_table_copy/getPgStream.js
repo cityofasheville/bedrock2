@@ -47,7 +47,7 @@ async function getPgStream(location) {
       let stream = client.query(copyFrom(queryString));
 
       stream.on('error', (err) => { client.end(); reject(err); });
-      stream.on('finish', async () => { await copyFromTemp(location, tablename, tempTablename, client); client.end(); resolve(); });
+      stream.on('finish', async () => { await copyFromTemp(location, tablename, tempTablename, copySinceQuery, client); client.end(); resolve(); });
 
       console.log('Copy to Postgres: ', location.connection, tablename);
       return { stream, promise };
@@ -58,7 +58,7 @@ async function getPgStream(location) {
   }
 }
 
-async function copyFromTemp(location, tablename, tempTablename, client) {
+async function copyFromTemp(location, tablename, tempTablename, copySinceQuery, client) {
   try {
     const serialToAppend = location.append_serial
       ? `alter table ${tempTablename} add column ${location.append_serial} serial;`

@@ -32,6 +32,9 @@ export async function lambda_handler(event) {
     if (!etl.active) {
       return ({ statusCode: 200, body: { lambda_output: 'Inactive: skipped' } });
     } else {
+      if (etl.source_location.copy_since) {
+        etl.target_location.copy_since = etl.source_location.copy_since;
+      }
       const loc = {
         source_location: {},
         target_location: {},
@@ -43,9 +46,6 @@ export async function lambda_handler(event) {
           eachloc.location = etl[locname];
           eachloc.location.fromto = locname;
           eachloc.location.conn_info = await getConnection(eachloc.location.connection);
-          if (etl.copy_since) {
-            eachloc.location.copy_since = etl.copy_since;
-          }
 
           if (eachloc.location.conn_info.type === 'postgresql') {
             streamObject = await getPgStream(eachloc.location);

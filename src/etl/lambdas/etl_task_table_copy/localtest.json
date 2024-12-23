@@ -5,15 +5,18 @@
         "type": "table_copy",
         "active": true,
         "source_location": {
-          "tablename": "ad_infoNOPE",
+          "tablename": "permit_custom_fields",
           "schemaname": "amd",
-          "connection": "munis/munprod/fme_jobs"
-      
+          "connection": "coa-acceladb/accela/mssqlgisadmin",
+          "copy_since": {
+            "num_weeks": 1,
+            "column_to_filter": "recdate"
+          }
         },
         "target_location": {
-          "filename": "nodata.txt",
-          "connection": "s3_data_files",
-          "path": "test/"
+          "tablename": "permit_custom_fields",
+          "schemaname": "internal",
+          "connection": "pubrecdb1/mdastore1/dbadmin"
         }
       }
     ]
