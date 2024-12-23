@@ -3,7 +3,7 @@ include ../../../../make_variables
 variable_files = ../../../../account.tfvars ../../lambda.tfvars ./local.tfvars
 config_files = config.tf datablocks.tf variables.tf local.tfvars
 
-role_key = \"terraform/bedrock/$(INSTANCE)/roles/bedrock-api-lambda-role/terraform.tfstate\"\\n
+role_key = \"terraform/bedrock/$(INSTANCE)/roles/bedrock-api-lambda-role/terraform.tfstate\"
 
 terraform.tfvars: $(variable_files) ../../../../make_variables
 	cat $(variable_files) > terraform.tfvars
