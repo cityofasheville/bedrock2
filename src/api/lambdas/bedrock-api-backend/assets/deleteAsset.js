@@ -77,6 +77,7 @@ async function deleteAsset(
 
   const response = {
     statusCode: 200,
+    result: {}
   };
 
   await checkExistence(db, tableName, idField, idValue, name, shouldExist);
@@ -86,18 +87,18 @@ async function deleteAsset(
   client = await db.newClient();
   await client.query('BEGIN');
 
+
   let ancestors = await getRelationsInfo(client, 'asset_id', idValue, name, 'bedrock.dependencies', 'dependent_asset_id');
   let descendants = await getRelationsInfo(client, 'dependent_asset_id', idValue, name, 'bedrock.dependencies', 'asset_id');
 
+
   // if either ancestors or descendants exists, we return info for them
   if (ancestors) {
-    if (!response.result) response.result = {}
     response.result.ancestors = formatAncestors(ancestors);
     await deleteInfo(client, 'bedrock.dependencies', 'asset_id', idValue, name)
   }
 
   if (descendants) {
-    if (!response.result) response.result = {}
     response.result.descendants = formatDescendants(descendants);
     // if there are descendents, we must delete from the dependent_asset_id column in the dependencies table as well.
     await deleteInfo(client, 'bedrock.dependencies', 'dependent_asset_id', idValue, name)
