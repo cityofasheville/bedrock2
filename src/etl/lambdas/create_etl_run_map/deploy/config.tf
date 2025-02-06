@@ -32,6 +32,7 @@ resource "aws_lambda_function" "create_etl_run_map-$$INSTANCE$$" {
         BEDROCK_DB_USER = "$$BEDROCK_DB_USER$$"
         BEDROCK_DB_PASSWORD = "$$BEDROCK_DB_PASSWORD$$"
         BEDROCK_DB_NAME = "$$BEDROCK_DB_NAME$$"
+        FRONTEND_ASSET_URL = "$$FRONTEND_ASSET_URL$$"
       }
     }
 }

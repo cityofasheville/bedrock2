@@ -14,6 +14,8 @@ def update_run_map(state):
         job = jobs[i]
         result = results[i]['ETLJob']
         name = result['name']
+        asset_id = result['asset_id']
+        asset_url = result['asset_url']
         success = True
         email = ''
         for j in range(len(result['etl_tasks'])): # each task
@@ -29,6 +31,8 @@ def update_run_map(state):
             if 'statusCode' not in task_result or task_result['statusCode'] != 200:
                 newstate['failure'].append({
                     "name": name,
+                    "asset_id": asset_id,
+                    "asset_url": asset_url,
                     "job": job,
                     "result": result
                 })
@@ -39,9 +43,17 @@ def update_run_map(state):
                 break
 
         if success:
-            newstate['success'].append(name)
+            newstate['success'].append({
+                "name": name,
+                "asset_id": asset_id,
+                "asset_url": asset_url
+            })
             if email == 'only_on_error':
-                newstate['noemail'].append(name)
+                newstate['noemail'].append({
+                "name": name,
+                "asset_id": asset_id,
+                "asset_url": asset_url
+            })
 
     # Purge all jobs from state['remainder'] that depend on failed or skipped jobs
     newremainder = []
@@ -52,11 +64,19 @@ def update_run_map(state):
             job = jobset.pop(0)
             for i in range(len(job['depends'])):
                 if job['depends'][i] in fails_noemail:
-                    newstate['noemail'].append(job['name'])
+                    newstate['noemail'].append({
+                        "name": job['name'],
+                        "asset_id": job['asset_id'],
+                        "asset_url": job['asset_url']
+                    })
                     fails_noemail[job['name']] = True
                 if job['depends'][i] in fails:
                     fails[job['name']] = True
-                    newstate['skipped'].append(job['name'])
+                    newstate['skipped'].append({
+                        "name": job['name'],
+                        "asset_id": job['asset_id'],
+                        "asset_url": job['asset_url']
+                    })
                     break
             if job['name'] not in fails:
                 jobs.append(job)

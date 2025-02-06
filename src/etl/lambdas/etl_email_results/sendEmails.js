@@ -16,13 +16,16 @@ async function sendEmails(results) {
     let emailSender = process.env.EMAIL_SENDER;
     let htmlEmail, emailSubject;
     let failureMessages = results.failure.map(res => res.result);
-    results.failure = results.failure.map(res => res.name);
+    results.failure = results.failure.map(res => ({
+      name: res.name,
+      asset_url: res.asset_url
+    }));
     results.failure.sort();
     results.success.sort();
     results.skipped.sort();
     emailSubject = "ETL Jobs Status: OK";
     if (results.skipped.length > 0 || results.failure.length > 0) {
-      emailSubject = "ETL Jobs Status: Error";
+      emailSubject = "@SDPEC@ ETL Jobs Status: Error";
     }
 
     let pugObj = {};

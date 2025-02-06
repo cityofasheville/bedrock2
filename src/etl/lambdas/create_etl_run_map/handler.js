@@ -45,6 +45,8 @@ async function readEtlList(client, run_groups) {
     const asset = arr[i];
     assetMap[asset.asset_name] = {
       name: asset.asset_name,
+      asset_id: asset.asset_id,
+      asset_url: process.env.FRONTEND_ASSET_URL.replaceAll('"', '') + asset.asset_id,
       run_group: asset.run_group_name,
       depends: [],
       etl_tasks: [],
