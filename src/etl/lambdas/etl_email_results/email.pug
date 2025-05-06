@@ -48,12 +48,12 @@ html
                 a(href=asset.asset_url) #{asset.name}
 
     footer 
-      if results.failure.length > 0
+      if results.failure.length > 0 && results.sendToHelpDesk === "true"
           p @@OPERATION=ADD_REQUEST@@
           p @@REQUESTTEMPLATE=Bedrock Error@@
           p @@GROUP=Software Development@@
           p @@Category=Data and Analytics@@
-          p @@SUBJECT=Bedrock Error Testing@@
+          p @@SUBJECT=Bedrock ETL Jobs Status: Error@@
           p @@REQUESTER=Citywide@@
           p @@UDF_CHAR6=[Data Management]@@
           p @@DESCRIPTION=

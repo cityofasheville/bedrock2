@@ -14,6 +14,8 @@ async function sendEmails(results) {
   if (in_email_but_not_noemail.length > 0) {
     let emailRecip = [process.env.EMAIL_RECIPIENT];
     let emailSender = process.env.EMAIL_SENDER;
+    let errorEmailRecip = process.env.ERROR_EMAIL_RECIPIENT;
+    let errorEmailSender = process.env.ERROR_EMAIL_SENDER;
     let htmlEmail, emailSubject;
     let failureMessages = results.failure.map(res => res.result);
     results.failure = results.failure.map(res => ({
@@ -23,11 +25,19 @@ async function sendEmails(results) {
     results.failure.sort();
     results.success.sort();
     results.skipped.sort();
+    results.sendToHelpDesk = process.env.SEND_ERRORS_TO_HELPDESK;
     emailSubject = "ETL Jobs Status: OK";
     if (results.skipped.length > 0 || results.failure.length > 0) {
-      emailSubject = "@SDPEC@ ETL Jobs Status: Error";
+      if (results.sendToHelpDesk === "true" || results.sendToHelpDesk === true) {
+        emailSubject = `${process.env.ERROR_EMAIL_SUBJECT_TAG} Bedrock ETL Jobs Status: Error`;
+        emailRecip = errorEmailRecip === null || errorEmailRecip === '' ? emailRecip : [errorEmailRecip];
+        emailSender = errorEmailSender === null || errorEmailSender === '' ? emailSender : errorEmailSender;
+      } else {
+        emailSubject = 'ETL Jobs Status: Error';
+      }
+      // console.log(emailSubject,emailRecip,emailSender);
     }
-
+    
     let pugObj = {};
     pugObj.results = results;
     htmlEmail = compiledFunction(pugObj);
