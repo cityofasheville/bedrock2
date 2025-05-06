@@ -39,6 +39,13 @@ data_directory="src/db/bedrock-db-data/data"
 # Email settings
 EMAIL_SENDER="asheville_fake@ashevillenc.gov"
 EMAIL_RECIPIENT="dummy@ashevillenc.gov"
+ERROR_EMAIL_SENDER="asheville_fake2@ashevillenc.gov"
+ERROR_EMAIL_RECIPIENT="dummy2@ashevillenc.gov"
+FRONTEND_ASSET_URL="https://one.ashevillenc.gov/bedrock/assets/"
+
+# The settings below will allow you to send error emails to a helpdesk system
+SEND_ERRORS_TO_HELPDESK="true"
+ERROR_EMAIL_SUBJECT_TAG="@SDPEC@"
 
 # Do not edit or delete the next line
 reverse=$(if $(1),$(call reverse,$(wordlist 2,$(words $(1)),$(1)))) $(firstword $(1))

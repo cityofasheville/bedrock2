@@ -26,6 +26,10 @@ resource "aws_lambda_function" "etl_email_results-$$INSTANCE$$" {
       variables = {
           "EMAIL_RECIPIENT" = "$$EMAIL_RECIPIENT$$"
           "EMAIL_SENDER"    = "$$EMAIL_SENDER$$"
+          "SEND_ERRORS_TO_HELPDESK" = "$$SEND_ERRORS_TO_HELPDESK$$"
+          "ERROR_EMAIL_RECIPIENT"   = "$$ERROR_EMAIL_RECIPIENT$$"
+          "ERROR_EMAIL_SENDER"      = "$$ERROR_EMAIL_SENDER$$"
+          "ERROR_EMAIL_SUBJECT_TAG" = "$$ERROR_EMAIL_SUBJECT_TAG$$"
       }
     }
 }
