@@ -263,9 +263,12 @@ async function verifyAssetExists(client, assetName) {
   return client.query(sql)
     .then((res) => {
       if (res.rowCount === 0) {
-        return false;
+        return {exists: false};
+      } else {
+        const asset = res.rows[0];
+        asset.exists = true;
+        return asset;
       }
-      return true;
     })
     .catch((err) => {
       const errmsg = pgErrorCodes[err.code];
@@ -291,11 +294,16 @@ const lambda_handler = async function x(event) {
     }
     let assetMap = {};
     if (event.one_asset) {
-      const assetExists = await verifyAssetExists(client, event.one_asset);
-      if (assetExists) {
+      const asset = await verifyAssetExists(client, event.one_asset);
+      if (asset.exists) {
         assetMap = {
           [event.one_asset]: {
-            name: event.one_asset, run_group: event.run_group, depends: [], etl_tasks: [],
+            name: event.one_asset,
+            asset_id: asset.asset_id,
+            asset_url: process.env.FRONTEND_ASSET_URL.replaceAll('"', '') + asset.asset_id,
+            run_group: event.run_group, 
+            depends: [], 
+            etl_tasks: [],
           },
         };
       }
