@@ -48,7 +48,7 @@ html
                 a(href=asset.asset_url) #{asset.name}
 
     footer 
-      if results.failure.length > 0 && results.sendToHelpDesk === "true"
+      if results.failure.length > 0 && (results.sendToHelpDesk === "true" || results.sendToHelpDesk === true)
           p @@OPERATION=ADD_REQUEST@@
           p @@REQUESTTEMPLATE=Bedrock Error@@
           p @@GROUP=Software Development@@
