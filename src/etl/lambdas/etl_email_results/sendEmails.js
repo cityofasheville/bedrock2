@@ -8,8 +8,10 @@ const __dirname = dirname(fileURLToPath(import.meta.url)); // current directory
 const compiledFunction = compileFile(join(__dirname, '/email.pug'));
 
 async function sendEmails(results) {
-  let noemail_list = results.noemail;
-  let email_list = results.success.concat(results.skipped).concat(results.failure.map(res => res.name));
+  let noemail_list = results.noemail.map(item => item.name);
+  let email_list = results.success.map(item => item.name)
+                          .concat(results.skipped.map(item => item.name))
+                          .concat(results.failure.map(item => item.name));
   let in_email_but_not_noemail = email_list.filter(item => !noemail_list.includes(item));
   if (in_email_but_not_noemail.length > 0) {
     let emailRecip = [process.env.EMAIL_RECIPIENT];
