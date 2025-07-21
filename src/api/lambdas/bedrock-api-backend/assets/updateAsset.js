@@ -94,7 +94,7 @@ async function updateTags(idValue, idField, body, client, name) {
     } catch (error) {
       throw new Error(`PG error reading tags for update: ${error}`);
     }
-
+  }
     // Now delete any existing tags
     try {
       await deleteInfo(client, 'bedrock.asset_tags', idField, idValue, name);
@@ -103,9 +103,10 @@ async function updateTags(idValue, idField, body, client, name) {
     }
 
     // And add the new ones back in
+    if (tags.length > 0) {
     try {
-      for (let i = 0; i < tags.length; i += 1) {
 
+      for (let i = 0; i < tags.length; i += 1) {
         res = await client.query(
           'INSERT INTO bedrock.asset_tags (asset_id, tag_id) VALUES ($1, $2)',
           [body.asset_id, tags[i]],
@@ -115,8 +116,8 @@ async function updateTags(idValue, idField, body, client, name) {
       throw new Error(`PG error inserting tags for update: ${error}`);
     }
   }
+
   return tags;
-  // End of adding any tags that aren't in the tags table for now
 }
 
 async function updateAsset(
