@@ -53,6 +53,7 @@ async function getDb(connection) {
     } catch (error) {
       throw (`PG connecting error: ${getErroMsg(error)}`);
     }
+  
     async function query(text, params) {
       try {
         const res = await _client.query(text, params);
@@ -61,14 +62,17 @@ async function getDb(connection) {
         }
         return res;
       } catch (error) {
-        await _client.query('ROLLBACK');
-        await _client.release();
         throw (`PG transaction error: ${getErroMsg(error)}`);
       }
     }
-
-    return { query };
+  
+    function release() {
+      return _client.release();
+    }
+  
+    return { query, release };
   }
+  
 
   return { query, newClient };
 

@@ -138,7 +138,7 @@ async function addTags(body, client) {
 }
 
 async function addAsset(
-  db,
+  client,
   idField,
   name,
   tableName,
@@ -164,7 +164,6 @@ async function addAsset(
     result: null,
   };
 
-  let client = await db.newClient();
   await client.query('BEGIN');
   await checkExistence(client, tableName, idField, idValue, name, shouldExist);
   checkInfo(bodyWithID, requiredFields, name, idValue, idField);
@@ -178,6 +177,8 @@ async function addAsset(
   let {parents, uses} = await addDependencies(bodyWithID, client);
   asset.set('parents', parents);
   asset.set('uses', uses);
+  throw new Error("ADD asset test error"
+  )
   asset.set('tags', await addTags(bodyWithID, client));
   await client.query('COMMIT');
   asset.set('asset_id', bodyWithID[idField]);

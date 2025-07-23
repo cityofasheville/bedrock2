@@ -62,7 +62,7 @@ function formatDescendants(descendants) {
 
 
 async function deleteAsset(
-  db,
+  client,
   idField,
   idValue,
   name,
@@ -80,17 +80,11 @@ async function deleteAsset(
     result: {}
   };
 
-  await checkExistence(db, tableName, idField, idValue, name, shouldExist);
-
-  let client;
-
-  client = await db.newClient();
+  await checkExistence(client, tableName, idField, idValue, name, shouldExist);
   await client.query('BEGIN');
-
 
   let ancestors = await getRelationsInfo(client, 'asset_id', idValue, name, 'bedrock.dependencies', 'dependent_asset_id');
   let descendants = await getRelationsInfo(client, 'dependent_asset_id', idValue, name, 'bedrock.dependencies', 'asset_id');
-
 
   // if either ancestors or descendants exists, we return info for them
   if (ancestors) {
@@ -104,7 +98,9 @@ async function deleteAsset(
     await deleteInfo(client, 'bedrock.dependencies', 'dependent_asset_id', idValue, name)
   }
 
-  let assetName = await getName(db, nameField, tableName, idField, idValue)
+  throw new Error("Delete asset test error")
+
+  let assetName = await getName(client, nameField, tableName, idField, idValue)
   await handleDelete(tableNames, client, idField, idValue, name);
 
   if (descendants || ancestors) {

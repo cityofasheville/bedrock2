@@ -16,6 +16,9 @@ async function handleAssetTypes(
   verb,
   db,
 ) {
+
+try{
+  let client = await db.newClient();
   let result = {
     statusCode: 200,
     message: '',
@@ -63,7 +66,7 @@ async function handleAssetTypes(
 
         case 'POST':
           result = await addAssetType(
-            db,
+            client,
             allFields,
             body,
             idField,
@@ -97,7 +100,7 @@ async function handleAssetTypes(
 
         case 'PUT':
           result = await updateAssetType(
-            db,
+            client,
             allFields,
             body,
             idField,
@@ -111,7 +114,7 @@ async function handleAssetTypes(
 
         case 'DELETE':
           result = await deleteAssetType(
-            db,
+            client,
             idField,
             idValue,
             name,
@@ -151,6 +154,13 @@ async function handleAssetTypes(
     console.log(result.message);
   }
   return result;
+} catch (e) {
+  if (['POST', 'PUT', 'DELETE'].includes(verb)) {
+    console.log("BINGO")
+    await client.query('ROLLBACK');
+    await client.release();
+    }
+}
 }
 
 export default handleAssetTypes;

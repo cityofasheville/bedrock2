@@ -74,7 +74,7 @@ async function addTasks(client, allFields, body, idValue) {
 }
 
 async function updateTasks(
-  db,
+  client,
   idField,
   idValue,
   name,
@@ -93,7 +93,6 @@ async function updateTasks(
 
   checkInfo(body, requiredFields);
 
-  let client = await db.newClient();
   await client.query('BEGIN');
   // make sure asset exists in the asset table
   await checkExistence(client, 'bedrock.assets', idField, idValue, name, shouldExist);

@@ -13,7 +13,7 @@ function checkCustomFields(body) {
 }
 
 async function addAssetType(
-  db,
+  client,
   allFields,
   body,
   idField,
@@ -37,8 +37,6 @@ async function addAssetType(
 
   checkInfo(bodyWithID, requiredFields, name, idValue, idField);
   checkCustomFields(bodyWithID);
-
-  let client = await db.newClient();
 
   await client.query('BEGIN');
   await checkExistence(client, tableName, idField, idValue, name, shouldExist);
