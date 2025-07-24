@@ -15,13 +15,12 @@ After that you should be able to run docker commands in the terminal.
 
 ### Next Steps
 
-To build and run:
-make sure colima is running
+Make sure colima is running
 ```
 colima start
 ```
 
-The first time, you may have to run 
+The first time you run colima, you may have to run 
 ```
 docker context use colima
 ```
@@ -30,6 +29,7 @@ Bedrock will work on most Linux architectures, but we have standardized on Amazo
 
 Make_variables file: Use build_mode=std and the architecture of your host system.
 
+To build and run:
 ```
     docker build -f Dockerfile.bedrock --tag cityofasheville/bedrock .
     docker run -it -v .:/home/bedrock cityofasheville/bedrock bash
