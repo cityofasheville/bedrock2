@@ -1,10 +1,35 @@
+
+
 ## Installation on Docker
+
+### Getting started with Docker
+
+A simple way to install Docker on a Mac is using Homebrew.
+Colima (https://github.com/abiosoft/colima) is a minimal open source Docker runtime.
+
+- brew install docker
+- brew install colima
+- colima start
+
+After that you should be able to run docker commands in the terminal.
+
+### Next Steps
+
+To build and run:
+make sure colima is running
+```
+colima start
+```
+
+The first time, you may have to run 
+```
+docker context use colima
+```
 
 Bedrock will work on most Linux architectures, but we have standardized on Amazon Linux 2023, which can be run as a Docker container defined by [Dockerfile.bedrock](./Dockerfile.bedrock). This will install Python, Node, and AWS tools, as well as clone this repository.
 
 Make_variables file: Use build_mode=std and the architecture of your host system.
 
-To build and run:
 ```
     docker build -f Dockerfile.bedrock --tag cityofasheville/bedrock .
     docker run -it -v .:/home/bedrock cityofasheville/bedrock bash
@@ -25,13 +50,3 @@ Alternatively, you may set up a profile in the AWS credentials file (see documen
 
 Follow the build directions [here](./deploy-notes.md). 
 
-### Getting started with Docker
-
-A simple way to install Docker on a Mac is using Homebrew.
-Colima (https://github.com/abiosoft/colima) is a minimal open source Docker runtime.
-
-- brew install docker
-- brew install colima
-- colima start
-
-After that you should be able to run docker commands in the terminal.
