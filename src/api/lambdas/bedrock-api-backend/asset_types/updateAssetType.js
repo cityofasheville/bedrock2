@@ -6,7 +6,7 @@ import {
 import { addAssetTypeCustomFields } from '../utilities/utilities.js'
 
 async function updateAssetType(
-  db,
+  client,
   allFields,
   body,
   idField,
@@ -24,7 +24,6 @@ async function updateAssetType(
     result: null,
   };
 
-  let client = await db.newClient();
   checkInfo(body, requiredFields, name, idValue, idField);
   await checkExistence(client, tableName, idField, idValue, name, shouldExist);
   await client.query('BEGIN');

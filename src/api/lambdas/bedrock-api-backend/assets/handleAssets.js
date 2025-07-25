@@ -12,6 +12,8 @@ import getExpandedRelations from './getExpandedRelations.js';
 
 // eslint-disable-next-line no-unused-vars
 async function handleAssets(event, pathElements, queryParams, verb, db) {
+  let client = await db.newClient();
+
   try {
   let response = {
     statusCode: 200,
@@ -55,7 +57,7 @@ async function handleAssets(event, pathElements, queryParams, verb, db) {
 
         case 'POST':
           response = await addAsset(
-            db,
+            client,
             idField,
             name,
             tableName,
@@ -87,7 +89,7 @@ async function handleAssets(event, pathElements, queryParams, verb, db) {
           response = await updateAsset(
             pathElements,
             queryParams,
-            db,
+            client,
             idField,
             idValue,
             name,
@@ -100,7 +102,7 @@ async function handleAssets(event, pathElements, queryParams, verb, db) {
 
         case 'DELETE':
           response = await deleteAsset(
-            db,
+            client,
             idField,
             idValue,
             name,
@@ -121,10 +123,10 @@ async function handleAssets(event, pathElements, queryParams, verb, db) {
     case 3:
       if (pathElements[2] === 'tasks') {
         if (verb === 'GET') {
-          response = await getTasks(db, idValue, idField, name);
+          response = await getTasks(client, idValue, idField, name);
         } else if (verb === 'PUT') {
           response = await updateTasks(
-            db,
+            client,
             idField,
             idValue,
             name,
@@ -195,6 +197,12 @@ async function handleAssets(event, pathElements, queryParams, verb, db) {
   }
   return response;
 } catch (e) {
+  console.log(e)
+    if (['POST', 'PUT', 'DELETE'].includes(verb)) {
+        console.log("BINGO")
+        await client.query('ROLLBACK');
+        await client.release();
+        }
   return {
     statusCode: 500,
     message: e,

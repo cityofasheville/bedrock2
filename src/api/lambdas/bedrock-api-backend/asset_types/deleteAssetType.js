@@ -5,7 +5,7 @@ import {
 } from '../utilities/utilities.js';
 
 async function deleteAssetType(
-  db,
+  client,
   idField,
   idValue,
   name,
@@ -23,9 +23,6 @@ async function deleteAssetType(
     result: null,
   };
 
-  let client;
-
-  client = await db.newClient();
   await checkExistence(client, tableName, idField, idValue, name, shouldExist);
   await checkBeforeDelete(client, name, assetsTableName, idField, idValue, connectedData, connectedDataIdField)
   let assetTypeName = await getName(db, nameField, tableName, idField, idValue)
