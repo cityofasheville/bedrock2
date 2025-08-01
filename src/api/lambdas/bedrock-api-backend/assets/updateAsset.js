@@ -3,11 +3,12 @@
 /* eslint-disable no-console */
 
 import {
-  getCustomFieldsInfo, addCustomFieldsInfo, getCustomValues, checkCustomFieldsInfo,
+  getCustomFieldsInfo,
+  addCustomFieldsInfo,
+  getCustomValues,
+  checkCustomFieldsInfo,
 } from '../utilities/assetUtilities.js';
-import {
-  checkInfo, updateInfo, deleteInfo,
-} from '../utilities/utilities.js';
+import { checkInfo, updateInfo, deleteInfo } from '../utilities/utilities.js';
 import getAsset from './getAsset.js';
 
 async function checkExistence(client, idValue) {
@@ -33,14 +34,13 @@ async function updateDependencies(client, idField, idValue, name, body) {
     throw new Error(`PG error deleting dependencies for update: ${error}`);
   }
   if (body.parents?.length > 0) {
-    console.log('parents')
     for (let i = 0; i < body.parents.length; i += 1) {
       const dependency = body.parents[i];
-      const relation_type = "PULLS_FROM";
+      const relation_type = 'PULLS_FROM';
       try {
         await client.query(
           'INSERT INTO bedrock.dependencies (asset_id, dependent_asset_id, relation_type) VALUES ($1, $2, $3)',
-          [idValue, dependency, relation_type],
+          [idValue, dependency, relation_type]
         );
       } catch (error) {
         throw new Error(`PG error updating dependencies: ${error}`);
@@ -48,14 +48,13 @@ async function updateDependencies(client, idField, idValue, name, body) {
     }
   }
   if (body.uses?.length > 0) {
-    console.log('uses')
     for (let i = 0; i < body.uses.length; i += 1) {
       const dependency = body.uses[i];
-      const relation_type = "USES";
+      const relation_type = 'USES';
       try {
         await client.query(
           'INSERT INTO bedrock.dependencies (asset_id, dependent_asset_id, relation_type) VALUES ($1, $2, $3)',
-          [idValue, dependency, relation_type],
+          [idValue, dependency, relation_type]
         );
       } catch (error) {
         throw new Error(`PG error updating dependencies: ${error}`);
@@ -65,9 +64,9 @@ async function updateDependencies(client, idField, idValue, name, body) {
 }
 
 async function updateTags(idValue, idField, body, client, name) {
-  // Finally, update any tags.
-  const tags = []; let tmpTags = [];
-  let sql; let res; let cnt;
+  const tags = [];
+  let tmpTags = [];
+  let res;
   if (Array.isArray(body.tags)) {
     tmpTags = body.tags;
   } else {
@@ -77,38 +76,24 @@ async function updateTags(idValue, idField, body, client, name) {
   for (let i = 0; i < tmpTags.length; i += 1) {
     const tag = tmpTags[i].trim();
     if (tag.length > 0) {
-      tags.push(tag); // Make sure they're cleaned up
+      tags.push(tag);
     }
   }
 
-  // For now, just add any tags that aren't in the tags table
+  // delete any existing tags
+  try {
+    await deleteInfo(client, 'bedrock.asset_tags', idField, idValue, name);
+  } catch (error) {
+    throw new Error(`PG error deleting tags for update: ${error}`);
+  }
+
   if (tags.length > 0) {
-    sql = 'SELECT tag_id from bedrock.tags where tag_id in (';
-    cnt = 1;
-    for (let i = 0, comma = ''; i < tags.length; i += 1, comma = ', ', cnt += 1) {
-      sql += `${comma}$${cnt}`;
-    }
-    sql += ');';
-    try {
-      res = await client.query(sql, tags);
-    } catch (error) {
-      throw new Error(`PG error reading tags for update: ${error}`);
-    }
-
-    // Now delete any existing tags
-    try {
-      await deleteInfo(client, 'bedrock.asset_tags', idField, idValue, name);
-    } catch (error) {
-      throw new Error(`PG error deleting tags for update: ${error}`);
-    }
-
     // And add the new ones back in
     try {
       for (let i = 0; i < tags.length; i += 1) {
-
         res = await client.query(
           'INSERT INTO bedrock.asset_tags (asset_id, tag_id) VALUES ($1, $2)',
-          [body.asset_id, tags[i]],
+          [body.asset_id, tags[i]]
         );
       }
     } catch (error) {
@@ -116,7 +101,6 @@ async function updateTags(idValue, idField, body, client, name) {
     }
   }
   return tags;
-  // End of adding any tags that aren't in the tags table for now
 }
 
 async function updateAsset(
@@ -129,11 +113,22 @@ async function updateAsset(
   tableName,
   requiredFields,
   allFields,
-  body,
+  body
 ) {
   let customFieldsFromAssetType;
   let customValues;
-  const baseFields = ['asset_id', 'asset_name', 'description', 'location', 'active', 'owner_id', 'asset_type_id', 'location', 'link', 'notes'];
+  const baseFields = [
+    'asset_id',
+    'asset_name',
+    'description',
+    'location',
+    'active',
+    'owner_id',
+    'asset_type_id',
+    'location',
+    'link',
+    'notes',
+  ];
   const assetType = body.asset_type_id;
   let customFields = new Map(Object.entries(body.custom_fields));
 
@@ -164,12 +159,7 @@ async function updateAsset(
     await updateTags(idValue, idField, body, client, name);
   }
   await client.query('COMMIT');
-  const responseInfo = await getAsset(
-    queryParams,
-    db,
-    idValue,
-    allFields,
-  );
+  const responseInfo = await getAsset(queryParams, db, idValue, allFields);
   response.result = responseInfo.result;
   return response;
 }
