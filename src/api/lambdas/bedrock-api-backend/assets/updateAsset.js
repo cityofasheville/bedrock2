@@ -34,7 +34,6 @@ async function updateDependencies(client, idField, idValue, name, body) {
     throw new Error(`PG error deleting dependencies for update: ${error}`);
   }
   if (body.parents?.length > 0) {
-    console.log('parents');
     for (let i = 0; i < body.parents.length; i += 1) {
       const dependency = body.parents[i];
       const relation_type = 'PULLS_FROM';
@@ -49,7 +48,6 @@ async function updateDependencies(client, idField, idValue, name, body) {
     }
   }
   if (body.uses?.length > 0) {
-    console.log('uses');
     for (let i = 0; i < body.uses.length; i += 1) {
       const dependency = body.uses[i];
       const relation_type = 'USES';
