@@ -9,7 +9,7 @@ import { Writable } from 'stream';
 async function createBigQueryWritable(location) {
   const { promise, resolve, reject } = createPromise();
   let buff = '';
-  const folderPath = './tmp';
+  const folderPath = '/tmp';
   const tempFilePath = `${folderPath}/tmpStream.csv`;
   const append = location.append ?? false;
 
