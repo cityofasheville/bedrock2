@@ -5,9 +5,9 @@
         "type": "table_copy",
         "active": true,
         "source_location": {
-          "datasetId": "aletizia_sbx",
-          "tableId": "google_info",
-          "connection": "big_query_testing"
+          "schemaname": "aletizia_sbx",
+          "tablename": "google_info",
+          "connection": "bedrock-bigquery"
         },
         "target_location": {
           "asset": "bq_test.goog",

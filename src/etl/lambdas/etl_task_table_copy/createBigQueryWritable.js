@@ -64,7 +64,7 @@ async function updateBqTableFromCsv(location, csvFilePath, append = false) {
     writeDisposition: writeDisposition, //'WRITE_APPEND' or 'WRITE_TRUNCATE'
   };
 
-  console.log(`Starting update job for table ${location.datasetId}.${location.tableId}`);
+  console.log(`Starting update job for table ${location.schemaname}.${location.tablename}`);
 
   try {
     if (!fs.existsSync(csvFilePath)) {
@@ -72,8 +72,8 @@ async function updateBqTableFromCsv(location, csvFilePath, append = false) {
     }
 
     const [job] = await bigquery
-      .dataset(location.datasetId)
-      .table(location.tableId)
+      .dataset(location.schemaname)
+      .table(location.tablename)
       .createLoadJob(csvFilePath, metadata);
 
     // console.log(`Job ${job.id} started.`);

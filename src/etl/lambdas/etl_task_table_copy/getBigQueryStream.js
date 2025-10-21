@@ -27,8 +27,8 @@ async function getBigQueryStream(location) {
     let retStream;
     let bodyStream = new PassThrough();
     const tableHeaders = location.tableheaders ?? false;
-    const datasetId = location.datasetId;
-    const tableId = location.tableId;
+    const datasetId = location.schemaname;
+    const tableId = location.tablename;
     const data = bigquery.dataset(datasetId).table(tableId);
 
     const readableStream = data.createReadStream();
