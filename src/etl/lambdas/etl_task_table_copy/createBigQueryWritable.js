@@ -59,8 +59,8 @@ async function updateBqTableFromCsv(location, csvFilePath, append = false) {
   const writeDisposition = append ? 'WRITE_APPEND' : 'WRITE_TRUNCATE'; 
   const metadata = {
     sourceFormat: 'CSV',
-    skipLeadingRows: 1,
-    autodetect: true,
+    skipLeadingRows: 0,
+    maxBadRecords: 0,
     writeDisposition: writeDisposition, //'WRITE_APPEND' or 'WRITE_TRUNCATE'
   };
 
@@ -76,15 +76,16 @@ async function updateBqTableFromCsv(location, csvFilePath, append = false) {
       .table(location.tablename)
       .createLoadJob(csvFilePath, metadata);
 
-    // console.log(`Job ${job.id} started.`);
+    let state = 'RUNNING'
 
-    await job.get();
-    
-    const status = job.metadata.status;
-    if (status.errorResult) {
-      throw new Error(`BigQuery Job failed with error: ${JSON.stringify(status.errors)}`);
+    while (state === 'RUNNING') {  
+      await job.get();
+      const status = job.metadata.status;
+      state = status.state;
+      if (status.errorResult) {
+        throw new Error(`BigQuery Job failed with error: ${JSON.stringify(status.errors)}`);
+      }
     }
-
     console.log(`BigQuery Job ${job.id} completed successfully.`);
 
   } catch (error) {
