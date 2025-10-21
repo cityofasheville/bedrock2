@@ -1,0 +1,25 @@
+{
+  "ETLJob": {
+    "etl_tasks": [
+      {
+        "type": "table_copy",
+        "active": true,
+        "source_location": {
+          "datasetId": "aletizia_sbx",
+          "tableId": "google_info",
+          "connection": "big_query_testing"
+        },
+        "target_location": {
+          "asset": "bq_test.goog",
+          "tab": "Sheet1",
+          "range": "A2:E",
+          "filename": "bq test",
+          "connection": "bedrock-googlesheets",
+          "connection_id": "76085554183a536a7fae",
+          "spreadsheetid": "1VxwB9TK1woPSsi3TbaSRb1ptNAwRsjdXa_AxHTd84sU"
+        }
+      }
+    ]
+  },
+  "TaskIndex": 0
+}

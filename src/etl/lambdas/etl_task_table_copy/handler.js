@@ -4,6 +4,7 @@ import getPgStream from './getPgStream.js';
 import getSsStream from './getSsStream.js';
 import getS3Stream from './getS3Stream.js';
 import getGoogleStream from './getGoogleStream.js';
+import getBigQueryStream from './getBigQueryStream.js';
 // eslint-disable-next-line no-unused-vars
 import streamDebug from './streamDebug.js';
 
@@ -55,6 +56,8 @@ export async function lambda_handler(event) {
             streamObject = await getGoogleStream(eachloc.location);
           } else if (eachloc.location.conn_info.type === 's3') {
             streamObject = await getS3Stream(eachloc.location);
+          } else if (eachloc.location.conn_info.type === 'bigquery') {
+            streamObject = await getBigQueryStream(eachloc.location);
           } else {
             return (returnError(`Invalid connection type: ${eachloc.location.conn_info.type}`));
           }
