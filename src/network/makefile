@@ -28,7 +28,7 @@ apply-y: $(TF_TARGS) $(dirs)
 destroy: $(dirs)
 
 clean:
-	rm -f *.instance
+	rm -f *.instance court_reminders_network_variables.generated
 	\rm -Rf build
 
 $(dirs):
