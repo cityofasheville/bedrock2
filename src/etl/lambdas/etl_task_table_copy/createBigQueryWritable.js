@@ -33,7 +33,7 @@ async function createBigQueryWritable(location) {
         reject(err);
       } finally {
         if (tempFilePath && fs.existsSync(tempFilePath)) {
-          await fsp.rm(folderPath, { recursive: true, force: true });
+          await fsp.rm(tempFilePath, { recursive: true, force: true });
           console.log(`\nCleaned up temporary file: ${tempFilePath}`);
         }
       }
