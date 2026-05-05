@@ -1,7 +1,7 @@
 import fs from 'fs';
 import * as fsp from 'fs/promises';
 import { BigQuery } from '@google-cloud/bigquery';
-import { google } from 'googleapis';
+import { GoogleAuth, JWT } from 'google-auth-library';
 import { createPromise } from './promiseWithResolvers.js';
 import { Writable } from 'stream';
 
@@ -45,7 +45,7 @@ async function createBigQueryWritable(location) {
 }
 
 async function updateBqTableFromCsv(location, csvFilePath, append = false) {
-  const jwtClient = new google.auth.JWT({
+  const jwtClient = new JWT({
     email: location.conn_info.client_email,
     key: location.conn_info.private_key,
     scopes: ['https://www.googleapis.com/auth/bigquery'],
