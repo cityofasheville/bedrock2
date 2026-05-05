@@ -1,12 +1,11 @@
 include ../../../make_variables
 
-variable_files = ./local.tfvars
-config_files = config.tf variables.tf local.tfvars
+config_files = config.tf variables.tf
 
 role_key = \"terraform/bedrock/$(INSTANCE)/roles/bedrock-lambda-role/terraform.tfstate\"
 
 terraform.tfvars: ../../../make_variables
-	cat $(variable_files) > terraform.tfvars
+	echo region = \"$(region)\" > terraform.tfvars
 	echo rolekey = $(role_key) >> terraform.tfvars
 	echo statebucket = \"$(statebucket)\" >> terraform.tfvars
 
