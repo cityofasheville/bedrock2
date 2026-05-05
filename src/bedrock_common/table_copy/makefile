@@ -7,7 +7,7 @@ dirs = build
 
 SRC_DIR := ./deploy
 DEST_DIR := ./build
-TFFILES := config.tf backend.tf local.tfvars variables.tf makefile
+TFFILES := config.tf backend.tf variables.tf makefile
 
 TF_TARGS := $(patsubst %,$(DEST_DIR)/%,$(TFFILES))
 
