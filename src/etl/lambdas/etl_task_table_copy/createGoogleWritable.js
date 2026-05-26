@@ -1,25 +1,22 @@
 /* eslint-disable import/no-unresolved */
 /* eslint-disable no-console */
 import { Writable } from 'stream';
-import { google } from 'googleapis';
+import { auth as gauth, sheets as gsheets } from '@googleapis/sheets';
 import { parse } from 'csv-parse/sync';
 import { createPromise } from './promiseWithResolvers.js';
 
 async function writeToSheet(location, theData, append = false) {
   const { promise, resolve, reject } = createPromise();
   try {
-    const jwtClient = new google.auth.JWT(
-      location.conn_info.client_email,
-      null,
-      location.conn_info.private_key,
-      ['https://www.googleapis.com/auth/spreadsheets'],
-    );
+    const jwtClient = new gauth.JWT({
+      email: location.conn_info.client_email,
+      key: location.conn_info.private_key,
+      scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+    });
     await jwtClient.authorize();
 
     const spreadsheetId = location.spreadsheetid;
-    const sheets = google.sheets('v4');
-
-    google.options({ auth: jwtClient });
+    const sheets = gsheets({ version: 'v4', auth: jwtClient });
 
     const { tab, range } = location;
     const tabrange = `${tab}!${range}`;

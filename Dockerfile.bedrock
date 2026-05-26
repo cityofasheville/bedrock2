@@ -5,7 +5,7 @@ RUN yum -y update
 RUN yum install -y make tar gzip zip
 
 # Install Node.js
-ENV NODE_VERSION=20.14.0
+ENV NODE_VERSION=24.15.0
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
 ENV NVM_DIR=/root/.nvm
 RUN . "$NVM_DIR/nvm.sh" && nvm install ${NODE_VERSION}

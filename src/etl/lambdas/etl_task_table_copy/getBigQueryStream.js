@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { google } from 'googleapis';
+import { GoogleAuth, JWT } from 'google-auth-library';
 import { BigQuery } from '@google-cloud/bigquery';
 import { PassThrough } from 'stream';
 import { stringify } from 'csv-stringify';
@@ -13,7 +13,7 @@ async function getBigQueryStream(location) {
     return createBigQueryWritable(location);
   }
   try {
-    const jwtClient = new google.auth.JWT({
+    const jwtClient = new JWT({
         email: location.conn_info.client_email,
         key: location.conn_info.private_key,
         scopes: ['https://www.googleapis.com/auth/bigquery'],

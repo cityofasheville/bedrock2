@@ -4,6 +4,7 @@ import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
 import { Upload } from '@aws-sdk/lib-storage';
 import { getConnection } from 'bedrock_common';
 import fillDateTemplate from './fillDateTemplate.js';
+import { Readable } from 'stream';
 
 const s3Client = new S3Client({ region: 'us-east-1' });
 
@@ -38,8 +39,9 @@ export const lambda_handler = async function x(event) {
 
     // encrypt
     const publicKey = await readKey({ armoredKey: pgpKey });
+    const webStream = Readable.toWeb(readableStream);
     const encryptedStream = await encrypt({
-      message: await createMessage({ binary: readableStream }),
+      message: await createMessage({ binary: webStream }),
       encryptionKeys: publicKey,
       config: { rejectPublicKeyAlgorithms: new Set([]) },
       // Needed for Delta Dental, whose key is ElGamal,

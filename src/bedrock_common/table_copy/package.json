@@ -8,16 +8,16 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.431.0",
-    "@aws-sdk/lib-storage": "^3.431.0",
-    "@google-cloud/bigquery": "^8.1.1",
-    "csv-parse": "^5.5.2",
-    "csv-stringify": "^6.4.4",
-    "googleapis": "^127.0.0",
-    "mssql": "^11.0.1",
+    "@aws-sdk/client-s3": "^3.1043.0",
+    "@aws-sdk/lib-storage": "^3.1043.0",
+    "@google-cloud/bigquery": "^8.3.0",
+    "@googleapis/sheets": "^13.0.1",
+    "csv-parse": "^6.2.1",
+    "csv-stringify": "^6.7.0",
+    "mssql": "^12.5.2",
     "multistream": "^4.1.0",
-    "pg": "^8.11.3",
-    "pg-copy-streams": "^6.0.6"
+    "pg": "^8.20.0",
+    "pg-copy-streams": "^7.0.0"
   },
   "author": "",
   "license": "ISC"
