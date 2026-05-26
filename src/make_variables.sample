@@ -7,6 +7,9 @@ account="518970837364"
 build_mode="std"
 # Set architecture to "arm64" or "x86_64" for Lambdas and Lambda Layers.
 architecture="arm64"
+# Set node and python runtime for Lambdas
+node_runtime="nodejs24.x"
+python_runtime="python3.12"
 
 # The next four variables provide information on the VPC, subnets and security
 # groups that Bedrock will use. They can be created in the network folder and
