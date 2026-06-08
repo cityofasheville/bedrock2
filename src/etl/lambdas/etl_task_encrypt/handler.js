@@ -43,9 +43,13 @@ export const lambda_handler = async function x(event) {
     const encryptedStream = await encrypt({
       message: await createMessage({ binary: webStream }),
       encryptionKeys: publicKey,
-      config: { rejectPublicKeyAlgorithms: new Set([]) },
-      // Needed for Delta Dental, whose key is ElGamal,
-      // which OpenPGP won't encrypt by default cuz sux}
+      config: {
+        rejectPublicKeyAlgorithms: new Set([]),
+        // Needed for Delta Dental, whose key is ElGamal,
+        // which OpenPGP won't encrypt by default cuz sux
+        allowMissingKeyFlags: true,
+        // Needed for keys that have no key flags set in their packet
+      },
     });
 
     // put encrypted file 'encrypted_filename' to s3
