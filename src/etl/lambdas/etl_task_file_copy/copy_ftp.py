@@ -67,6 +67,12 @@ def put_ftp(location, from_stream):
     except BaseException as err:
         raise Exception("Put FTP Error: " + str(err))
 
+KEY_CLASSES = {
+    "rsa": paramiko.RSAKey,
+    "ecdsa": paramiko.ECDSAKey,
+    "ed25519": paramiko.Ed25519Key,
+}
+
 def connectToFTP(connection_data):
     try:
         ftp_host = connection_data['host']
@@ -86,7 +92,11 @@ def connectToFTP(connection_data):
             transport.auth_password(
                     username=ftp_user, password=connection_data['password'])
         elif 'private_key' in connection_data.keys():
-            pk = paramiko.RSAKey.from_private_key(
+            key_type = connection_data.get('key_type', 'rsa').lower()
+            if key_type not in KEY_CLASSES:
+                raise Exception("Unsupported key_type '" + key_type +
+                                "', expected one of: " + ", ".join(KEY_CLASSES))
+            pk = KEY_CLASSES[key_type].from_private_key(
                     io.StringIO(connection_data['private_key']))
             transport.auth_publickey(username=ftp_user, key=pk)
         sftp = paramiko.SFTPClient.from_transport(transport)
