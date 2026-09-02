@@ -74,6 +74,7 @@ In Secrets Manager we create them as "Other type of secret" and then "Plaintext"
 ### SFTP
 ### (file_copy and sftp and encrypt)
 - Use either password or private_key to connect
+- Optional: key_type identifies the private_key algorithm - one of rsa (the default), ecdsa or ed25519. Note that the key file header does not always reveal this, since ssh-keygen writes "BEGIN OPENSSH PRIVATE KEY" for every key type.
 - pgp_key is optionally used for encrypting file before sending
 - Optional: disabled_algorithms might be needed in unusual circumstances (see paramiko docs)
 ```
@@ -84,6 +85,7 @@ In Secrets Manager we create them as "Other type of secret" and then "Plaintext"
         "username": "bedrock",
         "password": "xxxxx",
         "private_key": "-----BEGIN RSA PRIVATE KEY-----\nasdfgy",
+        "key_type": "rsa",
         "pgp_key": "-----BEGIN PGP PUBLIC KEY BLOCK-iuygqwerfibhu....",
         "disabled_algorithms": {
             "pubkeys": [
